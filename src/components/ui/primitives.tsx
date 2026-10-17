@@ -12,14 +12,13 @@ export function Container({ className, ...props }: ComponentProps<"div">) {
 
 // ─── Badge ──────────────────────────────────────────────────────────────────
 
-type BadgeTone = "neutral" | "accent" | "warn" | "outline" | "sponsor";
+type BadgeTone = "neutral" | "accent" | "warn" | "outline";
 
 const badgeTones: Record<BadgeTone, string> = {
   neutral: "bg-subtle text-muted",
   accent: "bg-accent-soft text-accent-ink",
   warn: "bg-warn-soft text-warn",
   outline: "border border-line-strong text-muted",
-  sponsor: "border border-dashed border-line-strong text-muted uppercase tracking-wide text-[10px]",
 };
 
 export function Badge({
@@ -49,23 +48,14 @@ export function Badge({
 type ButtonVariant = "primary" | "secondary" | "ghost";
 type ButtonSize = "sm" | "md" | "lg";
 
-const buttonBase =
-  "inline-flex items-center justify-center gap-1.5 rounded-lg font-medium transition-colors disabled:pointer-events-none disabled:opacity-60 whitespace-nowrap";
-
-const buttonVariants: Record<ButtonVariant, string> = {
-  primary: "bg-accent text-accent-fg hover:bg-accent-ink shadow-sm",
-  secondary: "border border-line-strong bg-surface text-fg hover:bg-subtle",
-  ghost: "text-muted hover:text-fg hover:bg-subtle",
-};
-
 const buttonSizes: Record<ButtonSize, string> = {
-  sm: "h-8 px-3 text-[13px]",
-  md: "h-10 px-4 text-sm",
-  lg: "h-12 px-5 text-[15px]",
+  sm: "h-8 rounded-lg px-3 text-[13px]",
+  md: "h-10 rounded-[10px] px-4 text-sm",
+  lg: "h-12 rounded-[14px] px-5 text-[15px]",
 };
 
 export function buttonClass(variant: ButtonVariant = "primary", size: ButtonSize = "md", className?: string) {
-  return cn(buttonBase, buttonVariants[variant], buttonSizes[size], className);
+  return cn("btn", `btn-${variant}`, buttonSizes[size], className);
 }
 
 export function Button({
@@ -77,39 +67,76 @@ export function Button({
   return <button className={buttonClass(variant, size, className)} {...props} />;
 }
 
-// ─── Section heading ────────────────────────────────────────────────────────
+// ─── Headings ───────────────────────────────────────────────────────────────
 
+/**
+ * Serif display heading for editorial sections. Pass an <em> inside `title`
+ * for the muted italic phrase, e.g. <>Browse by <em>category</em>.</>
+ */
 export function SectionHeading({
   id,
   title,
   description,
   href,
   linkLabel = "View all",
+  align = "left",
 }: {
   id?: string;
-  title: string;
+  title: ReactNode;
   description?: string;
   href?: string;
   linkLabel?: string;
+  align?: "left" | "center";
 }) {
-  return (
-    <div className="mb-6 flex items-end justify-between gap-4">
-      <div>
-        <h2 id={id} className="text-xl font-semibold tracking-tight text-fg sm:text-2xl">
+  const link = href && (
+    <Link
+      href={href}
+      className="group inline-flex shrink-0 items-center gap-1 text-sm font-medium text-accent-ink hover:underline underline-offset-4"
+    >
+      {linkLabel}
+      <Icon name="arrow-right" size={14} className="transition-transform group-hover:translate-x-0.5" />
+    </Link>
+  );
+
+  if (align === "center") {
+    return (
+      <div className="mx-auto mb-10 max-w-2xl text-center">
+        <h2 id={id} className="display text-[2.5rem] sm:text-[3.5rem]">
           {title}
         </h2>
-        {description && <p className="mt-1 text-sm text-muted sm:text-[15px]">{description}</p>}
+        {description && <p className="mt-3 text-[15px] leading-relaxed text-muted sm:text-base">{description}</p>}
+        {link && <div className="mt-4">{link}</div>}
       </div>
-      {href && (
-        <Link
-          href={href}
-          className="group inline-flex shrink-0 items-center gap-1 text-sm font-medium text-accent-ink hover:underline underline-offset-4"
-        >
-          {linkLabel}
-          <Icon name="arrow-right" size={14} className="transition-transform group-hover:translate-x-0.5" />
-        </Link>
-      )}
+    );
+  }
+
+  return (
+    <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+      <div className="min-w-0">
+        <h2 id={id} className="display text-[2.25rem] sm:text-[3rem]">
+          {title}
+        </h2>
+        {description && <p className="mt-2 text-[15px] text-muted">{description}</p>}
+      </div>
+      {link}
     </div>
+  );
+}
+
+/** Uppercase chip above a hero heading. Use <strong> for the figures. */
+export function Eyebrow({ children, className }: { children: ReactNode; className?: string }) {
+  return <p className={cn("eyebrow", className)}>{children}</p>;
+}
+
+/** Filled green check used for trust points. */
+export function CheckDot({ className }: { className?: string }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={cn("inline-flex size-[18px] shrink-0 items-center justify-center rounded-full bg-success text-white", className)}
+    >
+      <Icon name="check" size={12} strokeWidth={3} />
+    </span>
   );
 }
 
@@ -138,7 +165,7 @@ export function Notice({
       <Icon
         name={tone === "warn" ? "alert" : "info"}
         size={18}
-        className={cn("mt-0.5 shrink-0", tone === "warn" ? "text-warn" : "text-faint")}
+        className={cn("mt-0.5", tone === "warn" ? "text-warn" : "text-faint")}
       />
       <div>
         {title && <p className="font-medium text-fg">{title}</p>}

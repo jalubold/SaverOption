@@ -35,7 +35,7 @@ export default async function ProductPage(props: PageProps<"/products/[slug]">) 
   const ended = offers.filter((o) => o.isExpired);
 
   return (
-    <>
+    <div className="theme-dark">
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "Home", path: "/" },
@@ -43,8 +43,8 @@ export default async function ProductPage(props: PageProps<"/products/[slug]">) 
           { name: product.name, path: `/products/${product.slug}` },
         ])}
       />
-      <section className="border-b border-line bg-surface">
-        <Container className="py-10">
+      <section className="hero-glow border-b border-line">
+        <Container className="py-12 sm:py-16">
           <nav aria-label="Breadcrumb" className="text-xs text-faint">
             <Link href="/" className="hover:text-fg">
               Home
@@ -59,7 +59,7 @@ export default async function ProductPage(props: PageProps<"/products/[slug]">) 
             <div className="flex items-start gap-4">
               <ProductLogo product={product} size="lg" />
               <div>
-                <h1 className="text-3xl font-semibold tracking-tight">{product.name} offers</h1>
+                <h1 className="text-[2.25rem] font-semibold leading-tight tracking-[-0.03em] text-heading sm:text-5xl">{product.name} offers</h1>
                 <p className="mt-1 text-[15px] text-muted">
                   {product.tagline} · by {product.provider.name}
                 </p>
@@ -79,7 +79,7 @@ export default async function ProductPage(props: PageProps<"/products/[slug]">) 
         </Container>
       </section>
 
-      <Container className="py-10">
+      <Container className="pb-24 pt-10">
         <h2 className="mb-5 text-lg font-semibold">
           Active offers <span className="tabular font-normal text-faint">({active.length})</span>
         </h2>
@@ -100,6 +100,6 @@ export default async function ProductPage(props: PageProps<"/products/[slug]">) 
           </section>
         )}
       </Container>
-    </>
+    </div>
   );
 }

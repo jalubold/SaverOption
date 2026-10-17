@@ -40,7 +40,7 @@ export default async function CategoryPage(props: PageProps<"/categories/[slug]"
   const others = all.filter((c) => c.slug !== category.slug && c.count > 0);
 
   return (
-    <>
+    <div className="theme-dark">
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "Home", path: "/" },
@@ -48,8 +48,8 @@ export default async function CategoryPage(props: PageProps<"/categories/[slug]"
           { name: category.name, path: `/categories/${category.slug}` },
         ])}
       />
-      <section className="border-b border-line bg-surface">
-        <Container className="py-10">
+      <section className="hero-glow border-b border-line">
+        <Container className="py-12 sm:py-16">
           <nav aria-label="Breadcrumb" className="text-xs text-faint">
             <Link href="/" className="hover:text-fg">
               Home
@@ -61,15 +61,15 @@ export default async function CategoryPage(props: PageProps<"/categories/[slug]"
             / <span className="text-muted">{category.name}</span>
           </nav>
           <div className="mt-4 flex items-start gap-4">
-            <span className="hidden size-12 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent-ink sm:inline-flex">
+            <span className="hidden size-14 shrink-0 items-center justify-center rounded-2xl border border-line bg-accent-soft text-accent-ink sm:inline-flex">
               <Icon name={category.icon} size={24} />
             </span>
             <div>
-              <h1 className="text-3xl font-semibold tracking-tight">{category.name}</h1>
-              <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-muted">{category.intro}</p>
+              <h1 className="text-[2.25rem] font-semibold leading-tight tracking-[-0.03em] text-heading sm:text-5xl">{category.name}</h1>
+              <p className="mt-3 max-w-2xl text-[16px] leading-relaxed text-muted">{category.intro}</p>
             </div>
           </div>
-          <div className="mt-6 flex flex-wrap gap-2">
+          <div className="mt-7 flex flex-wrap gap-2">
             <Link href={`/deals?category=${category.slug}`} className={buttonClass("secondary", "sm")}>
               <Icon name="search" size={14} /> Search &amp; filter this category
             </Link>
@@ -80,7 +80,7 @@ export default async function CategoryPage(props: PageProps<"/categories/[slug]"
         </Container>
       </section>
 
-      <Container className="py-10">
+      <Container className="pb-24 pt-10">
         <p className="tabular mb-5 text-sm text-muted">
           <span className="font-medium text-fg">{total}</span> active {total === 1 ? "offer" : "offers"}
         </p>
@@ -103,6 +103,6 @@ export default async function CategoryPage(props: PageProps<"/categories/[slug]"
           </section>
         )}
       </Container>
-    </>
+    </div>
   );
 }

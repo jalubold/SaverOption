@@ -4,10 +4,13 @@ import { siteConfig } from "@/config/site";
 export function DemoBanner() {
   if (!siteConfig.demoMode) return null;
   return (
-    <div className="border-b border-warn/20 bg-warn-soft">
-      <p className="mx-auto max-w-6xl px-4 py-2 text-center text-xs leading-5 text-warn sm:px-6">
-        <strong className="font-semibold">Preview build.</strong> Every listing on this site is fictional sample
-        content for development — none are live offers.
+    <div className="promo-bar">
+      <p className="mx-auto flex max-w-6xl items-center justify-center gap-2 px-4 py-2 text-center text-[13px] font-medium leading-5 sm:px-6">
+        <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-[#f2545b]" />
+        <span>
+          <strong className="font-semibold">Preview build.</strong> Every listing here is fictional sample content, not a
+          live offer.
+        </span>
       </p>
     </div>
   );

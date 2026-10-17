@@ -44,6 +44,23 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
   const destinationHost = hostname(destination.kind === "affiliate" ? offer.links.officialUrl : destination.url);
   const primaryCategory = offer.categoryList[0];
   const paragraphs = offer.description.split(/\n\s*\n/);
+  // Sidebar shows one big figure; the period goes in the caption below it.
+  const pricing = offer.pricing;
+  const bigPrice =
+    pricing?.dealPrice === undefined ? null : pricing.dealPrice === 0 ? "Free" : formatMoney(pricing.dealPrice, pricing.currency);
+  const bigWas = price?.was && pricing?.regularPrice !== undefined ? formatMoney(pricing.regularPrice, pricing.currency) : null;
+  // Skip the headline when it only restates the price ("One-time $69 vs. $19/month", "Free").
+  const sidebarValue = value && bigPrice && (value === bigPrice || value.includes(bigPrice)) ? null : value;
+  const billingCaption =
+    bigPrice === "Free"
+      ? "No payment needed"
+      : offer.pricing?.period === "one-time"
+        ? "Billed once"
+        : offer.pricing?.period === "year"
+          ? "Billed yearly"
+          : offer.pricing?.period === "month"
+            ? "Billed monthly"
+            : null;
 
   const crumbs = [
     { name: "Deals", path: "/deals" },
@@ -56,63 +73,60 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", path: "/" }, ...crumbs])} />
       <JsonLd data={offerJsonLd(offer)} />
 
-      <Container className="pt-8">
-        <nav aria-label="Breadcrumb">
-          <ol className="flex flex-wrap items-center gap-1.5 text-xs text-faint">
-            <li>
-              <Link href="/" className="hover:text-fg">
-                Home
-              </Link>
-            </li>
-            {crumbs.map((c, i) => (
-              <li key={c.path} className="flex items-center gap-1.5">
-                <span aria-hidden="true">/</span>
-                {i === crumbs.length - 1 ? (
-                  <span aria-current="page" className="text-muted">
-                    {c.name}
-                  </span>
-                ) : (
-                  <Link href={c.path} className="hover:text-fg">
-                    {c.name}
-                  </Link>
-                )}
+      {/* ── Header band ─────────────────────────────────────────── */}
+      <section className="theme-dark hero-glow border-b border-line">
+        <Container className="pb-12 pt-8 sm:pb-16">
+          <nav aria-label="Breadcrumb">
+            <ol className="flex flex-wrap items-center gap-1.5 text-xs text-faint">
+              <li>
+                <Link href="/" className="hover:text-fg">
+                  Home
+                </Link>
               </li>
-            ))}
-          </ol>
-        </nav>
-      </Container>
+              {crumbs.map((c, i) => (
+                <li key={c.path} className="flex items-center gap-1.5">
+                  <span aria-hidden="true">/</span>
+                  {i === crumbs.length - 1 ? (
+                    <span aria-current="page" className="text-muted">
+                      {c.name}
+                    </span>
+                  ) : (
+                    <Link href={c.path} className="hover:text-fg">
+                      {c.name}
+                    </Link>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </nav>
 
-      <Container className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-14">
-        {/* ── Main column ─────────────────────────────────────────── */}
-        <article className="min-w-0">
-          {offer.isExpired && (
-            <Notice tone="warn" title="This offer has ended" className="mb-6">
-              It ended on {formatDate(offer.expiresAt!)}. We keep the page so you know it&apos;s no longer available —
-              see related offers below.
-            </Notice>
-          )}
-          {offer.verification.status === "demo" && (
-            <Notice title="Sample listing" className="mb-6">
-              This product and offer are fictional demo content. Nothing here is a real promotion.
-            </Notice>
-          )}
+          <div className="mt-8 max-w-3xl">
+            {offer.isExpired && (
+              <Notice tone="warn" title="This offer has ended" className="mb-6">
+                It ended on {formatDate(offer.expiresAt!)}. We keep the page so you know it&apos;s no longer available.
+                See related offers below.
+              </Notice>
+            )}
+            {offer.verification.status === "demo" && (
+              <Notice title="Sample listing" className="mb-6">
+                This product and offer are fictional demo content. Nothing here is a real promotion.
+              </Notice>
+            )}
 
-          <SponsoredLabel offer={offer} className="mb-3" />
-          <header>
+            <SponsoredLabel offer={offer} className="mb-3" />
             <div className="flex items-center gap-3">
               <ProductLogo product={offer.product} size="lg" />
               <div>
-                <Link
-                  href={`/products/${offer.product.slug}`}
-                  className="text-[15px] font-semibold text-fg hover:text-accent-ink"
-                >
+                <Link href={`/products/${offer.product.slug}`} className="text-[15px] font-semibold text-fg hover:text-accent-ink">
                   {offer.product.name}
                 </Link>
                 <p className="text-sm text-muted">by {offer.provider.name}</p>
               </div>
             </div>
-            <h1 className="mt-6 text-3xl font-semibold leading-tight tracking-tight sm:text-[2.125rem]">{offer.title}</h1>
-            <p className="mt-3 text-[17px] leading-relaxed text-muted">{offer.summary}</p>
+            <h1 className="mt-6 text-[2rem] font-semibold leading-[1.1] tracking-[-0.03em] text-heading sm:text-[2.75rem]">
+              {offer.title}
+            </h1>
+            <p className="mt-4 text-[17px] leading-relaxed text-muted">{offer.summary}</p>
             <div className="mt-5">
               <OfferBadges offer={offer} showSource />
             </div>
@@ -130,9 +144,14 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
                 </a>
               </div>
             )}
-          </header>
+          </div>
+        </Container>
+      </section>
 
-          <div className="mt-10 space-y-10">
+      <Container className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-14">
+        {/* ── Main column ─────────────────────────────────────────── */}
+        <article className="min-w-0">
+          <div className="space-y-12">
             <DetailSection title="About this offer">
               <div className="prose-body">
                 {paragraphs.map((p, i) => (
@@ -159,7 +178,7 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
                 <ol className="space-y-3">
                   {offer.redemption.map((step, i) => (
                     <li key={step} className="flex gap-3 text-[15px] text-muted">
-                      <span className="tabular inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-subtle text-xs font-semibold text-fg">
+                      <span className="tabular inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-accent-soft text-xs font-semibold text-accent-ink">
                         {i + 1}
                       </span>
                       <span className="pt-0.5">{step}</span>
@@ -214,58 +233,66 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
 
         {/* ── Offer summary sidebar ───────────────────────────────── */}
         <aside className="lg:sticky lg:top-24 lg:self-start" aria-label="Offer summary">
-          <div className="rounded-[var(--radius-card)] border border-line bg-surface p-6 shadow-[var(--shadow-card)]">
-            <p className="text-xs font-medium uppercase tracking-wider text-faint">{offerTypeLabels[offer.type]}</p>
-            {value && <p className="mt-2 text-2xl font-semibold tracking-tight text-accent-ink">{value}</p>}
-
-            {price && (
-              <dl className="mt-4 space-y-1.5 text-sm">
-                {price.current && (
-                  <div className="flex justify-between gap-4">
-                    <dt className="text-muted">Offer price</dt>
-                    <dd className="tabular font-medium text-fg">{price.current}</dd>
-                  </div>
-                )}
-                {(price.was || price.note) && (
-                  <div className="flex justify-between gap-4">
-                    <dt className="text-muted">Regular price</dt>
-                    <dd className="tabular text-muted">{price.was ? <s>{price.was}</s> : price.note?.replace(/^Normally /, "")}</dd>
-                  </div>
-                )}
-              </dl>
-            )}
-            {offer.pricing?.creditValue && (
-              <p className="mt-3 text-sm text-muted">
-                Credit value: <span className="tabular font-medium text-fg">{formatMoney(offer.pricing.creditValue, offer.pricing.currency)}</span>
-              </p>
-            )}
-
-            <div className="mt-4 text-sm">
-              {offer.expiresAt ? (
-                <ExpiryText offer={offer} />
-              ) : (
-                <span className="inline-flex items-center gap-1 text-muted">
-                  <Icon name="clock" size={13} /> No end date announced
-                </span>
+          <div className="theme-dark rounded-[22px] bg-bg p-2.5 shadow-[0_30px_60px_-30px_rgb(10_10_10/0.55)]">
+            <div className="rounded-[16px] bg-surface p-6">
+              <span className="inline-flex rounded-full bg-white px-3 py-1 text-[13px] font-medium text-[#0a0a0a]">
+                {offerTypeLabels[offer.type]}
+              </span>
+              {sidebarValue && (
+                <p className="mt-6 text-[26px] font-semibold leading-tight tracking-tight text-heading">{sidebarValue}</p>
               )}
+
+              {bigPrice && (
+                <div className={sidebarValue ? "mt-5" : "mt-6"}>
+                  <p className="flex flex-wrap items-baseline gap-x-3">
+                    {bigWas && (
+                      <s className="tabular text-xl font-semibold text-faint">
+                        <span className="sr-only">Regular price </span>
+                        {bigWas}
+                      </s>
+                    )}
+                    <span className="tabular text-[2.75rem] font-bold leading-none tracking-tight text-heading">
+                      <span className="sr-only">Offer price </span>
+                      {bigPrice}
+                    </span>
+                  </p>
+                  {price?.note && <p className="mt-2 text-sm text-muted">{price.note}</p>}
+                  {billingCaption && (
+                    <p className="mt-2 text-xs font-medium uppercase tracking-wider text-faint">{billingCaption}</p>
+                  )}
+                </div>
+              )}
+
+              <div className="mt-5 text-sm">
+                {offer.expiresAt ? (
+                  <ExpiryText offer={offer} />
+                ) : (
+                  <span className="inline-flex items-center gap-1 text-muted">
+                    <Icon name="clock" size={13} /> No end date announced
+                  </span>
+                )}
+              </div>
             </div>
 
-            {offer.isExpired ? (
-              <a href={offer.product.website} rel="nofollow noopener" target="_blank" className={buttonClass("secondary", "lg", "mt-6 w-full")}>
-                Visit {offer.product.name}
-                <Icon name="external" size={15} />
-              </a>
-            ) : (
-              <a href={outboundHref(offer)} rel={outboundRel(offer)} target="_blank" className={buttonClass("primary", "lg", "mt-6 w-full")}>
-                View deal on {destinationHost}
-                <Icon name="external" size={15} />
-              </a>
-            )}
-            <p className="mt-2.5 text-center text-xs text-faint">
-              Opens {offer.isExpired ? hostname(offer.product.website) : destinationHost} in a new tab.
-            </p>
+            <div className="px-1 pt-2.5">
+              {offer.isExpired ? (
+                <a href={offer.product.website} rel="nofollow noopener" target="_blank" className={buttonClass("secondary", "lg", "w-full")}>
+                  Visit {offer.product.name}
+                  <Icon name="external" size={15} />
+                </a>
+              ) : (
+                <a href={outboundHref(offer)} rel={outboundRel(offer)} target="_blank" className={buttonClass("primary", "lg", "w-full")}>
+                  View deal on {destinationHost}
+                  <Icon name="external" size={15} />
+                </a>
+              )}
+              <p className="mt-2.5 text-center text-xs text-faint">
+                Opens {offer.isExpired ? hostname(offer.product.website) : destinationHost} in a new tab.
+              </p>
+            </div>
 
-            <dl className="mt-6 space-y-4 border-t border-line pt-5 text-sm">
+            <div className="px-4 pb-4">
+            <dl className="mt-5 space-y-4 border-t border-line pt-5 text-sm">
               <div>
                 <dt className="text-xs font-medium uppercase tracking-wider text-faint">Source</dt>
                 <dd className="mt-1">
@@ -318,6 +345,7 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
                 </Link>
               </div>
             )}
+            </div>
           </div>
 
           <p className="mt-4 text-center text-xs text-faint">
@@ -333,13 +361,14 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
       </Container>
 
       {related.length > 0 && (
-        <Container className="mt-20">
+        <Container className="mt-24">
           <section aria-labelledby="related-heading">
-            <SectionHeading id="related-heading" title="Related offers" href={primaryCategory ? `/categories/${primaryCategory.slug}` : "/deals"} linkLabel={primaryCategory ? `More ${primaryCategory.name.toLowerCase()}` : "All deals"} />
+            <SectionHeading id="related-heading" title={<>Related <em>offers.</em></>} href={primaryCategory ? `/categories/${primaryCategory.slug}` : "/deals"} linkLabel={primaryCategory ? `More ${primaryCategory.name.toLowerCase()}` : "All deals"} />
             <OfferGrid offers={related} />
           </section>
         </Container>
       )}
+      <div aria-hidden="true" className="h-24" />
     </>
   );
 }
@@ -347,7 +376,7 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
 function DetailSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section>
-      <h2 className="mb-3 text-lg font-semibold tracking-tight">{title}</h2>
+      <h2 className="mb-4 text-xl font-semibold tracking-tight text-heading">{title}</h2>
       {children}
     </section>
   );

@@ -20,10 +20,12 @@ export interface SiteConfig {
   defaultCurrency: string;
   logo: BrandLogo;
   theme: {
-    /** Primary accent (buttons, links, focus rings). */
+    /** Primary accent — top of button gradients, focus rings, highlights. */
     accent: string;
-    /** Accent used in dark mode — usually a lighter tint. */
-    accentDark: string;
+    /** Deeper shade — bottom of button gradients and the purple panel. */
+    accentDeep: string;
+    /** Lighter tint for accent text on dark sections. */
+    accentOnDark: string;
     /** Text color drawn on top of the accent. */
     accentContrast: string;
   };
@@ -39,8 +41,8 @@ export interface SiteConfig {
 const env = process.env;
 
 export const siteConfig: SiteConfig = {
-  name: env.NEXT_PUBLIC_BRAND_NAME || "Savestack",
-  tagline: env.NEXT_PUBLIC_BRAND_TAGLINE || "Pay less for the software you rely on.",
+  name: env.NEXT_PUBLIC_BRAND_NAME || "Saver Option",
+  tagline: env.NEXT_PUBLIC_BRAND_TAGLINE || "The smarter option for paying less on software.",
   description:
     "Discover software deals, free credits, startup perks, student discounts and open-source alternatives — each one linked to the original provider.",
   url: (env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, ""),
@@ -48,8 +50,9 @@ export const siteConfig: SiteConfig = {
   defaultCurrency: "USD",
   logo: { kind: "mark" },
   theme: {
-    accent: "#0b7a5c",
-    accentDark: "#3ccf9e",
+    accent: "#7c3aec",
+    accentDeep: "#4803bd",
+    accentOnDark: "#b99cff",
     accentContrast: "#ffffff",
   },
   contactEmail: "hello@example.com",

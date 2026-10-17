@@ -16,7 +16,7 @@ export default function Icon() {
           alignItems: "center",
           justifyContent: "center",
           borderRadius: 16,
-          background: siteConfig.theme.accent,
+          backgroundImage: `linear-gradient(180deg, ${siteConfig.theme.accent} 0%, ${siteConfig.theme.accentDeep} 100%)`,
         }}
       >
         <svg width="40" height="40" viewBox="0 0 32 32">

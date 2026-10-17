@@ -1,4 +1,4 @@
-# Software deals & savings discovery platform
+# Saver Option: software deals & savings discovery
 
 A discovery site for software deals, free credits, startup perks, student discounts, lifetime deals and open-source alternatives. Users find offers here and redeem them on the provider's site. It is not a marketplace.
 
@@ -18,23 +18,31 @@ Node 20+ required. Copy `.env.example` to `.env.local` to set the site URL, bran
 ## Stack
 
 - **Next.js 16** (App Router, React Server Components) with TypeScript
-- **Tailwind CSS v4**, using design tokens defined as CSS variables in `src/app/globals.css`. Light and dark mode follow the OS setting.
-- **Geist** font, self-hosted through the `geist` package
+- **Tailwind CSS v4**, using design tokens defined as CSS variables in `src/app/globals.css`
+- **Geist** for UI text (self-hosted through the `geist` package) and **Instrument Serif** for editorial display headings (`next/font/google`)
 - No database yet. Content is typed TypeScript, read through a single data-access module.
 
 ## Rebranding
 
-The brand name is a placeholder. Everything brand-related lives in **`src/config/site.ts`**:
+The working brand is **Saver Option**. Everything brand-related lives in **`src/config/site.ts`**, so it can still change in one place:
 
 | Setting | Where it's used |
 |---|---|
 | `name`, `tagline`, `description` | Header, footer, page titles, metadata, Open Graph image, JSON-LD, policy pages |
 | `logo` | `{ kind: "mark" }` (built-in mark tinted with the accent) or `{ kind: "image", src, width, height }` |
-| `theme.accent` / `accentDark` / `accentContrast` | Injected as CSS variables on `<html>`. Buttons, links, focus rings, favicon and OG image follow them. |
+| `theme.accent` / `accentDeep` / `accentOnDark` / `accentContrast` | Injected as CSS variables on `<html>`. Button gradients, links, focus rings, the "How it works" panel, favicon and OG image follow them. |
 | `contactEmail` | Corrections and submissions links |
 | `demoMode` | Demo banner and `noindex` |
 
 `NEXT_PUBLIC_BRAND_NAME` and `NEXT_PUBLIC_BRAND_TAGLINE` override the name and tagline without editing code. No component hardcodes a brand string.
+
+## Design system
+
+The visual direction follows jiro.build: a dark, search-first catalog (header, page heroes, deal grids) above light editorial sections with large Instrument Serif headings and a muted italic phrase.
+
+- **Two token scopes.** Light tokens sit on `:root`. Wrapping any element in `.theme-dark` re-skins every component inside it, because components only read tokens (`bg-surface`, `text-fg`, `border-line`…). The same `OfferCard` renders on dark listing pages and in light "Related offers".
+- **Component classes** in `globals.css`: `.btn-primary` (glossy accent gradient), `.btn-secondary`, `.seg`/`.seg-item` (pill tabs with an accent ring), `.eyebrow` (uppercase chip), `.display` (serif headings, `<em>` becomes the muted italic), `.hero-glow`, `.panel-accent` and `.promo-bar`.
+- The look is a fixed design rather than following the OS light/dark setting.
 
 ## Project structure
 

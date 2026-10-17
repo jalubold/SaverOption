@@ -11,10 +11,12 @@ export const metadata = pageMetadata({
 export default function DisclosurePage() {
   const name = siteConfig.name;
   return (
-    <Container className="py-14">
+    <Container className="pb-24 pt-16 sm:pt-20">
       <div className="mx-auto max-w-2xl">
-        <h1 className="text-3xl font-semibold tracking-tight">How we make money</h1>
-        <p className="mt-3 text-[17px] leading-relaxed text-muted">
+        <h1 className="display text-[3rem] sm:text-[4rem]">
+          How we <em>make money.</em>
+        </h1>
+        <p className="mt-4 text-[17px] leading-relaxed text-muted">
           {name} is free to use. These are the ways the site may earn revenue, and the rules that keep listings honest.
         </p>
         <div className="prose-body mt-8 text-[16px]">

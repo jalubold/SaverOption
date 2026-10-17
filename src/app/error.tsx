@@ -16,7 +16,9 @@ export default function ErrorPage({ error, reset }: { error: Error & { digest?: 
         <span className="mx-auto inline-flex size-11 items-center justify-center rounded-full bg-warn-soft text-warn">
           <Icon name="alert" size={20} />
         </span>
-        <h1 className="mt-4 text-2xl font-semibold tracking-tight">Something went wrong</h1>
+        <h1 className="display mt-5 text-[2.5rem] sm:text-[3rem]">
+          Something <em>went wrong.</em>
+        </h1>
         <p className="mt-2 text-[15px] text-muted">
           We couldn&apos;t load this page. It&apos;s usually temporary — try again in a moment.
         </p>

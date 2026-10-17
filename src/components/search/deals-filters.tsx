@@ -85,7 +85,7 @@ export function DealsFilters(props: FiltersProps) {
             onClick={() => setMobileOpen((v) => !v)}
             aria-expanded={mobileOpen}
             aria-controls="filters-panel"
-            className="flex h-10 w-full items-center justify-between rounded-lg border border-line-strong bg-surface px-3.5 text-sm font-medium lg:hidden"
+            className="flex h-11 w-full items-center justify-between rounded-[12px] border border-line-strong bg-surface px-4 text-sm font-medium lg:hidden"
           >
             <span>
               Filters
@@ -116,7 +116,7 @@ export function DealsFilters(props: FiltersProps) {
                 name="sort"
                 defaultValue={props.sort ?? "relevance"}
                 key={props.sort ?? "relevance"}
-                className="h-9 rounded-lg border border-line-strong bg-surface pl-2.5 pr-8 text-sm text-fg outline-none focus:border-accent"
+                className="h-10 rounded-full border border-line-strong bg-surface pl-4 pr-9 text-sm text-fg outline-none focus:border-accent"
               >
                 {props.sortOptions.map((o) => (
                   <option key={o.value} value={o.value}>
@@ -149,18 +149,16 @@ function RadioGroup<T extends string>({
   return (
     <fieldset>
       <legend className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-faint">{legend}</legend>
-      <div className={variant === "segmented" ? "grid grid-cols-3 gap-1 rounded-lg bg-subtle p-1" : "space-y-0.5"}>
+      <div className={variant === "segmented" ? "seg grid w-full grid-cols-3" : "space-y-0.5"}>
         {options.map((o) => {
           const disabled = o.count === 0 && o.value !== value;
           return (
             <label
               key={o.value || "all"}
               className={cn(
-                "relative flex cursor-pointer items-center justify-between gap-2 text-sm transition-colors",
                 variant === "segmented"
-                  ? "justify-center rounded-md px-2 py-1.5 text-center text-[13px] text-muted has-[:checked]:bg-surface has-[:checked]:font-medium has-[:checked]:text-fg has-[:checked]:shadow-sm"
-                  : "rounded-md px-2 py-1.5 text-muted hover:bg-subtle hover:text-fg has-[:checked]:bg-accent-soft has-[:checked]:font-medium has-[:checked]:text-accent-ink",
-                "has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-accent",
+                  ? "seg-item h-9 px-2 text-[13px]"
+                  : "relative flex cursor-pointer items-center justify-between gap-2 rounded-lg px-2.5 py-1.5 text-sm text-muted transition-colors hover:bg-subtle hover:text-fg has-[:checked]:bg-accent-soft has-[:checked]:font-medium has-[:checked]:text-accent-ink has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-accent",
                 disabled && "cursor-not-allowed opacity-50",
               )}
             >

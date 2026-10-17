@@ -15,12 +15,16 @@ export const metadata = pageMetadata({
 export default async function CategoriesPage() {
   const categories = await getCategories();
   return (
-    <Container className="py-12">
-      <h1 className="text-3xl font-semibold tracking-tight">Categories</h1>
-      <p className="mt-2 max-w-2xl text-[15px] text-muted">
-        Every offer is filed under one or more categories, so a startup credit for an AI API shows up under both.
-      </p>
-      <div className="mt-8">
+    <Container className="pb-24 pt-16 sm:pt-20">
+      <div className="mx-auto max-w-2xl text-center">
+        <h1 className="display text-[3rem] sm:text-[4rem]">
+          All <em>categories.</em>
+        </h1>
+        <p className="mt-3 text-[16px] leading-relaxed text-muted">
+          Every offer is filed under one or more categories, so a startup credit for an AI API shows up under both.
+        </p>
+      </div>
+      <div className="mt-12">
         <CategoryGrid categories={categories} />
       </div>
     </Container>

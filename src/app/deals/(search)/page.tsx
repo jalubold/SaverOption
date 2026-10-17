@@ -57,17 +57,17 @@ export default async function DealsPage(props: PageProps<"/deals">) {
   const heading = params.q ? `Results for “${params.q}”` : activeCategory ? activeCategory.name : "All software deals";
 
   return (
-    <>
-      <section className="border-b border-line bg-surface">
-        <Container className="py-10">
+    <div className="theme-dark">
+      <section className="hero-glow border-b border-line">
+        <Container className="py-12 sm:py-16">
           <nav aria-label="Breadcrumb" className="text-xs text-faint">
             <Link href="/" className="hover:text-fg">
               Home
             </Link>{" "}
             / <span className="text-muted">Deals</span>
           </nav>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight">{heading}</h1>
-          <p className="mt-2 max-w-2xl text-[15px] text-muted">
+          <h1 className="mt-4 text-[2.25rem] font-semibold leading-tight tracking-[-0.03em] text-heading sm:text-5xl">{heading}</h1>
+          <p className="mt-3 max-w-2xl text-[16px] text-muted">
             Search by product, tool or keyword, then narrow by category, offer type and price.
           </p>
           <SearchBox
@@ -80,7 +80,7 @@ export default async function DealsPage(props: PageProps<"/deals">) {
         </Container>
       </section>
 
-      <Container className="py-10">
+      <Container className="pb-24 pt-10">
         <DealsFilters
           q={params.q}
           category={params.category}
@@ -152,7 +152,7 @@ export default async function DealsPage(props: PageProps<"/deals">) {
           )}
         </DealsFilters>
       </Container>
-    </>
+    </div>
   );
 }
 

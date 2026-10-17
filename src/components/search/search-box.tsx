@@ -9,7 +9,7 @@ import { cn } from "@/components/ui/primitives";
 export function SearchBox({
   defaultValue,
   size = "lg",
-  placeholder = "Search products or keywords",
+  placeholder = "Search software deals",
   autoFocus,
   hidden,
   className,
@@ -31,7 +31,7 @@ export function SearchBox({
       <Icon
         name="search"
         size={lg ? 20 : 17}
-        className={cn("pointer-events-none absolute top-1/2 -translate-y-1/2 text-faint", lg ? "left-4" : "left-3")}
+        className={cn("pointer-events-none absolute top-1/2 -translate-y-1/2 text-faint", lg ? "left-4" : "left-3.5")}
       />
       <input
         id={lg ? "search-lg" : "search-md"}
@@ -43,18 +43,15 @@ export function SearchBox({
         autoFocus={autoFocus}
         enterKeyHint="search"
         className={cn(
-          "w-full rounded-xl border border-line-strong bg-surface text-fg shadow-[var(--shadow-card)] outline-none transition-colors placeholder:text-faint focus:border-accent focus:ring-4 focus:ring-accent/15",
-          lg ? "h-14 pl-12 pr-28 text-base" : "h-11 pl-10 pr-24 text-[15px]",
+          "w-full rounded-[14px] border border-line-strong bg-surface text-fg outline-none transition-colors placeholder:text-faint focus:border-accent focus:ring-4 focus:ring-accent/20",
+          lg ? "h-14 pl-12 pr-28 text-base" : "h-12 pl-10 pr-24 text-[15px]",
         )}
       />
       {hidden &&
         Object.entries(hidden).map(([k, v]) => (v ? <input key={k} type="hidden" name={k} value={v} /> : null))}
       <button
         type="submit"
-        className={cn(
-          "absolute top-1/2 -translate-y-1/2 rounded-lg bg-accent font-medium text-accent-fg transition-colors hover:bg-accent-ink",
-          lg ? "right-2 h-10 px-4 text-sm" : "right-1.5 h-8 px-3 text-[13px]",
-        )}
+        className={cn("btn btn-primary absolute top-1/2 -translate-y-1/2", lg ? "right-2 h-10 rounded-[10px] px-4 text-sm" : "right-1.5 h-9 rounded-[10px] px-3.5 text-[13px]")}
       >
         Search
       </button>

@@ -11,10 +11,12 @@ export const metadata = pageMetadata({
 
 export default function AboutPage() {
   return (
-    <Container className="py-14">
+    <Container className="pb-24 pt-16 sm:pt-20">
       <div className="mx-auto max-w-2xl">
-        <h1 className="text-3xl font-semibold tracking-tight">About {siteConfig.name}</h1>
-        <div className="prose-body mt-6 text-[16px]">
+        <h1 className="display text-[3rem] sm:text-[4rem]">
+          About <em>{siteConfig.name}.</em>
+        </h1>
+        <div className="prose-body mt-8 text-[16px]">
           <p>
             Software spending creeps up one subscription at a time. {siteConfig.name} is a single place to find the
             discounts, free credits, startup programs, student plans and open-source alternatives that can bring it back
