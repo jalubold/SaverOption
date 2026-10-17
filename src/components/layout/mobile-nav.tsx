@@ -1,0 +1,61 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useId, useState } from "react";
+import { Icon } from "@/components/ui/icon";
+
+export function MobileNav({ items }: { items: readonly { label: string; href: string }[] }) {
+  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const panelId = useId();
+
+  // Close when navigating.
+  const [lastPath, setLastPath] = useState(pathname);
+  if (pathname !== lastPath) {
+    setLastPath(pathname);
+    setOpen(false);
+  }
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  return (
+    <div className="md:hidden">
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={panelId}
+        onClick={() => setOpen((v) => !v)}
+        className="inline-flex size-10 items-center justify-center rounded-lg text-muted hover:bg-subtle hover:text-fg"
+      >
+        <Icon name={open ? "x" : "menu"} size={20} />
+        <span className="sr-only">{open ? "Close menu" : "Open menu"}</span>
+      </button>
+      {open && (
+        <nav
+          id={panelId}
+          aria-label="Mobile"
+          className="absolute inset-x-0 top-16 border-b border-line bg-surface px-4 pb-4 pt-2 shadow-sm"
+        >
+          <ul className="flex flex-col">
+            {items.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className="block rounded-lg px-3 py-3 text-[15px] font-medium text-fg hover:bg-subtle"
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
+    </div>
+  );
+}

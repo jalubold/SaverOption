@@ -1,0 +1,108 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { CategoryChips } from "@/components/categories/category-links";
+import { OfferGrid } from "@/components/offers/offer-card";
+import { JsonLd } from "@/components/seo/json-ld";
+import { Icon } from "@/components/ui/icon";
+import { buttonClass, Container } from "@/components/ui/primitives";
+import { getCategories, getCategory, getSponsoredOffers, queryOffers } from "@/lib/catalog";
+import { breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
+
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  return (await getCategories()).map((c) => ({ slug: c.slug }));
+}
+
+export async function generateMetadata(props: PageProps<"/categories/[slug]">): Promise<Metadata> {
+  const category = await getCategory((await props.params).slug);
+  if (!category) return {};
+  return pageMetadata({
+    title: `${category.name} — software offers`,
+    description: category.intro,
+    path: `/categories/${category.slug}`,
+  });
+}
+
+export default async function CategoryPage(props: PageProps<"/categories/[slug]">) {
+  const category = await getCategory((await props.params).slug);
+  if (!category) notFound();
+
+  const [{ offers: allOffers }, sponsoredSlot, all] = await Promise.all([
+    queryOffers({ category: category.slug }),
+    getSponsoredOffers(category.slug, 1),
+    getCategories(),
+  ]);
+  // The sponsored card leads the grid once, labelled, and is removed from the organic list.
+  const offers = allOffers.filter((o) => !sponsoredSlot.some((s) => s.id === o.id));
+  const total = allOffers.length;
+  const others = all.filter((c) => c.slug !== category.slug && c.count > 0);
+
+  return (
+    <>
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "Categories", path: "/categories" },
+          { name: category.name, path: `/categories/${category.slug}` },
+        ])}
+      />
+      <section className="border-b border-line bg-surface">
+        <Container className="py-10">
+          <nav aria-label="Breadcrumb" className="text-xs text-faint">
+            <Link href="/" className="hover:text-fg">
+              Home
+            </Link>{" "}
+            /{" "}
+            <Link href="/categories" className="hover:text-fg">
+              Categories
+            </Link>{" "}
+            / <span className="text-muted">{category.name}</span>
+          </nav>
+          <div className="mt-4 flex items-start gap-4">
+            <span className="hidden size-12 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent-ink sm:inline-flex">
+              <Icon name={category.icon} size={24} />
+            </span>
+            <div>
+              <h1 className="text-3xl font-semibold tracking-tight">{category.name}</h1>
+              <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-muted">{category.intro}</p>
+            </div>
+          </div>
+          <div className="mt-6 flex flex-wrap gap-2">
+            <Link href={`/deals?category=${category.slug}`} className={buttonClass("secondary", "sm")}>
+              <Icon name="search" size={14} /> Search &amp; filter this category
+            </Link>
+            <Link href={`/deals?category=${category.slug}&sort=ending-soon`} className={buttonClass("ghost", "sm")}>
+              Ending soon
+            </Link>
+          </div>
+        </Container>
+      </section>
+
+      <Container className="py-10">
+        <p className="tabular mb-5 text-sm text-muted">
+          <span className="font-medium text-fg">{total}</span> active {total === 1 ? "offer" : "offers"}
+        </p>
+
+        {total > 0 ? (
+          <OfferGrid offers={[...sponsoredSlot, ...offers]} headingLevel="h2" />
+        ) : (
+          <div className="rounded-[var(--radius-card)] border border-dashed border-line-strong bg-surface px-6 py-14 text-center">
+            <h2 className="text-lg font-semibold">No active offers in this category yet</h2>
+            <p className="mt-1.5 text-sm text-muted">New offers are added regularly. Browse another category in the meantime.</p>
+          </div>
+        )}
+
+        {others.length > 0 && (
+          <section aria-labelledby="other-cats" className="mt-16">
+            <h2 id="other-cats" className="mb-4 text-sm font-semibold text-fg">
+              Other categories
+            </h2>
+            <CategoryChips categories={others} />
+          </section>
+        )}
+      </Container>
+    </>
+  );
+}

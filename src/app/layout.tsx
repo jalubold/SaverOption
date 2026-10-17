@@ -1,0 +1,67 @@
+import type { Metadata, Viewport } from "next";
+import { GeistMono } from "geist/font/mono";
+import { GeistSans } from "geist/font/sans";
+import type { CSSProperties } from "react";
+import { siteConfig } from "@/config/site";
+import { DemoBanner } from "@/components/layout/demo-banner";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { SiteHeader } from "@/components/layout/site-header";
+import { JsonLd } from "@/components/seo/json-ld";
+import { websiteJsonLd } from "@/lib/seo";
+import "./globals.css";
+
+export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.url),
+  title: {
+    default: `${siteConfig.name} — ${siteConfig.tagline}`,
+    template: `%s · ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
+  applicationName: siteConfig.name,
+  openGraph: {
+    type: "website",
+    siteName: siteConfig.name,
+    title: siteConfig.name,
+    description: siteConfig.description,
+    url: "/",
+    locale: "en_US",
+  },
+  twitter: { card: "summary_large_image" },
+  // Keep preview builds with demo content out of search indexes.
+  robots: siteConfig.demoMode ? { index: false, follow: false } : undefined,
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f8f8f6" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f1112" },
+  ],
+};
+
+const brandVars = {
+  "--brand-accent": siteConfig.theme.accent,
+  "--brand-accent-dark": siteConfig.theme.accentDark,
+  "--brand-accent-contrast": siteConfig.theme.accentContrast,
+} as CSSProperties;
+
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <html lang={siteConfig.locale} style={brandVars} className={`${GeistSans.variable} ${GeistMono.variable}`}>
+      <body className="flex min-h-dvh flex-col">
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-3 focus:z-50 focus:rounded-lg focus:bg-surface focus:px-4 focus:py-2 focus:text-sm focus:shadow"
+        >
+          Skip to content
+        </a>
+        <DemoBanner />
+        <SiteHeader />
+        <main id="main" className="flex-1">
+          {children}
+        </main>
+        <SiteFooter />
+        <JsonLd data={websiteJsonLd()} />
+      </body>
+    </html>
+  );
+}
