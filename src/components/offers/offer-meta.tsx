@@ -61,7 +61,7 @@ export function VerificationText({ offer, long = false, className }: { offer: Of
   const { status, checkedAt } = offer.verification;
   if (status === "verified") {
     return (
-      <span className={cn("inline-flex items-center gap-1 text-accent-ink", className)}>
+      <span className={cn("inline-flex items-center gap-1 whitespace-nowrap text-accent-ink", className)}>
         <Icon name="shield" size={13} />
         {checkedAt ? (
           <>
@@ -76,14 +76,14 @@ export function VerificationText({ offer, long = false, className }: { offer: Of
   }
   if (status === "demo") {
     return (
-      <span className={cn("inline-flex items-center gap-1 text-faint", className)}>
+      <span className={cn("inline-flex items-center gap-1 whitespace-nowrap text-faint", className)}>
         <Icon name="info" size={13} />
         {long ? "Sample listing — not a live offer" : "Sample listing"}
       </span>
     );
   }
   return (
-    <span className={cn("inline-flex items-center gap-1 text-faint", className)}>
+    <span className={cn("inline-flex items-center gap-1 whitespace-nowrap text-faint", className)}>
       <Icon name="info" size={13} />
       {long ? "Not yet verified by our editors" : "Unverified"}
     </span>

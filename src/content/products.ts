@@ -84,7 +84,11 @@ export const products: Product[] = [
       "Developer tools",
       "Git"
     ],
-    "brandColor": "#181717"
+    "brandColor": "#181717",
+    "logo": {
+      "src": "/logos/github.svg",
+      "alt": "GitHub logo"
+    }
   },
   {
     "id": "github-copilot",
@@ -99,7 +103,11 @@ export const products: Product[] = [
       "Developer tools",
       "Code assistant"
     ],
-    "brandColor": "#8957E5"
+    "brandColor": "#8957E5",
+    "logo": {
+      "src": "/logos/github-copilot.svg",
+      "alt": "GitHub Copilot logo"
+    }
   },
   {
     "id": "github-codespaces",
@@ -113,7 +121,11 @@ export const products: Product[] = [
       "Developer tools",
       "Cloud IDE"
     ],
-    "brandColor": "#181717"
+    "brandColor": "#181717",
+    "logo": {
+      "src": "/logos/github-codespaces.svg",
+      "alt": "GitHub Codespaces logo"
+    }
   },
   {
     "id": "office-365",
@@ -127,7 +139,11 @@ export const products: Product[] = [
       "Productivity",
       "Office suite"
     ],
-    "brandColor": "#D83B01"
+    "brandColor": "#D83B01",
+    "logo": {
+      "src": "/logos/office-365.svg",
+      "alt": "Office 365 logo"
+    }
   },
   {
     "id": "microsoft-azure",
@@ -141,7 +157,11 @@ export const products: Product[] = [
       "Cloud",
       "Developer tools"
     ],
-    "brandColor": "#0078D4"
+    "brandColor": "#0078D4",
+    "logo": {
+      "src": "/logos/microsoft-azure.svg",
+      "alt": "Microsoft Azure logo"
+    }
   },
   {
     "id": "google-cloud",
@@ -156,7 +176,11 @@ export const products: Product[] = [
       "Infrastructure",
       "AI"
     ],
-    "brandColor": "#4285F4"
+    "brandColor": "#4285F4",
+    "logo": {
+      "src": "/logos/google-cloud.svg",
+      "alt": "Google Cloud logo"
+    }
   },
   {
     "id": "notion",
@@ -171,7 +195,11 @@ export const products: Product[] = [
       "Productivity",
       "AI"
     ],
-    "brandColor": "#000000"
+    "brandColor": "#000000",
+    "logo": {
+      "src": "/logos/notion.svg",
+      "alt": "Notion logo"
+    }
   },
   {
     "id": "atlassian-cloud",
@@ -186,7 +214,11 @@ export const products: Product[] = [
       "Docs",
       "Collaboration"
     ],
-    "brandColor": "#0052CC"
+    "brandColor": "#0052CC",
+    "logo": {
+      "src": "/logos/atlassian-cloud.svg",
+      "alt": "Atlassian Cloud (Jira, Confluence, Loom) logo"
+    }
   },
   {
     "id": "linear",
@@ -200,7 +232,11 @@ export const products: Product[] = [
       "Project Management",
       "Developer Tools"
     ],
-    "brandColor": "#5E6AD2"
+    "brandColor": "#5E6AD2",
+    "logo": {
+      "src": "/logos/linear.svg",
+      "alt": "Linear logo"
+    }
   },
   {
     "id": "google-ai-pro",
@@ -215,7 +251,11 @@ export const products: Product[] = [
       "Assistant",
       "Students"
     ],
-    "brandColor": "#4285F4"
+    "brandColor": "#4285F4",
+    "logo": {
+      "src": "/logos/google-ai-pro.svg",
+      "alt": "Google AI Pro (Gemini) logo"
+    }
   },
   {
     "id": "canva",
@@ -230,7 +270,11 @@ export const products: Product[] = [
       "AI",
       "Marketing"
     ],
-    "brandColor": "#00C4CC"
+    "brandColor": "#00C4CC",
+    "logo": {
+      "src": "/logos/canva.svg",
+      "alt": "Canva logo"
+    }
   },
   {
     "id": "penpot",
@@ -246,6 +290,10 @@ export const products: Product[] = [
       "Self-hosted"
     ],
     "brandColor": "#000000",
+    "logo": {
+      "src": "/logos/penpot.svg",
+      "alt": "Penpot logo"
+    },
     "openSource": {
       "license": "MPL-2.0",
       "repoUrl": "https://github.com/penpot/penpot"
@@ -265,6 +313,10 @@ export const products: Product[] = [
       "Self-hosted"
     ],
     "brandColor": "#5850EC",
+    "logo": {
+      "src": "/logos/plausible-community-edition.svg",
+      "alt": "Plausible Community Edition logo"
+    },
     "openSource": {
       "license": "AGPL-3.0",
       "repoUrl": "https://github.com/plausible/analytics"
@@ -284,6 +336,10 @@ export const products: Product[] = [
       "Self-hosted"
     ],
     "brandColor": "#0082C9",
+    "logo": {
+      "src": "/logos/nextcloud.svg",
+      "alt": "Nextcloud logo"
+    },
     "openSource": {
       "license": "AGPL-3.0-or-later",
       "repoUrl": "https://github.com/nextcloud/server"
@@ -303,6 +359,10 @@ export const products: Product[] = [
       "Self-hosted"
     ],
     "brandColor": "#1E325C",
+    "logo": {
+      "src": "/logos/mattermost.svg",
+      "alt": "Mattermost logo"
+    },
     "openSource": {
       "license": "MIT (compiled releases); AGPL-3.0 and Apache-2.0 (source)",
       "repoUrl": "https://github.com/mattermost/mattermost"

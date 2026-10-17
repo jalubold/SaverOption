@@ -4,20 +4,30 @@ import type { Product } from "@/lib/types";
 
 const sizes = { sm: 36, md: 44, lg: 56 } as const;
 
-/** Product logo image, or a generated monogram tile when no logo is available. */
+/**
+ * Product logo on a white tile (so dark marks stay visible on dark sections),
+ * or a generated monogram when no logo file is available.
+ */
 export function ProductLogo({ product, size = "md", className }: { product: Product; size?: keyof typeof sizes; className?: string }) {
   const px = sizes[size];
   const radius = size === "lg" ? "rounded-xl" : "rounded-lg";
 
   if (product.logo) {
+    const pad = Math.round(px * 0.18);
     return (
-      <Image
-        src={product.logo.src}
-        alt={product.logo.alt ?? `${product.name} logo`}
-        width={px}
-        height={px}
-        className={cn("shrink-0 border border-line bg-surface object-contain", radius, className)}
-      />
+      <span
+        style={{ width: px, height: px, padding: pad }}
+        className={cn("inline-flex shrink-0 items-center justify-center bg-white ring-1 ring-black/5", radius, className)}
+      >
+        <Image
+          src={product.logo.src}
+          alt={product.logo.alt ?? `${product.name} logo`}
+          width={px - pad * 2}
+          height={px - pad * 2}
+          unoptimized
+          className="h-full w-full object-contain"
+        />
+      </span>
     );
   }
 
@@ -31,7 +41,7 @@ export function ProductLogo({ product, size = "md", className }: { product: Prod
   return (
     <span
       aria-hidden="true"
-      style={{ width: px, height: px, backgroundColor: product.brandColor ?? "var(--fg)" }}
+      style={{ width: px, height: px, backgroundColor: product.brandColor ?? "#4b5563" }}
       className={cn(
         "inline-flex shrink-0 select-none items-center justify-center font-semibold tracking-tight text-white",
         radius,

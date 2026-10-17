@@ -90,6 +90,10 @@ src/
 
 **Editorial rules the UI depends on:** never enter a price, discount, credit amount or end date that the source doesn't state. Leave the field empty and the UI omits it.
 
+## Product logos
+
+Logos live in `public/logos/<product-slug>.svg`. A product gets its logo automatically when that file exists; otherwise it shows a coloured initials tile. Current files come from two open-source collections of official brand marks: [SVG Logos](https://github.com/gilbarbara/logos) (CC0, full colour) and [Simple Icons](https://simpleicons.org) (CC0, single colour in the brand's own hex). The licences cover the SVG files only. The logos themselves remain trademarks of their owners and are used only to identify the products, as `/terms` states. Before launch, check each brand's usage guidelines, and swap in the official press-kit files where they exist.
+
 ## Monetisation, kept honest
 
 | Revenue stream | How it's supported |
