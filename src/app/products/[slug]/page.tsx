@@ -46,11 +46,11 @@ export default async function ProductPage(props: PageProps<"/products/[slug]">) 
       <section className="hero-glow border-b border-line">
         <Container className="py-12 sm:py-16">
           <nav aria-label="Breadcrumb" className="text-xs text-faint">
-            <Link href="/" className="hover:text-fg">
+            <Link href="/" className="-m-1 -my-2 inline-block px-1 py-2 hover:text-fg">
               Home
             </Link>{" "}
             /{" "}
-            <Link href="/deals" className="hover:text-fg">
+            <Link href="/deals" className="-m-1 -my-2 inline-block px-1 py-2 hover:text-fg">
               Deals
             </Link>{" "}
             / <span className="text-muted">{product.name}</span>

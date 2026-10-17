@@ -11,13 +11,13 @@ export default function Loading() {
           <div className="mt-8 h-11 max-w-2xl animate-pulse rounded-xl bg-subtle" />
         </Container>
       </div>
-      <Container className="grid gap-8 pb-24 pt-10 lg:grid-cols-[230px_minmax(0,1fr)]">
+      <Container className="grid grid-cols-1 gap-8 pb-24 pt-10 lg:grid-cols-[230px_minmax(0,1fr)]">
         <div className="hidden space-y-3 lg:block">
           {Array.from({ length: 8 }, (_, i) => (
             <div key={i} className="h-7 animate-pulse rounded-md bg-subtle" />
           ))}
         </div>
-        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {Array.from({ length: 6 }, (_, i) => (
             <OfferCardSkeleton key={i} />
           ))}

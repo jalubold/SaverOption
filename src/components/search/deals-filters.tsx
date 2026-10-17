@@ -2,8 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useRef, useState, useTransition, type ReactNode } from "react";
+import { flushSync } from "react-dom";
 import { Icon } from "@/components/ui/icon";
-import { cn } from "@/components/ui/primitives";
+import { buttonClass, cn } from "@/components/ui/primitives";
 import type { CategorySlug, OfferType, PriceFilter, SortKey } from "@/lib/types";
 
 /**
@@ -46,6 +47,8 @@ interface FiltersProps {
   priceOptions: Option<PriceFilter>[];
   sortOptions: Option<SortKey>[];
   activeCount: number;
+  /** Matching offers, shown on the mobile "Show N offers" button. */
+  resultCount: number;
   children: ReactNode; // results
   toolbar: ReactNode; // rendered left of the sort control
 }
@@ -55,6 +58,7 @@ export function DealsFilters(props: FiltersProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const [pending, startTransition] = useTransition();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   function navigate() {
     const form = formRef.current;
@@ -80,7 +84,7 @@ export function DealsFilters(props: FiltersProps) {
           e.preventDefault();
           navigate();
         }}
-        className="grid gap-8 lg:grid-cols-[230px_minmax(0,1fr)]"
+        className="grid grid-cols-1 gap-8 lg:grid-cols-[230px_minmax(0,1fr)]"
       >
         {props.q && <input type="hidden" name="q" value={props.q} />}
 
@@ -117,6 +121,18 @@ export function DealsFilters(props: FiltersProps) {
                 </div>
               </fieldset>
             )}
+            <button
+              type="button"
+              data-show-results=""
+              onClick={() => {
+                // Close the panel first so the scroll target is measured in the final layout.
+                flushSync(() => setMobileOpen(false));
+                resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+              className={buttonClass("primary", "md", "w-full lg:hidden")}
+            >
+              Show <span data-results-count="">{props.resultCount}</span> {props.resultCount === 1 ? "offer" : "offers"}
+            </button>
             <noscript>
               <button type="submit" className="h-9 rounded-lg bg-accent px-4 text-sm font-medium text-accent-fg">
                 Apply filters
@@ -126,7 +142,7 @@ export function DealsFilters(props: FiltersProps) {
         </div>
 
         {/* Results */}
-        <div className="min-w-0">
+        <div ref={resultsRef} className="min-w-0 scroll-mt-24">
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <div className="min-w-0">{props.toolbar}</div>
             <label className="flex items-center gap-2 text-sm text-muted">

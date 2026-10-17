@@ -85,7 +85,7 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
         <nav aria-label="Breadcrumb">
           <ol className="flex flex-wrap items-center gap-1.5 text-xs text-faint">
             <li>
-              <Link href="/" className="hover:text-fg">
+              <Link href="/" className="-m-1 -my-2 inline-block px-1 py-2 hover:text-fg">
                 Home
               </Link>
             </li>
@@ -97,7 +97,7 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
                     {c.name}
                   </span>
                 ) : (
-                  <Link href={c.path} className="hover:text-fg">
+                  <Link href={c.path} className="-m-1 -my-2 inline-block px-1 py-2 hover:text-fg">
                     {c.name}
                   </Link>
                 )}
@@ -107,7 +107,7 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
         </nav>
       </Container>
 
-      <Container className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-14">
+      <Container className="mt-6 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-14">
         {/* ── Main column ─────────────────────────────────────────── */}
         <article className="min-w-0">
           {offer.isExpired && (
@@ -127,7 +127,7 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
             <div className="flex items-center gap-3">
               <ProductLogo product={offer.product} size="lg" />
               <div>
-                <Link href={`/products/${offer.product.slug}`} className="text-[15px] font-semibold text-fg hover:text-accent-ink">
+                <Link href={`/products/${offer.product.slug}`} className="-my-1.5 inline-block py-1.5 text-[15px] font-semibold text-fg hover:text-accent-ink">
                   {offer.product.name}
                 </Link>
                 <p className="text-sm text-muted">by {offer.provider.name}</p>
@@ -173,7 +173,7 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
                   {offer.eligibility.map((item) => (
                     <li key={item} className="flex gap-2.5 text-[15px] text-muted">
                       <Icon name="check" size={18} className="mt-0.5 shrink-0 text-accent" />
-                      {item}
+                      <span className="min-w-0 [overflow-wrap:anywhere]">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -188,7 +188,7 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
                       <span className="tabular inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-accent-soft text-xs font-semibold text-accent-ink">
                         {i + 1}
                       </span>
-                      <span className="pt-0.5">{step}</span>
+                      <span className="min-w-0 pt-0.5 [overflow-wrap:anywhere]">{step}</span>
                     </li>
                   ))}
                 </ol>
@@ -197,7 +197,7 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
 
             {offer.lifetime && (offer.lifetime.licenceCovers || offer.lifetime.refundPolicy) && (
               <DetailSection title="What the licence covers">
-                <dl className="grid gap-3 text-[15px] sm:grid-cols-2">
+                <dl className="grid grid-cols-1 gap-3 text-[15px] sm:grid-cols-2">
                   {offer.lifetime.licenceCovers && (
                     <div className="rounded-xl border border-line bg-surface p-4">
                       <dt className="text-xs font-medium uppercase tracking-wider text-faint">Licence</dt>
@@ -216,7 +216,7 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
 
             {offer.terms.length > 0 && (
               <DetailSection title="Terms and restrictions">
-                <ul className="list-disc space-y-1.5 pl-5 text-[15px] text-muted marker:text-faint">
+                <ul className="list-disc space-y-1.5 pl-5 text-[15px] text-muted marker:text-faint [overflow-wrap:anywhere]">
                   {offer.terms.map((t) => (
                     <li key={t}>{t}</li>
                   ))}
@@ -232,7 +232,7 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
               <p className="text-[15px] leading-relaxed text-muted">{offer.product.description}</p>
               <div className="mt-4 flex flex-wrap gap-1.5">
                 {offer.product.tags.map((tag) => (
-                  <Link key={tag} href={`/deals?q=${encodeURIComponent(tag)}`}>
+                  <Link key={tag} href={`/deals?q=${encodeURIComponent(tag)}`} className="inline-flex min-h-8 min-w-8 items-center justify-center sm:min-h-0 sm:min-w-0">
                     <Badge tone="neutral" className="hover:text-fg">
                       {tag}
                     </Badge>
@@ -249,7 +249,7 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
               )}
               <Link
                 href={`/products/${offer.product.slug}`}
-                className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-accent-ink hover:underline underline-offset-4"
+                className="mt-2 inline-flex items-center gap-1 py-2 text-sm font-medium text-accent-ink hover:underline underline-offset-4"
               >
                 All {offer.product.name} offers <Icon name="arrow-right" size={14} />
               </Link>
@@ -363,7 +363,7 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
                     {offer.sourceName && ` · ${offer.sourceName}`}
                   </span>
                   <span className="mt-0.5 block text-[13px] leading-snug text-muted">{offerSourceLabels[offer.source].description}</span>
-                  <a href={offer.links.officialUrl} rel="nofollow noopener" target="_blank" className="mt-1 inline-block break-all text-[13px] text-accent-ink hover:underline">
+                  <a href={offer.links.officialUrl} rel="nofollow noopener" target="_blank" className="inline-block break-all py-2 text-[13px] text-accent-ink hover:underline">
                     {hostname(offer.links.officialUrl)}
                   </a>
                 </dd>

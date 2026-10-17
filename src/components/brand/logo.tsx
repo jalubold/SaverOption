@@ -40,7 +40,7 @@ export function Logo({ className, showName = true }: { className?: string; showN
       ) : (
         <BrandMark />
       )}
-      {showName && <span className="text-[16px] font-semibold tracking-tight">{name}</span>}
+      {showName && <span className="whitespace-nowrap text-[16px] font-semibold tracking-tight">{name}</span>}
     </Link>
   );
 }

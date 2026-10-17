@@ -9,15 +9,15 @@ import { buttonClass, Container } from "@/components/ui/primitives";
 export function SiteHeader() {
   return (
     <header className="theme-dark sticky top-0 z-40 border-b border-line bg-bg">
-      <Container className="flex h-16 items-center gap-8">
+      <Container className="flex h-16 items-center gap-6 xl:gap-8">
         <Logo />
-        <nav aria-label="Main" className="hidden md:block">
+        <nav aria-label="Main" className="hidden lg:block">
           <ul className="flex items-center gap-1">
             {mainNav.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="rounded-md px-2.5 py-1.5 text-sm font-medium text-fg/90 transition-colors hover:bg-subtle hover:text-fg"
+                  className="whitespace-nowrap rounded-md px-2.5 py-1.5 text-sm font-medium text-fg/90 transition-colors hover:bg-subtle hover:text-fg"
                 >
                   {item.label}
                 </Link>

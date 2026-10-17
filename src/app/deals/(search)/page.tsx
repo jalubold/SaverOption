@@ -68,7 +68,7 @@ export default async function DealsPage(props: PageProps<"/deals">) {
       <section className="hero-glow border-b border-line">
         <Container className="py-12 sm:py-16">
           <nav aria-label="Breadcrumb" className="text-xs text-faint">
-            <Link href="/" className="hover:text-fg">
+            <Link href="/" className="-m-1 -my-2 inline-block px-1 py-2 hover:text-fg">
               Home
             </Link>{" "}
             / <span className="text-muted">Deals</span>
@@ -106,6 +106,7 @@ export default async function DealsPage(props: PageProps<"/deals">) {
           requirementCounts={{ noCard: withNoCard.total, worldwide: withWorldwide.total }}
           requirementsAvailable={{ noCard: anyNoCard.total > 0 || Boolean(params.noCard), worldwide: anyWorldwide.total > 0 || Boolean(params.worldwide) }}
           activeCount={activeCount}
+          resultCount={result.total}
           categoryOptions={categories.map((c) => ({ value: c.slug, label: c.name, count: result.facets.categories[c.slug] ?? 0 }))}
           typeOptions={(Object.keys(offerTypeLabels) as OfferType[]).map((t) => ({
             value: t,
@@ -126,7 +127,7 @@ export default async function DealsPage(props: PageProps<"/deals">) {
                 <Link
                   key={chip.href}
                   href={chip.href}
-                  className="inline-flex items-center gap-1 rounded-full border border-line-strong bg-surface py-0.5 pl-2.5 pr-1.5 text-xs text-fg hover:border-fg"
+                  className="inline-flex min-h-8 items-center gap-1 rounded-full border border-line-strong bg-surface py-1 pl-3 pr-2 text-xs text-fg hover:border-fg sm:min-h-0 sm:py-0.5 sm:pl-2.5 sm:pr-1.5"
                 >
                   {chip.label}
                   <Icon name="x" size={12} className="text-faint" />
@@ -134,7 +135,7 @@ export default async function DealsPage(props: PageProps<"/deals">) {
                 </Link>
               ))}
               {chips.length > 1 && (
-                <Link href="/deals" className="text-xs font-medium text-accent-ink hover:underline">
+                <Link href="/deals" className="-my-2 py-2 text-xs font-medium text-accent-ink hover:underline">
                   Clear all
                 </Link>
               )}

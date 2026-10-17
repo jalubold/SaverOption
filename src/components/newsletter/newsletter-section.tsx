@@ -9,7 +9,7 @@ export function NewsletterSection() {
       aria-labelledby="newsletter-heading"
       className="rounded-2xl border border-line bg-surface p-6 shadow-[var(--shadow-card)] sm:p-10"
     >
-      <div className="grid items-center gap-8 lg:grid-cols-[1fr_minmax(0,420px)]">
+      <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[1fr_minmax(0,420px)]">
         <div>
           <span className="inline-flex size-10 items-center justify-center rounded-[10px] bg-accent-soft text-accent-ink">
             <Icon name="mail" size={20} />

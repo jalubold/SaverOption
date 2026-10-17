@@ -51,11 +51,11 @@ export default async function CategoryPage(props: PageProps<"/categories/[slug]"
       <section className="hero-glow border-b border-line">
         <Container className="py-12 sm:py-16">
           <nav aria-label="Breadcrumb" className="text-xs text-faint">
-            <Link href="/" className="hover:text-fg">
+            <Link href="/" className="-m-1 -my-2 inline-block px-1 py-2 hover:text-fg">
               Home
             </Link>{" "}
             /{" "}
-            <Link href="/categories" className="hover:text-fg">
+            <Link href="/categories" className="-m-1 -my-2 inline-block px-1 py-2 hover:text-fg">
               Categories
             </Link>{" "}
             / <span className="text-muted">{category.name}</span>

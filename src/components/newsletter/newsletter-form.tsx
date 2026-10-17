@@ -64,10 +64,10 @@ export function NewsletterForm({ className, compact = false }: { className?: str
           placeholder="you@company.com"
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? messageId : undefined}
-          className="h-11 min-w-0 flex-1 rounded-lg border border-line-strong bg-surface px-3.5 text-[15px] text-fg outline-none placeholder:text-faint focus:border-accent focus:ring-4 focus:ring-accent/15"
+          className="h-11 w-full min-w-0 rounded-lg sm:flex-1 border border-line-strong bg-surface px-3.5 text-[15px] text-fg outline-none placeholder:text-faint focus:border-accent focus:ring-4 focus:ring-accent/15"
         />
         <input type="text" name="company" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
-        <Button type="submit" size="md" className="h-11" disabled={state.status === "submitting"}>
+        <Button type="submit" size="md" className="h-11 w-full sm:w-auto" disabled={state.status === "submitting"}>
           {state.status === "submitting" ? "Subscribing…" : "Subscribe"}
         </Button>
       </div>

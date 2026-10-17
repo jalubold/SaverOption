@@ -6,7 +6,7 @@ import { Icon } from "@/components/ui/icon";
 export function HeaderSearch() {
   return (
     <>
-      <Form action="/deals" role="search" className="relative hidden w-64 lg:block">
+      <Form action="/deals" role="search" className="relative hidden w-64 xl:block">
         <label htmlFor="header-search" className="sr-only">
           Search deals
         </label>
@@ -22,7 +22,7 @@ export function HeaderSearch() {
       </Form>
       <Link
         href="/deals"
-        className="inline-flex size-10 items-center justify-center rounded-lg text-muted hover:bg-subtle hover:text-fg lg:hidden"
+        className="inline-flex size-10 items-center justify-center rounded-lg text-muted hover:bg-subtle hover:text-fg xl:hidden"
       >
         <Icon name="search" size={19} />
         <span className="sr-only">Search deals</span>

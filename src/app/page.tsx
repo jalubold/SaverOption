@@ -60,7 +60,7 @@ export default async function HomePage() {
       <div className="theme-dark">
         {/* ── Hero ─────────────────────────────────────────────────── */}
         <section className="hero-glow border-b border-line">
-          <Container className="grid gap-12 py-14 sm:py-20 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-center lg:gap-16">
+          <Container className="grid grid-cols-1 gap-12 py-14 sm:py-20 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-center lg:gap-16">
             <div className="min-w-0">
               <Eyebrow>
                 <strong className="tabular">{stats.offers}</strong> active offers
@@ -95,7 +95,7 @@ export default async function HomePage() {
                   <span aria-hidden="true" className="size-1.5 rounded-full bg-[#f2545b]" />
                   Ending soon
                 </h2>
-                <Link href="/deals?sort=ending-soon" className="text-xs font-medium text-accent-ink hover:underline">
+                <Link href="/deals?sort=ending-soon" className="-my-2 py-2 text-xs font-medium text-accent-ink hover:underline">
                   See all
                 </Link>
               </div>
@@ -193,7 +193,7 @@ export default async function HomePage() {
           <h2 id="principles-heading" className="sr-only">
             How {siteConfig.name} works
           </h2>
-          <ul className="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-line bg-line shadow-[var(--shadow-card)] md:grid-cols-3">
+          <ul className="grid grid-cols-1 gap-px overflow-hidden rounded-[var(--radius-card)] border border-line bg-line shadow-[var(--shadow-card)] md:grid-cols-3">
             {principles.map((p) => (
               <li key={p.title} className="bg-surface p-6">
                 <span className="inline-flex size-10 items-center justify-center rounded-[10px] bg-accent-soft text-accent-ink">

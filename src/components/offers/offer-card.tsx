@@ -107,7 +107,7 @@ export function OfferGrid({
   withSidebar?: boolean;
 }) {
   return (
-    <ul className={cn("grid gap-5 sm:grid-cols-2", withSidebar ? "xl:grid-cols-3" : "lg:grid-cols-3")}>
+    <ul className={cn("grid grid-cols-1 gap-5 sm:grid-cols-2", withSidebar ? "xl:grid-cols-3" : "lg:grid-cols-3")}>
       {offers.map((offer) => (
         <li key={offer.id}>
           <OfferCard offer={offer} headingLevel={headingLevel} />

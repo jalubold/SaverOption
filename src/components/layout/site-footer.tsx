@@ -37,23 +37,23 @@ export async function SiteFooter() {
 
   return (
     <footer className="border-t border-line bg-bg">
-      <Container className="grid gap-10 py-14 md:grid-cols-[1.4fr_repeat(3,1fr)] md:divide-x md:divide-line md:gap-0">
-        <div className="max-w-xs md:pr-10">
+      <Container className="grid grid-cols-1 gap-10 py-14 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-[1.4fr_repeat(3,1fr)] lg:gap-0 lg:divide-x lg:divide-line">
+        <div className="max-w-xs sm:col-span-3 lg:col-span-1 lg:pr-10">
           <Logo />
           <p className="mt-3 text-sm leading-relaxed text-muted">{siteConfig.tagline}</p>
         </div>
         {columns.map((col) => (
-          <nav key={col.title} aria-label={col.title} className="md:px-8">
+          <nav key={col.title} aria-label={col.title} className="lg:px-8">
             <h2 className="text-xs font-semibold uppercase tracking-wider text-faint">{col.title}</h2>
-            <ul className="mt-4 space-y-2.5">
+            <ul className="mt-3 space-y-0.5 lg:mt-4 lg:space-y-2.5">
               {col.links.map((link) => (
                 <li key={link.href}>
                   {link.href.startsWith("mailto:") ? (
-                    <a href={link.href} className="text-sm text-muted hover:text-fg">
+                    <a href={link.href} className="inline-block py-1.5 text-sm text-muted hover:text-fg lg:py-0">
                       {link.label}
                     </a>
                   ) : (
-                    <Link href={link.href} className="text-sm text-muted hover:text-fg">
+                    <Link href={link.href} className="inline-block py-1.5 text-sm text-muted hover:text-fg lg:py-0">
                       {link.label}
                     </Link>
                   )}

@@ -89,7 +89,7 @@ export function SectionHeading({
   const link = href && (
     <Link
       href={href}
-      className="group inline-flex shrink-0 items-center gap-1 text-sm font-medium text-accent-ink hover:underline underline-offset-4"
+      className="group -my-2 inline-flex shrink-0 items-center gap-1 py-2 text-sm font-medium text-accent-ink hover:underline underline-offset-4"
     >
       {linkLabel}
       <Icon name="arrow-right" size={14} className="transition-transform group-hover:translate-x-0.5" />
