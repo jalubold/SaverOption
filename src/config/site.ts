@@ -32,10 +32,10 @@ export interface SiteConfig {
   contactEmail: string;
   social: { label: string; href: string }[];
   /**
-   * Set to false once real, verified offers replace the demo catalog.
-   * While true, a site-wide notice explains that listings are sample data.
+   * Pre-launch: shows a site-wide notice and keeps the site out of search
+   * indexes. Set to false when the site goes live on its real domain.
    */
-  demoMode: boolean;
+  prelaunch: boolean;
 }
 
 const env = process.env;
@@ -57,7 +57,7 @@ export const siteConfig: SiteConfig = {
   },
   contactEmail: "hello@example.com",
   social: [],
-  demoMode: true,
+  prelaunch: true,
 };
 
 export const mainNav = [

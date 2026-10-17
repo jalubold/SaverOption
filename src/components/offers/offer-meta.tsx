@@ -1,11 +1,11 @@
 import { Icon } from "@/components/ui/icon";
 import { Badge, cn } from "@/components/ui/primitives";
 import { expiryLabel, formatDate } from "@/lib/format";
-import { offerTypeLabels } from "@/lib/labels";
+import { conditionLabels, offerTypeLabels } from "@/lib/labels";
 import type { OfferView } from "@/lib/types";
 
 /** Type + trust badges. Sponsored and exclusive status are always visible when they apply. */
-export function OfferBadges({ offer, showSource = false }: { offer: OfferView; showSource?: boolean }) {
+export function OfferBadges({ offer }: { offer: OfferView }) {
   return (
     <div className="flex flex-wrap items-center gap-1.5">
       <Badge tone={offer.isFree ? "accent" : "neutral"}>{offerTypeLabels[offer.type]}</Badge>
@@ -14,10 +14,10 @@ export function OfferBadges({ offer, showSource = false }: { offer: OfferView; s
           <Icon name="star" size={11} /> Exclusive
         </Badge>
       )}
-      {/* Third-party offers are always flagged; official/partner only where source is the point (detail page). */}
+      {offer.source === "official" && <Badge tone="outline">Official</Badge>}
+      {offer.source === "partner" && <Badge tone="outline">Partner</Badge>}
       {offer.source === "third-party" && <Badge tone="outline">Third-party</Badge>}
-      {showSource && offer.source === "official" && <Badge tone="outline">Official</Badge>}
-      {showSource && offer.source === "partner" && <Badge tone="outline">Partner</Badge>}
+      {offer.claim.method === "code" && <Badge tone="accent">Promo code</Badge>}
     </div>
   );
 }
@@ -87,5 +87,24 @@ export function VerificationText({ offer, long = false, className }: { offer: Of
       <Icon name="info" size={13} />
       {long ? "Not yet verified by our editors" : "Unverified"}
     </span>
+  );
+}
+
+/**
+ * Structured conditions (card required, regions, approval…). Only conditions
+ * the source states are shown; `limit` keeps cards compact.
+ */
+export function OfferConditions({ offer, limit, className }: { offer: OfferView; limit?: number; className?: string }) {
+  const items = conditionLabels(offer.requirements, offer.regions).slice(0, limit);
+  if (items.length === 0) return null;
+  return (
+    <ul className={cn("flex flex-wrap gap-x-3 gap-y-1 text-xs", className)}>
+      {items.map((c) => (
+        <li key={c.label} className={cn("inline-flex items-center gap-1", c.positive ? "text-fg" : "text-muted")}>
+          <Icon name={c.positive ? "check" : "info"} size={13} className={c.positive ? "text-success" : "text-faint"} />
+          {c.label}
+        </li>
+      ))}
+    </ul>
   );
 }

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { NewsletterForm } from "@/components/newsletter/newsletter-form";
 import { Icon } from "@/components/ui/icon";
@@ -23,7 +24,13 @@ export function NewsletterSection() {
         </div>
         <div>
           <NewsletterForm />
-          <p className="mt-3 text-xs text-faint">We only use your email to send the newsletter.</p>
+          <p className="mt-3 text-xs leading-relaxed text-faint">
+            By subscribing you agree to receive the newsletter. We only use your email to send it. See our{" "}
+            <Link href="/privacy" className="underline underline-offset-2 hover:text-muted">
+              privacy policy
+            </Link>
+            .
+          </p>
         </div>
       </div>
     </section>

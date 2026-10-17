@@ -27,23 +27,28 @@ export function parseDealsParams(raw: RawSearchParams): DealsParams {
     type: isOfferType(type) ? type : undefined,
     price: isPrice(price) && price !== "all" ? price : undefined,
     sort: isSort(sort) && sort !== "relevance" ? sort : undefined,
+    noCard: first(raw.nocard) === "1" || undefined,
+    worldwide: first(raw.worldwide) === "1" || undefined,
     page: Number.isFinite(page) && page > 1 ? page : 1,
   };
 }
 
 /** Builds a /deals URL from params, omitting defaults so URLs stay canonical. */
-export function dealsHref(params: Partial<DealsParams>, overrides: Partial<Record<keyof DealsParams, string | number | undefined>> = {}) {
-  const merged = { ...params, ...overrides } as Record<string, string | number | undefined>;
+export function dealsHref(
+  params: Partial<DealsParams>,
+  overrides: Partial<Record<keyof DealsParams, string | number | boolean | undefined>> = {},
+) {
+  const merged = { ...params, ...overrides } as Record<string, string | number | boolean | undefined>;
   const sp = new URLSearchParams();
-  for (const key of ["q", "category", "type", "price", "sort", "page"] as const) {
+  for (const key of ["q", "category", "type", "price", "noCard", "worldwide", "sort", "page"] as const) {
     const value = merged[key];
-    if (value === undefined || value === "" || (key === "page" && Number(value) <= 1)) continue;
-    sp.set(key, String(value));
+    if (value === undefined || value === "" || value === false || (key === "page" && Number(value) <= 1)) continue;
+    sp.set(key === "noCard" ? "nocard" : key, value === true ? "1" : String(value));
   }
   const qs = sp.toString();
   return qs ? `/deals?${qs}` : "/deals";
 }
 
 export function hasActiveFilters(p: DealsParams): boolean {
-  return Boolean(p.q || p.category || p.type || p.price);
+  return Boolean(p.q || p.category || p.type || p.price || p.noCard || p.worldwide);
 }

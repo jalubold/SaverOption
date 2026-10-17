@@ -95,6 +95,11 @@ export interface OfferPricing {
   /** Price under the offer, if verified. 0 means free. */
   dealPrice?: number;
   period?: BillingPeriod;
+  /** How many months the offer price applies before it renews (e.g. 12 for "first year"). */
+  durationMonths?: number;
+  /** Price once the offer period ends, if stated. */
+  renewalPrice?: number;
+  renewalPeriod?: BillingPeriod;
   /** Value of credits granted (free-credits offers). */
   creditValue?: number;
   /** Human summary of the saving, exactly as the provider states it. e.g. "40% off the first year". */
@@ -111,6 +116,39 @@ export interface OfferPricing {
 export interface OfferVerification {
   status: "verified" | "unverified" | "demo";
   checkedAt?: ISODate;
+  /** How it was checked, shown to readers, e.g. "Checked against the provider's official program page". */
+  method?: string;
+  note?: string;
+  /** Verbatim quotes from the source backing each fact. Kept for editors; not rendered. */
+  evidence?: { claim: string; quote: string }[];
+}
+
+/**
+ * How the offer is claimed.
+ *  - automatic:    applied when you sign up through the provider's page
+ *  - code:         a public promo code entered at checkout
+ *  - link:         a special sign-up link or page
+ *  - application:  apply to a program and wait for approval
+ *  - verification: prove eligibility (e.g. student status) first
+ */
+export type ClaimMethod = "automatic" | "code" | "link" | "application" | "verification";
+
+export interface OfferClaim {
+  method: ClaimMethod;
+  code?: string;
+  note?: string;
+}
+
+/** Key conditions as structured flags. Leave a key out when the source doesn't say. */
+export interface OfferRequirements {
+  cardRequired?: boolean;
+  newCustomersOnly?: boolean;
+  approvalRequired?: boolean;
+  studentVerification?: boolean;
+}
+
+export interface OfferRegions {
+  scope: "global" | "limited";
   note?: string;
 }
 
@@ -150,6 +188,11 @@ export interface Offer {
   /** Third-party publisher name when source is "third-party". */
   sourceName?: string;
   pricing?: OfferPricing;
+  claim: OfferClaim;
+  requirements?: OfferRequirements;
+  regions?: OfferRegions;
+  /** One-time licences: what the purchase covers and the refund policy, when stated. */
+  lifetime?: { licenceCovers?: string; refundPolicy?: string };
   eligibility: string[];
   redemption: string[];
   terms: string[];
@@ -183,6 +226,10 @@ export interface OfferQuery {
   category?: CategorySlug;
   type?: OfferType;
   price?: PriceFilter;
+  /** Only offers that state no credit card is needed. */
+  noCard?: boolean;
+  /** Only offers stated to be available worldwide. */
+  worldwide?: boolean;
   sort?: SortKey;
   includeExpired?: boolean;
 }

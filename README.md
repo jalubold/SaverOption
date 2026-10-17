@@ -2,7 +2,7 @@
 
 A discovery site for software deals, free credits, startup perks, student discounts, lifetime deals and open-source alternatives. Users find offers here and redeem them on the provider's site. It is not a marketplace.
 
-> **Demo content.** Every product and offer in `src/content/` is fictional, uses the reserved `.example` domain, and is marked `verification.status: "demo"`. While `siteConfig.demoMode` is `true`, a site-wide banner says so and the site is `noindex`.
+> **Real offers, pre-launch.** `src/content/` holds real offers researched from the providers' own sites. Offers whose live page was checked are `verified` with a `checkedAt` date; offers known only from search extracts of the provider's site are published as `unverified` and labelled "Not yet verified". Supporting quotes are kept in `verification.evidence`. While `siteConfig.prelaunch` is `true`, a banner shows the check date and the site is `noindex`.
 
 ## Quick start
 
@@ -32,7 +32,7 @@ The working brand is **Saver Option**. Everything brand-related lives in **`src/
 | `logo` | `{ kind: "mark" }` (built-in mark tinted with the accent) or `{ kind: "image", src, width, height }` |
 | `theme.accent` / `accentDeep` / `accentOnDark` / `accentContrast` | Injected as CSS variables on `<html>`. Button gradients, links, focus rings, the "How it works" panel, favicon and OG image follow them. |
 | `contactEmail` | Corrections and submissions links |
-| `demoMode` | Demo banner and `noindex` |
+| `prelaunch` | Pre-launch banner (with the latest check date) and `noindex` |
 
 `NEXT_PUBLIC_BRAND_NAME` and `NEXT_PUBLIC_BRAND_TAGLINE` override the name and tagline without editing code. No component hardcodes a brand string.
 
@@ -49,7 +49,7 @@ The visual direction follows jiro.build: a dark, search-first catalog (header, p
 ```
 src/
   config/site.ts           brand + navigation
-  content/                 demo catalog (categories, providers, products, offers)
+  content/                 catalog data (categories, providers, products, offers)
   lib/
     types.ts               content model
     catalog.ts             ALL data access (query, search, facets, related, popular)
@@ -77,9 +77,13 @@ src/
 - `type`: discount, lifetime, free-credits, free-trial, free-plan, student, startup or open-source.
 - `categories`: many-to-many. Categories are data in `src/content/categories.ts`, so you can add, rename or reorder them freely.
 - `source`: `official` (the provider), `partner` (arranged with this site) or `third-party` (a reseller or marketplace). Shown on cards and detail pages.
-- `pricing`: every field is optional. `savingsLabel` should repeat the provider's own wording. `regularPeriod` handles comparisons like "$69 once vs. $19/month", which never get a strikethrough.
+- `pricing`: every field is optional. `savingsLabel` should repeat the provider's own wording. `regularPeriod` handles comparisons like "$69 once vs. $19/month", which never get a strikethrough. `durationMonths` plus `renewalPrice` produce "Then $X/yr after N months", and with comparable regular and offer prices the page computes "Save $X over N months".
+- `claim`: how the offer is claimed (`automatic`, `code` with an optional public `code` shown with a copy button, `link`, `application`, `verification`).
+- `requirements`: `cardRequired`, `newCustomersOnly`, `approvalRequired`, `studentVerification`. Leave a key out when the source doesn't say; known keys become condition chips and the "No credit card" filter.
+- `regions`: `{ scope: "global" | "limited", note }`. Drives "Available worldwide" and its filter.
+- `lifetime`: for one-time licences, `licenceCovers` and `refundPolicy`.
 - `expiresAt`: only set when the provider states an end date. Expired offers drop out of listings automatically, keep their detail page with an "ended" notice, and redirect `/go/` to that page. Pages revalidate hourly.
-- `verification`: `verified` (an editor checked it on `checkedAt`), `unverified` or `demo`. Only `verified` offers get Product/Offer JSON-LD.
+- `verification`: `verified` (checked against the live source on `checkedAt`), `unverified` or `demo`, plus a reader-facing `method` and editor-only `evidence` quotes. Only `verified` offers get Product/Offer JSON-LD.
 - `links`: `officialUrl` (always shown as the source), plus optional `redeemUrl` and `affiliateUrl`.
 - `placement`: `featured` and `featuredRank` (editorial, unpaid), `sponsored` (paid, with optional date window) and `exclusive`.
 - `status`: `draft`, `published` or `archived`. Only `published` offers ever leave `catalog.ts`.
@@ -100,7 +104,7 @@ src/
 
 ## Search
 
-`/deals` is a plain GET form, so it works without JavaScript. With JS, filters apply instantly. You can search by keyword (weighted, prefix-matched, all terms required), filter by category, type and free/paid, and sort by relevance, newest or ending soon. Facet counts reflect the other active filters. Results paginate at 24 per page. Filtered and paginated URLs are `noindex`. The in-memory search handles a few thousand offers. Beyond that, reimplement `queryOffers` with Postgres full-text search or a hosted index; pages won't need to change.
+`/deals` is a plain GET form, so it works without JavaScript. With JS, filters apply instantly. You can search by keyword (weighted, prefix-matched, all terms required), filter by category, type, free/paid, "No credit card needed" and "Available worldwide", and sort by relevance, newest or ending soon. Facet counts reflect the other active filters. Results paginate at 24 per page. Filtered and paginated URLs are `noindex`. The in-memory search handles a few thousand offers. Beyond that, reimplement `queryOffers` with Postgres full-text search or a hosted index; pages won't need to change.
 
 ## Newsletter
 
@@ -108,11 +112,12 @@ The form posts to `/api/newsletter`. With no provider configured, development lo
 
 ## Going live checklist
 
-1. Replace `src/content/offers.ts` and `products.ts` with real, verified offers. Set `verification.status: "verified"` and `checkedAt` only after checking each one.
-2. Set `demoMode: false` in `site.ts`. This removes the banner and enables indexing, `robots.txt` rules and the sitemap reference.
-3. Set `NEXT_PUBLIC_SITE_URL` to the production domain, and set the final brand name, logo, accent and contact email.
-4. Connect a newsletter provider.
-5. Connect click storage in `lib/engagement.ts` to enable "Popular".
+1. Re-check every offer on its live page (especially the ones marked "Not yet verified"), then update `checkedAt`. Offers change often.
+2. Fill in the legal details on `/privacy` and `/terms` (operating entity, address) and have them reviewed.
+3. Set `prelaunch: false` in `site.ts`. This removes the banner and enables indexing, `robots.txt` rules and the sitemap reference.
+4. Set `NEXT_PUBLIC_SITE_URL` to the production domain, and set the final logo and contact email.
+5. Connect a newsletter provider.
+6. Connect click storage in `lib/engagement.ts` to enable "Popular".
 
 ## Next step: admin and persistent storage (proposed, not built)
 

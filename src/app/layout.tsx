@@ -4,7 +4,7 @@ import { GeistSans } from "geist/font/sans";
 import { Instrument_Serif } from "next/font/google";
 import type { CSSProperties } from "react";
 import { siteConfig } from "@/config/site";
-import { DemoBanner } from "@/components/layout/demo-banner";
+import { PrelaunchBanner } from "@/components/layout/prelaunch-banner";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -35,8 +35,8 @@ export const metadata: Metadata = {
     locale: "en_US",
   },
   twitter: { card: "summary_large_image" },
-  // Keep preview builds with demo content out of search indexes.
-  robots: siteConfig.demoMode ? { index: false, follow: false } : undefined,
+  // Keep pre-launch builds out of search indexes.
+  robots: siteConfig.prelaunch ? { index: false, follow: false } : undefined,
 };
 
 export const viewport: Viewport = {
@@ -60,7 +60,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         >
           Skip to content
         </a>
-        <DemoBanner />
+        <PrelaunchBanner />
         <SiteHeader />
         <main id="main" className="flex-1">
           {children}

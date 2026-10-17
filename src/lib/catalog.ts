@@ -107,6 +107,8 @@ export async function queryOffers(query: OfferQuery = {}): Promise<OfferQueryRes
   }
   if (price === "free") pool = pool.filter((o) => o.isFree);
   if (price === "paid") pool = pool.filter((o) => !o.isFree);
+  if (query.noCard) pool = pool.filter((o) => o.requirements?.cardRequired === false);
+  if (query.worldwide) pool = pool.filter((o) => o.regions?.scope === "global");
 
   const inCategory = (o: OfferView) => !query.category || o.categories.includes(query.category);
   const ofType = (o: OfferView) => !query.type || o.type === query.type;
@@ -229,5 +231,11 @@ export async function getCatalogStats() {
     offers: live.length,
     products: new Set(live.map((o) => o.productId)).size,
     lastUpdated: live.map((o) => o.updatedAt).sort().at(-1),
+    /** Most recent date an editor checked an offer against its source. */
+    lastChecked: live
+      .map((o) => o.verification.checkedAt)
+      .filter((d): d is string => Boolean(d))
+      .sort()
+      .at(-1),
   };
 }

@@ -35,6 +35,12 @@ interface FiltersProps {
   type?: OfferType;
   price?: PriceFilter;
   sort?: SortKey;
+  noCard?: boolean;
+  worldwide?: boolean;
+  /** Result counts if each requirement filter were switched on. */
+  requirementCounts: { noCard: number; worldwide: number };
+  /** Which requirement filters have any data in the catalog at all. */
+  requirementsAvailable: { noCard: boolean; worldwide: boolean };
   categoryOptions: Option<CategorySlug>[];
   typeOptions: Option<OfferType>[];
   priceOptions: Option<PriceFilter>[];
@@ -98,6 +104,19 @@ export function DealsFilters(props: FiltersProps) {
             <RadioGroup legend="Price" name="price" value={props.price ?? "all"} options={props.priceOptions} variant="segmented" />
             <RadioGroup legend="Category" name="category" value={props.category ?? ""} options={[{ value: "" as CategorySlug, label: "All categories" }, ...props.categoryOptions]} />
             <RadioGroup legend="Offer type" name="type" value={props.type ?? ""} options={[{ value: "" as OfferType, label: "All types" }, ...props.typeOptions]} />
+            {(props.requirementsAvailable.noCard || props.requirementsAvailable.worldwide) && (
+              <fieldset>
+                <legend className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-faint">Requirements</legend>
+                <div className="space-y-0.5">
+                  {props.requirementsAvailable.noCard && (
+                    <CheckboxOption name="nocard" label="No credit card needed" checked={Boolean(props.noCard)} count={props.requirementCounts.noCard} />
+                  )}
+                  {props.requirementsAvailable.worldwide && (
+                    <CheckboxOption name="worldwide" label="Available worldwide" checked={Boolean(props.worldwide)} count={props.requirementCounts.worldwide} />
+                  )}
+                </div>
+              </fieldset>
+            )}
             <noscript>
               <button type="submit" className="h-9 rounded-lg bg-accent px-4 text-sm font-medium text-accent-fg">
                 Apply filters
@@ -130,6 +149,30 @@ export function DealsFilters(props: FiltersProps) {
         </div>
       </form>
     </PendingContext.Provider>
+  );
+}
+
+function CheckboxOption({ name, label, checked, count }: { name: string; label: string; checked: boolean; count: number }) {
+  const disabled = count === 0 && !checked;
+  return (
+    <label
+      className={cn(
+        "relative flex cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm text-muted transition-colors hover:bg-subtle hover:text-fg has-[:checked]:bg-accent-soft has-[:checked]:font-medium has-[:checked]:text-accent-ink has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-accent",
+        disabled && "cursor-not-allowed opacity-50",
+      )}
+    >
+      <input
+        type="checkbox"
+        name={name}
+        value="1"
+        key={`${name}-${checked}`}
+        defaultChecked={checked}
+        disabled={disabled}
+        className="size-4 shrink-0 rounded accent-[var(--accent)]"
+      />
+      <span className="flex-1 truncate">{label}</span>
+      <span className="tabular text-xs text-faint">{count}</span>
+    </label>
   );
 }
 

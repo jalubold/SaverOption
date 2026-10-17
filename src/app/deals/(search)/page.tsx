@@ -29,10 +29,15 @@ export async function generateMetadata(props: PageProps<"/deals">): Promise<Meta
 
 export default async function DealsPage(props: PageProps<"/deals">) {
   const params = parseDealsParams(await props.searchParams);
-  const [result, categories, sponsored] = await Promise.all([
+  const [result, categories, sponsored, withNoCard, withWorldwide, anyNoCard, anyWorldwide] = await Promise.all([
     queryOffers(params),
     getCategories(),
     params.q ? Promise.resolve([]) : getSponsoredOffers(params.category),
+    queryOffers({ ...params, noCard: true }),
+    queryOffers({ ...params, worldwide: true }),
+    // Whole-catalog checks: a requirement filter only appears once some offer carries that data.
+    queryOffers({ noCard: true }),
+    queryOffers({ worldwide: true }),
   ]);
 
   // One labelled sponsored card leads the first page, only when it matches the current filters.
@@ -45,13 +50,15 @@ export default async function DealsPage(props: PageProps<"/deals">) {
   const visible = organic.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const activeCategory = categories.find((c) => c.slug === params.category);
-  const activeCount = [params.category, params.type, params.price].filter(Boolean).length;
+  const activeCount = [params.category, params.type, params.price, params.noCard, params.worldwide].filter(Boolean).length;
 
   const chips = [
     params.q && { label: `“${params.q}”`, href: dealsHref(params, { q: undefined, page: undefined }) },
     activeCategory && { label: activeCategory.name, href: dealsHref(params, { category: undefined, page: undefined }) },
     params.type && { label: offerTypeLabels[params.type], href: dealsHref(params, { type: undefined, page: undefined }) },
     params.price && { label: priceFilterLabels[params.price], href: dealsHref(params, { price: undefined, page: undefined }) },
+    params.noCard && { label: "No credit card", href: dealsHref(params, { noCard: undefined, page: undefined }) },
+    params.worldwide && { label: "Worldwide", href: dealsHref(params, { worldwide: undefined, page: undefined }) },
   ].filter((c): c is { label: string; href: string } => Boolean(c));
 
   const heading = params.q ? `Results for “${params.q}”` : activeCategory ? activeCategory.name : "All software deals";
@@ -75,7 +82,14 @@ export default async function DealsPage(props: PageProps<"/deals">) {
             defaultValue={params.q}
             className="mt-6 max-w-2xl"
             placeholder="Search deals"
-            hidden={{ category: params.category, type: params.type, price: params.price, sort: params.sort }}
+            hidden={{
+              category: params.category,
+              type: params.type,
+              price: params.price,
+              nocard: params.noCard ? "1" : undefined,
+              worldwide: params.worldwide ? "1" : undefined,
+              sort: params.sort,
+            }}
           />
         </Container>
       </section>
@@ -87,6 +101,10 @@ export default async function DealsPage(props: PageProps<"/deals">) {
           type={params.type}
           price={params.price}
           sort={params.sort}
+          noCard={params.noCard}
+          worldwide={params.worldwide}
+          requirementCounts={{ noCard: withNoCard.total, worldwide: withWorldwide.total }}
+          requirementsAvailable={{ noCard: anyNoCard.total > 0 || Boolean(params.noCard), worldwide: anyWorldwide.total > 0 || Boolean(params.worldwide) }}
           activeCount={activeCount}
           categoryOptions={categories.map((c) => ({ value: c.slug, label: c.name, count: result.facets.categories[c.slug] ?? 0 }))}
           typeOptions={(Object.keys(offerTypeLabels) as OfferType[]).map((t) => ({

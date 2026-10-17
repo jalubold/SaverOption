@@ -2,15 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { siteConfig } from "@/config/site";
-import { ExpiryText, OfferBadges, SponsoredLabel, VerificationText } from "@/components/offers/offer-meta";
+import { CopyCode } from "@/components/offers/copy-code";
+import { ExpiryText, OfferBadges, OfferConditions, SponsoredLabel, VerificationText } from "@/components/offers/offer-meta";
 import { OfferGrid } from "@/components/offers/offer-card";
 import { ProductLogo } from "@/components/offers/product-logo";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Icon } from "@/components/ui/icon";
 import { Badge, buttonClass, Container, Notice, SectionHeading } from "@/components/ui/primitives";
 import { getAllOfferSlugs, getOfferBySlug, getRelatedOffers } from "@/lib/catalog";
-import { formatDate, formatMoney, headlineValue, summarizePrice } from "@/lib/format";
-import { offerSourceLabels, offerTypeLabels } from "@/lib/labels";
+import { estimatedSavings, formatDate, formatMoney, headlineValue, renewalLabel, summarizePrice } from "@/lib/format";
+import { claimMethodLabels, offerSourceLabels, offerTypeLabels } from "@/lib/labels";
 import { destinationUrl, hostname, outboundHref, outboundRel } from "@/lib/outbound";
 import { breadcrumbJsonLd, offerJsonLd, pageMetadata } from "@/lib/seo";
 
@@ -51,9 +52,16 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
   const bigWas = price?.was && pricing?.regularPrice !== undefined ? formatMoney(pricing.regularPrice, pricing.currency) : null;
   // Skip the headline when it only restates the price ("One-time $69 vs. $19/month", "Free").
   const sidebarValue = value && bigPrice && (value === bigPrice || value.includes(bigPrice)) ? null : value;
+  const renewal = renewalLabel(pricing);
+  const savings = estimatedSavings(pricing);
+  const claim = claimMethodLabels[offer.claim.method];
   const billingCaption =
     bigPrice === "Free"
-      ? "No payment needed"
+      ? pricing?.durationMonths
+        ? `Free for ${pricing.durationMonths} months`
+        : offer.requirements?.cardRequired
+          ? "Card required at sign-up"
+          : "No charge"
       : offer.pricing?.period === "one-time"
         ? "Billed once"
         : offer.pricing?.period === "year"
@@ -130,14 +138,16 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
             </h1>
             <p className="mt-4 text-[17px] leading-relaxed text-muted">{offer.summary}</p>
             <div className="mt-5">
-              <OfferBadges offer={offer} showSource />
+              <OfferBadges offer={offer} />
             </div>
+            <OfferConditions offer={offer} className="mt-4 text-sm" />
 
             {/* Small screens: surface the value and CTA before the long-form content. */}
             {!offer.isExpired && (
               <div className="theme-dark mt-6 flex items-center justify-between gap-4 rounded-[var(--radius-card)] border border-line bg-surface p-4 lg:hidden">
                 <div className="min-w-0 text-sm">
                   {value && <p className="font-semibold text-accent-ink">{value}</p>}
+                  <p className="mt-0.5 text-xs text-muted">{claim.label}</p>
                   <ExpiryText offer={offer} className="mt-0.5 text-xs" />
                 </div>
                 <a href={outboundHref(offer)} rel={outboundRel(offer)} target="_blank" className={buttonClass("primary", "md", "shrink-0")}>
@@ -182,6 +192,25 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
                     </li>
                   ))}
                 </ol>
+              </DetailSection>
+            )}
+
+            {offer.lifetime && (offer.lifetime.licenceCovers || offer.lifetime.refundPolicy) && (
+              <DetailSection title="What the licence covers">
+                <dl className="grid gap-3 text-[15px] sm:grid-cols-2">
+                  {offer.lifetime.licenceCovers && (
+                    <div className="rounded-xl border border-line bg-surface p-4">
+                      <dt className="text-xs font-medium uppercase tracking-wider text-faint">Licence</dt>
+                      <dd className="mt-1 text-fg">{offer.lifetime.licenceCovers}</dd>
+                    </div>
+                  )}
+                  {offer.lifetime.refundPolicy && (
+                    <div className="rounded-xl border border-line bg-surface p-4">
+                      <dt className="text-xs font-medium uppercase tracking-wider text-faint">Refunds</dt>
+                      <dd className="mt-1 text-fg">{offer.lifetime.refundPolicy}</dd>
+                    </div>
+                  )}
+                </dl>
               </DetailSection>
             )}
 
@@ -257,6 +286,20 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
                   {billingCaption && (
                     <p className="mt-2 text-xs font-medium uppercase tracking-wider text-faint">{billingCaption}</p>
                   )}
+                  {(renewal || savings) && (
+                    <ul className="mt-4 space-y-1.5 border-t border-line pt-4 text-sm">
+                      {savings && (
+                        <li className="flex items-center gap-1.5 font-medium text-accent-ink">
+                          <Icon name="tag" size={14} /> {savings}
+                        </li>
+                      )}
+                      {renewal && (
+                        <li className="flex items-center gap-1.5 text-muted">
+                          <Icon name="calendar" size={14} /> {renewal}
+                        </li>
+                      )}
+                    </ul>
+                  )}
                 </div>
               )}
 
@@ -288,8 +331,30 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
               </p>
             </div>
 
+            {!offer.isExpired && (
+              <div className="mx-1 mt-4 rounded-[14px] border border-line p-4">
+                <p className="text-xs font-medium uppercase tracking-wider text-faint">How to claim</p>
+                <p className="mt-1.5 text-sm font-medium text-fg">{claim.label}</p>
+                <p className="mt-0.5 text-[13px] leading-snug text-muted">{offer.claim.note ?? claim.description}</p>
+                {offer.claim.code && (
+                  <div className="mt-3">
+                    <CopyCode code={offer.claim.code} />
+                  </div>
+                )}
+              </div>
+            )}
+
             <div className="px-4 pb-4">
             <dl className="mt-5 space-y-4 border-t border-line pt-5 text-sm">
+              {(offer.requirements || offer.regions) && (
+                <div>
+                  <dt className="text-xs font-medium uppercase tracking-wider text-faint">Conditions</dt>
+                  <dd className="mt-1.5">
+                    <OfferConditions offer={offer} className="flex-col gap-y-1.5 text-[13px]" />
+                    {offer.regions?.note && <p className="mt-1.5 text-[13px] leading-snug text-muted">{offer.regions.note}</p>}
+                  </dd>
+                </div>
+              )}
               <div>
                 <dt className="text-xs font-medium uppercase tracking-wider text-faint">Source</dt>
                 <dd className="mt-1">
@@ -307,11 +372,16 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
                 <dt className="text-xs font-medium uppercase tracking-wider text-faint">Verification</dt>
                 <dd className="mt-1">
                   <VerificationText offer={offer} long />
+                  {offer.verification.method && (
+                    <span className="mt-0.5 block text-[13px] leading-snug text-muted">{offer.verification.method}</span>
+                  )}
                 </dd>
               </div>
               <div>
-                <dt className="text-xs font-medium uppercase tracking-wider text-faint">Last updated</dt>
+                <dt className="text-xs font-medium uppercase tracking-wider text-faint">Added · Last updated</dt>
                 <dd className="mt-1 text-muted">
+                  <time dateTime={offer.publishedAt}>{formatDate(offer.publishedAt)}</time>
+                  {" · "}
                   <time dateTime={offer.updatedAt}>{formatDate(offer.updatedAt)}</time>
                 </dd>
               </div>

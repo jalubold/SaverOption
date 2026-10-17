@@ -81,6 +81,31 @@ export function summarizePrice(pricing?: OfferPricing): PriceSummary | null {
   return { current, note: `Normally ${regular}` };
 }
 
+const periodMonths: Partial<Record<BillingPeriod, number>> = { month: 1, year: 12 };
+
+/** "Then $300/yr" — the price after the offer period, when stated. */
+export function renewalLabel(pricing?: OfferPricing): string | null {
+  if (pricing?.renewalPrice === undefined) return null;
+  const period = pricing.renewalPeriod ?? pricing.regularPeriod ?? pricing.period;
+  const after = pricing.durationMonths ? ` after ${pricing.durationMonths} months` : "";
+  return `Then ${formatPeriodPrice(pricing.renewalPrice, pricing.currency, period)}${after}`;
+}
+
+/**
+ * Money saved over the offer period, computed only from stated figures:
+ * regular and offer price on the same monthly/yearly basis plus a known duration.
+ */
+export function estimatedSavings(pricing?: OfferPricing): string | null {
+  if (!pricing || pricing.regularPrice === undefined || pricing.dealPrice === undefined || !pricing.durationMonths) return null;
+  const period = pricing.period;
+  const regularPeriod = pricing.regularPeriod ?? period;
+  const months = period && periodMonths[period];
+  if (!months || regularPeriod !== period) return null;
+  const saved = ((pricing.regularPrice - pricing.dealPrice) / months) * pricing.durationMonths;
+  if (saved <= 0) return null;
+  return `Save ${formatMoney(Math.round(saved * 100) / 100, pricing.currency)} over ${pricing.durationMonths} months`;
+}
+
 /** The single most important fact about an offer, used as the card headline value. */
 export function headlineValue(offer: OfferView): string | null {
   const p = offer.pricing;

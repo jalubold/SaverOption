@@ -7,6 +7,7 @@ import { OfferRow } from "@/components/offers/offer-row";
 import { SearchBox } from "@/components/search/search-box";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, Container, Eyebrow, SectionHeading } from "@/components/ui/primitives";
+import { formatDate } from "@/lib/format";
 import {
   getCatalogStats,
   getCategories,
@@ -49,7 +50,9 @@ export default async function HomePage() {
     queryOffers({ sort: "ending-soon" }),
   ]);
   const ending = endingSoon.offers.filter((o) => o.daysLeft !== undefined).slice(0, 4);
-  const chips = categories.filter((c) => quickCategories.includes(c.slug));
+  // Only categories with live offers appear on the homepage; the full list lives on /categories.
+  const liveCategories = categories.filter((c) => c.count > 0);
+  const chips = liveCategories.filter((c) => quickCategories.includes(c.slug));
 
   return (
     <>
@@ -59,9 +62,15 @@ export default async function HomePage() {
           <Container className="grid gap-12 py-14 sm:py-20 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-center lg:gap-16">
             <div className="min-w-0">
               <Eyebrow>
-                <strong className="tabular">{stats.offers}</strong> {siteConfig.demoMode ? "sample" : "active"} offers
+                <strong className="tabular">{stats.offers}</strong> active offers
                 <span aria-hidden="true">•</span>
                 <strong className="tabular">{stats.products}</strong> products
+                {stats.lastChecked && (
+                  <>
+                    <span aria-hidden="true">•</span>
+                    Checked <strong>{formatDate(stats.lastChecked)}</strong>
+                  </>
+                )}
               </Eyebrow>
               <h1 className="mt-5 max-w-2xl text-[2.5rem] font-semibold leading-[1.06] tracking-[-0.035em] text-muted sm:text-[3.25rem]">
                 Find <span className="text-heading">software deals</span> and{" "}
@@ -142,7 +151,7 @@ export default async function HomePage() {
             href="/categories"
             linkLabel="All categories"
           />
-          <CategoryGrid categories={categories} />
+          <CategoryGrid categories={liveCategories} />
         </section>
 
         {/* ── Recently added ───────────────────────────────────────── */}

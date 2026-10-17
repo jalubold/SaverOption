@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ExpiryText, OfferBadges, SponsoredLabel, VerificationText } from "@/components/offers/offer-meta";
+import { ExpiryText, OfferBadges, OfferConditions, SponsoredLabel, VerificationText } from "@/components/offers/offer-meta";
 import { ProductLogo } from "@/components/offers/product-logo";
 import { Icon } from "@/components/ui/icon";
 import { cn } from "@/components/ui/primitives";
@@ -49,6 +49,7 @@ export function OfferCard({ offer, headingLevel = "h3" }: { offer: OfferView; he
         <div className="mt-3">
           <OfferBadges offer={offer} />
         </div>
+        <OfferConditions offer={offer} limit={3} className="mt-3" />
 
         {(value || price) && (
           <div className="mt-4 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
