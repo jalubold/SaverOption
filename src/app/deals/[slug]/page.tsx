@@ -73,47 +73,49 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", path: "/" }, ...crumbs])} />
       <JsonLd data={offerJsonLd(offer)} />
 
-      {/* ── Header band ─────────────────────────────────────────── */}
-      <section className="theme-dark hero-glow border-b border-line">
-        <Container className="pb-12 pt-8 sm:pb-16">
-          <nav aria-label="Breadcrumb">
-            <ol className="flex flex-wrap items-center gap-1.5 text-xs text-faint">
-              <li>
-                <Link href="/" className="hover:text-fg">
-                  Home
-                </Link>
+      <Container className="pt-8">
+        <nav aria-label="Breadcrumb">
+          <ol className="flex flex-wrap items-center gap-1.5 text-xs text-faint">
+            <li>
+              <Link href="/" className="hover:text-fg">
+                Home
+              </Link>
+            </li>
+            {crumbs.map((c, i) => (
+              <li key={c.path} className="flex items-center gap-1.5">
+                <span aria-hidden="true">/</span>
+                {i === crumbs.length - 1 ? (
+                  <span aria-current="page" className="text-muted">
+                    {c.name}
+                  </span>
+                ) : (
+                  <Link href={c.path} className="hover:text-fg">
+                    {c.name}
+                  </Link>
+                )}
               </li>
-              {crumbs.map((c, i) => (
-                <li key={c.path} className="flex items-center gap-1.5">
-                  <span aria-hidden="true">/</span>
-                  {i === crumbs.length - 1 ? (
-                    <span aria-current="page" className="text-muted">
-                      {c.name}
-                    </span>
-                  ) : (
-                    <Link href={c.path} className="hover:text-fg">
-                      {c.name}
-                    </Link>
-                  )}
-                </li>
-              ))}
-            </ol>
-          </nav>
+            ))}
+          </ol>
+        </nav>
+      </Container>
 
-          <div className="mt-8 max-w-3xl">
-            {offer.isExpired && (
-              <Notice tone="warn" title="This offer has ended" className="mb-6">
-                It ended on {formatDate(offer.expiresAt!)}. We keep the page so you know it&apos;s no longer available.
-                See related offers below.
-              </Notice>
-            )}
-            {offer.verification.status === "demo" && (
-              <Notice title="Sample listing" className="mb-6">
-                This product and offer are fictional demo content. Nothing here is a real promotion.
-              </Notice>
-            )}
+      <Container className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-14">
+        {/* ── Main column ─────────────────────────────────────────── */}
+        <article className="min-w-0">
+          {offer.isExpired && (
+            <Notice tone="warn" title="This offer has ended" className="mb-6">
+              It ended on {formatDate(offer.expiresAt!)}. We keep the page so you know it&apos;s no longer available.
+              See related offers below.
+            </Notice>
+          )}
+          {offer.verification.status === "demo" && (
+            <Notice title="Sample listing" className="mb-6">
+              This product and offer are fictional demo content. Nothing here is a real promotion.
+            </Notice>
+          )}
 
-            <SponsoredLabel offer={offer} className="mb-3" />
+          <SponsoredLabel offer={offer} className="mb-3" />
+          <header>
             <div className="flex items-center gap-3">
               <ProductLogo product={offer.product} size="lg" />
               <div>
@@ -123,7 +125,7 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
                 <p className="text-sm text-muted">by {offer.provider.name}</p>
               </div>
             </div>
-            <h1 className="mt-6 text-[2rem] font-semibold leading-[1.1] tracking-[-0.03em] text-heading sm:text-[2.75rem]">
+            <h1 className="mt-6 text-[2rem] font-semibold leading-[1.1] tracking-[-0.03em] text-heading sm:text-[2.5rem]">
               {offer.title}
             </h1>
             <p className="mt-4 text-[17px] leading-relaxed text-muted">{offer.summary}</p>
@@ -133,7 +135,7 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
 
             {/* Small screens: surface the value and CTA before the long-form content. */}
             {!offer.isExpired && (
-              <div className="mt-6 flex items-center justify-between gap-4 rounded-[var(--radius-card)] border border-line bg-surface p-4 lg:hidden">
+              <div className="theme-dark mt-6 flex items-center justify-between gap-4 rounded-[var(--radius-card)] border border-line bg-surface p-4 lg:hidden">
                 <div className="min-w-0 text-sm">
                   {value && <p className="font-semibold text-accent-ink">{value}</p>}
                   <ExpiryText offer={offer} className="mt-0.5 text-xs" />
@@ -144,14 +146,9 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
                 </a>
               </div>
             )}
-          </div>
-        </Container>
-      </section>
+          </header>
 
-      <Container className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-14">
-        {/* ── Main column ─────────────────────────────────────────── */}
-        <article className="min-w-0">
-          <div className="space-y-12">
+          <div className="mt-10 space-y-10">
             <DetailSection title="About this offer">
               <div className="prose-body">
                 {paragraphs.map((p, i) => (
@@ -361,7 +358,7 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
       </Container>
 
       {related.length > 0 && (
-        <Container className="mt-24">
+        <Container className="mt-20">
           <section aria-labelledby="related-heading">
             <SectionHeading id="related-heading" title={<>Related <em>offers.</em></>} href={primaryCategory ? `/categories/${primaryCategory.slug}` : "/deals"} linkLabel={primaryCategory ? `More ${primaryCategory.name.toLowerCase()}` : "All deals"} />
             <OfferGrid offers={related} />

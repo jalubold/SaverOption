@@ -269,11 +269,6 @@
     background-repeat: no-repeat;
   }
 
-  /* Black-to-accent panel ("How it works"). */
-  .panel-accent {
-    background-image: linear-gradient(180deg, #000 0%, #07020f 30%, color-mix(in oklab, var(--accent-deep) 55%, #000) 70%, var(--accent-deep) 100%);
-  }
-
   /* Pastel promo strip at the very top. */
   .promo-bar {
     background-image: linear-gradient(90deg, #fbe4f2 0%, #ece3fc 30%, #f7f5ff 55%, #dfe9ff 85%, #cfe0ff 100%);

@@ -41,7 +41,7 @@ The working brand is **Saver Option**. Everything brand-related lives in **`src/
 The visual direction follows jiro.build: a dark, search-first catalog (header, page heroes, deal grids) above light editorial sections with large Instrument Serif headings and a muted italic phrase.
 
 - **Two token scopes.** Light tokens sit on `:root`. Wrapping any element in `.theme-dark` re-skins every component inside it, because components only read tokens (`bg-surface`, `text-fg`, `border-line`…). The same `OfferCard` renders on dark listing pages and in light "Related offers".
-- **Component classes** in `globals.css`: `.btn-primary` (glossy accent gradient), `.btn-secondary`, `.seg`/`.seg-item` (pill tabs with an accent ring), `.eyebrow` (uppercase chip), `.display` (serif headings, `<em>` becomes the muted italic), `.hero-glow`, `.panel-accent` and `.promo-bar`.
+- **Component classes** in `globals.css`: `.btn-primary` (glossy accent gradient), `.btn-secondary`, `.seg`/`.seg-item` (pill tabs with an accent ring), `.eyebrow` (uppercase chip), `.display` (serif headings, `<em>` becomes the muted italic), `.hero-glow` and `.promo-bar`.
 - The look is a fixed design rather than following the OS light/dark setting.
 
 ## Project structure

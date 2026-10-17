@@ -79,14 +79,12 @@ export function SectionHeading({
   description,
   href,
   linkLabel = "View all",
-  align = "left",
 }: {
   id?: string;
   title: ReactNode;
   description?: string;
   href?: string;
   linkLabel?: string;
-  align?: "left" | "center";
 }) {
   const link = href && (
     <Link
@@ -97,18 +95,6 @@ export function SectionHeading({
       <Icon name="arrow-right" size={14} className="transition-transform group-hover:translate-x-0.5" />
     </Link>
   );
-
-  if (align === "center") {
-    return (
-      <div className="mx-auto mb-10 max-w-2xl text-center">
-        <h2 id={id} className="display text-[2.5rem] sm:text-[3.5rem]">
-          {title}
-        </h2>
-        {description && <p className="mt-3 text-[15px] leading-relaxed text-muted sm:text-base">{description}</p>}
-        {link && <div className="mt-4">{link}</div>}
-      </div>
-    );
-  }
 
   return (
     <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
@@ -126,18 +112,6 @@ export function SectionHeading({
 /** Uppercase chip above a hero heading. Use <strong> for the figures. */
 export function Eyebrow({ children, className }: { children: ReactNode; className?: string }) {
   return <p className={cn("eyebrow", className)}>{children}</p>;
-}
-
-/** Filled green check used for trust points. */
-export function CheckDot({ className }: { className?: string }) {
-  return (
-    <span
-      aria-hidden="true"
-      className={cn("inline-flex size-[18px] shrink-0 items-center justify-center rounded-full bg-success text-white", className)}
-    >
-      <Icon name="check" size={12} strokeWidth={3} />
-    </span>
-  );
 }
 
 // ─── Notice ─────────────────────────────────────────────────────────────────
