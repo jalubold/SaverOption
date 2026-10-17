@@ -4,6 +4,7 @@ import { CategoryChips, CategoryGrid } from "@/components/categories/category-li
 import { NewsletterSection } from "@/components/newsletter/newsletter-section";
 import { OfferGrid } from "@/components/offers/offer-card";
 import { OfferRow } from "@/components/offers/offer-row";
+import { VisitorsToday } from "@/components/analytics/visitors-today";
 import { SearchBox } from "@/components/search/search-box";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, Container, Eyebrow, SectionHeading } from "@/components/ui/primitives";
@@ -71,6 +72,7 @@ export default async function HomePage() {
                     Checked <strong>{formatDate(stats.lastChecked)}</strong>
                   </>
                 )}
+                <VisitorsToday />
               </Eyebrow>
               <h1 className="mt-5 max-w-2xl text-[2.5rem] font-semibold leading-[1.06] tracking-[-0.035em] text-muted sm:text-[3.25rem]">
                 Find <span className="text-heading">software deals</span> and{" "}

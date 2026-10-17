@@ -1,4 +1,4 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { after, NextResponse, type NextRequest } from "next/server";
 import { getOfferBySlug } from "@/lib/catalog";
 import { recordOutboundClick } from "@/lib/engagement";
 import { destinationUrl } from "@/lib/outbound";
@@ -21,8 +21,9 @@ export async function GET(request: NextRequest, ctx: RouteContext<"/go/[slug]">)
   }
 
   const { url, kind } = destinationUrl(offer);
-  // Never block the redirect on analytics.
-  recordOutboundClick({ offerId: offer.id, destination: kind, referrer: request.headers.get("referer") }).catch(() => {});
+  // Record after the response is sent, so analytics never slows the redirect.
+  const referrer = request.headers.get("referer");
+  after(() => recordOutboundClick({ offerId: offer.id, destination: kind, referrer }).catch(() => {}));
 
   const res = NextResponse.redirect(url, 302);
   res.headers.set("X-Robots-Tag", "noindex, nofollow");

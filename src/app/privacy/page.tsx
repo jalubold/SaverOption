@@ -33,8 +33,14 @@ export default function PrivacyPage() {
               newsletter.
             </li>
             <li>
-              <strong>Outbound clicks.</strong> When you click &ldquo;View deal&rdquo;, we may count the click against that
-              offer to see which offers are useful. These counts don&apos;t identify you.
+              <strong>Visitor counts.</strong> To count unique visitors per day without cookies, each page view is turned
+              into a one-way hash of your IP address and browser user agent combined with a value that changes daily. Only
+              that hash is added to an aggregate daily count; your IP address and user agent are not stored, and the hash
+              can&apos;t be linked across days. We show the daily total on the site.
+            </li>
+            <li>
+              <strong>Outbound clicks.</strong> When you click &ldquo;View deal&rdquo;, we count the click against that
+              offer to see which offers are useful. Only the count per offer and day is stored, nothing about you.
             </li>
             <li>
               <strong>Server logs.</strong> Our hosting provider keeps standard technical logs (such as IP address,
@@ -46,20 +52,23 @@ export default function PrivacyPage() {
           <h2>Why we use it</h2>
           <ul>
             <li>To send the newsletter you asked for (based on your consent).</li>
-            <li>To keep the site working, secure and useful (based on our legitimate interest in running the service).</li>
+            <li>
+              To keep the site working, secure and useful, and to measure how many people use it (based on our legitimate
+              interest in running the service).
+            </li>
           </ul>
 
           <h2>Who else processes it</h2>
           <p>
-            We use a hosting provider to serve the site and an email provider to send the newsletter. They process data
-            only on our behalf. When you follow a link to a software provider, their own privacy policy applies on their
+            We use a hosting provider to serve the site, a database provider (Upstash) to store the aggregate counts, and
+            an email provider to send the newsletter. They process data only on our behalf. When you follow a link to a software provider, their own privacy policy applies on their
             site.
           </p>
 
           <h2>How long we keep it</h2>
           <p>
-            We keep your email address until you unsubscribe. Server logs are kept for a limited period by our hosting
-            provider.
+            We keep your email address until you unsubscribe. Daily visitor and click counts are deleted after 40 days.
+            Server logs are kept for a limited period by our hosting provider.
           </p>
 
           <h2>Your choices and rights</h2>
