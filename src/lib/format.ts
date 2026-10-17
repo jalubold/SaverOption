@@ -36,6 +36,17 @@ export function formatDate(value: ISODate): string {
   }).format(parseDate(value));
 }
 
+/** "Oct 17" in the current year, "Oct 17, 2025" otherwise — for compact card metadata. */
+export function formatShortDate(value: ISODate, now = new Date()): string {
+  const d = parseDate(value);
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    ...(d.getUTCFullYear() !== now.getUTCFullYear() && { year: "numeric" }),
+    timeZone: "UTC",
+  }).format(d);
+}
+
 /**
  * Calendar days (UTC) from today until `value`.
  * 0 = ends today, negative = already ended.
@@ -47,13 +58,17 @@ export function daysUntil(value: ISODate, now = new Date()): number {
   return Math.round((target - today) / DAY_MS);
 }
 
-export function expiryLabel(offer: Pick<OfferView, "expiresAt" | "isExpired" | "daysLeft">): string | null {
+export function expiryLabel(
+  offer: Pick<OfferView, "expiresAt" | "isExpired" | "daysLeft">,
+  { short = false }: { short?: boolean } = {},
+): string | null {
   if (!offer.expiresAt) return null;
-  if (offer.isExpired) return `Ended ${formatDate(offer.expiresAt)}`;
+  const date = short ? formatShortDate(offer.expiresAt) : formatDate(offer.expiresAt);
+  if (offer.isExpired) return `Ended ${date}`;
   if (offer.daysLeft === 0) return "Ends today";
   if (offer.daysLeft === 1) return "Ends tomorrow";
   if (offer.daysLeft !== undefined && offer.daysLeft <= 14) return `Ends in ${offer.daysLeft} days`;
-  return `Ends ${formatDate(offer.expiresAt)}`;
+  return `Ends ${date}`;
 }
 
 export interface PriceSummary {

@@ -17,7 +17,7 @@ export default function Loading() {
             <div key={i} className="h-7 animate-pulse rounded-md bg-subtle" />
           ))}
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {Array.from({ length: 6 }, (_, i) => (
             <OfferCardSkeleton key={i} />
           ))}

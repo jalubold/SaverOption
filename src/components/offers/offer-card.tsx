@@ -72,9 +72,10 @@ export function OfferCard({ offer, headingLevel = "h3" }: { offer: OfferView; he
           </div>
         )}
 
-        <div className="mt-auto flex items-end justify-between gap-3 pt-5">
-          <div className="flex min-w-0 flex-col gap-1 text-xs">
-            <ExpiryText offer={offer} />
+        {/* Meta keeps its natural width; when the card is too narrow the button wraps to its own line. */}
+        <div className="mt-auto flex flex-wrap items-center justify-between gap-x-3 gap-y-3 pt-5">
+          <div className="flex flex-col gap-1 text-xs">
+            <ExpiryText offer={offer} short />
             <VerificationText offer={offer} />
           </div>
           {!offer.isExpired && (
@@ -82,7 +83,7 @@ export function OfferCard({ offer, headingLevel = "h3" }: { offer: OfferView; he
               href={outboundHref(offer)}
               target="_blank"
               rel={outboundRel(offer)}
-              className="relative z-10 inline-flex h-8 shrink-0 items-center gap-1.5 rounded-full border border-line bg-subtle px-3.5 text-[13px] font-medium text-fg transition-colors hover:border-line-strong hover:text-accent-ink"
+              className="relative z-10 ml-auto inline-flex h-8 shrink-0 items-center gap-1.5 rounded-full border border-line bg-subtle px-3.5 text-[13px] font-medium text-fg transition-colors hover:border-line-strong hover:text-accent-ink"
             >
               View deal
               <Icon name="external" size={13} />
@@ -95,9 +96,18 @@ export function OfferCard({ offer, headingLevel = "h3" }: { offer: OfferView; he
   );
 }
 
-export function OfferGrid({ offers, headingLevel }: { offers: OfferView[]; headingLevel?: "h2" | "h3" }) {
+export function OfferGrid({
+  offers,
+  headingLevel,
+  withSidebar = false,
+}: {
+  offers: OfferView[];
+  headingLevel?: "h2" | "h3";
+  /** Next to a filter sidebar the grid has less room, so the third column waits for wider screens. */
+  withSidebar?: boolean;
+}) {
   return (
-    <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    <ul className={cn("grid gap-5 sm:grid-cols-2", withSidebar ? "xl:grid-cols-3" : "lg:grid-cols-3")}>
       {offers.map((offer) => (
         <li key={offer.id}>
           <OfferCard offer={offer} headingLevel={headingLevel} />

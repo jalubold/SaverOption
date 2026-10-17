@@ -142,7 +142,7 @@ export default async function DealsPage(props: PageProps<"/deals">) {
           }
         >
           {visible.length > 0 || sponsoredSlot.length > 0 ? (
-            <OfferGrid offers={[...sponsoredSlot, ...visible]} headingLevel="h2" />
+            <OfferGrid offers={[...sponsoredSlot, ...visible]} headingLevel="h2" withSidebar />
           ) : (
             <EmptyState hasFilters={hasActiveFilters(params)} categories={categories} />
           )}

@@ -1,6 +1,6 @@
 import { Icon } from "@/components/ui/icon";
 import { Badge, cn } from "@/components/ui/primitives";
-import { expiryLabel, formatDate } from "@/lib/format";
+import { expiryLabel, formatDate, formatShortDate } from "@/lib/format";
 import { conditionLabels, offerTypeLabels } from "@/lib/labels";
 import type { OfferView } from "@/lib/types";
 
@@ -34,8 +34,8 @@ export function SponsoredLabel({ offer, className }: { offer: OfferView; classNa
   );
 }
 
-export function ExpiryText({ offer, className }: { offer: OfferView; className?: string }) {
-  const label = expiryLabel(offer);
+export function ExpiryText({ offer, short = false, className }: { offer: OfferView; short?: boolean; className?: string }) {
+  const label = expiryLabel(offer, { short });
   if (!label) return null;
   const urgent = !offer.isExpired && offer.daysLeft !== undefined && offer.daysLeft <= 14;
   return (
@@ -66,7 +66,9 @@ export function VerificationText({ offer, long = false, className }: { offer: Of
         {checkedAt ? (
           <>
             {long ? "Verified by our editors on " : "Verified "}
-            <time dateTime={checkedAt}>{formatDate(checkedAt)}</time>
+            <time dateTime={checkedAt} title={formatDate(checkedAt)}>
+              {long ? formatDate(checkedAt) : formatShortDate(checkedAt)}
+            </time>
           </>
         ) : (
           "Verified"
