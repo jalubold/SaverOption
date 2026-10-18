@@ -30,6 +30,8 @@ export interface SiteConfig {
     accentContrast: string;
   };
   contactEmail: string;
+  /** Where the Partnerships page CTAs send partnership enquiries. */
+  partnershipsEmail: string;
   social: { label: string; href: string }[];
   /**
    * Pre-launch: keeps the site out of search indexes. Set to false when the
@@ -56,6 +58,7 @@ export const siteConfig: SiteConfig = {
     accentContrast: "#ffffff",
   },
   contactEmail: "hello@example.com",
+  partnershipsEmail: "jalubold@gmail.com",
   social: [],
   prelaunch: true,
 };
