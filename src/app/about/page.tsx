@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { Container } from "@/components/ui/primitives";
 import { pageMetadata } from "@/lib/seo";
@@ -47,8 +46,7 @@ export default function AboutPage() {
           <h2>Corrections and submissions</h2>
           <p>
             Spotted an expired offer or a wrong detail, or want to suggest a deal? Email{" "}
-            <a href={`mailto:${siteConfig.contactEmail}`}>{siteConfig.contactEmail}</a>. See our{" "}
-            <Link href="/disclosure">disclosure</Link> for how sponsored and affiliate links are labelled.
+            <a href={`mailto:${siteConfig.contactEmail}`}>{siteConfig.contactEmail}</a>.
           </p>
         </div>
       </div>

@@ -57,7 +57,7 @@ export const siteConfig: SiteConfig = {
     accentOnDark: "#b99cff",
     accentContrast: "#ffffff",
   },
-  contactEmail: "hello@example.com",
+  contactEmail: "jalubold@gmail.com",
   partnershipsEmail: "jalubold@gmail.com",
   social: [],
   prelaunch: true,
