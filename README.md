@@ -2,7 +2,7 @@
 
 A discovery site for software deals, free credits, startup perks, student discounts, lifetime deals and open-source alternatives. Users find offers here and redeem them on the provider's site. It is not a marketplace.
 
-> **Real offers, pre-launch.** `src/content/` holds real offers researched from the providers' own sites. Offers whose live page was checked are `verified` with a `checkedAt` date; offers known only from search extracts of the provider's site are published as `unverified` and labelled "Not yet verified". Supporting quotes are kept in `verification.evidence`. While `siteConfig.prelaunch` is `true`, a banner shows the check date and the site is `noindex`.
+> **Real offers, pre-launch.** `src/content/` holds real offers researched from the providers' own sites. Offers whose live page was checked are `verified` with a `checkedAt` date; offers known only from search extracts of the provider's site are published as `unverified` and labelled "Not yet verified". Supporting quotes are kept in `verification.evidence`. While `siteConfig.prelaunch` is `true`, the site is `noindex`.
 
 ## Quick start
 
@@ -32,7 +32,7 @@ The working brand is **Saver Option**. Everything brand-related lives in **`src/
 | `logo` | `{ kind: "mark" }` (built-in mark tinted with the accent) or `{ kind: "image", src, width, height }` |
 | `theme.accent` / `accentDeep` / `accentOnDark` / `accentContrast` | Injected as CSS variables on `<html>`. Button gradients, links, focus rings, the "How it works" panel, favicon and OG image follow them. |
 | `contactEmail` | Corrections and submissions links |
-| `prelaunch` | Pre-launch banner (with the latest check date) and `noindex` |
+| `prelaunch` | Keeps the site `noindex` |
 
 `NEXT_PUBLIC_BRAND_NAME` and `NEXT_PUBLIC_BRAND_TAGLINE` override the name and tagline without editing code. No component hardcodes a brand string.
 
@@ -41,7 +41,7 @@ The working brand is **Saver Option**. Everything brand-related lives in **`src/
 The visual direction follows jiro.build: a dark, search-first catalog (header, page heroes, deal grids) above light editorial sections with large Instrument Serif headings and a muted italic phrase.
 
 - **Two token scopes.** Light tokens sit on `:root`. Wrapping any element in `.theme-dark` re-skins every component inside it, because components only read tokens (`bg-surface`, `text-fg`, `border-line`…). The same `OfferCard` renders on dark listing pages and in light "Related offers".
-- **Component classes** in `globals.css`: `.btn-primary` (glossy accent gradient), `.btn-secondary`, `.seg`/`.seg-item` (pill tabs with an accent ring), `.eyebrow` (uppercase chip), `.display` (serif headings, `<em>` becomes the muted italic), `.hero-glow` and `.promo-bar`.
+- **Component classes** in `globals.css`: `.btn-primary` (glossy accent gradient), `.btn-secondary`, `.seg`/`.seg-item` (pill tabs with an accent ring), `.eyebrow` (uppercase chip), `.display` (serif headings, `<em>` becomes the muted italic) and `.hero-glow`.
 - The look is a fixed design rather than following the OS light/dark setting.
 
 ## Project structure
@@ -126,7 +126,7 @@ The form posts to `/api/newsletter`. With no provider configured, development lo
 
 1. Re-check every offer on its live page (especially the ones marked "Not yet verified"), then update `checkedAt`. Offers change often.
 2. Fill in the legal details on `/privacy` and `/terms` (operating entity, address) and have them reviewed.
-3. Set `prelaunch: false` in `site.ts`. This removes the banner and enables indexing, `robots.txt` rules and the sitemap reference.
+3. Set `prelaunch: false` in `site.ts`. This enables indexing, `robots.txt` rules and the sitemap reference.
 4. Set `NEXT_PUBLIC_SITE_URL` to the production domain, and set the final logo and contact email.
 5. Connect a newsletter provider.
 6. Add Upstash Redis (Vercel → Storage/Marketplace → Upstash) and set `VISITOR_SALT` to turn on real visitor counts and "Popular".

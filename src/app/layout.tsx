@@ -5,7 +5,6 @@ import { Instrument_Serif } from "next/font/google";
 import type { CSSProperties } from "react";
 import { siteConfig } from "@/config/site";
 import { VisitBeacon } from "@/components/analytics/visit-beacon";
-import { PrelaunchBanner } from "@/components/layout/prelaunch-banner";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -61,7 +60,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         >
           Skip to content
         </a>
-        <PrelaunchBanner />
         <SiteHeader />
         <main id="main" className="flex-1">
           {children}

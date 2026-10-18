@@ -32,8 +32,8 @@ export interface SiteConfig {
   contactEmail: string;
   social: { label: string; href: string }[];
   /**
-   * Pre-launch: shows a site-wide notice and keeps the site out of search
-   * indexes. Set to false when the site goes live on its real domain.
+   * Pre-launch: keeps the site out of search indexes. Set to false when the
+   * site goes live on its real domain.
    */
   prelaunch: boolean;
 }
