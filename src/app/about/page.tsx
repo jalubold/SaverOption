@@ -47,8 +47,8 @@ export default function AboutPage() {
           <h2>Corrections and submissions</h2>
           <p>
             Spotted an expired offer or a wrong detail, or want to suggest a deal? Email{" "}
-            <a href={`mailto:${siteConfig.contactEmail}`}>{siteConfig.contactEmail}</a>. Read{" "}
-            <Link href="/disclosure">how we make money</Link> for our policy on sponsored and affiliate listings.
+            <a href={`mailto:${siteConfig.contactEmail}`}>{siteConfig.contactEmail}</a>. See our{" "}
+            <Link href="/disclosure">disclosure</Link> for how sponsored and affiliate links are labelled.
           </p>
         </div>
       </div>

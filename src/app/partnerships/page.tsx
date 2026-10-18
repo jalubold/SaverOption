@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, Container, Eyebrow } from "@/components/ui/primitives";
@@ -67,12 +66,7 @@ export default function PartnershipsPage() {
             <p className="mt-5 max-w-xl text-[17px] leading-relaxed text-muted">
               Connect your software with people looking for better tools, smarter deals, and more value.
             </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <PartnerButton className="w-full sm:w-auto" />
-              <Link href="/disclosure" className={buttonClass("secondary", "lg", "w-full sm:w-auto")}>
-                How we label paid placements
-              </Link>
-            </div>
+            <PartnerButton className="mt-8 w-full sm:w-auto" />
           </div>
         </Container>
       </section>

@@ -408,7 +408,7 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
                   </p>
                 )}
                 <Link href="/disclosure" className="inline-block font-medium text-accent-ink hover:underline">
-                  How we make money
+                  Disclosure
                 </Link>
               </div>
             )}

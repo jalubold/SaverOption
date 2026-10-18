@@ -82,7 +82,7 @@ export default function PrivacyPage() {
           <h2>Changes</h2>
           <p>
             If we change this policy, we&apos;ll update the date at the top of this page. See also our{" "}
-            <Link href="/terms">terms of use</Link> and <Link href="/disclosure">how we make money</Link>.
+            <Link href="/terms">terms of use</Link> and <Link href="/disclosure">disclosure</Link>.
           </p>
         </div>
       </div>

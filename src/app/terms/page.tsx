@@ -40,8 +40,8 @@ export default function TermsPage() {
           <h2>Links to other sites</h2>
           <p>
             Listings link to third-party websites. We aren&apos;t responsible for their content, products, prices or
-            privacy practices. Some links may be affiliate links; when they are, the listing says so. Read{" "}
-            <Link href="/disclosure">how we make money</Link>.
+            privacy practices. Some links may be affiliate links; when they are, the listing says so. See our{" "}
+            <Link href="/disclosure">disclosure</Link>.
           </p>
 
           <h2>Trademarks</h2>

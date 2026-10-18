@@ -204,14 +204,6 @@ export default async function HomePage() {
               </li>
             ))}
           </ul>
-          <p className="mt-4 text-sm">
-            <Link
-              href="/disclosure"
-              className="inline-flex items-center gap-1 font-medium text-accent-ink hover:underline underline-offset-4"
-            >
-              Read how we make money and verify offers <Icon name="arrow-right" size={14} />
-            </Link>
-          </p>
         </section>
 
         <NewsletterSection />
