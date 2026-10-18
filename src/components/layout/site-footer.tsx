@@ -28,7 +28,6 @@ export async function SiteFooter() {
       links: [
         { label: `About ${siteConfig.name}`, href: "/about" },
         { label: "Partnerships", href: "/partnerships" },
-        { label: "How we make money", href: "/disclosure" },
         { label: "Privacy policy", href: "/privacy" },
         { label: "Terms of use", href: "/terms" },
         { label: "Submit or correct a deal", href: `mailto:${siteConfig.contactEmail}?subject=Deal%20submission` },
