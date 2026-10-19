@@ -200,6 +200,18 @@ export const providers: Provider[] = [
     "name": "Autodesk",
     "website": "https://www.autodesk.com",
     "about": "Autodesk makes design, engineering and 3D software such as AutoCAD, Revit and Fusion."
+  },
+  {
+    "id": "anthropic",
+    "name": "Anthropic",
+    "website": "https://www.anthropic.com",
+    "about": "Anthropic is an AI safety and research company that makes the Claude family of AI models and apps."
+  },
+  {
+    "id": "perplexity",
+    "name": "Perplexity",
+    "website": "https://www.perplexity.ai",
+    "about": "Perplexity makes an AI-powered answer engine and research assistant."
   }
 ];
 
@@ -947,6 +959,97 @@ export const products: Product[] = [
     "logo": {
       "src": "/logos/autodesk.svg",
       "alt": "Autodesk logo"
+    }
+  },
+  {
+    "id": "claude",
+    "slug": "claude",
+    "name": "Claude",
+    "providerId": "anthropic",
+    "tagline": "AI assistant from Anthropic",
+    "description": "Claude is Anthropic's AI assistant, available on the web, desktop and mobile, with Claude Code and Cowork for agentic work.",
+    "website": "https://claude.com",
+    "tags": [
+      "AI",
+      "Assistant",
+      "Education"
+    ],
+    "brandColor": "#D97757",
+    "logo": {
+      "src": "/logos/claude.svg",
+      "alt": "Claude logo"
+    }
+  },
+  {
+    "id": "chatgpt",
+    "slug": "chatgpt",
+    "name": "ChatGPT",
+    "providerId": "openai",
+    "tagline": "AI assistant from OpenAI",
+    "description": "ChatGPT is OpenAI's AI assistant, offered on Free and paid plans such as Plus.",
+    "website": "https://chatgpt.com",
+    "tags": [
+      "AI",
+      "Assistant",
+      "Chatbot"
+    ],
+    "brandColor": "#10A37F",
+    "logo": {
+      "src": "/logos/chatgpt.svg",
+      "alt": "ChatGPT logo"
+    }
+  },
+  {
+    "id": "gemini-api",
+    "slug": "gemini-api",
+    "name": "Gemini API",
+    "providerId": "google",
+    "tagline": "Google's developer API for Gemini models",
+    "description": "The Gemini Developer API gives developers paid and free-tier access to Google's Gemini models.",
+    "website": "https://ai.google.dev/gemini-api/docs",
+    "tags": [
+      "AI",
+      "LLM API",
+      "Developer tools"
+    ],
+    "brandColor": "#1A73E8",
+    "logo": {
+      "src": "/logos/gemini-api.svg",
+      "alt": "Gemini API logo"
+    }
+  },
+  {
+    "id": "kiro",
+    "slug": "kiro",
+    "name": "Kiro",
+    "providerId": "aws",
+    "tagline": "Agentic AI IDE from AWS",
+    "description": "Kiro is an AI coding IDE and agent from AWS.",
+    "website": "https://kiro.dev",
+    "tags": [
+      "AI",
+      "IDE",
+      "Developer tools"
+    ],
+    "brandColor": "#7B3FE4"
+  },
+  {
+    "id": "perplexity",
+    "slug": "perplexity",
+    "name": "Perplexity",
+    "providerId": "perplexity",
+    "tagline": "AI answer engine",
+    "description": "Perplexity is an AI answer engine with Pro, Max and Enterprise plans.",
+    "website": "https://www.perplexity.ai",
+    "tags": [
+      "AI",
+      "Search",
+      "Research"
+    ],
+    "brandColor": "#20808D",
+    "logo": {
+      "src": "/logos/perplexity.svg",
+      "alt": "Perplexity logo"
     }
   }
 ];

@@ -3828,5 +3828,408 @@ export const offers: Offer[] = [
       "officialUrl": "https://www.autodesk.com/support/account/education/students-educators/overview",
       "redeemUrl": "https://www.autodesk.com/education/home"
     }
+  },
+  {
+    "id": "o-claude-for-teachers-free-year",
+    "slug": "claude-for-teachers-free-year",
+    "productId": "claude",
+    "title": "Claude for Teachers: a free year of Claude for verified US K-12 educators (sign up by June 30, 2027)",
+    "summary": "Verified K-12 educators in the US get Claude for Teachers free, with premium Claude features, teaching skills and curriculum connectors. Signing up by June 30, 2027 gives a full year of free access.",
+    "description": "Claude for Teachers gives verified K-12 educators in the US free access to premium Claude capabilities, a library of teaching skills and a connection to evidence-based curricula through Learning Commons, mapped to academic standards in all 50 states. It also includes Claude Code and Cowork.\n\nAnthropic says educators who sign up by June 30, 2027 get a full year of free access. Training is off for verified teacher accounts, and the plan comes with its own teacher terms. Claude for Teachers is for individual educators; schools and districts have a separate free offering with centrally managed accounts.",
+    "type": "free-plan",
+    "categories": [
+      "ai-tools",
+      "student-discounts"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "durationMonths": 12
+    },
+    "claim": {
+      "method": "verification",
+      "note": "Get verified as a US K-12 educator from the Claude for Teachers page."
+    },
+    "regions": {
+      "scope": "limited",
+      "note": "US K-12 educators only."
+    },
+    "eligibility": [
+      "Verified K-12 educator in the US",
+      "For individual educators; schools and districts use a separate offering",
+      "Educators only, consistent with Claude's 18-and-over policy"
+    ],
+    "redemption": [
+      "Go to claude.com/solutions/teachers",
+      "Select Get verified / Verify now and complete educator verification",
+      "Sign up by June 30, 2027 to get the full year of free access"
+    ],
+    "terms": [
+      "Sign up by June 30, 2027 for a full year of free access",
+      "Training is off for verified teacher accounts",
+      "Extra usage limits apply; price and plans are subject to change at Anthropic's discretion"
+    ],
+    "expiresAt": "2027-06-30",
+    "publishedAt": "2026-10-19",
+    "updatedAt": "2026-10-19",
+    "status": "published",
+    "source": "official",
+    "verification": {
+      "status": "verified",
+      "checkedAt": "2026-10-19",
+      "method": "Checked against Anthropic's official program page",
+      "evidence": [
+        {
+          "claim": "Who gets it and what it includes",
+          "quote": "We're introducing Claude for Teachers, providing verified K-12 educators in the US free access to premium Claude capabilities, a library of teaching skills, and a direct connection to evidence-based curricula, mapped to academic standards in all 50 states."
+        },
+        {
+          "claim": "End date and duration (announcement)",
+          "quote": "Once verified, educators can access Claude for Teachers entirely free. Sign up by June 30, 2027, for a full year of access."
+        },
+        {
+          "claim": "End date (program page)",
+          "quote": "Sign up by June 30, 2027 for your full year of free access."
+        },
+        {
+          "claim": "Price on program page",
+          "quote": "For US K-12 teachers Serving verified teachers across US school systems Free Verify now ... Free account with access to premium Claude features"
+        },
+        {
+          "claim": "Individual educators vs. districts",
+          "quote": "Claude for Teachers is for individual educators. On August 28, 2026 we launched a dedicated offering for schools and districts."
+        },
+        {
+          "claim": "Includes Claude Code and Cowork",
+          "quote": "Claude for Teachers includes Claude Code and Cowork, which means Claude can carry work forward on its own."
+        },
+        {
+          "claim": "Educators only, 18+",
+          "quote": "Claude for Teachers is for educators only, consistent with Claude's 18-and-over policy."
+        },
+        {
+          "claim": "No training on teacher accounts",
+          "quote": "Training is off for verified teacher accounts."
+        },
+        {
+          "claim": "Usage and price caveat",
+          "quote": "*Extra usage limits apply. Prices shown don’t include applicable tax. Price and plans are subject to change at Anthropic’s discretion."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://claude.com/solutions/teachers",
+      "redeemUrl": "https://claude.ai/teachers"
+    }
+  },
+  {
+    "id": "o-chatgpt-plus-4-months-free-us-college-students",
+    "slug": "chatgpt-plus-4-months-free-us-college-students",
+    "productId": "chatgpt",
+    "title": "ChatGPT Plus free for 4 months for eligible U.S. college students (claim by October 31, 2026)",
+    "summary": "OpenAI's 2026 Back to School offer gives eligible U.S. college and graduate students four free months of ChatGPT Plus, including ChatGPT Work. It must be claimed by October 31, 2026.",
+    "description": "Current full-time and part-time college and graduate students at eligible U.S. degree-granting institutions can claim four months of ChatGPT Plus at no cost. Enrollment is verified through SheerID while signed in to the ChatGPT account that should receive the offer.\n\nA payment method is required to activate the offer, but you are not charged during the four free months. After the promotion the subscription renews at $20 per month unless cancelled. If you cancel early, Plus stays active through the current billing period and the remaining free months are forfeited. Existing Plus subscribers billed directly by ChatGPT can claim it; subscriptions billed through the Apple App Store or Google Play are not supported while they remain store-billed.",
+    "type": "student",
+    "categories": [
+      "student-discounts",
+      "ai-tools",
+      "free-trials"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "period": "month",
+      "durationMonths": 4,
+      "renewalPrice": 20,
+      "renewalPeriod": "month"
+    },
+    "claim": {
+      "method": "verification",
+      "note": "Verify enrollment through SheerID on the ChatGPT students page while signed in."
+    },
+    "requirements": {
+      "studentVerification": true,
+      "cardRequired": true
+    },
+    "regions": {
+      "scope": "limited",
+      "note": "Students at eligible U.S. degree-granting institutions."
+    },
+    "eligibility": [
+      "Current full-time or part-time college or graduate student",
+      "Enrolled at an eligible U.S. degree-granting institution",
+      "Not billed through the Apple App Store or Google Play"
+    ],
+    "redemption": [
+      "Go to chatgpt.com/students/2026 and sign in to the ChatGPT account you want credited",
+      "Verify your enrollment through SheerID",
+      "Add a payment method if you are a new Plus subscriber",
+      "Claim by October 31, 2026"
+    ],
+    "terms": [
+      "Claim by October 31, 2026",
+      "Renews at $20/month after the promotion unless cancelled",
+      "Cancelling early forfeits the remaining promotional months",
+      "Store-billed (Apple App Store or Google Play) subscriptions are not supported"
+    ],
+    "expiresAt": "2026-10-31",
+    "publishedAt": "2026-10-19",
+    "updatedAt": "2026-10-19",
+    "status": "published",
+    "source": "official",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of OpenAI's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of the official page because the page could not be fetched from the research environment; re-check wording and the end date against the live page before publishing. The landing page headline frames the offer as \"4 months of ChatGPT Work on us\" (an \"$80 value\"), while the help article describes it as ChatGPT Plus including ChatGPT Work. The verbatim deadline quote (\"Claim by October 31\") has no year; the year 2026 comes from the offer page URL (/students/2026/) and from search summaries of the help article, which give the deadline as October 31, 2026.",
+      "evidence": [
+        {
+          "claim": "Offer headline",
+          "quote": "Get 4 months of ChatGPT Work on us"
+        },
+        {
+          "claim": "Deadline",
+          "quote": "Claim by October 31"
+        },
+        {
+          "claim": "Eligibility",
+          "quote": "current full-time and part-time college and graduate students enrolled at eligible U.S. degree-granting institutions"
+        },
+        {
+          "claim": "Store-billed subscriptions excluded",
+          "quote": "subscriptions billed through the Apple App Store or Google Play are not supported while they remain store-billed"
+        },
+        {
+          "claim": "Cancellation",
+          "quote": "any remaining promotional months are forfeited when the cancellation takes effect"
+        },
+        {
+          "claim": "Renewal price",
+          "quote": "renews at $20/month unless you cancel"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://help.openai.com/en/articles/20001493-chatgpt-back-to-school-offer-for-students",
+      "redeemUrl": "https://chatgpt.com/students/2026/"
+    }
+  },
+  {
+    "id": "o-gemini-4-argon-introductory-api-pricing",
+    "slug": "gemini-4-argon-introductory-api-pricing",
+    "productId": "gemini-api",
+    "title": "Gemini 4 Argon introductory API pricing: $2 input / $10 output per 1M tokens until November 30, 2026",
+    "summary": "Google is charging an introductory rate for Gemini 4 Argon on the Gemini API's paid tier until November 30, 2026, after which the price doubles to $4 input and $20 output per 1M tokens.",
+    "description": "Gemini 4 Argon launched on the Gemini Developer API at an introductory price of $2 per 1M input tokens and $10 per 1M output tokens on the standard paid tier. Google states that after the introductory period expires on November 30, 2026, the price becomes $4 per 1M input tokens and $20 per 1M output tokens.\n\nThe model is not available on the Gemini API Free tier. Other tiers (such as Priority and Batch) have their own introductory rates that also change after November 30, 2026; check the pricing page for the tier you use.",
+    "type": "discount",
+    "categories": [
+      "ai-tools",
+      "saas-discounts"
+    ],
+    "claim": {
+      "method": "automatic",
+      "note": "The introductory rate applies to paid-tier Gemini API usage of Gemini 4 Argon until November 30, 2026."
+    },
+    "eligibility": [
+      "Gemini API paid tier (the model is not available on the Free tier)"
+    ],
+    "redemption": [
+      "Use the Gemini 4 Argon model on a paid Gemini API project; billing uses the introductory rate until November 30, 2026"
+    ],
+    "terms": [
+      "Introductory input price is $2.00 per 1M tokens through November 30, 2026, then $4.00 starting December 1, 2026",
+      "After November 30, 2026, $4 per 1M input tokens and $20 per 1M output tokens apply"
+    ],
+    "expiresAt": "2026-11-30",
+    "publishedAt": "2026-10-19",
+    "updatedAt": "2026-10-19",
+    "status": "published",
+    "source": "official",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Google's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of the official page because the page could not be fetched from the research environment; re-check wording and the end date against the live page before publishing.",
+      "evidence": [
+        {
+          "claim": "Pricing table: free tier unavailable; introductory input price and end date",
+          "quote": "Input price | Not available | $2.00 through November 30, 2026.$4.00 starting December 1, 2026."
+        },
+        {
+          "claim": "Price after the introductory period (blog)",
+          "quote": "After the introductory period expires on November 30, 2026, the price of $4 per 1M input tokens and $20 per 1M output tokens will apply."
+        },
+        {
+          "claim": "Launch price (blog)",
+          "quote": "$2 per million input tokens and $10 per million output tokens"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://ai.google.dev/gemini-api/docs/pricing"
+    }
+  },
+  {
+    "id": "o-kiro-startup-credits-2026",
+    "slug": "kiro-startup-credits-2026",
+    "productId": "kiro",
+    "title": "Kiro startup credits: up to a year of free Kiro Pro+ for early-stage to Series A startups (apply by December 31, 2026)",
+    "summary": "AWS's Kiro startup program offers early-stage to Series A startups up to a year's worth of free Kiro Pro+. The 2026 program terms run from April 7 to December 31, 2026.",
+    "description": "Kiro, the AI coding IDE from AWS, runs a startup credits program that gives eligible early-stage to Series A startups up to 1 year's worth of free Kiro Pro+. The amount of promotion credits depends on the tier you select, and applications are reviewed on a rolling basis.\n\nYou need an AWS account whose email address uses a domain matching your startup's corporate website. Startups with active AWS Activate credits are not eligible, although Activate credits can already be used for Kiro. The offer is limited to one subscription per startup, credits expire one year after they are issued, and once credits run out the account switches to standard Kiro Pro+ billing.",
+    "type": "startup",
+    "categories": [
+      "startup-perks",
+      "ai-tools",
+      "free-credits"
+    ],
+    "claim": {
+      "method": "application",
+      "note": "Apply through AWS Startups at aws.amazon.com/startups/credits/kiro."
+    },
+    "requirements": {
+      "approvalRequired": true
+    },
+    "eligibility": [
+      "Early-stage to Series A startup",
+      "AWS account whose email domain matches the startup's corporate website",
+      "No active AWS Activate credits",
+      "Applicants must be 18 years and older"
+    ],
+    "redemption": [
+      "Create an AWS account if you don't have one",
+      "Apply at aws.amazon.com/startups/credits/kiro and choose a tier",
+      "Wait for the rolling review; the decision is sent to your AWS account email",
+      "After approval, credits are added to your AWS account; sign in to Kiro through IAM Identity Center"
+    ],
+    "terms": [
+      "Program terms run from April 7, 2026 to December 31, 2026",
+      "Limited to one subscription per startup; credits can be received once",
+      "Credits expire one year after issuance",
+      "When credits run out, the account switches to standard Kiro Pro+ billing"
+    ],
+    "expiresAt": "2026-12-31",
+    "publishedAt": "2026-10-19",
+    "updatedAt": "2026-10-19",
+    "status": "published",
+    "source": "official",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Kiro (AWS)'s official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of the official page because the page could not be fetched from the research environment; re-check wording and the end date against the live page before publishing. The end date is from the 2026 program terms; the startups page itself only says \"for a limited time\". AWS may modify or cancel the offer at any time.",
+      "evidence": [
+        {
+          "claim": "Offer",
+          "quote": "for a limited time only, early stage to Series A startups globally can apply for up to 1-year's worth of free Kiro Pro+"
+        },
+        {
+          "claim": "Program dates (terms)",
+          "quote": "April 7, 2026 to December 31, 2026"
+        },
+        {
+          "claim": "Activate exclusion",
+          "quote": "Startups with active AWS Activate Credits are not eligible for this promotion, but don't worry, Activate credits can be used for Kiro."
+        },
+        {
+          "claim": "Email domain requirement",
+          "quote": "must include a domain name matching the domain name for your startup's corporate website"
+        },
+        {
+          "claim": "Rolling review",
+          "quote": "Applications will be reviewed on a rolling basis"
+        },
+        {
+          "claim": "One per startup",
+          "quote": "Offer limited to 1 subscription per startup. You may only receive Kiro credits once under this promotion."
+        },
+        {
+          "claim": "Credit expiry",
+          "quote": "Credits expire 1 year after the date of issuance"
+        },
+        {
+          "claim": "After credits run out",
+          "quote": "Once credits run out, your AWS Account will automatically switch to standard Kiro Pro+ billing."
+        },
+        {
+          "claim": "Age",
+          "quote": "18 years and older"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://kiro.dev/startups/terms/",
+      "redeemUrl": "https://kiro.dev/startups/"
+    }
+  },
+  {
+    "id": "o-perplexity-amex-1000-computer-credits",
+    "slug": "perplexity-amex-1000-computer-credits",
+    "productId": "perplexity",
+    "title": "Perplexity Enterprise: 1,000 bonus Computer Credits when you pay with a U.S. American Express card (ends March 29, 2027)",
+    "summary": "Perplexity gives a one-time bonus of 1,000 Perplexity Computer Credits to Enterprise Pro or Enterprise Max accounts paid on perplexity.ai with a U.S. American Express card between October 1, 2026 and March 29, 2027.",
+    "description": "Under Perplexity's American Express partnership, paying for a new or existing Perplexity Enterprise Pro or Enterprise Max subscription on perplexity.ai with a U.S. American Express card earns a one-time bonus of 1,000 Perplexity Computer Credits. Perplexity's offer page says the offer ends 03/29/2027.\n\nThe bonus is limited to one per eligible Perplexity account, not per seat. Credits can take up to 90 days after the eligible charge to arrive, expire 60 calendar days after they are awarded, and are forfeited if the Perplexity subscription is cancelled.",
+    "type": "free-credits",
+    "categories": [
+      "free-credits",
+      "ai-tools"
+    ],
+    "claim": {
+      "method": "automatic",
+      "note": "Pay for Perplexity Enterprise Pro or Enterprise Max on perplexity.ai with an eligible U.S. American Express card."
+    },
+    "regions": {
+      "scope": "limited",
+      "note": "U.S. American Express cards."
+    },
+    "eligibility": [
+      "New or existing Perplexity Enterprise Pro or Enterprise Max subscription",
+      "Paid on perplexity.ai with a U.S. American Express card between 10/1/2026 and 3/29/2027"
+    ],
+    "redemption": [
+      "Pay for Perplexity Enterprise Pro or Enterprise Max on perplexity.ai with a U.S. American Express card",
+      "Wait for the 1,000 Computer Credits to post (up to 90 days after the eligible charge)"
+    ],
+    "terms": [
+      "Offer ends 03/29/2027",
+      "One bonus of 1,000 Computer Credits per eligible Perplexity account, not per seat",
+      "Credits expire 60 calendar days after they are awarded",
+      "Credits are forfeited if the Perplexity subscription is cancelled"
+    ],
+    "expiresAt": "2027-03-29",
+    "publishedAt": "2026-10-19",
+    "updatedAt": "2026-10-19",
+    "status": "published",
+    "source": "official",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Perplexity's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of the official page because the page could not be fetched from the research environment; re-check wording and the end date against the live page before publishing. The same page also describes a separate American Express statement-credit offer that requires enrolling the card with American Express; it is not covered here.",
+      "evidence": [
+        {
+          "claim": "End date",
+          "quote": "Offer ends 03/29/2027"
+        },
+        {
+          "claim": "Eligible purchases",
+          "quote": "Eligible purchases include existing or new Perplexity Enterprise Pro or Enterprise Max subscriptions."
+        },
+        {
+          "claim": "Purchase window",
+          "quote": "between 10/1/2026 and 3/29/2027"
+        },
+        {
+          "claim": "Bonus amount and limit",
+          "quote": "one (1) bonus of 1,000 Perplexity Computer Credits per eligible Perplexity Account (not per seat)"
+        },
+        {
+          "claim": "Posting time",
+          "quote": "up to 90 days after the eligible charge"
+        },
+        {
+          "claim": "Expiry and forfeiture",
+          "quote": "expire 60 calendar days after they are awarded, and will be forfeited upon cancellation of your Perplexity subscription"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.perplexity.ai/hub/partnerships/amex"
+    }
   }
 ];
