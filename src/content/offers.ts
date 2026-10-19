@@ -4060,11 +4060,23 @@ export const offers: Offer[] = [
         {
           "claim": "Launch price (blog)",
           "quote": "$2 per million input tokens and $10 per million output tokens"
+        },
+        {
+          "claim": "Region: Gemini API Additional Terms: region restriction",
+          "quote": "You may only access the Services (or make API Clients available to users) within an available region."
+        },
+        {
+          "claim": "Region: Available regions page",
+          "quote": "Available regions for Google AI Studio and Gemini API"
         }
       ]
     },
     "links": {
       "officialUrl": "https://ai.google.dev/gemini-api/docs/pricing"
+    },
+    "regions": {
+      "scope": "limited",
+      "note": "Only in the countries and territories where the Gemini API is available (see ai.google.dev/gemini-api/docs/available-regions)."
     }
   },
   {
@@ -4150,12 +4162,24 @@ export const offers: Offer[] = [
         {
           "claim": "Age",
           "quote": "18 years and older"
+        },
+        {
+          "claim": "Region: Scope wording (startups page)",
+          "quote": "early stage to Series A startups in most countries or regions globally can apply for up to one year's worth of Kiro Pro+ credits"
+        },
+        {
+          "claim": "Region: Excluded countries (startups FAQ)",
+          "quote": "Excludes individuals living in Argentina, Belarus, Brazil, China/GCR, Cuba, France, Germany, Iran, Italy, Mexico, North Korea, Poland, Russia, Spain, Syria, the region of Crimea, the so-called Donetsk People's Republic region (DNR), the so-called Luhansk People's Republic region (LNR), and the United Arab Emirates."
         }
       ]
     },
     "links": {
       "officialUrl": "https://kiro.dev/startups/terms/",
       "redeemUrl": "https://kiro.dev/startups/"
+    },
+    "regions": {
+      "scope": "limited",
+      "note": "Excludes individuals living in Argentina, Belarus, Brazil, China/GCR, Cuba, France, Germany, Iran, Italy, Mexico, North Korea, Poland, Russia, Spain, Syria, Crimea, the so-called DNR and LNR regions, and the United Arab Emirates."
     }
   },
   {
@@ -4231,5 +4255,210 @@ export const offers: Offer[] = [
     "links": {
       "officialUrl": "https://www.perplexity.ai/hub/partnerships/amex"
     }
+  },
+  {
+    "id": "o-devin-gemini-4-argon-75-off-october-2026",
+    "slug": "devin-gemini-4-argon-75-off-october-2026",
+    "productId": "devin-desktop",
+    "title": "Gemini 4 Argon at 75% off list price in Devin Desktop and Devin CLI (through October 27, 2026)",
+    "summary": "Cognition is offering Gemini 4 Argon in Devin Desktop (formerly Windsurf) and Devin CLI at 75% off list price through October 27, 2026, by adding an extra 50% discount on top of Google's introductory pricing.",
+    "description": "Gemini 4 Argon is live in Devin Desktop and Devin CLI. Through October 27, 2026, Cognition adds an extra 50% discount on top of Google's 50% introductory pricing, which works out to 75% off list price. During the promotion the token rates are $1.00 per 1M input tokens, $5.00 per 1M output tokens and $0.05 per 1M cached input tokens.\n\nAfter October 27, Devin's docs say Google's introductory rate of $2.00 input / $10.00 output per 1M tokens applies through December 1, 2026, and list pricing applies afterward. Credit-based enterprise customers get a separate deal: Gemini 4 Argon is half price in credits (25, 35 and 45 credits for Low, Medium and High) through October 27, 2026.",
+    "type": "discount",
+    "categories": [
+      "ai-tools",
+      "saas-discounts"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "savingsLabel": "75% off list price through October 27, 2026"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Pick Gemini 4 Argon in the Devin Desktop or Devin CLI model selector; the discounted rate is applied to usage through October 27, 2026."
+    },
+    "eligibility": [
+      "Devin Desktop or Devin CLI users who select Gemini 4 Argon",
+      "Credit-based enterprise customers get a separate half-price credit rate through October 27, 2026"
+    ],
+    "redemption": [
+      "Open Devin Desktop or Devin CLI",
+      "Select Gemini 4 Argon in the model selector",
+      "Usage through October 27, 2026 is billed at the promotional rate"
+    ],
+    "terms": [
+      "75% off list price runs through October 27, 2026",
+      "The discount combines Google's 50% introductory pricing with an extra 50% discount from Devin",
+      "Google's introductory pricing runs through December 1, 2026, then list pricing applies"
+    ],
+    "expiresAt": "2026-10-27",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Cognition (Devin)'s official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of the official page because the page could not be fetched from the research environment; re-check wording and the end date against the live page before publishing. Devin's docs give the introductory-rate end as December 1, 2026 while Google's own pricing page says November 30, 2026; only the October 27 date is used here. No country restriction is stated in the offer terms; not labelled worldwide because the provider does not say so explicitly.",
+      "evidence": [
+        {
+          "claim": "Offer and end date (blog)",
+          "quote": "Gemini 4 Argon is now live in Devin Desktop and Devin CLI, at 75% off list price through October 27, 2026."
+        },
+        {
+          "claim": "How the discount is built (blog)",
+          "quote": "That combines Google's 50% introductory pricing, which runs through December 1, 2026, with an extra 50% discount in Devin through October 27, 2026."
+        },
+        {
+          "claim": "Promotional token rates (docs)",
+          "quote": "with an additional 50% off ($1.00/1M input, $5.00/1M output, $0.05/1M cache input) through October 27, 2026"
+        },
+        {
+          "claim": "Enterprise credit rate (docs)",
+          "quote": "Gemini 4 Argon is half price (25, 35, and 45 credits for Low, Medium, and High) through October 27, 2026."
+        },
+        {
+          "claim": "Enterprise credit rate scope (docs)",
+          "quote": "This only applies to credit-based enterprise customers."
+        },
+        {
+          "claim": "Region basis",
+          "quote": "No country or region restriction appears in the blog announcement or the models docs pricing note checked above; offer applies to self-serve usage in the product."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://devin.ai/blog/gemini-4-argon",
+      "redeemUrl": "https://docs.devin.ai/desktop/models"
+    },
+    "publishedAt": "2026-10-19",
+    "updatedAt": "2026-10-19",
+    "status": "published",
+    "source": "official"
+  },
+  {
+    "id": "o-vercel-ai-gateway-laya-free-october-2026",
+    "slug": "vercel-ai-gateway-laya-free-october-2026",
+    "productId": "vercel",
+    "title": "Laya decision model free on Vercel AI Gateway (through October 31, 2026)",
+    "summary": "Vercel AI Gateway is serving Convai Innovations' Laya decision model for free through October 31, 2026, when requests are served by Boundless.",
+    "description": "Laya, a decision model from Convai Innovations, is available on Vercel AI Gateway. Through October 31, 2026, both model IDs, convaiinnovations/laya and convaiinnovations/laya-free, are free when served by the provider Boundless.\n\nThe -free ID routes to Boundless and stops serving when the promotion ends. Promotional pricing is applied automatically at request time.",
+    "type": "free-plan",
+    "categories": [
+      "ai-tools",
+      "free-credits"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Call convaiinnovations/laya or convaiinnovations/laya-free through Vercel AI Gateway; promotional pricing is applied at request time."
+    },
+    "eligibility": [
+      "Vercel AI Gateway users"
+    ],
+    "redemption": [
+      "Set up Vercel AI Gateway on your Vercel account",
+      "Send requests to convaiinnovations/laya or convaiinnovations/laya-free",
+      "Requests served by Boundless are free through October 31, 2026"
+    ],
+    "terms": [
+      "Free only when served by Boundless",
+      "The -free model ID stops serving after the promotion"
+    ],
+    "expiresAt": "2026-10-31",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Vercel's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of the official page because the page could not be fetched from the research environment; re-check wording and the end date against the live page before publishing. No country restriction is stated in the offer terms; not labelled worldwide because the provider does not say so explicitly.",
+      "evidence": [
+        {
+          "claim": "Free window and end date (changelog)",
+          "quote": "Through October 31, 2026, both convaiinnovations/laya and convaiinnovations/laya-free are free when served by Boundless."
+        },
+        {
+          "claim": "-free ID ends with the promotion (changelog)",
+          "quote": "The -free ID routes to Boundless and stops serving after the promotion."
+        },
+        {
+          "claim": "Automatic application (AI Gateway page)",
+          "quote": "Promotional pricing applies automatically at request time."
+        },
+        {
+          "claim": "Region basis",
+          "quote": "The changelog terms quoted above contain no country or region restriction; AI Gateway is a self-serve online service."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://vercel.com/changelog/laya-decision-model-now-available-on-ai-gateway-free-through-october-31",
+      "redeemUrl": "https://vercel.com/ai-gateway/models/laya-free"
+    },
+    "publishedAt": "2026-10-19",
+    "updatedAt": "2026-10-19",
+    "status": "published",
+    "source": "official"
+  },
+  {
+    "id": "o-figma-code-layers-no-ai-credits-november-2026",
+    "slug": "figma-code-layers-no-ai-credits-november-2026",
+    "productId": "figma",
+    "title": "Figma code layers: generating and editing code uses no AI credits (through November 4)",
+    "summary": "During the open beta of code layers in Figma Design, generating and editing code inside a code layer does not use AI credits through November 4; after that, code layer tasks use AI credits like other agentic AI features.",
+    "description": "Figma launched code layers in Figma Design in open beta on October 15, 2026. Until November 4, generating and editing code inside code layers does not use AI credits. Other work the Figma agent does as part of the same request still consumes AI credits.\n\nAfter November 4, all code layer tasks use AI credits like Figma's other agentic AI features. Code layers is rolling out gradually, so some accounts may see the feature later than others.",
+    "type": "free-plan",
+    "categories": [
+      "ai-tools",
+      "software-deals"
+    ],
+    "claim": {
+      "method": "automatic",
+      "note": "No action needed: code-layer generation and editing are not charged AI credits until November 4."
+    },
+    "eligibility": [
+      "Figma Design users with access to code layers (open beta, rolling out gradually)"
+    ],
+    "redemption": [
+      "Open a Figma Design file",
+      "Create or edit a code layer",
+      "Code generation and editing inside the code layer does not use AI credits until November 4"
+    ],
+    "terms": [
+      "Only code generation and editing inside code layers is free; other Figma agent work in the same request still uses AI credits",
+      "After November 4, all code layer tasks use AI credits"
+    ],
+    "expiresAt": "2026-11-04",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Figma's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of the official page because the page could not be fetched from the research environment; re-check wording and the end date against the live page before publishing. Figma's verbatim lines say \"November 4\" without a year; the year 2026 comes from the open beta launch post dated October 15, 2026 and search extracts of the help center. Figma's help center and Config India page disagree on whether K-12 Education plans have access, so plan eligibility is left out. No country restriction is stated in the offer terms; not labelled worldwide because the provider does not say so explicitly.",
+      "evidence": [
+        {
+          "claim": "Free window (pricing FAQ)",
+          "quote": "Free through November 4: Generating and editing code inside code layers."
+        },
+        {
+          "claim": "Other agent work still billed (pricing FAQ)",
+          "quote": "The Figma agent's other work related to your request still consumes AI credits."
+        },
+        {
+          "claim": "After the end date (help center)",
+          "quote": "After November 4, all code layer tasks will use AI credits like other agentic AI features."
+        },
+        {
+          "claim": "Open beta launch (blog, dated October 15, 2026)",
+          "quote": "code layers is rolling out in open beta starting today, and will use AI credits."
+        },
+        {
+          "claim": "Region basis",
+          "quote": "The pricing FAQ and help-center terms quoted above contain no country or region restriction; the window applies within the Figma product."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.figma.com/pricing-faq/",
+      "redeemUrl": "https://help.figma.com/hc/en-us/articles/44193259600535-Code-layers-in-Figma-Design"
+    },
+    "publishedAt": "2026-10-19",
+    "updatedAt": "2026-10-19",
+    "status": "published",
+    "source": "official"
   }
 ];

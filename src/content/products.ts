@@ -212,6 +212,12 @@ export const providers: Provider[] = [
     "name": "Perplexity",
     "website": "https://www.perplexity.ai",
     "about": "Perplexity makes an AI-powered answer engine and research assistant."
+  },
+  {
+    "id": "cognition",
+    "name": "Cognition",
+    "website": "https://devin.ai",
+    "about": "Cognition makes Devin, an AI software engineering agent, and Devin Desktop (formerly Windsurf), an AI coding editor."
   }
 ];
 
@@ -1031,7 +1037,11 @@ export const products: Product[] = [
       "IDE",
       "Developer tools"
     ],
-    "brandColor": "#7B3FE4"
+    "brandColor": "#7B3FE4",
+    "logo": {
+      "src": "/logos/kiro.svg",
+      "alt": "Kiro logo"
+    }
   },
   {
     "id": "perplexity",
@@ -1050,6 +1060,25 @@ export const products: Product[] = [
     "logo": {
       "src": "/logos/perplexity.svg",
       "alt": "Perplexity logo"
+    }
+  },
+  {
+    "id": "devin-desktop",
+    "slug": "devin-desktop",
+    "name": "Devin Desktop",
+    "providerId": "cognition",
+    "tagline": "AI coding editor and CLI from Cognition (formerly Windsurf)",
+    "description": "Devin Desktop, formerly Windsurf, is an AI code editor with an agent panel and a companion Devin CLI that run models from several AI labs.",
+    "website": "https://devin.ai",
+    "tags": [
+      "AI coding",
+      "Code editor",
+      "Developer tools"
+    ],
+    "brandColor": "#0B100F",
+    "logo": {
+      "src": "/logos/devin-desktop.svg",
+      "alt": "Devin Desktop logo"
     }
   }
 ];

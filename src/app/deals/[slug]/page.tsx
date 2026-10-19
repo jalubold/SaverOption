@@ -127,7 +127,7 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
             <div className="flex items-center gap-3">
               <ProductLogo product={offer.product} size="lg" />
               <div>
-                <Link href={`/products/${offer.product.slug}`} className="-my-1.5 inline-block py-1.5 text-[15px] font-semibold text-fg hover:text-accent-ink">
+                <Link href={`/products/${offer.product.slug}`} className="-my-1.5 inline-block min-w-8 py-1.5 text-[15px] font-semibold text-fg hover:text-accent-ink">
                   {offer.product.name}
                 </Link>
                 <p className="text-sm text-muted">by {offer.provider.name}</p>
