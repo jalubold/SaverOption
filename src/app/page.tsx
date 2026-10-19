@@ -21,6 +21,9 @@ import {
 // Re-render hourly so expiry labels and "ending soon" stay accurate.
 export const revalidate = 3600;
 
+// Rows in the hero side panel: offers with a published end date first, then the largest credit programs.
+const HERO_ROWS = 5;
+
 const quickCategories = ["ai-tools", "free-credits", "startup-perks", "student-discounts", "lifetime-deals", "open-source"];
 
 const principles = [
@@ -50,7 +53,12 @@ export default async function HomePage() {
     getPopularOffers(6),
     queryOffers({ sort: "ending-soon" }),
   ]);
-  const ending = endingSoon.offers.filter((o) => o.daysLeft !== undefined).slice(0, 4);
+  const ending = endingSoon.offers.filter((o) => o.daysLeft !== undefined).slice(0, HERO_ROWS - 1);
+  const endingIds = new Set(ending.map((o) => o.id));
+  const largestCredits = endingSoon.offers
+    .filter((o) => !endingIds.has(o.id) && (o.pricing?.creditValue ?? 0) > 0)
+    .sort((a, b) => (b.pricing?.creditValue ?? 0) - (a.pricing?.creditValue ?? 0))
+    .slice(0, HERO_ROWS - ending.length);
   // Only categories with live offers appear on the homepage; the full list lives on /categories.
   const liveCategories = categories.filter((c) => c.count > 0);
   const chips = liveCategories.filter((c) => quickCategories.includes(c.slug));
@@ -108,7 +116,27 @@ export default async function HomePage() {
                   ))}
                 </ul>
               ) : (
-                <p className="px-2 py-6 text-sm text-muted">No offers with a published end date right now.</p>
+                <p className="px-2 py-4 text-sm text-muted">No offers with a published end date right now.</p>
+              )}
+              {largestCredits.length > 0 && (
+                <>
+                  <div className="mt-2 flex items-center justify-between border-t border-line px-2 pb-1 pt-3">
+                    <h2 className="flex items-center gap-2 text-sm font-semibold text-fg">
+                      <Icon name="coins" size={14} className="text-accent-ink" />
+                      Largest credit programs
+                    </h2>
+                    <Link href="/categories/free-credits" className="-my-2 py-2 text-xs font-medium text-accent-ink hover:underline">
+                      See all
+                    </Link>
+                  </div>
+                  <ul>
+                    {largestCredits.map((o) => (
+                      <li key={o.id}>
+                        <OfferRow offer={o} />
+                      </li>
+                    ))}
+                  </ul>
+                </>
               )}
               <Link href="/deals" className={buttonClass("primary", "md", "mt-2 w-full")}>
                 Explore all deals

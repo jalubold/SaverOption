@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ExpiryText } from "@/components/offers/offer-meta";
 import { ProductLogo } from "@/components/offers/product-logo";
 import { headlineValue } from "@/lib/format";
+import { offerTypeLabels } from "@/lib/labels";
 import type { OfferView } from "@/lib/types";
 
 /** Dense single-line listing for side panels and compact lists. */
@@ -19,7 +20,7 @@ export function OfferRow({ offer }: { offer: OfferView }) {
           {value && <span className="font-normal text-muted"> · {value}</span>}
         </p>
         <p className="mt-0.5 text-xs">
-          <ExpiryText offer={offer} />
+          {offer.expiresAt ? <ExpiryText offer={offer} /> : <span className="text-muted">{offerTypeLabels[offer.type]}</span>}
         </p>
       </div>
     </Link>
