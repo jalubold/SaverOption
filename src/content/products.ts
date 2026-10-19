@@ -1,5 +1,5 @@
 /**
- * Providers and products — generated from research notes on 2026-10-17.
+ * Providers and products — generated from research notes on 2026-10-17 and 2026-10-19.
  * Sources are the providers' own sites. `verification.status` says whether the
  * live page was checked ("verified") or the facts came from the provider's site
  * via search extracts only ("unverified"). Supporting quotes are kept in
@@ -68,6 +68,138 @@ export const providers: Provider[] = [
     "id": "betterdisplay",
     "name": "BetterDisplay (waydabber)",
     "website": "https://betterdisplay.pro"
+  },
+  {
+    "id": "aws",
+    "name": "Amazon Web Services",
+    "website": "https://aws.amazon.com",
+    "about": "Amazon Web Services is Amazon's cloud computing platform."
+  },
+  {
+    "id": "cloudflare",
+    "name": "Cloudflare",
+    "website": "https://www.cloudflare.com",
+    "about": "Cloudflare provides a global network for security, performance and developer services."
+  },
+  {
+    "id": "digitalocean",
+    "name": "DigitalOcean",
+    "website": "https://www.digitalocean.com",
+    "about": "DigitalOcean is a cloud infrastructure provider for developers and startups."
+  },
+  {
+    "id": "mongodb",
+    "name": "MongoDB",
+    "website": "https://www.mongodb.com",
+    "about": "MongoDB, Inc. develops the MongoDB document database and the MongoDB Atlas cloud service."
+  },
+  {
+    "id": "oracle",
+    "name": "Oracle",
+    "website": "https://www.oracle.com",
+    "about": "Oracle is an enterprise software and cloud company that runs Oracle Cloud Infrastructure (OCI)."
+  },
+  {
+    "id": "vercel",
+    "name": "Vercel",
+    "website": "https://vercel.com",
+    "about": "Vercel is a cloud platform for deploying and hosting web applications."
+  },
+  {
+    "id": "neon",
+    "name": "Neon",
+    "website": "https://neon.com",
+    "about": "Neon provides serverless Postgres and is part of Databricks."
+  },
+  {
+    "id": "nvidia",
+    "name": "NVIDIA",
+    "website": "https://www.nvidia.com",
+    "about": "NVIDIA makes GPUs and the software platforms used to build and run AI."
+  },
+  {
+    "id": "elevenlabs",
+    "name": "ElevenLabs",
+    "website": "https://elevenlabs.io",
+    "about": "ElevenLabs builds AI voice, text-to-speech and conversational audio products."
+  },
+  {
+    "id": "openai",
+    "name": "OpenAI",
+    "website": "https://openai.com",
+    "about": "OpenAI develops the GPT models, ChatGPT and the OpenAI API."
+  },
+  {
+    "id": "cohere",
+    "name": "Cohere",
+    "website": "https://cohere.com",
+    "about": "Cohere builds large language models and AI tools for enterprises."
+  },
+  {
+    "id": "hubspot",
+    "name": "HubSpot",
+    "website": "https://www.hubspot.com",
+    "about": "HubSpot makes CRM, marketing, sales and customer service software."
+  },
+  {
+    "id": "posthog",
+    "name": "PostHog",
+    "website": "https://posthog.com",
+    "about": "PostHog makes product analytics and related developer tools."
+  },
+  {
+    "id": "intercom",
+    "name": "Intercom",
+    "website": "https://www.intercom.com",
+    "about": "Intercom makes customer service software and the Fin AI agent."
+  },
+  {
+    "id": "sentry",
+    "name": "Sentry",
+    "website": "https://sentry.io",
+    "about": "Sentry makes application error tracking and performance monitoring software."
+  },
+  {
+    "id": "datadog",
+    "name": "Datadog",
+    "website": "https://www.datadoghq.com",
+    "about": "Datadog makes monitoring and observability software for cloud applications."
+  },
+  {
+    "id": "miro",
+    "name": "Miro",
+    "website": "https://miro.com",
+    "about": "Miro makes an online whiteboard and visual collaboration workspace."
+  },
+  {
+    "id": "mixpanel",
+    "name": "Mixpanel",
+    "website": "https://mixpanel.com",
+    "about": "Mixpanel makes product analytics software."
+  },
+  {
+    "id": "zendesk",
+    "name": "Zendesk",
+    "website": "https://www.zendesk.com",
+    "about": "Zendesk makes customer service and help desk software."
+  },
+  {
+    "id": "jetbrains",
+    "name": "JetBrains",
+    "website": "https://www.jetbrains.com",
+    "about": "JetBrains makes IDEs and developer tools such as IntelliJ IDEA, PyCharm and ReSharper."
+  },
+  {
+    "id": "figma",
+    "name": "Figma",
+    "website": "https://www.figma.com",
+    "about": "Figma makes collaborative design and prototyping tools."
+  },
+  {
+    "id": "autodesk",
+    "name": "Autodesk",
+    "website": "https://www.autodesk.com",
+    "about": "Autodesk makes design, engineering and 3D software such as AutoCAD, Revit and Fusion."
   }
 ];
 
@@ -381,5 +513,440 @@ export const products: Product[] = [
       "Displays",
       "Utilities"
     ]
+  },
+  {
+    "id": "aws",
+    "slug": "aws",
+    "name": "Amazon Web Services (AWS)",
+    "providerId": "aws",
+    "tagline": "Cloud computing platform",
+    "description": "AWS is Amazon's cloud platform offering compute, storage, databases, AI and other infrastructure services.",
+    "website": "https://aws.amazon.com",
+    "tags": [
+      "Cloud",
+      "Infrastructure",
+      "Hosting"
+    ],
+    "brandColor": "#FF9900",
+    "logo": {
+      "src": "/logos/aws.svg",
+      "alt": "Amazon Web Services (AWS) logo"
+    }
+  },
+  {
+    "id": "cloudflare",
+    "slug": "cloudflare",
+    "name": "Cloudflare",
+    "providerId": "cloudflare",
+    "tagline": "Connectivity cloud and developer platform",
+    "description": "Cloudflare offers CDN, security and developer platform services such as Workers, R2 and Workers AI.",
+    "website": "https://www.cloudflare.com",
+    "tags": [
+      "Cloud",
+      "CDN",
+      "Security",
+      "Serverless"
+    ],
+    "brandColor": "#F38020",
+    "logo": {
+      "src": "/logos/cloudflare.svg",
+      "alt": "Cloudflare logo"
+    }
+  },
+  {
+    "id": "digitalocean",
+    "slug": "digitalocean",
+    "name": "DigitalOcean",
+    "providerId": "digitalocean",
+    "tagline": "Cloud infrastructure for developers",
+    "description": "DigitalOcean provides cloud infrastructure including Droplets, GPU Droplets, managed databases and Kubernetes.",
+    "website": "https://www.digitalocean.com",
+    "tags": [
+      "Cloud",
+      "Infrastructure",
+      "Hosting"
+    ],
+    "brandColor": "#0080FF",
+    "logo": {
+      "src": "/logos/digitalocean.svg",
+      "alt": "DigitalOcean logo"
+    }
+  },
+  {
+    "id": "mongodb-atlas",
+    "slug": "mongodb-atlas",
+    "name": "MongoDB Atlas",
+    "providerId": "mongodb",
+    "tagline": "Managed MongoDB database in the cloud",
+    "description": "MongoDB Atlas is MongoDB's fully managed cloud database service.",
+    "website": "https://www.mongodb.com/atlas",
+    "tags": [
+      "Database",
+      "Cloud",
+      "NoSQL"
+    ],
+    "brandColor": "#00ED64",
+    "logo": {
+      "src": "/logos/mongodb-atlas.svg",
+      "alt": "MongoDB Atlas logo"
+    }
+  },
+  {
+    "id": "oracle-cloud-infrastructure",
+    "slug": "oracle-cloud-infrastructure",
+    "name": "Oracle Cloud Infrastructure (OCI)",
+    "providerId": "oracle",
+    "tagline": "Oracle's public cloud platform",
+    "description": "Oracle Cloud Infrastructure is Oracle's cloud platform for compute, storage, databases and AI workloads.",
+    "website": "https://www.oracle.com/cloud/",
+    "tags": [
+      "Cloud",
+      "Infrastructure",
+      "AI"
+    ],
+    "brandColor": "#C74634",
+    "logo": {
+      "src": "/logos/oracle-cloud-infrastructure.svg",
+      "alt": "Oracle Cloud Infrastructure (OCI) logo"
+    }
+  },
+  {
+    "id": "vercel",
+    "slug": "vercel",
+    "name": "Vercel",
+    "providerId": "vercel",
+    "tagline": "Frontend cloud for web apps",
+    "description": "Vercel is a platform for building, deploying and hosting web applications, with AI Gateway and v0.",
+    "website": "https://vercel.com",
+    "tags": [
+      "Hosting",
+      "Developer Tools",
+      "Cloud"
+    ],
+    "brandColor": "#000000",
+    "logo": {
+      "src": "/logos/vercel.svg",
+      "alt": "Vercel logo"
+    }
+  },
+  {
+    "id": "neon",
+    "slug": "neon",
+    "name": "Neon",
+    "providerId": "neon",
+    "tagline": "Serverless Postgres",
+    "description": "Neon is a serverless Postgres database platform.",
+    "website": "https://neon.com",
+    "tags": [
+      "Database",
+      "Postgres",
+      "Cloud"
+    ],
+    "brandColor": "#00E599",
+    "logo": {
+      "src": "/logos/neon.svg",
+      "alt": "Neon logo"
+    }
+  },
+  {
+    "id": "nvidia-inception",
+    "slug": "nvidia-inception",
+    "name": "NVIDIA Inception",
+    "providerId": "nvidia",
+    "tagline": "NVIDIA's program for startups",
+    "description": "NVIDIA Inception is NVIDIA's free membership program for technology startups.",
+    "website": "https://www.nvidia.com/en-us/startups/",
+    "tags": [
+      "AI",
+      "GPU",
+      "Startup Program"
+    ],
+    "brandColor": "#76B900",
+    "logo": {
+      "src": "/logos/nvidia-inception.svg",
+      "alt": "NVIDIA Inception logo"
+    }
+  },
+  {
+    "id": "elevenlabs",
+    "slug": "elevenlabs",
+    "name": "ElevenLabs",
+    "providerId": "elevenlabs",
+    "tagline": "AI voice and text-to-speech",
+    "description": "ElevenLabs provides AI text-to-speech, voice and conversational agent tools through an app and an API.",
+    "website": "https://elevenlabs.io",
+    "tags": [
+      "AI",
+      "Text to Speech",
+      "Voice API"
+    ],
+    "brandColor": "#000000",
+    "logo": {
+      "src": "/logos/elevenlabs.svg",
+      "alt": "ElevenLabs logo"
+    }
+  },
+  {
+    "id": "openai-api",
+    "slug": "openai-api",
+    "name": "OpenAI API",
+    "providerId": "openai",
+    "tagline": "API access to OpenAI models",
+    "description": "The OpenAI API gives developers programmatic access to OpenAI's models.",
+    "website": "https://openai.com/api/",
+    "tags": [
+      "AI",
+      "LLM API",
+      "Developer Tools"
+    ],
+    "brandColor": "#000000",
+    "logo": {
+      "src": "/logos/openai-api.svg",
+      "alt": "OpenAI API logo"
+    }
+  },
+  {
+    "id": "cohere",
+    "slug": "cohere",
+    "name": "Cohere",
+    "providerId": "cohere",
+    "tagline": "Enterprise language models and API",
+    "description": "Cohere offers large language models for generation, search and retrieval through its API.",
+    "website": "https://cohere.com",
+    "tags": [
+      "AI",
+      "LLM API",
+      "Enterprise"
+    ],
+    "brandColor": "#39594D",
+    "logo": {
+      "src": "/logos/cohere.svg",
+      "alt": "Cohere logo"
+    }
+  },
+  {
+    "id": "hubspot",
+    "slug": "hubspot",
+    "name": "HubSpot",
+    "providerId": "hubspot",
+    "tagline": "CRM platform for marketing, sales and service",
+    "description": "HubSpot is a CRM platform with marketing, sales, customer service and content tools.",
+    "website": "https://www.hubspot.com",
+    "tags": [
+      "CRM",
+      "Marketing",
+      "Sales"
+    ],
+    "brandColor": "#FF7A59",
+    "logo": {
+      "src": "/logos/hubspot.svg",
+      "alt": "HubSpot logo"
+    }
+  },
+  {
+    "id": "posthog",
+    "slug": "posthog",
+    "name": "PostHog",
+    "providerId": "posthog",
+    "tagline": "Product analytics and developer tools",
+    "description": "PostHog is a product analytics platform with session replay, feature flags and experiments.",
+    "website": "https://posthog.com",
+    "tags": [
+      "Analytics",
+      "Product Analytics",
+      "Developer Tools"
+    ],
+    "brandColor": "#F54E00",
+    "logo": {
+      "src": "/logos/posthog.svg",
+      "alt": "PostHog logo"
+    }
+  },
+  {
+    "id": "intercom",
+    "slug": "intercom",
+    "name": "Intercom",
+    "providerId": "intercom",
+    "tagline": "Customer service platform with the Fin AI agent",
+    "description": "Intercom is a customer service platform with a help desk, messaging and the Fin AI agent.",
+    "website": "https://www.intercom.com",
+    "tags": [
+      "Customer Support",
+      "Help Desk",
+      "AI"
+    ],
+    "brandColor": "#1F8DED",
+    "logo": {
+      "src": "/logos/intercom.svg",
+      "alt": "Intercom logo"
+    }
+  },
+  {
+    "id": "sentry",
+    "slug": "sentry",
+    "name": "Sentry",
+    "providerId": "sentry",
+    "tagline": "Error tracking and performance monitoring",
+    "description": "Sentry is an application monitoring tool for error tracking and performance monitoring.",
+    "website": "https://sentry.io",
+    "tags": [
+      "Monitoring",
+      "Error Tracking",
+      "Developer Tools"
+    ],
+    "brandColor": "#362D59",
+    "logo": {
+      "src": "/logos/sentry.svg",
+      "alt": "Sentry logo"
+    }
+  },
+  {
+    "id": "datadog",
+    "slug": "datadog",
+    "name": "Datadog",
+    "providerId": "datadog",
+    "tagline": "Monitoring and observability for cloud applications",
+    "description": "Datadog is a monitoring and observability platform for infrastructure, applications and logs.",
+    "website": "https://www.datadoghq.com",
+    "tags": [
+      "Monitoring",
+      "Observability",
+      "DevOps"
+    ],
+    "brandColor": "#632CA6",
+    "logo": {
+      "src": "/logos/datadog.svg",
+      "alt": "Datadog logo"
+    }
+  },
+  {
+    "id": "miro",
+    "slug": "miro",
+    "name": "Miro",
+    "providerId": "miro",
+    "tagline": "Online whiteboard for team collaboration",
+    "description": "Miro is an online whiteboard and visual workspace for team collaboration.",
+    "website": "https://miro.com",
+    "tags": [
+      "Collaboration",
+      "Whiteboard",
+      "Design"
+    ],
+    "brandColor": "#FFD02F",
+    "logo": {
+      "src": "/logos/miro.svg",
+      "alt": "Miro logo"
+    }
+  },
+  {
+    "id": "mixpanel",
+    "slug": "mixpanel",
+    "name": "Mixpanel",
+    "providerId": "mixpanel",
+    "tagline": "Product analytics for web and mobile",
+    "description": "Mixpanel is a product analytics tool for tracking user events in web and mobile apps.",
+    "website": "https://mixpanel.com",
+    "tags": [
+      "Analytics",
+      "Product Analytics"
+    ],
+    "brandColor": "#7856FF",
+    "logo": {
+      "src": "/logos/mixpanel.svg",
+      "alt": "Mixpanel logo"
+    }
+  },
+  {
+    "id": "zendesk",
+    "slug": "zendesk",
+    "name": "Zendesk",
+    "providerId": "zendesk",
+    "tagline": "Customer service and help desk software",
+    "description": "Zendesk is customer service software with ticketing, messaging and a help center.",
+    "website": "https://www.zendesk.com",
+    "tags": [
+      "Customer Support",
+      "Help Desk"
+    ],
+    "brandColor": "#03363D",
+    "logo": {
+      "src": "/logos/zendesk.svg",
+      "alt": "Zendesk logo"
+    }
+  },
+  {
+    "id": "jetbrains-ides",
+    "slug": "jetbrains-ides",
+    "name": "JetBrains IDEs",
+    "providerId": "jetbrains",
+    "tagline": "IDEs for professional development",
+    "description": "JetBrains IDEs, including IntelliJ IDEA, PyCharm and WebStorm, are development environments for many programming languages.",
+    "website": "https://www.jetbrains.com/ides/",
+    "tags": [
+      "Developer Tools",
+      "IDE"
+    ],
+    "brandColor": "#000000",
+    "logo": {
+      "src": "/logos/jetbrains-ides.svg",
+      "alt": "JetBrains IDEs logo"
+    }
+  },
+  {
+    "id": "figma",
+    "slug": "figma",
+    "name": "Figma",
+    "providerId": "figma",
+    "tagline": "Collaborative interface design",
+    "description": "Figma is a browser-based tool for interface design, prototyping and collaboration.",
+    "website": "https://www.figma.com",
+    "tags": [
+      "Design",
+      "Prototyping",
+      "Collaboration"
+    ],
+    "brandColor": "#F24E1E",
+    "logo": {
+      "src": "/logos/figma.svg",
+      "alt": "Figma logo"
+    }
+  },
+  {
+    "id": "cloudflare-workers",
+    "slug": "cloudflare-workers",
+    "name": "Cloudflare Workers",
+    "providerId": "cloudflare",
+    "tagline": "Serverless functions on Cloudflare's network",
+    "description": "Cloudflare Workers is a serverless platform for running code on Cloudflare's global network.",
+    "website": "https://workers.cloudflare.com",
+    "tags": [
+      "Serverless",
+      "Hosting",
+      "Developer Tools"
+    ],
+    "brandColor": "#F38020",
+    "logo": {
+      "src": "/logos/cloudflare-workers.svg",
+      "alt": "Cloudflare Workers logo"
+    }
+  },
+  {
+    "id": "autodesk",
+    "slug": "autodesk",
+    "name": "Autodesk",
+    "providerId": "autodesk",
+    "tagline": "Design, engineering and 3D software",
+    "description": "Autodesk makes design and engineering software including AutoCAD, Revit, Fusion and Maya.",
+    "website": "https://www.autodesk.com",
+    "tags": [
+      "CAD",
+      "3D",
+      "Design"
+    ],
+    "brandColor": "#0696D7",
+    "logo": {
+      "src": "/logos/autodesk.svg",
+      "alt": "Autodesk logo"
+    }
   }
 ];
