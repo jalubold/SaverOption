@@ -206,7 +206,7 @@ export default async function HomePage() {
           </ul>
         </section>
 
-        <NewsletterSection />
+        {siteConfig.newsletter && <NewsletterSection />}
       </Container>
     </>
   );

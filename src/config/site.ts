@@ -38,6 +38,8 @@ export interface SiteConfig {
    * site goes live on its real domain.
    */
   prelaunch: boolean;
+  /** Shows the newsletter sign-up section on the homepage. */
+  newsletter: boolean;
 }
 
 const env = process.env;
@@ -61,6 +63,7 @@ export const siteConfig: SiteConfig = {
   partnershipsEmail: "jalubold@gmail.com",
   social: [],
   prelaunch: true,
+  newsletter: false,
 };
 
 export const mainNav = [
