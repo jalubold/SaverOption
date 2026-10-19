@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans";
 import { Instrument_Serif } from "next/font/google";
 import type { CSSProperties } from "react";
 import { siteConfig } from "@/config/site";
+import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import { VisitBeacon } from "@/components/analytics/visit-beacon";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
@@ -67,6 +68,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <SiteFooter />
         <JsonLd data={websiteJsonLd()} />
         <VisitBeacon />
+        <GoogleAnalytics />
       </body>
     </html>
   );

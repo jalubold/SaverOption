@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
+import { googleAnalyticsId } from "@/components/analytics/google-analytics";
 import { Container } from "@/components/ui/primitives";
 import { pageMetadata } from "@/lib/seo";
 
@@ -9,10 +10,11 @@ export const metadata = pageMetadata({
   path: "/privacy",
 });
 
-const LAST_UPDATED = "October 17, 2026";
+const LAST_UPDATED = "October 19, 2026";
 
 export default function PrivacyPage() {
   const name = siteConfig.name;
+  const usesGoogleAnalytics = googleAnalyticsId() !== null;
   return (
     <Container className="pb-24 pt-16 sm:pt-20">
       <div className="mx-auto max-w-2xl">
@@ -42,6 +44,15 @@ export default function PrivacyPage() {
               <strong>Outbound clicks.</strong> When you click &ldquo;View deal&rdquo;, we count the click against that
               offer to see which offers are useful. Only the count per offer and day is stored, nothing about you.
             </li>
+            {usesGoogleAnalytics && (
+              <li>
+                <strong>Google Analytics.</strong> We use Google Analytics to understand how the site is used, such as
+                which pages are visited and how people arrive. It sets first-party cookies and Google processes data such
+                as your IP address, browser and device type, and pages viewed. Google signals and ad personalization are
+                turned off. You can opt out with Google&apos;s{" "}
+                <a href="https://tools.google.com/dlpage/gaoptout">browser add-on</a>.
+              </li>
+            )}
             <li>
               <strong>Server logs.</strong> Our hosting provider keeps standard technical logs (such as IP address,
               browser type and pages requested) to run and secure the site.
@@ -60,14 +71,16 @@ export default function PrivacyPage() {
 
           <h2>Who else processes it</h2>
           <p>
-            We use a hosting provider to serve the site, a database provider (Upstash) to store the aggregate counts, and
-            an email provider to send the newsletter. They process data only on our behalf. When you follow a link to a software provider, their own privacy policy applies on their
+            We use a hosting provider to serve the site, a database provider (Upstash) to store the aggregate counts,
+            {usesGoogleAnalytics && " Google (Google Analytics) to measure site usage,"} and an email provider to send
+            the newsletter. They process data only on our behalf. When you follow a link to a software provider, their own privacy policy applies on their
             site.
           </p>
 
           <h2>How long we keep it</h2>
           <p>
             We keep your email address until you unsubscribe. Daily visitor and click counts are deleted after 40 days.
+            {usesGoogleAnalytics && " Google Analytics data is kept according to the retention setting in our Google Analytics account."}{" "}
             Server logs are kept for a limited period by our hosting provider.
           </p>
 
