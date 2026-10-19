@@ -53,9 +53,11 @@ export default async function HomePage() {
     getPopularOffers(6),
     queryOffers({ sort: "ending-soon" }),
   ]);
-  const ending = endingSoon.offers.filter((o) => o.daysLeft !== undefined).slice(0, HERO_ROWS - 1);
+  // The hero panel only lists offers open to everyone; country-restricted offers stay in the catalog.
+  const openToAll = endingSoon.offers.filter((o) => o.regions?.scope !== "limited");
+  const ending = openToAll.filter((o) => o.daysLeft !== undefined).slice(0, HERO_ROWS - 1);
   const endingIds = new Set(ending.map((o) => o.id));
-  const largestCredits = endingSoon.offers
+  const largestCredits = openToAll
     .filter((o) => !endingIds.has(o.id) && (o.pricing?.creditValue ?? 0) > 0)
     .sort((a, b) => (b.pricing?.creditValue ?? 0) - (a.pricing?.creditValue ?? 0))
     .slice(0, HERO_ROWS - ending.length);
