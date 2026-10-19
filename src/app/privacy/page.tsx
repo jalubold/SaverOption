@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
-import { googleAnalyticsId } from "@/components/analytics/google-analytics";
+import { googleTagManagerId } from "@/components/analytics/google-tag-manager";
 import { Container } from "@/components/ui/primitives";
 import { pageMetadata } from "@/lib/seo";
 
@@ -14,7 +14,7 @@ const LAST_UPDATED = "October 19, 2026";
 
 export default function PrivacyPage() {
   const name = siteConfig.name;
-  const usesGoogleAnalytics = googleAnalyticsId() !== null;
+  const usesGoogleAnalytics = googleTagManagerId() !== null;
   return (
     <Container className="pb-24 pt-16 sm:pt-20">
       <div className="mx-auto max-w-2xl">
@@ -46,10 +46,10 @@ export default function PrivacyPage() {
             </li>
             {usesGoogleAnalytics && (
               <li>
-                <strong>Google Analytics.</strong> We use Google Analytics to understand how the site is used, such as
-                which pages are visited and how people arrive. It sets first-party cookies and Google processes data such
-                as your IP address, browser and device type, and pages viewed. Google signals and ad personalization are
-                turned off. You can opt out with Google&apos;s{" "}
+                <strong>Google Analytics.</strong> We use Google Analytics, loaded through Google Tag Manager, to understand
+                how the site is used, such as which pages are visited and how people arrive. It sets first-party cookies
+                and Google processes data such as your IP address, browser and device type, and pages viewed. You can opt
+                out with Google&apos;s{" "}
                 <a href="https://tools.google.com/dlpage/gaoptout">browser add-on</a>.
               </li>
             )}
@@ -72,7 +72,7 @@ export default function PrivacyPage() {
           <h2>Who else processes it</h2>
           <p>
             We use a hosting provider to serve the site, a database provider (Upstash) to store the aggregate counts,
-            {usesGoogleAnalytics && " Google (Google Analytics) to measure site usage,"} and an email provider to send
+            {usesGoogleAnalytics && " Google (Tag Manager and Analytics) to measure site usage,"} and an email provider to send
             the newsletter. They process data only on our behalf. When you follow a link to a software provider, their own privacy policy applies on their
             site.
           </p>

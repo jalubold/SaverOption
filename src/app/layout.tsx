@@ -4,7 +4,7 @@ import { GeistSans } from "geist/font/sans";
 import { Instrument_Serif } from "next/font/google";
 import type { CSSProperties } from "react";
 import { siteConfig } from "@/config/site";
-import { GoogleAnalytics } from "@/components/analytics/google-analytics";
+import { GoogleTagManagerNoScript, GoogleTagManagerScript } from "@/components/analytics/google-tag-manager";
 import { VisitBeacon } from "@/components/analytics/visit-beacon";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
@@ -54,7 +54,11 @@ const brandVars = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang={siteConfig.locale} style={brandVars} className={`${GeistSans.variable} ${GeistMono.variable} ${instrumentSerif.variable}`}>
+      <head>
+        <GoogleTagManagerScript />
+      </head>
       <body className="flex min-h-dvh flex-col">
+        <GoogleTagManagerNoScript />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-3 focus:z-50 focus:rounded-lg focus:bg-surface focus:px-4 focus:py-2 focus:text-sm focus:shadow"
@@ -68,7 +72,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <SiteFooter />
         <JsonLd data={websiteJsonLd()} />
         <VisitBeacon />
-        <GoogleAnalytics />
       </body>
     </html>
   );
