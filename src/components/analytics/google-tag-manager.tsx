@@ -6,7 +6,7 @@ export function googleTagManagerId(): string | null {
   return id && /^GTM-[A-Z0-9]+$/.test(id) ? id : null;
 }
 
-/** GTM loader. Render as high in <head> as possible. Google Analytics is configured inside the container. */
+/** GTM loader. Render as high in <head> as possible. */
 export function GoogleTagManagerScript() {
   const id = googleTagManagerId();
   if (!id) return null;

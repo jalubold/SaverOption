@@ -38,7 +38,9 @@ export interface SiteConfig {
    * site goes live on its real domain.
    */
   prelaunch: boolean;
-  /** Google Tag Manager container (GTM-XXXXXXX). Google Analytics runs inside it. Empty disables it. */
+  /** Google Analytics 4 measurement ID (G-XXXXXXXXXX), loaded directly. Empty disables it. */
+  googleAnalyticsId: string;
+  /** Google Tag Manager container (GTM-XXXXXXX). Don't add a GA4 tag to it while googleAnalyticsId is set. Empty disables it. */
   googleTagManagerId: string;
   /** Shows the newsletter sign-up section on the homepage. */
   newsletter: boolean;
@@ -66,6 +68,7 @@ export const siteConfig: SiteConfig = {
   social: [],
   prelaunch: true,
   newsletter: false,
+  googleAnalyticsId: env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "G-3TTH3ZZXJ3",
   googleTagManagerId: env.NEXT_PUBLIC_GTM_ID ?? "GTM-NLNXN6HT",
 };
 

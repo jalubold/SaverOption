@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
+import { googleAnalyticsId } from "@/components/analytics/google-analytics";
 import { googleTagManagerId } from "@/components/analytics/google-tag-manager";
 import { Container } from "@/components/ui/primitives";
 import { pageMetadata } from "@/lib/seo";
@@ -14,7 +15,7 @@ const LAST_UPDATED = "October 19, 2026";
 
 export default function PrivacyPage() {
   const name = siteConfig.name;
-  const usesGoogleAnalytics = googleTagManagerId() !== null;
+  const usesGoogleAnalytics = googleAnalyticsId() !== null || googleTagManagerId() !== null;
   return (
     <Container className="pb-24 pt-16 sm:pt-20">
       <div className="mx-auto max-w-2xl">
@@ -46,7 +47,7 @@ export default function PrivacyPage() {
             </li>
             {usesGoogleAnalytics && (
               <li>
-                <strong>Google Analytics.</strong> We use Google Analytics, loaded through Google Tag Manager, to understand
+                <strong>Google Analytics.</strong> We use Google Analytics and Google Tag Manager to understand
                 how the site is used, such as which pages are visited and how people arrive. It sets first-party cookies
                 and Google processes data such as your IP address, browser and device type, and pages viewed. You can opt
                 out with Google&apos;s{" "}
