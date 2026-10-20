@@ -8,6 +8,7 @@ export const audiences: Audience[] = [
     description: "Credits, trials and discounts on AI assistants, model APIs and AI apps.",
     intro: "Offers on AI products: assistants, coding agents, model APIs and voice tools, from free credits to introductory pricing.",
     icon: "sparkles",
+    color: { from: "#9b6bff", to: "#5b21d6" },
     order: 1,
   },
   {
@@ -16,6 +17,7 @@ export const audiences: Audience[] = [
     description: "Cloud credits and SaaS perks for early-stage companies.",
     intro: "Startup programs that give early-stage companies cloud credits, free plans or steep first-year discounts. Most need an application.",
     icon: "rocket",
+    color: { from: "#ff9a4d", to: "#e4570f" },
     order: 2,
   },
   {
@@ -24,6 +26,7 @@ export const audiences: Audience[] = [
     description: "Better prices on CRM, support, security and team software.",
     intro: "Discounts, trials and programs on the software companies run on: CRM, customer support, security, collaboration and infrastructure.",
     icon: "briefcase",
+    color: { from: "#4f8dff", to: "#1d4fd8" },
     order: 3,
   },
   {
@@ -32,6 +35,7 @@ export const audiences: Audience[] = [
     description: "Hosting, databases, IDEs and APIs with free tiers and credits.",
     intro: "Free tiers, credits and discounts on developer tools: cloud hosting, databases, IDEs, monitoring and model APIs.",
     icon: "code",
+    color: { from: "#22c58b", to: "#047857" },
     order: 4,
   },
   {
@@ -40,6 +44,7 @@ export const audiences: Audience[] = [
     description: "Video, audio, writing and content tools for less.",
     intro: "Offers on the tools creators use to make and publish content: video and audio editing, voice, graphics and writing.",
     icon: "video",
+    color: { from: "#ff5c7a", to: "#c81e4a" },
     order: 5,
   },
   {
@@ -48,6 +53,7 @@ export const audiences: Audience[] = [
     description: "Design, prototyping and 3D software deals.",
     intro: "Free plans, education access and discounts on UI design, graphic design, whiteboarding and 3D software.",
     icon: "pen",
+    color: { from: "#e15cf5", to: "#a21caf" },
     order: 6,
   },
   {
@@ -56,6 +62,7 @@ export const audiences: Audience[] = [
     description: "Invoicing, scheduling and time tracking for solo work.",
     intro: "Tools for working on your own: invoicing and accounting, time tracking, scheduling, contracts and solo-friendly plans.",
     icon: "user",
+    color: { from: "#ffbe3d", to: "#c27a06" },
     order: 7,
   },
   {
@@ -64,6 +71,7 @@ export const audiences: Audience[] = [
     description: "Docs, email, meetings, chat and project management.",
     intro: "Offers on everyday work software: office suites, docs, email, video meetings, team chat, file storage and project management.",
     icon: "file",
+    color: { from: "#22c3e6", to: "#0e7490" },
     order: 8,
   },
   {
@@ -72,6 +80,7 @@ export const audiences: Audience[] = [
     description: "Free and discounted software with student verification.",
     intro: "Software that's free or discounted for students and educators. Most offers need a school email or proof of enrolment.",
     icon: "graduation",
+    color: { from: "#7b7ff7", to: "#4338ca" },
     order: 9,
   },
   {
@@ -80,6 +89,7 @@ export const audiences: Audience[] = [
     description: "Email marketing, SEO, analytics and CRM offers.",
     intro: "Free plans, trials and discounts on marketing software: email marketing, SEO, social scheduling, analytics and CRM.",
     icon: "megaphone",
+    color: { from: "#8fd14f", to: "#4d8a12" },
     order: 10,
   },
 ];

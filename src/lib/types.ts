@@ -70,6 +70,8 @@ export interface Audience {
   /** Intro at the top of the collection page. */
   intro: string;
   icon: IconName;
+  /** Gradient for the icon tile and hover glow, so each collection is recognisable at a glance. */
+  color: { from: string; to: string };
   order: number;
 }
 
