@@ -218,6 +218,144 @@ export const providers: Provider[] = [
     "name": "Cognition",
     "website": "https://devin.ai",
     "about": "Cognition makes Devin, an AI software engineering agent, and Devin Desktop (formerly Windsurf), an AI coding editor."
+  },
+  {
+    "id": "wave",
+    "name": "Wave",
+    "website": "https://www.waveapps.com",
+    "about": "Wave makes accounting, invoicing and payments software for small businesses in the United States and Canada."
+  },
+  {
+    "id": "zoho",
+    "name": "Zoho",
+    "website": "https://www.zoho.com",
+    "about": "Zoho makes a suite of business software, including CRM, finance and collaboration apps."
+  },
+  {
+    "id": "clockify",
+    "name": "Clockify",
+    "website": "https://clockify.me",
+    "about": "Clockify makes time tracking and timesheet software for individuals and teams."
+  },
+  {
+    "id": "calendly",
+    "name": "Calendly",
+    "website": "https://calendly.com",
+    "about": "Calendly makes online meeting scheduling software."
+  },
+  {
+    "id": "shopify",
+    "name": "Shopify",
+    "website": "https://www.shopify.com",
+    "about": "Shopify makes an ecommerce platform for building and running online stores."
+  },
+  {
+    "id": "1password",
+    "name": "1Password",
+    "website": "https://1password.com",
+    "about": "1Password makes password management and access security software for individuals and businesses."
+  },
+  {
+    "id": "slack",
+    "name": "Slack",
+    "website": "https://slack.com",
+    "about": "Slack makes a messaging and collaboration app for teams."
+  },
+  {
+    "id": "dropbox",
+    "name": "Dropbox",
+    "website": "https://www.dropbox.com",
+    "about": "Dropbox makes cloud file storage, sharing and eSignature products."
+  },
+  {
+    "id": "adobe",
+    "name": "Adobe",
+    "website": "https://www.adobe.com",
+    "about": "Adobe makes creative, document and marketing software, including Creative Cloud, Adobe Express and Acrobat."
+  },
+  {
+    "id": "framer",
+    "name": "Framer",
+    "website": "https://www.framer.com",
+    "about": "Framer makes a no-code website builder for designers and teams."
+  },
+  {
+    "id": "webflow",
+    "name": "Webflow",
+    "website": "https://webflow.com",
+    "about": "Webflow makes a visual website builder with built-in hosting and CMS."
+  },
+  {
+    "id": "descript",
+    "name": "Descript",
+    "website": "https://www.descript.com",
+    "about": "Descript makes a text-based audio and video editor with AI tools."
+  },
+  {
+    "id": "blackmagic-design",
+    "name": "Blackmagic Design",
+    "website": "https://www.blackmagicdesign.com",
+    "about": "Blackmagic Design makes cameras, broadcast hardware and the DaVinci Resolve post-production software."
+  },
+  {
+    "id": "sketch",
+    "name": "Sketch",
+    "website": "https://www.sketch.com",
+    "about": "Sketch makes a Mac design app and a web workspace for UI design and collaboration."
+  },
+  {
+    "id": "riverside",
+    "name": "Riverside",
+    "website": "https://riverside.com",
+    "about": "Riverside makes remote podcast and video recording and editing software."
+  },
+  {
+    "id": "restream",
+    "name": "Restream",
+    "website": "https://restream.io",
+    "about": "Restream makes live streaming software for broadcasting to several platforms at once."
+  },
+  {
+    "id": "zoom",
+    "name": "Zoom",
+    "website": "https://www.zoom.com",
+    "about": "Zoom Communications makes the Zoom Workplace platform for video meetings, chat and phone."
+  },
+  {
+    "id": "airtable",
+    "name": "Airtable",
+    "website": "https://www.airtable.com",
+    "about": "Airtable makes a no-code platform for building apps and databases on top of spreadsheet-style tables."
+  },
+  {
+    "id": "mailchimp",
+    "name": "Intuit Mailchimp",
+    "website": "https://mailchimp.com",
+    "about": "Mailchimp is an email and marketing automation platform owned by Intuit."
+  },
+  {
+    "id": "brevo",
+    "name": "Brevo",
+    "website": "https://www.brevo.com",
+    "about": "Brevo (formerly Sendinblue) makes email, SMS and marketing automation software."
+  },
+  {
+    "id": "kit",
+    "name": "Kit",
+    "website": "https://kit.com",
+    "about": "Kit (formerly ConvertKit) makes email marketing software for creators."
+  },
+  {
+    "id": "buffer",
+    "name": "Buffer",
+    "website": "https://buffer.com",
+    "about": "Buffer makes social media scheduling and analytics tools."
+  },
+  {
+    "id": "ahrefs",
+    "name": "Ahrefs",
+    "website": "https://ahrefs.com",
+    "about": "Ahrefs makes SEO tools for keyword research, backlink analysis and site audits."
   }
 ];
 
@@ -1080,5 +1218,501 @@ export const products: Product[] = [
       "src": "/logos/devin-desktop.svg",
       "alt": "Devin Desktop logo"
     }
+  },
+  {
+    "id": "wave",
+    "slug": "wave",
+    "name": "Wave",
+    "providerId": "wave",
+    "tagline": "Invoicing and accounting for small businesses",
+    "description": "Wave is accounting and invoicing software for small businesses, with optional paid add-ons such as online payments and payroll.",
+    "website": "https://www.waveapps.com",
+    "tags": [
+      "Invoicing",
+      "Accounting",
+      "Small business"
+    ],
+    "brandColor": "#1C6CFF"
+  },
+  {
+    "id": "zoho-invoice",
+    "slug": "zoho-invoice",
+    "name": "Zoho Invoice",
+    "providerId": "zoho",
+    "tagline": "Free online invoicing software",
+    "description": "Zoho Invoice is online invoicing software for creating invoices, sending payment reminders and collecting payments.",
+    "website": "https://www.zoho.com/invoice/",
+    "tags": [
+      "Invoicing",
+      "Billing",
+      "Small business"
+    ],
+    "brandColor": "#E42527",
+    "logo": {
+      "src": "/logos/zoho-invoice.svg",
+      "alt": "Zoho Invoice logo"
+    }
+  },
+  {
+    "id": "clockify",
+    "slug": "clockify",
+    "name": "Clockify",
+    "providerId": "clockify",
+    "tagline": "Time tracker and timesheet app",
+    "description": "Clockify is a time tracking and timesheet app for logging work hours across projects, tasks and clients.",
+    "website": "https://clockify.me",
+    "tags": [
+      "Time tracking",
+      "Timesheets",
+      "Productivity"
+    ],
+    "brandColor": "#03A9F4",
+    "logo": {
+      "src": "/logos/clockify.svg",
+      "alt": "Clockify logo"
+    }
+  },
+  {
+    "id": "calendly",
+    "slug": "calendly",
+    "name": "Calendly",
+    "providerId": "calendly",
+    "tagline": "Online meeting scheduling",
+    "description": "Calendly is a scheduling app that lets people book meetings from a booking page connected to your calendar.",
+    "website": "https://calendly.com",
+    "tags": [
+      "Scheduling",
+      "Meetings",
+      "Calendar"
+    ],
+    "brandColor": "#006BFF",
+    "logo": {
+      "src": "/logos/calendly.svg",
+      "alt": "Calendly logo"
+    }
+  },
+  {
+    "id": "shopify",
+    "slug": "shopify",
+    "name": "Shopify",
+    "providerId": "shopify",
+    "tagline": "Ecommerce platform for online stores",
+    "description": "Shopify is an ecommerce platform for building an online store and selling online and in person.",
+    "website": "https://www.shopify.com",
+    "tags": [
+      "Ecommerce",
+      "Online store",
+      "Payments"
+    ],
+    "brandColor": "#95BF47",
+    "logo": {
+      "src": "/logos/shopify.svg",
+      "alt": "Shopify logo"
+    }
+  },
+  {
+    "id": "1password-business",
+    "slug": "1password-business",
+    "name": "1Password Business",
+    "providerId": "1password",
+    "tagline": "Password manager for teams and businesses",
+    "description": "1Password Business is a password manager for companies, with shared vaults, admin controls and security reporting.",
+    "website": "https://1password.com/business",
+    "tags": [
+      "Password manager",
+      "Security",
+      "Teams"
+    ],
+    "brandColor": "#0572EC",
+    "logo": {
+      "src": "/logos/1password-business.svg",
+      "alt": "1Password Business logo"
+    }
+  },
+  {
+    "id": "slack",
+    "slug": "slack",
+    "name": "Slack",
+    "providerId": "slack",
+    "tagline": "Team messaging and collaboration",
+    "description": "Slack is a messaging app for teams, organised into channels, direct messages and huddles.",
+    "website": "https://slack.com",
+    "tags": [
+      "Team chat",
+      "Messaging",
+      "Collaboration"
+    ],
+    "brandColor": "#4A154B",
+    "logo": {
+      "src": "/logos/slack.svg",
+      "alt": "Slack logo"
+    }
+  },
+  {
+    "id": "dropbox-sign",
+    "slug": "dropbox-sign",
+    "name": "Dropbox Sign",
+    "providerId": "dropbox",
+    "tagline": "Electronic signatures from Dropbox",
+    "description": "Dropbox Sign is an eSignature service for sending documents for signature and signing them online.",
+    "website": "https://sign.dropbox.com",
+    "tags": [
+      "eSignature",
+      "Contracts",
+      "Documents"
+    ],
+    "brandColor": "#0061FF",
+    "logo": {
+      "src": "/logos/dropbox-sign.svg",
+      "alt": "Dropbox Sign logo"
+    }
+  },
+  {
+    "id": "adobe-express",
+    "slug": "adobe-express",
+    "name": "Adobe Express",
+    "providerId": "adobe",
+    "tagline": "Quick design for social, video and documents",
+    "description": "Adobe Express is a web and mobile app for making social posts, videos, flyers and other graphics from templates.",
+    "website": "https://www.adobe.com/express/",
+    "tags": [
+      "Graphic design",
+      "Templates",
+      "Social media"
+    ],
+    "brandColor": "#EB1000",
+    "logo": {
+      "src": "/logos/adobe-express.svg",
+      "alt": "Adobe Express logo"
+    }
+  },
+  {
+    "id": "framer",
+    "slug": "framer",
+    "name": "Framer",
+    "providerId": "framer",
+    "tagline": "No-code website builder for designers",
+    "description": "Framer is a website builder with a design canvas, CMS and hosting for publishing sites without code.",
+    "website": "https://www.framer.com",
+    "tags": [
+      "Website builder",
+      "No-code",
+      "Design"
+    ],
+    "brandColor": "#0055FF",
+    "logo": {
+      "src": "/logos/framer.svg",
+      "alt": "Framer logo"
+    }
+  },
+  {
+    "id": "webflow",
+    "slug": "webflow",
+    "name": "Webflow",
+    "providerId": "webflow",
+    "tagline": "Visual website builder with CMS and hosting",
+    "description": "Webflow is a visual website builder that combines design, a CMS and hosting.",
+    "website": "https://webflow.com",
+    "tags": [
+      "Website builder",
+      "No-code",
+      "CMS"
+    ],
+    "brandColor": "#146EF5",
+    "logo": {
+      "src": "/logos/webflow.svg",
+      "alt": "Webflow logo"
+    }
+  },
+  {
+    "id": "descript",
+    "slug": "descript",
+    "name": "Descript",
+    "providerId": "descript",
+    "tagline": "Edit video and audio like a doc",
+    "description": "Descript is an audio and video editor that lets you edit recordings by editing their transcript, with built-in AI tools.",
+    "website": "https://www.descript.com",
+    "tags": [
+      "Video editing",
+      "Podcasting",
+      "Transcription",
+      "AI"
+    ],
+    "brandColor": "#000000",
+    "logo": {
+      "src": "/logos/descript.svg",
+      "alt": "Descript logo"
+    }
+  },
+  {
+    "id": "davinci-resolve",
+    "slug": "davinci-resolve",
+    "name": "DaVinci Resolve",
+    "providerId": "blackmagic-design",
+    "tagline": "Editing, color, effects and audio in one app",
+    "description": "DaVinci Resolve is Blackmagic Design's post-production application for video editing, color correction, visual effects and audio.",
+    "website": "https://www.blackmagicdesign.com/products/davinciresolve",
+    "tags": [
+      "Video editing",
+      "Color grading",
+      "Post-production"
+    ],
+    "brandColor": "#233A51",
+    "logo": {
+      "src": "/logos/davinci-resolve.svg",
+      "alt": "DaVinci Resolve logo"
+    }
+  },
+  {
+    "id": "affinity",
+    "slug": "affinity",
+    "name": "Affinity",
+    "providerId": "canva",
+    "tagline": "Vector, pixel and layout design in one app",
+    "description": "Affinity is Canva's professional desktop design app combining vector, pixel and page layout tools.",
+    "website": "https://www.affinity.studio",
+    "tags": [
+      "Graphic design",
+      "Photo editing",
+      "Desktop publishing"
+    ],
+    "brandColor": "#111111",
+    "logo": {
+      "src": "/logos/affinity.svg",
+      "alt": "Affinity logo"
+    }
+  },
+  {
+    "id": "sketch",
+    "slug": "sketch",
+    "name": "Sketch",
+    "providerId": "sketch",
+    "tagline": "UI design app for Mac",
+    "description": "Sketch is a Mac app and web workspace for designing and prototyping user interfaces.",
+    "website": "https://www.sketch.com",
+    "tags": [
+      "UI design",
+      "Prototyping",
+      "Mac"
+    ],
+    "brandColor": "#F7B500",
+    "logo": {
+      "src": "/logos/sketch.svg",
+      "alt": "Sketch logo"
+    }
+  },
+  {
+    "id": "riverside",
+    "slug": "riverside",
+    "name": "Riverside",
+    "providerId": "riverside",
+    "tagline": "Remote podcast and video recording",
+    "description": "Riverside is a browser-based studio for recording podcasts and video interviews with remote guests, with separate tracks per participant.",
+    "website": "https://riverside.com",
+    "tags": [
+      "Podcasting",
+      "Video recording",
+      "Remote recording"
+    ],
+    "brandColor": "#5E3BEE"
+  },
+  {
+    "id": "restream",
+    "slug": "restream",
+    "name": "Restream",
+    "providerId": "restream",
+    "tagline": "Stream live to several platforms at once",
+    "description": "Restream is a live streaming service for broadcasting to several platforms at the same time from its browser studio or from encoders such as OBS.",
+    "website": "https://restream.io",
+    "tags": [
+      "Live streaming",
+      "Multistreaming",
+      "Video"
+    ],
+    "brandColor": "#0E1C4E"
+  },
+  {
+    "id": "google-workspace",
+    "slug": "google-workspace",
+    "name": "Google Workspace",
+    "providerId": "google",
+    "tagline": "Gmail, Drive, Docs and Meet for businesses",
+    "description": "Google Workspace is Google's paid suite of business email, file storage, documents and video meetings, including Gmail, Drive, Docs, Sheets and Meet.",
+    "website": "https://workspace.google.com",
+    "tags": [
+      "Productivity",
+      "Email",
+      "Collaboration"
+    ],
+    "brandColor": "#4285F4",
+    "logo": {
+      "src": "/logos/google-workspace.svg",
+      "alt": "Google Workspace logo"
+    }
+  },
+  {
+    "id": "microsoft-365-business",
+    "slug": "microsoft-365-business",
+    "name": "Microsoft 365 for business",
+    "providerId": "microsoft",
+    "tagline": "Office apps, email and Teams for organizations",
+    "description": "Microsoft 365 for business is a family of subscriptions (Business Basic, Standard and Premium, plus Apps for business) that bundle Office apps, Exchange email, OneDrive, SharePoint and Teams.",
+    "website": "https://www.microsoft.com/microsoft-365/business",
+    "tags": [
+      "Productivity",
+      "Email",
+      "Collaboration"
+    ],
+    "brandColor": "#D83B01",
+    "logo": {
+      "src": "/logos/microsoft-365-business.svg",
+      "alt": "Microsoft 365 for business logo"
+    }
+  },
+  {
+    "id": "zoom-workplace",
+    "slug": "zoom-workplace",
+    "name": "Zoom Workplace",
+    "providerId": "zoom",
+    "tagline": "Video meetings, chat and collaboration",
+    "description": "Zoom Workplace is Zoom's collaboration platform for video meetings, team chat, whiteboards and notes.",
+    "website": "https://www.zoom.com",
+    "tags": [
+      "Video meetings",
+      "Communication"
+    ],
+    "brandColor": "#0B5CFF",
+    "logo": {
+      "src": "/logos/zoom-workplace.svg",
+      "alt": "Zoom Workplace logo"
+    }
+  },
+  {
+    "id": "trello",
+    "slug": "trello",
+    "name": "Trello",
+    "providerId": "atlassian",
+    "tagline": "Kanban boards for organizing work",
+    "description": "Trello is Atlassian's board-based project management tool that organizes tasks as cards on lists.",
+    "website": "https://trello.com",
+    "tags": [
+      "Project management",
+      "Kanban",
+      "Collaboration"
+    ],
+    "brandColor": "#0052CC",
+    "logo": {
+      "src": "/logos/trello.svg",
+      "alt": "Trello logo"
+    }
+  },
+  {
+    "id": "airtable",
+    "slug": "airtable",
+    "name": "Airtable",
+    "providerId": "airtable",
+    "tagline": "Spreadsheet-database hybrid for building apps",
+    "description": "Airtable is a cloud platform that combines spreadsheet-style tables with database features, views and automations for building team apps.",
+    "website": "https://www.airtable.com",
+    "tags": [
+      "Database",
+      "No-code",
+      "Project management"
+    ],
+    "brandColor": "#18BFFF",
+    "logo": {
+      "src": "/logos/airtable.svg",
+      "alt": "Airtable logo"
+    }
+  },
+  {
+    "id": "mailchimp",
+    "slug": "mailchimp",
+    "name": "Mailchimp",
+    "providerId": "mailchimp",
+    "tagline": "Email marketing and automation",
+    "description": "Mailchimp is an email marketing platform for building audiences, sending campaigns and automating marketing messages.",
+    "website": "https://mailchimp.com",
+    "tags": [
+      "Email marketing",
+      "Marketing automation"
+    ],
+    "brandColor": "#FFE01B",
+    "logo": {
+      "src": "/logos/mailchimp.svg",
+      "alt": "Mailchimp logo"
+    }
+  },
+  {
+    "id": "brevo",
+    "slug": "brevo",
+    "name": "Brevo",
+    "providerId": "brevo",
+    "tagline": "Email, SMS and marketing automation",
+    "description": "Brevo is a marketing platform for email campaigns, transactional email, SMS and marketing automation.",
+    "website": "https://www.brevo.com",
+    "tags": [
+      "Email marketing",
+      "Marketing automation",
+      "SMS"
+    ],
+    "brandColor": "#0B996E",
+    "logo": {
+      "src": "/logos/brevo.svg",
+      "alt": "Brevo logo"
+    }
+  },
+  {
+    "id": "kit",
+    "slug": "kit",
+    "name": "Kit",
+    "providerId": "kit",
+    "tagline": "Email marketing for creators",
+    "description": "Kit, formerly ConvertKit, is an email marketing platform for creators with forms, landing pages, newsletters and digital product sales.",
+    "website": "https://kit.com",
+    "tags": [
+      "Email marketing",
+      "Newsletters",
+      "Creators"
+    ],
+    "brandColor": "#FB6970",
+    "logo": {
+      "src": "/logos/kit.svg",
+      "alt": "Kit logo"
+    }
+  },
+  {
+    "id": "buffer",
+    "slug": "buffer",
+    "name": "Buffer",
+    "providerId": "buffer",
+    "tagline": "Social media scheduling",
+    "description": "Buffer is a tool for planning, scheduling and analyzing posts across social media channels.",
+    "website": "https://buffer.com",
+    "tags": [
+      "Social media",
+      "Scheduling",
+      "Marketing"
+    ],
+    "brandColor": "#231F20",
+    "logo": {
+      "src": "/logos/buffer.svg",
+      "alt": "Buffer logo"
+    }
+  },
+  {
+    "id": "ahrefs",
+    "slug": "ahrefs",
+    "name": "Ahrefs",
+    "providerId": "ahrefs",
+    "tagline": "SEO tools for site audits and backlinks",
+    "description": "Ahrefs is an SEO platform for site audits, backlink and keyword research, and rank tracking.",
+    "website": "https://ahrefs.com",
+    "tags": [
+      "SEO",
+      "Marketing",
+      "Analytics"
+    ],
+    "brandColor": "#054ADA"
   }
 ];

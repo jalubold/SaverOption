@@ -4697,5 +4697,1948 @@ export const offers: Offer[] = [
       "designers",
       "ai-tools"
     ]
+  },
+  {
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "source": "official",
+    "id": "o-wave-starter-free-plan",
+    "slug": "wave-starter-free-plan",
+    "productId": "wave",
+    "title": "Wave Starter plan: free invoicing and accounting for US and Canadian businesses",
+    "summary": "Wave's Starter Plan is free and covers basic accounting and invoicing. It is available to businesses in the United States and Canada, and no credit card is needed.",
+    "description": "Wave's Starter Plan is its free tier, with basic bookkeeping and invoicing. Wave says it remains committed to offering the Starter Plan for free.\n\nPaid extras such as accepting online payments, receipt scanning and payroll can be added on top, and the paid Pro Plan adds features such as auto-importing bank transactions. Card payments carry processing fees on every plan.\n\nWave is available only to businesses located in the United States and Canada.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals",
+      "saas-discounts"
+    ],
+    "audiences": [
+      "freelancers",
+      "businesses"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "period": "month"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Choose the free option when you create a Wave account."
+    },
+    "requirements": {
+      "cardRequired": false
+    },
+    "regions": {
+      "scope": "limited",
+      "note": "United States and Canada only"
+    },
+    "eligibility": [
+      "Businesses located in the United States or Canada"
+    ],
+    "redemption": [
+      "Create a Wave account in a web browser or the Wave mobile app",
+      "Choose the free Starter option during setup"
+    ],
+    "terms": [
+      "No credit card is required for the free plan",
+      "Online payments, receipt scanning and payroll are paid add-ons"
+    ],
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Wave's official page; live page not checked",
+      "note": "Official site was not reachable from the research environment; figures taken from search-result extracts of the provider's own pages. Re-check before publishing as verified.",
+      "evidence": [
+        {
+          "claim": "Region",
+          "quote": "Wave is available for businesses located in the United States and Canada."
+        },
+        {
+          "claim": "No card required",
+          "quote": "For the free plan, no credit card info is required!"
+        },
+        {
+          "claim": "Starter stays free",
+          "quote": "remains committed to offering the Starter Plan for free"
+        },
+        {
+          "claim": "Existing users moved to Starter",
+          "quote": "starting June 10, 2024, these businesses will automatically be part of the free Starter Plan, with the option of upgrading to the Pro Plan at any time"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://support.waveapps.com/hc/en-us/articles/208621296-Is-Wave-free",
+      "redeemUrl": "https://www.waveapps.com"
+    }
+  },
+  {
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "source": "official",
+    "id": "o-zoho-invoice-free",
+    "slug": "zoho-invoice-free",
+    "productId": "zoho-invoice",
+    "title": "Zoho Invoice: free invoicing with up to 500 invoices per year",
+    "summary": "Zoho Invoice is free for small businesses, with no credit card, ads or hidden fees. The free plan allows up to two users, three projects and 500 invoices per year.",
+    "description": "Zoho made Zoho Invoice completely free for small and medium-sized businesses and says it will remain ad-free and will never sell your data.\n\nThe free plan lets you add up to two users, create up to three projects and send up to 500 invoices per year. It covers invoices, payment reminders, payment collection and expense recording.\n\nLimits are quoted from Zoho's US pricing page; Zoho runs regional pricing pages for other countries.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals",
+      "saas-discounts"
+    ],
+    "audiences": [
+      "freelancers",
+      "businesses"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Sign up for Zoho Invoice; no payment details are needed."
+    },
+    "requirements": {
+      "cardRequired": false
+    },
+    "regions": {
+      "scope": "global",
+      "note": "Zoho announced Zoho Invoice as free for SMBs everywhere; limits quoted from the US pricing page."
+    },
+    "eligibility": [
+      "Small and medium-sized businesses"
+    ],
+    "redemption": [
+      "Go to Zoho Invoice's pricing page",
+      "Sign up for a free account"
+    ],
+    "terms": [
+      "Up to two users",
+      "Up to three projects",
+      "Up to 500 invoices per year",
+      "No credit cards, ads or hidden fees"
+    ],
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Zoho's official page; live page not checked",
+      "note": "Official site was not reachable from the research environment; figures taken from search-result extracts of the provider's own pages. Re-check before publishing as verified.",
+      "evidence": [
+        {
+          "claim": "Free-plan limits (US pricing page)",
+          "quote": "Add up to two users. Create a maximum of three projects. Send up to 500 invoices per year."
+        },
+        {
+          "claim": "No card, ads or fees",
+          "quote": "No credit cards, no ads, and no hidden fees."
+        },
+        {
+          "claim": "Free for SMBs",
+          "quote": "Zoho Invoice will now be completely free for all small and medium-sized businesses"
+        },
+        {
+          "claim": "Data and ads",
+          "quote": "We will never sell your data, and Zoho Invoice will remain ad-free"
+        },
+        {
+          "claim": "Worldwide (blog title)",
+          "quote": "Leveling the playing field: Zoho Invoice is now free for SMBs everywhere"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.zoho.com/us/invoice/pricing/"
+    }
+  },
+  {
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "source": "official",
+    "id": "o-clockify-free-plan",
+    "slug": "clockify-free-plan",
+    "productId": "clockify",
+    "title": "Clockify Free plan: unlimited time tracking for up to 5 users",
+    "summary": "Clockify's Free plan includes unlimited time tracking for unlimited projects, tasks and clients, for up to 5 active users including the owner.",
+    "description": "Clockify's Free plan covers the time tracker, timesheet, calendar, mobile and desktop apps, and reports, with unlimited tracking across projects, tasks and clients.\n\nThe Free plan is capped at 5 active users, counting the workspace owner. During a free trial there is no limit on invites, but when the trial ends only the first 4 invitees plus the owner stay active. Moving to a paid plan means every user needs a paid seat.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals",
+      "saas-discounts"
+    ],
+    "audiences": [
+      "freelancers",
+      "businesses"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Sign up for Clockify and stay on the Free plan."
+    },
+    "eligibility": [
+      "Individuals and teams of up to 5 active users, including the owner"
+    ],
+    "redemption": [
+      "Sign up for a Clockify account",
+      "Keep 5 or fewer active members in the workspace to remain on the Free plan"
+    ],
+    "terms": [
+      "5 active users maximum, including the owner",
+      "After a trial ends, only the first 4 invitees plus the owner stay active",
+      "On a paid plan, every user requires a paid seat"
+    ],
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Clockify's official page; live page not checked",
+      "note": "Official site was not reachable from the research environment; figures taken from search-result extracts of the provider's own pages. Re-check before publishing as verified.",
+      "evidence": [
+        {
+          "claim": "Unlimited tracking",
+          "quote": "unlimited time tracking for an unlimited number of: Projects, Tasks, and Clients"
+        },
+        {
+          "claim": "User cap",
+          "quote": "5 total active users, including the owner"
+        },
+        {
+          "claim": "After trial",
+          "quote": "the Free plan will only keep your first 4 invitees + owner active"
+        },
+        {
+          "claim": "Paid seats",
+          "quote": "every user requires a paid seat"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://clockify.me/help/administration/updates-to-clockify-free-plan",
+      "redeemUrl": "https://clockify.me/pricing"
+    }
+  },
+  {
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "source": "official",
+    "id": "o-calendly-free-plan",
+    "slug": "calendly-free-plan",
+    "productId": "calendly",
+    "title": "Calendly Free plan: one event type and one calendar connection, always free",
+    "summary": "Calendly's Free plan is always free and includes one event type, one calendar connection, one-on-one scheduling, a customizable booking page and a browser extension.",
+    "description": "Calendly lists its Free plan as always free. It includes one event type, one calendar connection and one-on-one scheduling, along with a customizable booking page and a browser extension.\n\nIt suits freelancers and solo professionals who need a single bookable meeting type; group and team scheduling are on paid plans.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals",
+      "saas-discounts"
+    ],
+    "audiences": [
+      "freelancers",
+      "office-tools"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Sign up for Calendly and choose the Free plan."
+    },
+    "eligibility": [
+      "Anyone with a Calendly account"
+    ],
+    "redemption": [
+      "Go to Calendly's pricing page",
+      "Sign up and choose the Free plan"
+    ],
+    "terms": [
+      "One event type",
+      "One calendar connection",
+      "One-on-one scheduling"
+    ],
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Calendly's official page; live page not checked",
+      "note": "Official site was not reachable from the research environment; figures taken from search-result extracts of the provider's own pages. Re-check before publishing as verified.",
+      "evidence": [
+        {
+          "claim": "Free plan contents",
+          "quote": "Free: Always free. Includes: Scheduling - One event type - One calendar connection - One-on-one scheduling - Customizable booking page - Browser extension"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://calendly.com/pricing"
+    }
+  },
+  {
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "source": "official",
+    "id": "o-shopify-free-trial-1-dollar-3-months",
+    "slug": "shopify-free-trial-1-dollar-3-months",
+    "productId": "shopify",
+    "title": "Shopify: free 3-day trial, then $1 per month for the first 3 months",
+    "summary": "Shopify starts with a free 3-day trial with no credit card required. After the trial, most plans cost $1 per month for the first 3 months, then standard monthly pricing applies.",
+    "description": "Shopify offers a free 3-day trial with no credit card required. After the trial, most plans start at $1 per month for the first 3 months before switching to standard monthly pricing.\n\nThe offer applies to most plans, not all; check the pricing page for your country and plan before signing up.",
+    "type": "free-trial",
+    "categories": [
+      "free-trials",
+      "saas-discounts"
+    ],
+    "audiences": [
+      "businesses",
+      "creators"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 1,
+      "period": "month",
+      "durationMonths": 3,
+      "savingsLabel": "3 months for $1/mo"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Applied when you start a store from Shopify's sign-up page."
+    },
+    "requirements": {
+      "cardRequired": false
+    },
+    "eligibility": [
+      "People starting a new Shopify store"
+    ],
+    "redemption": [
+      "Go to shopify.com/start",
+      "Start the free 3-day trial",
+      "Pick a plan after the trial to get $1 per month for the first 3 months"
+    ],
+    "terms": [
+      "The trial lasts 3 days and needs no credit card",
+      "The $1 price applies to most plans, not all",
+      "Standard monthly pricing applies after the first 3 months"
+    ],
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Shopify's official page; live page not checked",
+      "note": "Official site was not reachable from the research environment; figures taken from search-result extracts of the provider's own pages. Re-check before publishing as verified.",
+      "evidence": [
+        {
+          "claim": "Trial and $1 months",
+          "quote": "Shopify starts with a free 3-day trial—no credit card required. After your trial, most plans start at just $1 per month for the first 3 months, then switch to standard monthly pricing."
+        },
+        {
+          "claim": "Start page wording",
+          "quote": "Start for free, then get 3 months for $1/mo."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.shopify.com/pricing",
+      "redeemUrl": "https://www.shopify.com/start"
+    }
+  },
+  {
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "source": "official",
+    "id": "o-1password-business-14-day-trial",
+    "slug": "1password-business-14-day-trial",
+    "productId": "1password-business",
+    "title": "1Password Business: 14-day free trial, no credit card required",
+    "summary": "1Password lets businesses try its Business plan free for 14 days without entering a credit card.",
+    "description": "1Password offers a 14-day free trial of 1Password Business so teams can test it before choosing a plan. No credit card is needed to start.\n\nThe trial is useful for small businesses and startups moving shared passwords out of spreadsheets and chat into a managed password vault.",
+    "type": "free-trial",
+    "categories": [
+      "free-trials",
+      "software-deals"
+    ],
+    "audiences": [
+      "businesses",
+      "startups"
+    ],
+    "claim": {
+      "method": "automatic",
+      "note": "Start the trial from 1Password's business pricing page."
+    },
+    "requirements": {
+      "cardRequired": false
+    },
+    "eligibility": [
+      "Businesses and teams creating a new 1Password Business account"
+    ],
+    "redemption": [
+      "Go to 1Password's business pricing page",
+      "Choose Business and start the free trial"
+    ],
+    "terms": [
+      "The trial lasts 14 days",
+      "No credit card is required to start"
+    ],
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of 1Password's official page; live page not checked",
+      "note": "Official site was not reachable from the research environment; figures taken from search-result extracts of the provider's own pages. Re-check before publishing as verified.",
+      "evidence": [
+        {
+          "claim": "Trial length and card",
+          "quote": "Try free for 14 days, no credit card required"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://1password.com/pricing/business"
+    }
+  },
+  {
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "source": "official",
+    "id": "o-slack-free-plan",
+    "slug": "slack-free-plan",
+    "productId": "slack",
+    "title": "Slack Free plan: team messaging with 90 days of message history",
+    "summary": "Slack's free version is free to use, with access to the most recent 90 days of message and file history; data older than one year is deleted.",
+    "description": "On Slack's free version, workspaces can see the most recent 90 days of message and file history, and data in the workspace that is more than one year old is deleted. Upgrading reveals messages and files beyond the 90-day limit.\n\nFree workspaces that haven't had a Slack Connect trial may be offered a 90-day trial of Slack Pro, once per workspace, with no credit card required.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals",
+      "saas-discounts"
+    ],
+    "audiences": [
+      "office-tools",
+      "businesses",
+      "startups"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Create a Slack workspace; it starts on the free version."
+    },
+    "eligibility": [
+      "Any team creating a Slack workspace"
+    ],
+    "redemption": [
+      "Go to slack.com and create a workspace",
+      "Stay on the free version or upgrade later"
+    ],
+    "terms": [
+      "Only the most recent 90 days of message and file history are available",
+      "Workspace data more than one year old is deleted",
+      "The 90-day Pro trial offered to eligible teams can be applied only once per workspace"
+    ],
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Slack's official page; live page not checked",
+      "note": "Official site was not reachable from the research environment; figures taken from search-result extracts of the provider's own pages. Re-check before publishing as verified.",
+      "evidence": [
+        {
+          "claim": "History limit and deletion",
+          "quote": "On the free version of Slack, you'll be limited to the most recent 90 days of message and file history, and all data in your workspace that's more than one year old will be deleted. When you upgrade, your messages and files beyond the 90-day limit will be revealed."
+        },
+        {
+          "claim": "Pro trial for eligible teams",
+          "quote": "Eligible teams will have access to Slack's Pro plan and all its premium features, including Slack Connect, for 90 days. This trial offer can be applied only once per workspace."
+        },
+        {
+          "claim": "No card for trial",
+          "quote": "You won't need to add a credit card to accept the trial offer."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://slack.com/help/articles/27204752526611-Feature-limitations-on-the-free-version-of-Slack",
+      "redeemUrl": "https://slack.com/pricing/free"
+    }
+  },
+  {
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "source": "official",
+    "id": "o-dropbox-sign-free-plan",
+    "slug": "dropbox-sign-free-plan",
+    "productId": "dropbox-sign",
+    "title": "Dropbox Sign free plan: 3 signature requests per month",
+    "summary": "Dropbox Sign's free plan includes 3 signature requests per month, with up to 3 signers per document. Self-signing doesn't count toward the limit.",
+    "description": "Dropbox Sign's free plan lets you send 3 signature requests per month. Self-signing doesn't count towards that limit, and documents sent to signers in a single bundle count as one request.\n\nEach document can have up to 3 signers on the free plan. When a request is completed you receive a PDF of the signed documents plus an audit trail. The allowance renews monthly on the day of the month you signed up, not on the 1st.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals",
+      "saas-discounts"
+    ],
+    "audiences": [
+      "freelancers",
+      "businesses"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Sign up for a free Dropbox Sign account."
+    },
+    "eligibility": [
+      "Anyone with a Dropbox Sign account"
+    ],
+    "redemption": [
+      "Go to Dropbox Sign",
+      "Create a free account and send up to 3 signature requests per month"
+    ],
+    "terms": [
+      "3 signature requests per month",
+      "Up to 3 signers per document",
+      "Self-signing doesn't count toward the 3 requests",
+      "A single bundle of documents sent to signers counts as one request",
+      "The allowance renews on your sign-up day each month"
+    ],
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Dropbox's official page; live page not checked",
+      "note": "Official site was not reachable from the research environment; figures taken from search-result extracts of the provider's own pages. Re-check before publishing as verified.",
+      "evidence": [
+        {
+          "claim": "Monthly allowance and self-signing",
+          "quote": "Self-signing doesn't count towards your 3 free signature requests per month."
+        },
+        {
+          "claim": "Bundles",
+          "quote": "As long as you send the document(s) to the signer(s) in a single bundle, it counts as only one signature request."
+        },
+        {
+          "claim": "Signers per document",
+          "quote": "If you're on a Dropbox Sign free plan, you can have up to 3 signers per document."
+        },
+        {
+          "claim": "Audit trail",
+          "quote": "When your signature request is completed, you'll receive a PDF of the signed document(s) plus an audit trail."
+        },
+        {
+          "claim": "Rolling renewal",
+          "quote": "if you used your documents on January 17th, 20th, and 21st, your pages will not renew on February 1st. You will still be out of docs until they renew on February 17th."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://help.dropbox.com/plans/dropbox-sign-free-plan",
+      "redeemUrl": "https://sign.dropbox.com"
+    }
+  },
+  {
+    "id": "o-adobe-express-free-plan",
+    "slug": "adobe-express-free-plan",
+    "productId": "adobe-express",
+    "title": "Adobe Express Free plan: 5GB storage and 100,000+ templates",
+    "summary": "Adobe Express has a Free plan with 5GB of storage, 10 days of version history and access to 100,000+ static and video templates.",
+    "description": "Adobe Express offers an ongoing Free plan. Adobe's help page lists 5GB of storage, 10 days of version history and access to more than 100,000 static and video templates.\n\nPremium editing features, such as background removal and bulk resize, require an upgrade to a paid plan.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals"
+    ],
+    "audiences": [
+      "designers",
+      "creators",
+      "marketing-tools"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Sign up for a free Adobe account at adobe.com/express."
+    },
+    "eligibility": [
+      "Anyone with an Adobe account"
+    ],
+    "redemption": [
+      "Go to adobe.com/express",
+      "Sign up for a free Adobe account and start designing"
+    ],
+    "terms": [
+      "Storage: 5GB",
+      "Version history: 10 days",
+      "Premium editing features such as remove background and bulk resize require an upgrade"
+    ],
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Adobe's official page; live page not checked",
+      "note": "Adobe's help page lists 5GB of storage; some older Adobe Express marketing pages say 2GB. Confirm on the live pricing page.",
+      "evidence": [
+        {
+          "claim": "Storage",
+          "quote": "Storage · 5GB"
+        },
+        {
+          "claim": "Version history",
+          "quote": "Version history · 10 days"
+        },
+        {
+          "claim": "Templates",
+          "quote": "access to 100,000+ static and video templates"
+        },
+        {
+          "claim": "Premium features need an upgrade",
+          "quote": "premium editing features such as remove background, bulk resize, and more"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://helpx.adobe.com/express/web/adobe-express-subscription/free.html",
+      "redeemUrl": "https://www.adobe.com/express/pricing"
+    }
+  },
+  {
+    "id": "o-framer-for-students",
+    "slug": "framer-for-students",
+    "productId": "framer",
+    "title": "Framer for students: free Basic plan for students in a certified program",
+    "summary": "Students enrolled in a certified in-person or online program can apply for a free Framer Basic plan; Framer reviews applications within 5 working days.",
+    "description": "Framer's education program gives students free access to its Basic plan, including hosting for a site and full access to the design canvas and CMS.\n\nTo qualify, you must be enrolled in a certified in-person or online program, such as a high school, college or university. Framer reviews applications within 5 working days, and you can keep using a free account while you wait.",
+    "type": "student",
+    "categories": [
+      "student-discounts",
+      "software-deals"
+    ],
+    "audiences": [
+      "students",
+      "designers"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "application",
+      "note": "Apply through Framer's student education page."
+    },
+    "requirements": {
+      "approvalRequired": true,
+      "studentVerification": true
+    },
+    "eligibility": [
+      "Enrolled in a certified in-person or online program, such as a high school, college or university"
+    ],
+    "redemption": [
+      "Go to Framer's education page for students",
+      "Submit the student application",
+      "Wait for review (Framer aims for within 5 working days)"
+    ],
+    "terms": [
+      "Applications are reviewed before the plan is granted"
+    ],
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Framer's official page; live page not checked",
+      "note": "framer.com was not reachable from the research environment.",
+      "evidence": [
+        {
+          "claim": "Program headline",
+          "quote": "Framer for education: Students get Framer for free"
+        },
+        {
+          "claim": "Eligibility",
+          "quote": "enrolled in a certified in-person or online program, like a high school, college, or university"
+        },
+        {
+          "claim": "Review time",
+          "quote": "within 5 working days"
+        },
+        {
+          "claim": "What's included (Framer blog)",
+          "quote": "hosting for a site, full access to the design canvas and CMS"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.framer.com/education/students/"
+    }
+  },
+  {
+    "id": "o-webflow-starter-free-site-plan",
+    "slug": "webflow-starter-free-site-plan",
+    "productId": "webflow",
+    "title": "Webflow Starter: free site plan with 50 CMS items and 2 static pages",
+    "summary": "Webflow's free Starter Site plan allows up to 1,000 monthly visits, 50 CMS items and 2 static pages, published on a .webflow.io subdomain.",
+    "description": "Every Webflow site starts on the free Starter Site plan. It allows up to 1,000 monthly visits, 50 CMS items and 2 static pages, and lets you publish the site on a .webflow.io subdomain.\n\nIt suits trying Webflow or building a small personal or portfolio site before moving to a paid Site plan.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals"
+    ],
+    "audiences": [
+      "designers",
+      "freelancers"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "New sites start on the Starter Site plan when you sign up."
+    },
+    "eligibility": [
+      "Anyone with a Webflow account"
+    ],
+    "redemption": [
+      "Sign up for a Webflow account",
+      "Create a site; it starts on the free Starter Site plan"
+    ],
+    "terms": [
+      "Up to 1,000 monthly visits",
+      "Up to 50 CMS items and 2 static pages",
+      "Sites publish on the .webflow.io subdomain"
+    ],
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Webflow's official page; live page not checked",
+      "note": "webflow.com was not reachable from the research environment. Bandwidth figures conflict between Webflow pages, so bandwidth is left out.",
+      "evidence": [
+        {
+          "claim": "Starter limits and subdomain",
+          "quote": "up to 1,000 monthly visits, 50 CMS items, and 2 static pages, and comes with the ability to publish your site on the .webflow.io subdomain"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://help.webflow.com/hc/en-us/articles/33961232582419-Choose-a-Site-plan",
+      "redeemUrl": "https://webflow.com/pricing"
+    }
+  },
+  {
+    "id": "o-descript-free-plan",
+    "slug": "descript-free-plan",
+    "productId": "descript",
+    "title": "Descript Free plan: 1 media hour per month and 100 AI credits",
+    "summary": "Descript's Free plan includes 1 media hour per month and a one-time grant of 100 AI credits, with exports up to 720p.",
+    "description": "Descript has an ongoing Free plan for trying its text-based video and audio editor. It includes 1 media hour per month, counted on media you upload or record, and a one-time grant of 100 AI credits for Underlord and Descript's other AI tools.\n\nOn the Free plan, exports are limited to 720p with a watermark. Unused media time and credits do not carry over to the next month.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals",
+      "ai-tools"
+    ],
+    "audiences": [
+      "creators",
+      "ai-tools"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Sign up for a free Descript account."
+    },
+    "eligibility": [
+      "Anyone with a Descript account"
+    ],
+    "redemption": [
+      "Go to descript.com/pricing",
+      "Sign up for the Free plan"
+    ],
+    "terms": [
+      "1 media hour per month",
+      "100 AI credits, granted one time",
+      "Exports up to 720p with a watermark"
+    ],
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Descript's official page; live page not checked",
+      "note": "descript.com was not reachable from the research environment. Some older Descript tool pages describe 100 credits per month and one watermark-free export; the main pricing page wording (one-time credits, 720p with watermark) is used here.",
+      "evidence": [
+        {
+          "claim": "Media hours",
+          "quote": "1 media hour"
+        },
+        {
+          "claim": "AI credits",
+          "quote": "The free plan includes 100 AI credits, one time, to spend on Underlord and the other AI tools."
+        },
+        {
+          "claim": "Export limit",
+          "quote": "720p"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.descript.com/pricing"
+    }
+  },
+  {
+    "id": "o-davinci-resolve-free",
+    "slug": "davinci-resolve-free",
+    "productId": "davinci-resolve",
+    "title": "DaVinci Resolve: free version for Mac, Windows and Linux",
+    "summary": "Blackmagic Design offers DaVinci Resolve as a free download that works with virtually all 8-bit video formats at up to 60fps and up to Ultra HD 3840 x 2160; the paid Studio version costs $295.",
+    "description": "DaVinci Resolve, Blackmagic Design's editing, color, effects and audio application, is available as a free download for Mac, Windows and Linux.\n\nThe free version works with virtually all 8-bit video formats at up to 60fps, in resolutions as high as Ultra HD 3840 x 2160. DaVinci Resolve Studio, the paid version, adds the DaVinci AI Neural Engine, more Resolve FX, 10-bit video up to 120 frames per second and resolutions beyond 4K, and is listed at $295.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals"
+    ],
+    "audiences": [
+      "creators"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "link",
+      "note": "Download the free (non-Studio) installer from Blackmagic Design's DaVinci Resolve page."
+    },
+    "eligibility": [
+      "Anyone; no purchase needed for the free version"
+    ],
+    "redemption": [
+      "Go to Blackmagic Design's DaVinci Resolve page",
+      "Choose the free DaVinci Resolve download (not Studio) for Mac, Windows or Linux"
+    ],
+    "terms": [
+      "Free version: virtually all 8-bit video formats at up to 60fps, up to Ultra HD 3840 x 2160",
+      "Higher frame rates, 10-bit and resolutions beyond 4K require DaVinci Resolve Studio"
+    ],
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Blackmagic Design's official page; live page not checked",
+      "note": "blackmagicdesign.com was not reachable from the research environment.",
+      "evidence": [
+        {
+          "claim": "Free version limits",
+          "quote": "virtually all 8-bit video formats at up to 60fps in resolutions as high as Ultra HD 3840 x 2160"
+        },
+        {
+          "claim": "Platforms",
+          "quote": "Mac, Windows and Linux"
+        },
+        {
+          "claim": "Studio additions",
+          "quote": "DaVinci AI Neural Engine, dozens of additional Resolve FX"
+        },
+        {
+          "claim": "Studio video support",
+          "quote": "10-bit video up to 120 frames per second and resolutions beyond 4K"
+        },
+        {
+          "claim": "Studio price",
+          "quote": "$295"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.blackmagicdesign.com/products/davinciresolve"
+    }
+  },
+  {
+    "id": "o-affinity-free-with-canva-account",
+    "slug": "affinity-free-with-canva-account",
+    "productId": "affinity",
+    "title": "Affinity: free with a Canva account",
+    "summary": "Canva makes the full Affinity design app free for everyone with a Canva account, including Canva Free users; Canva paid plans add Canva AI tools inside Affinity.",
+    "description": "Affinity, Canva's professional vector, pixel and layout app, is free for anyone who signs in with a Canva account, including Canva Free users. Canva paid plans additionally unlock Canva AI tools inside Affinity, such as Generative Fill, Generative Expand and Generate Image/Vector.\n\nYou need to be online to download the app and activate the licence. After that, Affinity can be used offline, even for extended periods. Signing in means accepting the Affinity Additional Terms and Canva's Privacy Policy.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals"
+    ],
+    "audiences": [
+      "designers",
+      "creators"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Install Affinity and sign in with a free Canva account."
+    },
+    "eligibility": [
+      "Anyone with a Canva account, including Canva Free users"
+    ],
+    "redemption": [
+      "Install the Affinity app",
+      "Open Affinity and select Sign in with Canva",
+      "Select Allow to connect your Canva account",
+      "Select Launch"
+    ],
+    "terms": [
+      "Canva AI tools in Affinity require a Canva paid plan",
+      "An internet connection is needed to download and activate the licence; after that, no connection is required",
+      "Logging in means you agree to the Affinity Additional Terms and Canva's Privacy Policy",
+      "Canva may suspend, remove, modify or limit access to the Affinity software at any time without notice"
+    ],
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Canva's official page; live page not checked",
+      "note": "canva.com and affinity.studio were not reachable from the research environment.",
+      "evidence": [
+        {
+          "claim": "Free for everyone; paid plans add Canva AI",
+          "quote": "Everyone, even Canva Free users, can use Affinity, but Canva paid plans can unlock incredibly powerful Canva AI tools such as Generative Fill, Generative Expand, Generate Image/Vector, and more directly in Affinity."
+        },
+        {
+          "claim": "Online activation, then offline use",
+          "quote": "You will need to be online to download and activate your license with your free Canva account. From then on, there is no requirement to be online, even with extended offline periods."
+        },
+        {
+          "claim": "Sign-in steps",
+          "quote": "Install the Affinity app if you haven't already. Open Affinity and select Sign in with Canva. Select Allow to connect your Canva account. Select Launch — you're in!"
+        },
+        {
+          "claim": "Terms on login",
+          "quote": "When you log in to Affinity with your Canva account, you agree to the Affinity Additional Terms and Canva's Privacy Policy."
+        },
+        {
+          "claim": "Canva may change access (Affinity Terms)",
+          "quote": "may suspend, remove, modify or disable (or impose limits on) access to the currently available Affinity Software and/or any Affinity-Licensed Content at any time without notice and without liability to you"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.canva.com/en_in/help/free-affinity-access/",
+      "redeemUrl": "https://www.affinity.studio/download"
+    }
+  },
+  {
+    "id": "o-sketch-education-plan",
+    "slug": "sketch-education-plan",
+    "productId": "sketch",
+    "title": "Sketch Education plan: free Workspace with 50 GB storage for students and teachers",
+    "summary": "Eligible students and teachers get a free Sketch Workspace with 50 GB of storage and an Editor seat for the Mac app, for as long as Sketch is part of their studies or teaching.",
+    "description": "Sketch's Education plan gives a free Workspace with 50 GB of storage and Editor seats, with access to the Mac app. Students currently enrolled in studies and employed teachers receive a Workspace with 1 Editor seat; academic institutions can get multiple seats if they meet Sketch's criteria.\n\nStudents and teachers can use Sketch free for as long as the use is part of their studies or the course they teach. The plan is not available for home learning or self-education, and there is a minimum age of 16.",
+    "type": "student",
+    "categories": [
+      "student-discounts",
+      "software-deals"
+    ],
+    "audiences": [
+      "students",
+      "designers"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "application",
+      "note": "Sign up for a Sketch account and submit the education form on sketch.com/education."
+    },
+    "requirements": {
+      "studentVerification": true
+    },
+    "eligibility": [
+      "Students currently enrolled in studies",
+      "Teachers currently employed at an educational institution",
+      "Minimum age of 16",
+      "Not available for home learning or self-education"
+    ],
+    "redemption": [
+      "Go to sketch.com/education",
+      "Create a Sketch account and submit your education status for review"
+    ],
+    "terms": [
+      "Students and teachers get a Workspace with 1 Editor seat, which allows access to the Mac app",
+      "Free for as long as the use is part of your studies or the course you teach",
+      "Includes 50 GB of storage"
+    ],
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Sketch's official page; live page not checked",
+      "note": "sketch.com was not reachable from the research environment. An older Sketch blog post mentions 5GB of storage; the 50 GB figure is from the current support page. The support page also says \"for one year\" while stating use is free for as long as it is part of your studies or teaching; access may need re-applying (renewal) after a year.",
+      "evidence": [
+        {
+          "claim": "What the plan includes",
+          "quote": "a free Workspace with 50 GB of storage and Editor seats (depending on your education status) with access to the Mac app for one year"
+        },
+        {
+          "claim": "Seats for students and teachers",
+          "quote": "Students currently enrolled in studies and employed Teachers can receive a Workspace with 1 Editor seat, which allows access to the Mac app."
+        },
+        {
+          "claim": "Duration",
+          "quote": "for as long as the use is part of your studies or the course you're teaching"
+        },
+        {
+          "claim": "Exclusion",
+          "quote": "isn't available for home learning or self-education purposes"
+        },
+        {
+          "claim": "Minimum age",
+          "quote": "minimum age requirement of 16"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.sketch.com/support/subscriptions/plans/education/whats-an-education-plan/",
+      "redeemUrl": "https://www.sketch.com/education/"
+    }
+  },
+  {
+    "id": "o-riverside-free-plan",
+    "slug": "riverside-free-plan",
+    "productId": "riverside",
+    "title": "Riverside Free plan: 2 hours of multi-track recordings, up to 720p",
+    "summary": "Riverside's Free plan lets you try 2 hours of multi-track recordings with separate audio and video tracks, at up to 720p video quality, with a Riverside watermark.",
+    "description": "Riverside offers an ongoing Free plan for recording podcasts and video interviews. It includes 2 hours of multi-track recordings, with separate audio and video tracks for each participant, and video quality up to 720p.\n\nRecordings on the Free plan carry a Riverside watermark; removing it requires a paid plan.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals"
+    ],
+    "audiences": [
+      "creators"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Sign up for a free Riverside account."
+    },
+    "eligibility": [
+      "Anyone with a Riverside account"
+    ],
+    "redemption": [
+      "Go to riverside.com/pricing",
+      "Sign up for the Free plan"
+    ],
+    "terms": [
+      "2 hours of multi-track recordings (separate audio and video tracks)",
+      "Up to 720p video quality",
+      "Recordings include a Riverside watermark"
+    ],
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Riverside's official page; live page not checked",
+      "note": "riverside.com was not reachable from the research environment. A Riverside blog post says the 2-hour cap applies to exporting separate tracks, not to recording or editing.",
+      "evidence": [
+        {
+          "claim": "Multi-track hours",
+          "quote": "Try 2 hours of multi-track recordings (Separate audio and video tracks)"
+        },
+        {
+          "claim": "Video quality",
+          "quote": "Up to 720p video quality"
+        },
+        {
+          "claim": "Watermark (Riverside blog)",
+          "quote": "Riverside's free plan adds a watermark to your recordings. To remove the watermark, upgrade to a paid plan"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://riverside.com/pricing"
+    }
+  },
+  {
+    "id": "o-restream-free-plan",
+    "slug": "restream-free-plan",
+    "productId": "restream",
+    "title": "Restream Free plan: stream to 2 channels at once",
+    "summary": "Restream's Free plan lets you stream to two channels at the same time from Restream Studio (in 720p) or OBS, with Restream branding on the stream.",
+    "description": "Restream's Free plan lets you broadcast to two channels at the same time, from Restream Studio or from OBS. Restream Studio output on the Free plan is 720p, and streams carry Restream branding.\n\nPaid plans add more channels, remove Restream branding and add destinations such as Facebook Pages, Groups and custom RTMP.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals"
+    ],
+    "audiences": [
+      "creators",
+      "marketing-tools"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Sign up for a free Restream account."
+    },
+    "eligibility": [
+      "Anyone with a Restream account"
+    ],
+    "redemption": [
+      "Sign up for a free Restream account",
+      "Add and enable up to two channels, then go live from Restream Studio or OBS"
+    ],
+    "terms": [
+      "Up to 2 channels at once",
+      "Restream Studio in 720p",
+      "Restream branding on your stream",
+      "Facebook Pages, Groups and custom RTMP require an upgrade"
+    ],
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Restream's official page; live page not checked",
+      "note": "restream.io was not reachable from the research environment. Paid plan prices conflict between Restream pages and are left out.",
+      "evidence": [
+        {
+          "claim": "Two channels, Studio or OBS; upgrade benefits",
+          "quote": "Stream to two channels at the same time on the free plan, from Studio or OBS. Upgrade to stream to more channels, remove Restream branding and add Facebook Pages, Groups or custom RTMP."
+        },
+        {
+          "claim": "Studio resolution and branding",
+          "quote": "The Free plan includes streaming to 2 channels at once, Restream Studio in 720p, and Restream branding on your stream."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://restream.io/multistreaming",
+      "redeemUrl": "https://restream.io/pricing"
+    }
+  },
+  {
+    "id": "o-canva-education-free-k12",
+    "slug": "canva-education-free-k12",
+    "productId": "canva",
+    "title": "Canva Education: free premium features for K-12 teachers and their students",
+    "summary": "Canva Education is free for K-12 teachers, their students and qualified school districts; teachers verify their status and invite their students.",
+    "description": "Canva Education gives eligible K-12 (primary and secondary) teachers and their students access to Canva's premium features for free. Canva commits that it will remain 100% free for K-12 educators, their students and qualified school districts and institutions.\n\nTeachers sign up and verify their teaching status, either instantly or by uploading a document. Students cannot sign up on their own: they must be invited by their teacher, school or district. School administrators can disable access.\n\nCanva Education is not available to college and university students; Canva for Campus is a separate paid offering for higher education.",
+    "type": "student",
+    "categories": [
+      "student-discounts",
+      "software-deals"
+    ],
+    "audiences": [
+      "students",
+      "designers"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "verification",
+      "note": "Teachers sign up and verify their teaching status; students join by teacher invitation."
+    },
+    "requirements": {
+      "studentVerification": true
+    },
+    "eligibility": [
+      "K-12 (primary and secondary) teachers who can confirm their teaching status",
+      "K-12 students invited by their teacher, school or school district",
+      "Qualified K-12 school districts and institutions",
+      "Not available to college and university students"
+    ],
+    "redemption": [
+      "Go to canva.com/education and sign up as a teacher",
+      "Complete verification (instant, or by uploading a document confirming your teaching status)",
+      "Invite your students"
+    ],
+    "terms": [
+      "Premium features are free for eligible K-12 teachers and students unless disabled by school administrators",
+      "Students must be invited by their teacher, school or school district",
+      "Canva for Campus, for higher education, is a paid offering"
+    ],
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Canva's official page; live page not checked",
+      "note": "canva.com was not reachable from the research environment.",
+      "evidence": [
+        {
+          "claim": "Free commitment",
+          "quote": "Canva Education will remain 100% free for K-12 (primary and secondary) educators, their students, as well as qualified school districts and institutions"
+        },
+        {
+          "claim": "Premium features free unless disabled",
+          "quote": "Eligible K-12 teachers and students can access premium features for free, unless disabled by school administrators"
+        },
+        {
+          "claim": "Teacher verification",
+          "quote": "You might be eligible for instant verification. If not, you'll need to upload a document to confirm your teaching status."
+        },
+        {
+          "claim": "Students need an invite",
+          "quote": "Students must be invited by their teacher, school or school district"
+        },
+        {
+          "claim": "Higher education is a paid offering",
+          "quote": "Canva for Campus is our paid offering designed for full campus-wide rollouts at higher education institutions."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.canva.com/education/"
+    }
+  },
+  {
+    "id": "o-microsoft-365-business-free-trial",
+    "slug": "microsoft-365-business-free-trial",
+    "productId": "microsoft-365-business",
+    "title": "Microsoft 365 for business: free 30-day trial",
+    "summary": "Organizations can try Microsoft 365 Business Basic, Business Standard, Business Premium, Microsoft Defender for Business or Microsoft 365 Apps for business free for one month.",
+    "description": "Microsoft offers a free 30-day trial of its Microsoft 365 for business plans. You don't need an existing Microsoft account to sign up: pick a plan on the Microsoft 365 products site and select \"Try free for 1 month\". Trial subscriptions include 25 licenses for the trial period, and trial tenants are limited to 300 GB of pooled storage across OneDrive, SharePoint and Exchange Online.\n\nAt the end of the trial, the subscription renews to an annual paid subscription by default unless you turn off recurring billing in the Microsoft 365 admin center. If you cancel before the trial ends, your card isn't charged.",
+    "type": "free-trial",
+    "categories": [
+      "free-trials",
+      "software-deals"
+    ],
+    "audiences": [
+      "office-tools",
+      "businesses",
+      "startups"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "durationMonths": 1
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Choose a plan on the Microsoft 365 products site and select \"Try free for 1 month\"."
+    },
+    "eligibility": [
+      "Available for Microsoft 365 Business Basic, Business Standard, Business Premium, Microsoft Defender for Business and Microsoft 365 Apps for business",
+      "No existing Microsoft account is needed to sign up for the trial"
+    ],
+    "redemption": [
+      "Go to the Microsoft 365 products site",
+      "Select the plan you want and choose \"Try free for 1 month\"",
+      "Follow the steps to set up your account"
+    ],
+    "terms": [
+      "The trial lasts one month (30 days)",
+      "Trial subscriptions include 25 free licenses for the trial period",
+      "Trial subscriptions are limited to 300 GB of pooled storage across OneDrive, SharePoint and Exchange Online",
+      "At the end of the trial the subscription renews to an annual term by default unless recurring billing is turned off",
+      "Cancel by turning off recurring billing before the trial ends and your card isn't charged",
+      "Microsoft can suspend access if payment isn't received after the trial ends"
+    ],
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "verification": {
+      "status": "verified",
+      "checkedAt": "2026-10-20",
+      "method": "Checked against Microsoft's official documentation source (MicrosoftDocs/microsoft-365-docs repository)",
+      "evidence": [
+        {
+          "claim": "Free 30-day trial of business plans",
+          "quote": "This article shows you how to sign up for a free 30-day trial or buy a Microsoft 365 for business subscription, including Microsoft 365 Business Basic, Microsoft 365 Business Standard, Microsoft 365 Business Premium, Microsoft Defender for Business, or Microsoft 365 Apps for business."
+        },
+        {
+          "claim": "No Microsoft account needed",
+          "quote": "You don't need an existing Microsoft account to sign up for a free trial."
+        },
+        {
+          "claim": "Sign-up steps",
+          "quote": "Go to the Microsoft 365 Products site. Select the plan that you want, such as Microsoft 365 Business Standard, scroll down the page, and select Try free for 1 month. On the next page, follow the steps to set up your account."
+        },
+        {
+          "claim": "Storage limit",
+          "quote": "If you have a Microsoft 365 trial, your subscription is limited to 300 GB of pooled storage. Pooled storage provides a single pool of storage for each tenant, and spans OneDrive, SharePoint Online, and Exchange Online."
+        },
+        {
+          "claim": "Trial-only tenant limits",
+          "quote": "Trial-only tenants are limited to 30 days and 300 GB."
+        },
+        {
+          "claim": "25 licenses",
+          "quote": "All trial subscriptions include 25 free licenses for the duration of the trial period."
+        },
+        {
+          "claim": "Auto-renewal",
+          "quote": "At the end of your trial period, your subscription renews to an annual term subscription by default, unless you turn off recurring billing from inside of Billing > Your products."
+        },
+        {
+          "claim": "Cancel without charge",
+          "quote": "If you decide to cancel your trial subscription before the free trial period ends, go to the Microsoft 365 admin center and turn off recurring billing. The trial automatically expires when your month ends, and your credit card isn't charged."
+        },
+        {
+          "claim": "Suspension for non-payment",
+          "quote": "Microsoft reserves the right to suspend access to its products and services if payment isn't received after your one-month free trial ends. Storage for trials is limited."
+        },
+        {
+          "claim": "Source note",
+          "quote": "Terms read from Microsoft's official docs source (MicrosoftDocs/microsoft-365-docs repository, file microsoft-365/commerce/try-or-buy-microsoft-365.md, ms.date 04/23/2026) because learn.microsoft.com was not reachable from the research environment."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://learn.microsoft.com/en-us/microsoft-365/commerce/try-or-buy-microsoft-365",
+      "redeemUrl": "https://www.aka.ms/office365signup"
+    }
+  },
+  {
+    "id": "o-google-workspace-14-day-free-trial",
+    "slug": "google-workspace-14-day-free-trial",
+    "productId": "google-workspace",
+    "title": "Google Workspace 14-day free trial for up to 10 users",
+    "summary": "New Google Workspace sign-ups start with a 14-day free trial for up to 10 users; the payment method isn't charged until the trial ends.",
+    "description": "When you sign up for Google Workspace you start on a 14-day free trial that up to 10 users can use. Your payment method isn't charged until the trial ends, and you can cancel during the trial without being charged.\n\nThe paid subscription begins automatically when the trial ends. Adding an 11th user ends the trial early and starts the paid subscription for all users. If the trial ends without billing set up, the account is suspended. Sign-ups made from Android or iOS handle billing through Google Play or the device's Settings app instead.",
+    "type": "free-trial",
+    "categories": [
+      "free-trials",
+      "software-deals"
+    ],
+    "audiences": [
+      "office-tools",
+      "businesses",
+      "startups",
+      "freelancers"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "The trial starts automatically when you sign up for Google Workspace."
+    },
+    "eligibility": [
+      "New Google Workspace sign-ups",
+      "Up to 10 users during the trial"
+    ],
+    "redemption": [
+      "Sign up for Google Workspace on the Google Workspace site",
+      "Add a payment method; it isn't charged until the trial ends",
+      "Verify your domain within 9 days of starting the trial"
+    ],
+    "terms": [
+      "The trial lasts 14 days",
+      "The trial is limited to 10 users; adding an 11th user ends the trial and starts the paid subscription for all users",
+      "The paid subscription begins automatically when the trial ends",
+      "Cancelling within the 14-day trial means you aren't charged",
+      "If the trial ends and billing isn't set up, the account is suspended",
+      "The subscription can be cancelled during the trial if the domain isn't verified within 9 days or billing isn't set up by the end of the trial"
+    ],
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Google's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of the official page. The live page could not be fetched from the research environment (outbound access to the provider's site was blocked), so an editor should re-check it before marking this verified.",
+      "evidence": [
+        {
+          "claim": "14-day trial for up to 10 users",
+          "quote": "When you sign up for Google Workspace, you start with a 14-day free trial subscription. Up to 10 users can explore the features of Google Workspace."
+        },
+        {
+          "claim": "Payment method not charged during trial",
+          "quote": "your payment method will not be charged until your free trial ends"
+        },
+        {
+          "claim": "Automatic start of paid subscription",
+          "quote": "Your paid subscription automatically begins when your trial ends."
+        },
+        {
+          "claim": "10-user limit",
+          "quote": "Your Google Workspace trial is limited to 10 users. To add more than 10 users, you must set up billing. When you add an 11th user, you are prompted to end your trial and your paid subscription begins for all users."
+        },
+        {
+          "claim": "Cancel without charge",
+          "quote": "If you cancel within your 14 day trial period, you will not be charged."
+        },
+        {
+          "claim": "Suspension without billing",
+          "quote": "If your trial period ends and you haven't set up billing, your account will be suspended."
+        },
+        {
+          "claim": "Domain verification deadline",
+          "quote": "your subscription will be canceled during your free trial if you do not: Verify your domain within 9 days of starting your trial or set up billing by the end of the trial."
+        },
+        {
+          "claim": "Mobile sign-ups",
+          "quote": "you instead manage billing in Google Play (Android) or the Settings app (iOS)."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://knowledge.workspace.google.com/admin/getting-started/about-your-google-workspace-free-trial",
+      "redeemUrl": "https://workspace.google.com/"
+    }
+  },
+  {
+    "id": "o-zoom-basic-free-plan",
+    "slug": "zoom-basic-free-plan",
+    "productId": "zoom-workplace",
+    "title": "Zoom Basic free plan: meetings up to 40 minutes with up to 100 participants",
+    "summary": "Zoom's free Basic plan lets you host unlimited meetings for up to 100 participants, with each meeting limited to 40 minutes.",
+    "description": "Zoom's Basic plan is free. It lets you host an unlimited number of meetings with up to 100 participants, and each meeting can last up to 40 minutes. Paid Zoom Workplace plans remove the 40-minute limit.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals"
+    ],
+    "audiences": [
+      "office-tools",
+      "businesses",
+      "freelancers"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "New Zoom accounts start on the free Basic plan."
+    },
+    "eligibility": [
+      "Anyone who signs up for a free Zoom account"
+    ],
+    "redemption": [
+      "Sign up for a free Zoom account",
+      "Host meetings on the Basic plan"
+    ],
+    "terms": [
+      "Meetings are limited to 40 minutes",
+      "Up to 100 participants per meeting",
+      "Unlimited number of meetings"
+    ],
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Zoom's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of the official page. The live page could not be fetched from the research environment (outbound access to the provider's site was blocked), so an editor should re-check it before marking this verified. Both quotes are short extracts that the search tool may have paraphrased; check the exact wording on zoom.us/pricing.",
+      "evidence": [
+        {
+          "claim": "Free plan limits (search extract, paraphrased by the search tool)",
+          "quote": "up to 40 minutes per meeting for up to 100 participants"
+        },
+        {
+          "claim": "Unlimited meetings (search extract, paraphrased by the search tool)",
+          "quote": "host an unlimited number of meetings for up to 100 participants, with a meeting duration limit of 40 minutes"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.zoom.com/en/products/virtual-meetings/features/free-video-conferencing/",
+      "redeemUrl": "https://zoom.us/pricing"
+    }
+  },
+  {
+    "id": "o-trello-free-plan",
+    "slug": "trello-free-plan",
+    "productId": "trello",
+    "title": "Trello Free plan: up to 10 collaborators per Workspace",
+    "summary": "Trello's Free plan is free for up to 10 collaborators per Workspace, with unlimited cards and up to 10 open boards per Workspace.",
+    "description": "Trello's Free plan costs nothing for Workspaces with up to 10 collaborators and includes unlimited cards. A free Workspace can have up to 10 open boards at a time.\n\nThe 10-collaborator limit applies to the whole Workspace rather than each board. If a free Workspace goes over the limit, its boards become view-only until it is back within the limit or upgraded.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals"
+    ],
+    "audiences": [
+      "office-tools",
+      "freelancers",
+      "startups"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "New Trello Workspaces start on the Free plan."
+    },
+    "eligibility": [
+      "Any Trello Workspace with up to 10 collaborators"
+    ],
+    "redemption": [
+      "Sign up for Trello",
+      "Create a Workspace and boards on the Free plan"
+    ],
+    "terms": [
+      "Up to 10 collaborators per Workspace",
+      "The collaborator limit applies to the Workspace, not to individual boards",
+      "Free Workspaces are limited to 10 open boards at a time",
+      "Boards in a Workspace over the collaborator limit become view-only"
+    ],
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Trello's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of the official page. The live page could not be fetched from the research environment (outbound access to the provider's site was blocked), so an editor should re-check it before marking this verified. The unlimited-cards feature is from the search tool's summary of trello.com/pricing and is not quoted.",
+      "evidence": [
+        {
+          "claim": "10 collaborators per Workspace (search extract, paraphrased by the search tool)",
+          "quote": "free for up to 10 collaborators per Workspace"
+        },
+        {
+          "claim": "Limit applies per Workspace",
+          "quote": "the 10 Collaborator limit for our free plan applies to the Workspace your board is in rather than the board itself"
+        },
+        {
+          "claim": "Over-limit consequence",
+          "quote": "the boards in this Workspace will become view-only"
+        },
+        {
+          "claim": "Open board limit",
+          "quote": "Free Trello Workspaces are limited to 10 open boards at a time"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://trello.com/pricing"
+    }
+  },
+  {
+    "id": "o-airtable-free-plan",
+    "slug": "airtable-free-plan",
+    "productId": "airtable",
+    "title": "Airtable Free plan: 1,000 records per base and up to 5 editors",
+    "summary": "Airtable's Free plan allows 1,000 records per base and up to 5 collaborators with Editor or Creator permissions, plus unlimited read-only collaborators.",
+    "description": "Airtable's Free plan lets a workspace build bases with up to 1,000 records each. The record limit is counted across all tables in a base.\n\nFree workspaces can have up to 5 collaborators with Editor or Creator permissions and an unlimited number of read-only collaborators.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals"
+    ],
+    "audiences": [
+      "office-tools",
+      "startups",
+      "businesses"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "New Airtable workspaces start on the Free plan."
+    },
+    "eligibility": [
+      "Any Airtable workspace on the Free plan"
+    ],
+    "redemption": [
+      "Sign up for Airtable",
+      "Create bases in a Free plan workspace"
+    ],
+    "terms": [
+      "1,000 records per base",
+      "Record limits are counted across all tables in a base",
+      "Up to 5 collaborators with Editor or Creator permissions",
+      "Unlimited collaborators with read-only permissions"
+    ],
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Airtable's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of the official page. The live page could not be fetched from the research environment (outbound access to the provider's site was blocked), so an editor should re-check it before marking this verified.",
+      "evidence": [
+        {
+          "claim": "Record limit (search extract, paraphrased by the search tool)",
+          "quote": "1000 records per base"
+        },
+        {
+          "claim": "Records counted across tables",
+          "quote": "record limits are cumulative across all tables in a base"
+        },
+        {
+          "claim": "Editor limit",
+          "quote": "Free plan workspaces are limited to 5 collaborators with Editor or Creator permissions"
+        },
+        {
+          "claim": "Read-only collaborators",
+          "quote": "Free plan workspaces include unlimited collaborators with \"Read only\" permissions"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://support.airtable.com/articles/2277136852-airtable-plans-overview",
+      "redeemUrl": "https://www.airtable.com/pricing"
+    }
+  },
+  {
+    "id": "o-mailchimp-free-plan",
+    "slug": "mailchimp-free-plan",
+    "productId": "mailchimp",
+    "title": "Mailchimp Free plan: up to 250 contacts and 500 email sends per month",
+    "summary": "Mailchimp's Free plan includes up to 250 contacts and 500 email sends per month, with a daily limit of 250 sends.",
+    "description": "Mailchimp's Free plan lets you keep up to 250 contacts and send up to 500 emails a month, with no more than 250 sends per day.\n\nIf you go over the 250-contact limit, Mailchimp holds sending of live and test emails until you upgrade to a paid plan or reduce your contact count.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals"
+    ],
+    "audiences": [
+      "marketing-tools",
+      "businesses",
+      "freelancers"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Choose the Free plan when signing up for Mailchimp."
+    },
+    "eligibility": [
+      "Any Mailchimp account on the Free plan"
+    ],
+    "redemption": [
+      "Go to Mailchimp's pricing page",
+      "Sign up and choose the Free plan"
+    ],
+    "terms": [
+      "Up to 250 contacts",
+      "500 email sends per month, with a daily limit of 250",
+      "Going over 250 contacts puts a hold on sending live and test emails until you upgrade or reduce your contacts"
+    ],
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Mailchimp's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of the official page. The live page could not be fetched from the research environment (outbound access to the provider's site was blocked), so an editor should re-check it before marking this verified. Older Mailchimp pages still describe a retired legacy Free plan (2,000 contacts); the figures here are from the current help article.",
+      "evidence": [
+        {
+          "claim": "Monthly and daily send limits",
+          "quote": "The monthly email send limit for the Free plan is 500 sends (daily limit of 250)."
+        },
+        {
+          "claim": "Contact and send limits (search extract, paraphrased by the search tool)",
+          "quote": "up to 250 contacts and 500 sends per month, with a daily send limit of 250"
+        },
+        {
+          "claim": "Over the contact limit",
+          "quote": "If you exceed the 250 contact limit in your Free plan, a hold is placed on sending live emails or test emails until you upgrade to a paid plan or reduce your contact total."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://mailchimp.com/help/about-mailchimp-pricing-plans/",
+      "redeemUrl": "https://mailchimp.com/pricing/marketing/"
+    }
+  },
+  {
+    "id": "o-brevo-free-plan",
+    "slug": "brevo-free-plan",
+    "productId": "brevo",
+    "title": "Brevo Free plan: 300 emails per day and storage for up to 100,000 contacts",
+    "summary": "Brevo's Free plan includes 300 email sends per day and storage for up to 100,000 contacts, with marketing automation for up to 2,000 contacts.",
+    "description": "Brevo's Free plan includes 300 email sends per day and lets you store up to 100,000 contacts. Unused daily sends don't carry over. You can upload contacts straight away and start sending once Brevo approves your account for sending.\n\nMulti-channel marketing automation on the Free plan covers up to 2,000 contacts.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals"
+    ],
+    "audiences": [
+      "marketing-tools",
+      "businesses",
+      "startups"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "New Brevo accounts start on the Free plan."
+    },
+    "eligibility": [
+      "Any Brevo account on the Free plan, once approved for sending"
+    ],
+    "redemption": [
+      "Sign up for Brevo",
+      "Upload your contacts",
+      "Start sending once Brevo approves your account for sending"
+    ],
+    "terms": [
+      "300 email sends per day; unused sends don't roll over",
+      "Storage for up to 100,000 contacts",
+      "Sending starts after Brevo approves the account",
+      "Marketing automation covers up to 2,000 contacts"
+    ],
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Brevo's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of the official page. The live page could not be fetched from the research environment (outbound access to the provider's site was blocked), so an editor should re-check it before marking this verified. The no-rollover term is from the search tool's summary of the help article and is not quoted.",
+      "evidence": [
+        {
+          "claim": "Daily sends and contact storage",
+          "quote": "The Free plan includes 300 daily email sends and storage for up to 100,000 contacts."
+        },
+        {
+          "claim": "Approval before sending (search extract, paraphrased by the search tool)",
+          "quote": "once Brevo approves your account for sending, you can start sending up to 300 emails per day"
+        },
+        {
+          "claim": "Automation limit (search extract, paraphrased by the search tool)",
+          "quote": "multi-channel marketing automation is available on the Free plan for up to 2,000 contacts"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://help.brevo.com/hc/en-us/articles/208589409-About-Brevo-s-pricing-plans",
+      "redeemUrl": "https://www.brevo.com/pricing/"
+    }
+  },
+  {
+    "id": "o-kit-free-plan",
+    "slug": "kit-free-plan",
+    "productId": "kit",
+    "title": "Kit Free plan: email marketing for up to 10,000 subscribers",
+    "summary": "Kit (formerly ConvertKit) offers a Free plan for up to 10,000 subscribers with unlimited forms, landing pages and email broadcasts.",
+    "description": "Kit's Free plan covers up to 10,000 subscribers and includes unlimited forms, landing pages and email broadcasts, tagging and segmentation, and digital products and subscriptions.\n\nVisual automations, email sequences and some other features are reserved for the paid Creator and Creator Pro plans. Kit keeps one recommendation slot on the Free plan, and Paid Recommendation earnings from that slot go to Kit. If you grow past 10,000 subscribers, you need to upgrade to keep sending.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals"
+    ],
+    "audiences": [
+      "marketing-tools",
+      "creators"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Choose the Free plan when signing up for Kit."
+    },
+    "eligibility": [
+      "Creators with up to 10,000 subscribers"
+    ],
+    "redemption": [
+      "Go to Kit's pricing page",
+      "Sign up for the Free plan"
+    ],
+    "terms": [
+      "Up to 10,000 subscribers",
+      "Visual automations and email sequences need a paid Creator or Creator Pro plan",
+      "Paid Recommendation earnings from Kit's recommendation slot on the Free plan go to Kit",
+      "Above 10,000 subscribers you need a paid plan to keep sending"
+    ],
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Kit's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of the official page. The live page could not be fetched from the research environment (outbound access to the provider's site was blocked), so an editor should re-check it before marking this verified. The list of included and paid-only features is from the search tool's summary of help.kit.com and should be re-checked.",
+      "evidence": [
+        {
+          "claim": "Subscriber limit (search extract, paraphrased by the search tool)",
+          "quote": "up to 10,000 active subscribers"
+        },
+        {
+          "claim": "Paid-plan features",
+          "quote": "These features live on the Creator and Creator Pro plans."
+        },
+        {
+          "claim": "Recommendation slot",
+          "quote": "any Paid Recommendation earnings generated from that slot will go to Kit"
+        },
+        {
+          "claim": "Going over the limit",
+          "quote": "You'll need to upgrade to a paid plan to keep sending. Everything you've built stays exactly where it is."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://help.kit.com/en/articles/16627071-the-kit-free-plan",
+      "redeemUrl": "https://kit.com/pricing"
+    }
+  },
+  {
+    "id": "o-buffer-free-plan",
+    "slug": "buffer-free-plan",
+    "productId": "buffer",
+    "title": "Buffer Free plan: up to 3 channels with 10 scheduled posts each",
+    "summary": "Buffer's Free plan lets you connect up to 3 social channels and keep 10 scheduled posts per channel, up to 30 in total.",
+    "description": "Buffer's Free plan supports up to three social media channels. Each channel can have 10 posts scheduled at a time, so up to 30 in total; when a post is published its slot frees up again.\n\nIf you connect more than three channels on the Free plan, the extra channels are locked. Paid plans are billed per channel, including the channels you already had on the Free plan.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals"
+    ],
+    "audiences": [
+      "marketing-tools",
+      "creators",
+      "freelancers"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "New Buffer accounts can stay on the Free plan."
+    },
+    "eligibility": [
+      "Any Buffer account with up to three channels"
+    ],
+    "redemption": [
+      "Sign up for Buffer",
+      "Connect up to three social channels",
+      "Schedule posts from the queue"
+    ],
+    "terms": [
+      "Up to 3 channels",
+      "10 scheduled posts per channel, up to 30 in total",
+      "A slot frees up once a scheduled post is published",
+      "Channels beyond the three-channel limit are locked",
+      "Upgrading means paying for each channel, including those connected on the Free plan"
+    ],
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Buffer's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of the official page. The live page could not be fetched from the research environment (outbound access to the provider's site was blocked), so an editor should re-check it before marking this verified.",
+      "evidence": [
+        {
+          "claim": "Scheduled posts per channel",
+          "quote": "The Free plan allows 10 scheduled posts per channel. Once a post is published, the slot becomes available again."
+        },
+        {
+          "claim": "Total queue",
+          "quote": "On the Free plan you can keep 10 scheduled posts per channel, up to 30 in total across three channels."
+        },
+        {
+          "claim": "Channel limit",
+          "quote": "Channels will be locked if you exceed the three-channel limit for the Free plan."
+        },
+        {
+          "claim": "Upgrade billing",
+          "quote": "If you decide to upgrade to a paid plan, you will pay for each channel — including any channels you had while on the Free plan."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://buffer.com/pricing"
+    }
+  },
+  {
+    "id": "o-ahrefs-free-webmaster-tools",
+    "slug": "ahrefs-free-webmaster-tools",
+    "productId": "ahrefs",
+    "title": "Ahrefs Free (Ahrefs Webmaster Tools): free Site Audit and Site Explorer for sites you verify",
+    "summary": "Ahrefs' free account gives site owners free Site Audit, Site Explorer and Web Analytics for websites they verify, with no credit card or trial period.",
+    "description": "Ahrefs' free account, which grew out of Ahrefs Webmaster Tools, gives website owners free access to SEO tools for their own sites. Site Explorer, Site Audit and Web Analytics need you to verify ownership first, which you can do through Google Search Console, a DNS record or an HTML file.\n\nSite Audit allows 5,000 crawl credits per verified project per month, and Site Explorer shows up to 1,000 keywords, backlinks or top pages at a time. Ahrefs says the account needs no credit card and has no trial period.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals"
+    ],
+    "audiences": [
+      "marketing-tools",
+      "businesses",
+      "developers"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "verification",
+      "note": "Sign up for Ahrefs Free, then verify ownership of your website."
+    },
+    "requirements": {
+      "cardRequired": false
+    },
+    "eligibility": [
+      "Website owners who can verify ownership of their site"
+    ],
+    "redemption": [
+      "Sign up for Ahrefs Free",
+      "Verify ownership of your website through Google Search Console, a DNS record or an HTML file",
+      "Use Site Explorer, Site Audit and Web Analytics on your verified project"
+    ],
+    "terms": [
+      "Site Explorer, Site Audit and Web Analytics work only on websites you have verified",
+      "Site Audit: 5,000 crawl credits per verified project per month",
+      "Site Explorer shows up to 1,000 keywords, backlinks or top pages at a time",
+      "No credit card and no trial period"
+    ],
+    "publishedAt": "2026-10-20",
+    "updatedAt": "2026-10-20",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Ahrefs's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of the official page. The live page could not be fetched from the research environment (outbound access to the provider's site was blocked), so an editor should re-check it before marking this verified. Ahrefs' own pages are not fully consistent about the free tier's scope; re-check limits on the help article before verifying.",
+      "evidence": [
+        {
+          "claim": "Verification required",
+          "quote": "Some tools — Site Explorer, Site Audit, and Web Analytics — require you to verify ownership of your website first."
+        },
+        {
+          "claim": "Verification methods",
+          "quote": "The easiest way to do this is via Google Search Console, although you can verify your ownership by adding a DNS record or HTML file."
+        },
+        {
+          "claim": "No card or trial",
+          "quote": "no credit card, no trial period, no hidden charges"
+        },
+        {
+          "claim": "Site Audit allowance (search extract, paraphrased by the search tool)",
+          "quote": "5,000 crawl credits per verified project per month"
+        },
+        {
+          "claim": "Site Explorer cap (search extract, paraphrased by the search tool)",
+          "quote": "1000 keywords, backlinks, or top pages at once"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://help.ahrefs.com/en/articles/13002606-what-can-i-use-for-free-in-ahrefs",
+      "redeemUrl": "https://ahrefs.com/webmaster-tools"
+    }
   }
 ];
