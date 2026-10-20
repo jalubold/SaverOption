@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { CSSProperties } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { siteConfig } from "@/config/site";
@@ -50,8 +51,11 @@ export default async function AudiencePage(props: PageProps<"/for/[slug]">) {
             / <span className="text-muted">{title}</span>
           </nav>
           <div className="mt-4 flex items-start gap-4">
-            <span className="hidden size-14 shrink-0 items-center justify-center rounded-2xl border border-line bg-accent-soft text-accent-ink sm:inline-flex">
-              <Icon name={audience.icon} size={24} />
+            <span
+              style={{ "--tile-from": audience.color.from, "--tile-to": audience.color.to } as CSSProperties}
+              className="icon-tile hidden size-14 shrink-0 rounded-2xl sm:inline-flex"
+            >
+              <Icon name={audience.icon} size={26} />
             </span>
             <div>
               <h1 className="text-[2.25rem] font-semibold leading-tight tracking-[-0.03em] text-heading sm:text-5xl">

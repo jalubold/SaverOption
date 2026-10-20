@@ -27,6 +27,8 @@ export interface Category {
   /** Longer intro shown at the top of the category page (SEO copy). */
   intro: string;
   icon: IconName;
+  /** Gradient for the icon tile and hover glow. */
+  color: { from: string; to: string };
   order: number;
 }
 

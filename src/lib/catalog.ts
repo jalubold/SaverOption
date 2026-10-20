@@ -69,6 +69,13 @@ function publishedViews(now = new Date()): OfferView[] {
     .filter((o): o is OfferView => o !== null);
 }
 
+/** Distinct products of some offers, logos first so preview rows show real marks. */
+function distinctProducts(list: OfferView[]): Product[] {
+  return [...new Map(list.map((o) => [o.product.id, o.product])).values()].sort(
+    (x, y) => Number(Boolean(y.logo)) - Number(Boolean(x.logo)),
+  );
+}
+
 const byNewest = (a: OfferView, b: OfferView) => b.publishedAt.localeCompare(a.publishedAt);
 
 function byEndingSoon(a: OfferView, b: OfferView) {
@@ -204,11 +211,16 @@ export async function getOffersForProduct(productId: string): Promise<OfferView[
     .sort((a, b) => Number(a.isExpired) - Number(b.isExpired) || byNewest(a, b));
 }
 
-export async function getCategories(): Promise<(Category & { count: number })[]> {
-  const live = publishedViews().filter((o) => !o.isExpired);
+export async function getCategories(): Promise<(Category & { count: number; products: Product[] })[]> {
+  const live = publishedViews()
+    .filter((o) => !o.isExpired)
+    .sort(byEditorial);
   return [...categories]
     .sort((a, b) => a.order - b.order)
-    .map((c) => ({ ...c, count: live.filter((o) => o.categories.includes(c.slug)).length }));
+    .map((c) => {
+      const inCategory = live.filter((o) => o.categories.includes(c.slug));
+      return { ...c, count: inCategory.length, products: distinctProducts(inCategory) };
+    });
 }
 
 export async function getCategory(slug: string): Promise<Category | null> {
@@ -223,11 +235,7 @@ export async function getAudiences(): Promise<(Audience & { count: number; produ
     .sort((a, b) => a.order - b.order)
     .map((a) => {
       const inAudience = live.filter((o) => o.audiences?.includes(a.slug));
-      // Distinct products, logos first so the preview row shows real marks.
-      const products = [...new Map(inAudience.map((o) => [o.product.id, o.product])).values()].sort(
-        (x, y) => Number(Boolean(y.logo)) - Number(Boolean(x.logo)),
-      );
-      return { ...a, count: inAudience.length, products };
+      return { ...a, count: inAudience.length, products: distinctProducts(inAudience) };
     });
 }
 
