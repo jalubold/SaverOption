@@ -3,6 +3,7 @@
  * never from `src/content/*` directly — so moving to a database or CMS
  * only means re-implementing this module. Functions are async for that reason.
  */
+import { audiences } from "@/content/audiences";
 import { categories } from "@/content/categories";
 import { offers } from "@/content/offers";
 import { products, providers } from "@/content/products";
@@ -10,6 +11,8 @@ import { MIN_POPULAR_OFFERS, getTopOffersByEngagement } from "@/lib/engagement";
 import { daysUntil, parseDate } from "@/lib/format";
 import { scoreOffer, tokenize } from "@/lib/search";
 import type {
+  Audience,
+  AudienceSlug,
   Category,
   CategorySlug,
   Offer,
@@ -26,6 +29,7 @@ const productById = new Map(products.map((p) => [p.id, p]));
 const productBySlug = new Map(products.map((p) => [p.slug, p]));
 const providerById = new Map(providers.map((p) => [p.id, p]));
 const categoryBySlug = new Map(categories.map((c) => [c.slug, c]));
+const audienceBySlug = new Map(audiences.map((a) => [a.slug, a]));
 
 const FREE_TYPES: ReadonlySet<OfferType> = new Set(["free-credits", "free-trial", "free-plan", "open-source"]);
 
@@ -109,6 +113,8 @@ export async function queryOffers(query: OfferQuery = {}): Promise<OfferQueryRes
   if (price === "paid") pool = pool.filter((o) => !o.isFree);
   if (query.noCard) pool = pool.filter((o) => o.requirements?.cardRequired === false);
   if (query.worldwide) pool = pool.filter((o) => o.regions?.scope === "global");
+  const audience = query.audience;
+  if (audience) pool = pool.filter((o) => o.audiences?.includes(audience));
 
   const inCategory = (o: OfferView) => !query.category || o.categories.includes(query.category);
   const ofType = (o: OfferView) => !query.type || o.type === query.type;
@@ -207,6 +213,17 @@ export async function getCategories(): Promise<(Category & { count: number })[]>
 
 export async function getCategory(slug: string): Promise<Category | null> {
   return categoryBySlug.get(slug as CategorySlug) ?? null;
+}
+
+export async function getAudiences(): Promise<(Audience & { count: number })[]> {
+  const live = publishedViews().filter((o) => !o.isExpired);
+  return [...audiences]
+    .sort((a, b) => a.order - b.order)
+    .map((a) => ({ ...a, count: live.filter((o) => o.audiences?.includes(a.slug)).length }));
+}
+
+export async function getAudience(slug: string): Promise<Audience | null> {
+  return audienceBySlug.get(slug as AudienceSlug) ?? null;
 }
 
 export async function getProductBySlug(slug: string): Promise<(Product & { provider: Provider }) | null> {

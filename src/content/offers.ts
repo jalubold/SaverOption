@@ -109,7 +109,11 @@ export const offers: Offer[] = [
     "placement": {
       "featured": true,
       "featuredRank": 2
-    }
+    },
+    "audiences": [
+      "students",
+      "developers"
+    ]
   },
   {
     "id": "o-github-copilot-student-free",
@@ -198,7 +202,12 @@ export const offers: Offer[] = [
     "placement": {
       "featured": true,
       "featuredRank": 6
-    }
+    },
+    "audiences": [
+      "students",
+      "ai-tools",
+      "developers"
+    ]
   },
   {
     "id": "o-github-copilot-pro-free-teachers",
@@ -282,7 +291,12 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://docs.github.com/en/copilot/how-tos/copilot-on-github/set-up-copilot/enable-copilot/set-up-for-teachers-and-os-maintainers"
-    }
+    },
+    "audiences": [
+      "students",
+      "ai-tools",
+      "developers"
+    ]
   },
   {
     "id": "o-github-codespaces-students-180-core-hours",
@@ -340,7 +354,11 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://docs.github.com/en/education/about-github-education/github-education-for-students/about-github-education-for-students"
-    }
+    },
+    "audiences": [
+      "students",
+      "developers"
+    ]
   },
   {
     "id": "o-github-education-teachers-free-github-team",
@@ -407,7 +425,11 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://docs.github.com/en/education/about-github-education/github-education-for-teachers/about-github-education-for-teachers"
-    }
+    },
+    "audiences": [
+      "students",
+      "developers"
+    ]
   },
   {
     "id": "o-office-365-a1-free-students-educators",
@@ -492,7 +514,11 @@ export const offers: Offer[] = [
     "placement": {
       "featured": true,
       "featuredRank": 4
-    }
+    },
+    "audiences": [
+      "students",
+      "office-tools"
+    ]
   },
   {
     "id": "o-azure-for-students-100-credit",
@@ -554,7 +580,11 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://www.microsoft.com/en-us/education/products/azure-for-education"
-    }
+    },
+    "audiences": [
+      "students",
+      "developers"
+    ]
   },
   {
     "id": "o-google-cloud-300-free-trial-credit",
@@ -648,7 +678,10 @@ export const offers: Offer[] = [
     "placement": {
       "featured": true,
       "featuredRank": 1
-    }
+    },
+    "audiences": [
+      "developers"
+    ]
   },
   {
     "id": "o-google-cloud-free-tier",
@@ -719,7 +752,10 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://cloud.google.com/free"
-    }
+    },
+    "audiences": [
+      "developers"
+    ]
   },
   {
     "id": "o-google-for-startups-cloud-program-credits",
@@ -848,7 +884,11 @@ export const offers: Offer[] = [
     "placement": {
       "featured": true,
       "featuredRank": 3
-    }
+    },
+    "audiences": [
+      "startups",
+      "developers"
+    ]
   },
   {
     "id": "o-google-cloud-students-google-skills-credits",
@@ -907,7 +947,11 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://cloud.google.com/edu/students"
-    }
+    },
+    "audiences": [
+      "students",
+      "developers"
+    ]
   },
   {
     "id": "o-microsoft-for-startups-azure-credits",
@@ -980,7 +1024,11 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://www.microsoft.com/en-us/startups"
-    }
+    },
+    "audiences": [
+      "startups",
+      "developers"
+    ]
   },
   {
     "id": "o-notion-for-startups",
@@ -1056,7 +1104,11 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://www.notion.com/help/notion-for-startups"
-    }
+    },
+    "audiences": [
+      "startups",
+      "office-tools"
+    ]
   },
   {
     "id": "o-atlassian-for-startups",
@@ -1126,7 +1178,12 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://www.atlassian.com/software/startups"
-    }
+    },
+    "audiences": [
+      "startups",
+      "businesses",
+      "office-tools"
+    ]
   },
   {
     "id": "o-linear-for-startups",
@@ -1198,7 +1255,12 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://linear.app/startups"
-    }
+    },
+    "audiences": [
+      "startups",
+      "developers",
+      "office-tools"
+    ]
   },
   {
     "id": "o-google-ai-pro-free-for-us-students",
@@ -1281,7 +1343,11 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://gemini.google/students/"
-    }
+    },
+    "audiences": [
+      "students",
+      "ai-tools"
+    ]
   },
   {
     "id": "o-canva-pro-30-day-free-trial",
@@ -1350,7 +1416,13 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://www.canva.com/pro/"
-    }
+    },
+    "audiences": [
+      "creators",
+      "designers",
+      "freelancers",
+      "marketing-tools"
+    ]
   },
   {
     "id": "o-penpot-open-source-design-tool",
@@ -1433,7 +1505,10 @@ export const offers: Offer[] = [
     "placement": {
       "featured": true,
       "featuredRank": 5
-    }
+    },
+    "audiences": [
+      "designers"
+    ]
   },
   {
     "id": "o-plausible-community-edition-self-hosted",
@@ -1517,7 +1592,10 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://github.com/plausible/analytics"
-    }
+    },
+    "audiences": [
+      "marketing-tools"
+    ]
   },
   {
     "id": "o-nextcloud-self-hosted-file-sync",
@@ -1600,7 +1678,11 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://github.com/nextcloud/server"
-    }
+    },
+    "audiences": [
+      "businesses",
+      "office-tools"
+    ]
   },
   {
     "id": "o-mattermost-self-hosted-team-chat",
@@ -1674,7 +1756,11 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://github.com/mattermost/mattermost"
-    }
+    },
+    "audiences": [
+      "businesses",
+      "office-tools"
+    ]
   },
   {
     "id": "o-betterdisplay-pro-perpetual-licence",
@@ -1768,7 +1854,10 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://github.com/waydabber/BetterDisplay"
-    }
+    },
+    "audiences": [
+      "freelancers"
+    ]
   },
   {
     "publishedAt": "2026-10-19",
@@ -1855,7 +1944,11 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://aws.amazon.com/startups/credits/"
-    }
+    },
+    "audiences": [
+      "startups",
+      "developers"
+    ]
   },
   {
     "publishedAt": "2026-10-19",
@@ -1956,7 +2049,11 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://www.cloudflare.com/startups/"
-    }
+    },
+    "audiences": [
+      "startups",
+      "developers"
+    ]
   },
   {
     "publishedAt": "2026-10-19",
@@ -2034,7 +2131,11 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://www.digitalocean.com/startups"
-    }
+    },
+    "audiences": [
+      "startups",
+      "developers"
+    ]
   },
   {
     "publishedAt": "2026-10-19",
@@ -2105,7 +2206,11 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://www.mongodb.com/solutions/startups"
-    }
+    },
+    "audiences": [
+      "startups",
+      "developers"
+    ]
   },
   {
     "publishedAt": "2026-10-19",
@@ -2188,7 +2293,11 @@ export const offers: Offer[] = [
     "links": {
       "officialUrl": "https://www.oracle.com/europe/artificial-intelligence/startup-growth-engine/terms/",
       "redeemUrl": "https://www.oracle.com/europe/artificial-intelligence/startup-growth-engine/"
-    }
+    },
+    "audiences": [
+      "startups",
+      "developers"
+    ]
   },
   {
     "publishedAt": "2026-10-19",
@@ -2274,7 +2383,11 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://vercel.com/startups/credits"
-    }
+    },
+    "audiences": [
+      "startups",
+      "developers"
+    ]
   },
   {
     "publishedAt": "2026-10-19",
@@ -2340,7 +2453,11 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://neon.com/startups"
-    }
+    },
+    "audiences": [
+      "startups",
+      "developers"
+    ]
   },
   {
     "id": "o-nvidia-inception-startups",
@@ -2416,7 +2533,12 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://www.nvidia.com/en-us/startups/"
-    }
+    },
+    "audiences": [
+      "startups",
+      "ai-tools",
+      "developers"
+    ]
   },
   {
     "id": "o-elevenlabs-startup-grants",
@@ -2516,7 +2638,13 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://elevenlabs.io/startup-grants"
-    }
+    },
+    "audiences": [
+      "startups",
+      "ai-tools",
+      "developers",
+      "creators"
+    ]
   },
   {
     "id": "o-openai-startups-vc-partner-credits",
@@ -2576,7 +2704,12 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://openai.com/business/why-openai/startups/"
-    }
+    },
+    "audiences": [
+      "startups",
+      "ai-tools",
+      "developers"
+    ]
   },
   {
     "id": "o-cohere-startup-program",
@@ -2639,7 +2772,13 @@ export const offers: Offer[] = [
     "links": {
       "officialUrl": "https://cohere.com/startup-program",
       "redeemUrl": "https://cohere.com/startup-program-application"
-    }
+    },
+    "audiences": [
+      "startups",
+      "ai-tools",
+      "developers",
+      "businesses"
+    ]
   },
   {
     "id": "o-datadog-for-startups",
@@ -2740,7 +2879,12 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://www.datadoghq.com/partner/datadog-for-startups/"
-    }
+    },
+    "audiences": [
+      "startups",
+      "developers",
+      "businesses"
+    ]
   },
   {
     "id": "o-posthog-for-startups",
@@ -2813,7 +2957,12 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://posthog.com/startups"
-    }
+    },
+    "audiences": [
+      "startups",
+      "developers",
+      "marketing-tools"
+    ]
   },
   {
     "id": "o-intercom-early-stage-program",
@@ -2889,7 +3038,12 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://www.intercom.com/early-stage"
-    }
+    },
+    "audiences": [
+      "startups",
+      "businesses",
+      "marketing-tools"
+    ]
   },
   {
     "id": "o-sentry-for-startups",
@@ -2961,7 +3115,11 @@ export const offers: Offer[] = [
     "links": {
       "officialUrl": "https://sentry.io/for/startups/",
       "redeemUrl": "https://sentry.io/for/startups/apply/"
-    }
+    },
+    "audiences": [
+      "startups",
+      "developers"
+    ]
   },
   {
     "id": "o-miro-startup-program",
@@ -3037,7 +3195,12 @@ export const offers: Offer[] = [
     "links": {
       "officialUrl": "https://help.miro.com/hc/en-us/articles/360014912819-Miro-Startup-Program",
       "redeemUrl": "https://miro.com/startups/apply/"
-    }
+    },
+    "audiences": [
+      "startups",
+      "designers",
+      "office-tools"
+    ]
   },
   {
     "id": "o-mixpanel-for-startups",
@@ -3112,7 +3275,11 @@ export const offers: Offer[] = [
     "links": {
       "officialUrl": "https://docs.mixpanel.com/docs/pricing/startup-program",
       "redeemUrl": "https://mixpanel.com/startups-apply/"
-    }
+    },
+    "audiences": [
+      "startups",
+      "marketing-tools"
+    ]
   },
   {
     "id": "o-zendesk-for-startups",
@@ -3173,7 +3340,11 @@ export const offers: Offer[] = [
     "links": {
       "officialUrl": "https://support.zendesk.com/hc/en-us/articles/4408822027418-Startups-program-qualifications-approval-process",
       "redeemUrl": "https://www.zendesk.com/business/startups/"
-    }
+    },
+    "audiences": [
+      "startups",
+      "businesses"
+    ]
   },
   {
     "id": "o-hubspot-for-startups",
@@ -3239,7 +3410,12 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://www.hubspot.com/startups"
-    }
+    },
+    "audiences": [
+      "startups",
+      "businesses",
+      "marketing-tools"
+    ]
   },
   {
     "id": "o-jetbrains-student-pack",
@@ -3316,7 +3492,11 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://www.jetbrains.com/academy/student-pack/"
-    }
+    },
+    "audiences": [
+      "students",
+      "developers"
+    ]
   },
   {
     "id": "o-figma-for-education",
@@ -3384,7 +3564,11 @@ export const offers: Offer[] = [
     "links": {
       "officialUrl": "https://help.figma.com/hc/en-us/articles/360041061214-Figma-for-Education",
       "redeemUrl": "https://www.figma.com/education/apply"
-    }
+    },
+    "audiences": [
+      "students",
+      "designers"
+    ]
   },
   {
     "id": "o-notion-education-plan-free",
@@ -3461,7 +3645,11 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://www.notion.com/help/notion-for-education"
-    }
+    },
+    "audiences": [
+      "students",
+      "office-tools"
+    ]
   },
   {
     "id": "o-aws-free-tier-credits",
@@ -3541,7 +3729,10 @@ export const offers: Offer[] = [
     "links": {
       "officialUrl": "https://aws.amazon.com/free/free-tier-faqs/",
       "redeemUrl": "https://aws.amazon.com/free/"
-    }
+    },
+    "audiences": [
+      "developers"
+    ]
   },
   {
     "id": "o-azure-free-account-200-credit",
@@ -3617,7 +3808,10 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://azure.microsoft.com/en-us/pricing/purchase-options/azure-account"
-    }
+    },
+    "audiences": [
+      "developers"
+    ]
   },
   {
     "id": "o-oracle-cloud-free-tier",
@@ -3699,7 +3893,10 @@ export const offers: Offer[] = [
     "links": {
       "officialUrl": "https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier.htm",
       "redeemUrl": "https://www.oracle.com/cloud/free/"
-    }
+    },
+    "audiences": [
+      "developers"
+    ]
   },
   {
     "id": "o-cloudflare-workers-free-plan",
@@ -3759,7 +3956,10 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://developers.cloudflare.com/workers/platform/pricing/"
-    }
+    },
+    "audiences": [
+      "developers"
+    ]
   },
   {
     "id": "o-autodesk-education-plan",
@@ -3827,7 +4027,11 @@ export const offers: Offer[] = [
     "links": {
       "officialUrl": "https://www.autodesk.com/support/account/education/students-educators/overview",
       "redeemUrl": "https://www.autodesk.com/education/home"
-    }
+    },
+    "audiences": [
+      "students",
+      "designers"
+    ]
   },
   {
     "id": "o-claude-for-teachers-free-year",
@@ -3920,7 +4124,11 @@ export const offers: Offer[] = [
     "links": {
       "officialUrl": "https://claude.com/solutions/teachers",
       "redeemUrl": "https://claude.ai/teachers"
-    }
+    },
+    "audiences": [
+      "students",
+      "ai-tools"
+    ]
   },
   {
     "id": "o-chatgpt-plus-4-months-free-us-college-students",
@@ -4011,7 +4219,11 @@ export const offers: Offer[] = [
     "links": {
       "officialUrl": "https://help.openai.com/en/articles/20001493-chatgpt-back-to-school-offer-for-students",
       "redeemUrl": "https://chatgpt.com/students/2026/"
-    }
+    },
+    "audiences": [
+      "students",
+      "ai-tools"
+    ]
   },
   {
     "id": "o-gemini-4-argon-introductory-api-pricing",
@@ -4077,7 +4289,11 @@ export const offers: Offer[] = [
     "regions": {
       "scope": "limited",
       "note": "Only in the countries and territories where the Gemini API is available (see ai.google.dev/gemini-api/docs/available-regions)."
-    }
+    },
+    "audiences": [
+      "ai-tools",
+      "developers"
+    ]
   },
   {
     "id": "o-kiro-startup-credits-2026",
@@ -4180,7 +4396,12 @@ export const offers: Offer[] = [
     "regions": {
       "scope": "limited",
       "note": "Excludes individuals living in Argentina, Belarus, Brazil, China/GCR, Cuba, France, Germany, Iran, Italy, Mexico, North Korea, Poland, Russia, Spain, Syria, Crimea, the so-called DNR and LNR regions, and the United Arab Emirates."
-    }
+    },
+    "audiences": [
+      "startups",
+      "ai-tools",
+      "developers"
+    ]
   },
   {
     "id": "o-perplexity-amex-1000-computer-credits",
@@ -4254,7 +4475,11 @@ export const offers: Offer[] = [
     },
     "links": {
       "officialUrl": "https://www.perplexity.ai/hub/partnerships/amex"
-    }
+    },
+    "audiences": [
+      "ai-tools",
+      "businesses"
+    ]
   },
   {
     "id": "o-devin-gemini-4-argon-75-off-october-2026",
@@ -4329,7 +4554,11 @@ export const offers: Offer[] = [
     "publishedAt": "2026-10-19",
     "updatedAt": "2026-10-19",
     "status": "published",
-    "source": "official"
+    "source": "official",
+    "audiences": [
+      "ai-tools",
+      "developers"
+    ]
   },
   {
     "id": "o-vercel-ai-gateway-laya-free-october-2026",
@@ -4394,7 +4623,11 @@ export const offers: Offer[] = [
     "publishedAt": "2026-10-19",
     "updatedAt": "2026-10-19",
     "status": "published",
-    "source": "official"
+    "source": "official",
+    "audiences": [
+      "developers",
+      "ai-tools"
+    ]
   },
   {
     "id": "o-figma-code-layers-no-ai-credits-november-2026",
@@ -4459,6 +4692,10 @@ export const offers: Offer[] = [
     "publishedAt": "2026-10-19",
     "updatedAt": "2026-10-19",
     "status": "published",
-    "source": "official"
+    "source": "official",
+    "audiences": [
+      "designers",
+      "ai-tools"
+    ]
   }
 ];

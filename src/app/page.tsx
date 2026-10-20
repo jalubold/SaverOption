@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
-import { CategoryChips, CategoryGrid } from "@/components/categories/category-links";
+import { AudienceGrid } from "@/components/categories/audience-grid";
+import { CategoryChips } from "@/components/categories/category-links";
 import { NewsletterSection } from "@/components/newsletter/newsletter-section";
 import { OfferGrid } from "@/components/offers/offer-card";
 import { OfferRow } from "@/components/offers/offer-row";
@@ -10,6 +11,7 @@ import { Icon } from "@/components/ui/icon";
 import { buttonClass, Container, Eyebrow, SectionHeading } from "@/components/ui/primitives";
 import { formatDate } from "@/lib/format";
 import {
+  getAudiences,
   getCatalogStats,
   getCategories,
   getFeaturedOffers,
@@ -45,9 +47,10 @@ const principles = [
 ];
 
 export default async function HomePage() {
-  const [stats, categories, featured, recent, popular, endingSoon] = await Promise.all([
+  const [stats, categories, audiences, featured, recent, popular, endingSoon] = await Promise.all([
     getCatalogStats(),
     getCategories(),
+    getAudiences(),
     getFeaturedOffers(6),
     getRecentOffers(6),
     getPopularOffers(6),
@@ -61,7 +64,7 @@ export default async function HomePage() {
     .filter((o) => !endingIds.has(o.id) && (o.pricing?.creditValue ?? 0) > 0)
     .sort((a, b) => (b.pricing?.creditValue ?? 0) - (a.pricing?.creditValue ?? 0))
     .slice(0, HERO_ROWS - ending.length);
-  // Only categories with live offers appear on the homepage; the full list lives on /categories.
+  // Only categories with live offers appear in the hero chips; the full list lives on /categories.
   const liveCategories = categories.filter((c) => c.count > 0);
   const chips = liveCategories.filter((c) => quickCategories.includes(c.slug));
 
@@ -170,20 +173,20 @@ export default async function HomePage() {
       </div>
 
       <Container className="space-y-20 pb-24 pt-16 sm:space-y-24 sm:pt-20">
-        {/* ── Categories ───────────────────────────────────────────── */}
-        <section aria-labelledby="categories-heading">
+        {/* ── Explore deals (audience collections) ─────────────────── */}
+        <section aria-labelledby="explore-heading">
           <SectionHeading
-            id="categories-heading"
+            id="explore-heading"
             title={
               <>
-                Browse by <em>category.</em>
+                Explore <em>Deals</em>
               </>
             }
-            description="From AI credits to lifetime licenses and self-hosted alternatives."
+            description="Discover software discounts, exclusive offers, and better prices on the tools you use."
             href="/categories"
             linkLabel="All categories"
           />
-          <CategoryGrid categories={liveCategories} />
+          <AudienceGrid audiences={audiences} />
         </section>
 
         {/* ── Recently added ───────────────────────────────────────── */}

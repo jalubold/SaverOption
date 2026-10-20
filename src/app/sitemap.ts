@@ -1,13 +1,14 @@
 import type { MetadataRoute } from "next";
-import { getAllProductSlugs, getCategories, queryOffers } from "@/lib/catalog";
+import { getAllProductSlugs, getAudiences, getCategories, queryOffers } from "@/lib/catalog";
 import { absoluteUrl } from "@/lib/seo";
 
 export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [{ offers }, categories, products] = await Promise.all([
+  const [{ offers }, categories, audiences, products] = await Promise.all([
     queryOffers({ includeExpired: true, sort: "newest" }),
     getCategories(),
+    getAudiences(),
     getAllProductSlugs(),
   ]);
 
@@ -16,6 +17,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: absoluteUrl("/deals"), changeFrequency: "daily", priority: 0.9 },
     { url: absoluteUrl("/categories"), changeFrequency: "weekly", priority: 0.6 },
     ...categories.map((c) => ({ url: absoluteUrl(`/categories/${c.slug}`), changeFrequency: "daily" as const, priority: 0.8 })),
+    ...audiences.map((a) => ({ url: absoluteUrl(`/for/${a.slug}`), changeFrequency: "daily" as const, priority: 0.8 })),
     ...offers.map((o) => ({
       url: absoluteUrl(`/deals/${o.slug}`),
       lastModified: o.updatedAt,

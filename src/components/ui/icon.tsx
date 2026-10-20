@@ -108,6 +108,44 @@ const paths: Record<GlyphName, React.ReactNode> = {
       <path d="m3.5 6.5 8.5 6.5 8.5-6.5" />
     </>
   ),
+  briefcase: (
+    <>
+      <rect x="3" y="7" width="18" height="13" rx="2" />
+      <path d="M8 7V5.5A1.5 1.5 0 0 1 9.5 4h5A1.5 1.5 0 0 1 16 5.5V7M3 13h18" />
+    </>
+  ),
+  video: (
+    <>
+      <rect x="3" y="6" width="13" height="12" rx="2" />
+      <path d="m16 10.5 5-3v9l-5-3" />
+    </>
+  ),
+  pen: (
+    <>
+      <path d="m12 19 7-7 3 3-7 7-3-3Z" />
+      <path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5Z" />
+      <path d="m2 2 7.6 7.6" />
+      <circle cx="11" cy="11" r="2" />
+    </>
+  ),
+  user: (
+    <>
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 21a8 8 0 0 1 16 0" />
+    </>
+  ),
+  file: (
+    <>
+      <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z" />
+      <path d="M14 3v5h5M9 13h6M9 17h6" />
+    </>
+  ),
+  megaphone: (
+    <>
+      <path d="m3 11 18-5v12L3 14v-3Z" />
+      <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6" />
+    </>
+  ),
   calendar: (
     <>
       <rect x="3.5" y="5" width="17" height="15" rx="2" />

@@ -40,7 +40,38 @@ export type IconName =
   | "graduation"
   | "rocket"
   | "code"
-  | "star";
+  | "star"
+  | "briefcase"
+  | "video"
+  | "pen"
+  | "user"
+  | "file"
+  | "megaphone";
+
+/** Who an offer is for. Drives the "Explore Deals" collections on the homepage and /for/[slug]. */
+export type AudienceSlug =
+  | "ai-tools"
+  | "startups"
+  | "businesses"
+  | "developers"
+  | "creators"
+  | "designers"
+  | "freelancers"
+  | "office-tools"
+  | "students"
+  | "marketing-tools";
+
+export interface Audience {
+  slug: AudienceSlug;
+  /** Shown after the brand name, e.g. "AI Tools" in "Saver Option for AI Tools". */
+  name: string;
+  /** One line for cards and metadata. */
+  description: string;
+  /** Intro at the top of the collection page. */
+  intro: string;
+  icon: IconName;
+  order: number;
+}
 
 export interface Provider {
   id: string;
@@ -184,6 +215,8 @@ export interface Offer {
   description: string;
   type: OfferType;
   categories: CategorySlug[];
+  /** Who the offer is for; an offer can appear in several collections. */
+  audiences?: AudienceSlug[];
   source: OfferSource;
   /** Third-party publisher name when source is "third-party". */
   sourceName?: string;
@@ -224,6 +257,7 @@ export type PriceFilter = "all" | "free" | "paid";
 export interface OfferQuery {
   q?: string;
   category?: CategorySlug;
+  audience?: AudienceSlug;
   type?: OfferType;
   price?: PriceFilter;
   /** Only offers that state no credit card is needed. */
