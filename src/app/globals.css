@@ -153,6 +153,20 @@
     color: var(--accent-ink);
   }
 
+  /* Glossy accent tile behind an icon, matching the brand mark. */
+  .icon-tile {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    color: var(--accent-contrast);
+    background-image: linear-gradient(180deg, var(--accent) 0%, var(--accent-deep) 100%);
+    border: 1px solid rgb(255 255 255 / 0.2);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.25),
+      0 6px 14px -4px color-mix(in oklab, var(--accent) 55%, transparent);
+  }
+
   /* Buttons: glossy accent gradient and a quiet secondary gradient. */
   .btn {
     display: inline-flex;

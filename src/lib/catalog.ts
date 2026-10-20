@@ -215,11 +215,20 @@ export async function getCategory(slug: string): Promise<Category | null> {
   return categoryBySlug.get(slug as CategorySlug) ?? null;
 }
 
-export async function getAudiences(): Promise<(Audience & { count: number })[]> {
-  const live = publishedViews().filter((o) => !o.isExpired);
+export async function getAudiences(): Promise<(Audience & { count: number; products: Product[] })[]> {
+  const live = publishedViews()
+    .filter((o) => !o.isExpired)
+    .sort(byEditorial);
   return [...audiences]
     .sort((a, b) => a.order - b.order)
-    .map((a) => ({ ...a, count: live.filter((o) => o.audiences?.includes(a.slug)).length }));
+    .map((a) => {
+      const inAudience = live.filter((o) => o.audiences?.includes(a.slug));
+      // Distinct products, logos first so the preview row shows real marks.
+      const products = [...new Map(inAudience.map((o) => [o.product.id, o.product])).values()].sort(
+        (x, y) => Number(Boolean(y.logo)) - Number(Boolean(x.logo)),
+      );
+      return { ...a, count: inAudience.length, products };
+    });
 }
 
 export async function getAudience(slug: string): Promise<Audience | null> {
