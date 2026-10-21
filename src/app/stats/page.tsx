@@ -38,7 +38,7 @@ const fmtDate = (iso: string, withTime = false) =>
 
 export default async function StatsPage(props: PageProps<"/stats">) {
   const q = parseStatsQuery(await props.searchParams);
-  const stats = await getTrafficStats(q);
+  const result = await getTrafficStats(q);
   const activeFilters = Object.entries(q.filters) as [Dimension, string][];
 
   return (
@@ -117,7 +117,7 @@ export default async function StatsPage(props: PageProps<"/stats">) {
       </section>
 
       <Container className="space-y-4 pb-24 pt-8 sm:space-y-5 sm:pt-10">
-        {stats ? <Dashboard stats={stats} q={q} /> : <Unavailable />}
+        {result.ok ? <Dashboard stats={result.stats} q={q} /> : <Unavailable reason={result.reason} />}
 
         <section
           aria-labelledby="advertise-heading"
@@ -242,11 +242,13 @@ function StatTile({ label, value, note, delta = null }: { label: string; value: 
   );
 }
 
-function Unavailable() {
+function Unavailable({ reason }: { reason: string }) {
   return (
     <div className="rounded-[18px] border border-dashed border-line-strong bg-surface px-6 py-14 text-center">
       <h2 className="text-lg font-semibold">Traffic stats are temporarily unavailable</h2>
       <p className="mt-1.5 text-sm text-muted">We couldn&apos;t load the latest numbers. Please check back shortly.</p>
+      {/* A status code helps diagnose setup issues; it never includes the token. */}
+      <p className="tabular mt-4 font-mono text-[11px] text-faint">Error: {reason}</p>
     </div>
   );
 }

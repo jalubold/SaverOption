@@ -113,7 +113,8 @@ interface ApiRow {
 }
 
 function settings() {
-  const token = process.env.VERCEL_ANALYTICS_TOKEN;
+  // Trim: a token pasted with a trailing newline would make the Authorization header invalid.
+  const token = process.env.VERCEL_ANALYTICS_TOKEN?.trim();
   if (!token) return null;
   return {
     token,
@@ -129,18 +130,43 @@ export function trafficStatsConfigured(): boolean {
   return settings() !== null;
 }
 
+export class WebAnalyticsError extends Error {
+  constructor(
+    readonly endpoint: string,
+    readonly status: number,
+    readonly code?: string,
+  ) {
+    super(`Web Analytics ${endpoint} ${status}${code ? ` (${code})` : ""}`);
+  }
+}
+
+// Personal tokens scoped to the account can reject an explicit teamId; remember what worked.
+let sendTeamId = true;
+
 async function query<T>(path: "count" | "aggregate", params: Record<string, string | number | undefined>, revalidate: number): Promise<T> {
   const s = settings();
   if (!s) throw new Error("VERCEL_ANALYTICS_TOKEN is not set");
-  const url = new URL(`${s.base}/v1/query/web-analytics/visits/${path}`);
-  url.searchParams.set("projectId", s.projectId);
-  url.searchParams.set("teamId", s.teamId);
-  for (const [k, v] of Object.entries(params)) if (v !== undefined) url.searchParams.set(k, String(v));
-  const res = await fetch(url, {
-    headers: { Authorization: `Bearer ${s.token}` },
-    next: { revalidate, tags: ["traffic-stats"] },
-  });
-  if (!res.ok) throw new Error(`Web Analytics ${path} ${res.status}`);
+  const attempt = async (withTeam: boolean) => {
+    const url = new URL(`${s.base}/v1/query/web-analytics/visits/${path}`);
+    url.searchParams.set("projectId", s.projectId);
+    if (withTeam) url.searchParams.set("teamId", s.teamId);
+    for (const [k, v] of Object.entries(params)) if (v !== undefined) url.searchParams.set(k, String(v));
+    return fetch(url, {
+      headers: { Authorization: `Bearer ${s.token}` },
+      next: { revalidate, tags: ["traffic-stats"] },
+    });
+  };
+  let res = await attempt(sendTeamId);
+  if ((res.status === 403 || res.status === 404) && sendTeamId) {
+    const retry = await attempt(false);
+    if (retry.ok) sendTeamId = false;
+    res = retry.ok ? retry : res;
+  }
+  if (!res.ok) {
+    // Error bodies carry a short code (e.g. "forbidden"); never the token.
+    const body = (await res.json().catch(() => null)) as { error?: { code?: string } } | null;
+    throw new WebAnalyticsError(path, res.status, body?.error?.code);
+  }
   return ((await res.json()) as { data: T }).data;
 }
 
@@ -195,9 +221,14 @@ function toRows(dim: Dimension, rows: ApiRow[]): Row[] {
   return out;
 }
 
-/** Stats for a range and filters, or null when not configured or the API fails. */
-export async function getTrafficStats(q: StatsQuery, now = new Date()): Promise<TrafficStats | null> {
-  if (!trafficStatsConfigured()) return null;
+export type TrafficStatsResult =
+  | { ok: true; stats: TrafficStats }
+  /** `reason` is safe to show: an HTTP status and error code, never a credential. */
+  | { ok: false; reason: string };
+
+/** Stats for a range and filters. */
+export async function getTrafficStats(q: StatsQuery, now = new Date()): Promise<TrafficStatsResult> {
+  if (!trafficStatsConfigured()) return { ok: false, reason: "not configured" };
 
   const granularity = q.range === "24h" ? "hour" : "day";
   const days = RANGES[q.range].days;
@@ -219,13 +250,19 @@ export async function getTrafficStats(q: StatsQuery, now = new Date()): Promise<
 
   try {
     const dims = Object.keys(DIMENSIONS) as Dimension[];
+    // Totals and the time series are required; the comparison and breakdowns degrade to empty.
+    const optional = <T,>(p: Promise<T>, fallback: T) =>
+      p.catch((err) => {
+        console.error("[traffic-stats]", err instanceof Error ? err.message : err);
+        return fallback;
+      });
     const [totals, series, previous, ...lists] = await Promise.all([
       query<Totals>("count", range, revalidate),
       query<ApiRow[]>("aggregate", { ...range, by: granularity, limit: 100 }, revalidate),
       hasPrevious
-        ? query<Totals>("count", { since: new Date(prevStart).toISOString(), until: new Date(start - 1).toISOString(), filter }, revalidate)
+        ? optional(query<Totals | null>("count", { since: new Date(prevStart).toISOString(), until: new Date(start - 1).toISOString(), filter }, revalidate), null)
         : Promise.resolve(null),
-      ...dims.map((dim) => query<ApiRow[]>("aggregate", { ...range, by: dim, limit: 10 }, revalidate)),
+      ...dims.map((dim) => optional(query<ApiRow[]>("aggregate", { ...range, by: dim, limit: 10 }, revalidate), [] as ApiRow[])),
     ]);
 
     const byBucket = new Map(series.map((r) => [new Date(String(r.timestamp)).getTime(), r]));
@@ -238,17 +275,21 @@ export async function getTrafficStats(q: StatsQuery, now = new Date()): Promise<
     const breakdowns = Object.fromEntries(dims.map((dim, i) => [dim, toRows(dim, lists[i])])) as Record<Dimension, Row[]>;
 
     return {
-      since,
-      until,
-      granularity,
-      totals: { visitors: totals.visitors ?? 0, pageviews: totals.pageviews ?? 0 },
-      previous: previous ? { visitors: previous.visitors ?? 0, pageviews: previous.pageviews ?? 0 } : null,
-      series: points,
-      breakdowns,
-      fetchedAt: now.toISOString(),
+      ok: true,
+      stats: {
+        since,
+        until,
+        granularity,
+        totals: { visitors: totals.visitors ?? 0, pageviews: totals.pageviews ?? 0 },
+        previous: previous ? { visitors: previous.visitors ?? 0, pageviews: previous.pageviews ?? 0 } : null,
+        series: points,
+        breakdowns,
+        fetchedAt: now.toISOString(),
+      },
     };
   } catch (err) {
     console.error("[traffic-stats]", err instanceof Error ? err.message : err);
-    return null;
+    if (err instanceof WebAnalyticsError) return { ok: false, reason: `${err.endpoint} ${err.status}${err.code ? ` ${err.code}` : ""}` };
+    return { ok: false, reason: err instanceof TypeError ? "network error" : "unexpected error" };
   }
 }
