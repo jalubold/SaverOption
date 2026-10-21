@@ -131,7 +131,11 @@ The form posts to `/api/newsletter`. With no provider configured, development lo
 5. Connect a newsletter provider.
 6. Add Upstash Redis (Vercel → Storage/Marketplace → Upstash) and set `VISITOR_SALT` to turn on real visitor counts and "Popular".
 
-## Next step: admin and persistent storage (proposed, not built)
+## Advertiser listings (paid "Promote your SaaS")
+
+`/promote` → Lemon Squeezy checkout → account → `/dashboard`, with admin review at `/admin` and published listings at `/listings`. It runs on Supabase (Postgres + Auth + Storage) and is off until its environment variables are set: without them `/promote` falls back to an email submission. Live payments stay disabled behind `LEMONSQUEEZY_LIVE_CHECKOUT_ENABLED`. Setup, env vars, webhook and test checklist: [`docs/ADVERTISER_SETUP.md`](docs/ADVERTISER_SETUP.md).
+
+## Next step: admin for deals and persistent storage (proposed, not built)
 
 The admin interface needs a database and authentication, so it was left out of this iteration on purpose. Recommended lightweight path:
 
