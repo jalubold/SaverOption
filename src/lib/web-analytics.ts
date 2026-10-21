@@ -293,3 +293,16 @@ export async function getTrafficStats(q: StatsQuery, now = new Date()): Promise<
     return { ok: false, reason: err instanceof TypeError ? "network error" : "unexpected error" };
   }
 }
+
+/** Unique visitors so far today (UTC), or null when unavailable. Cached for five minutes. */
+export async function getVisitorsTodayFromVercel(now = new Date()): Promise<number | null> {
+  if (!trafficStatsConfigured()) return null;
+  const since = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())).toISOString();
+  try {
+    const totals = await query<Totals>("count", { since, until: now.toISOString() }, 300);
+    return totals.visitors ?? null;
+  } catch (err) {
+    console.error("[traffic-stats]", err instanceof Error ? err.message : err);
+    return null;
+  }
+}
