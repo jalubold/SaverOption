@@ -70,7 +70,7 @@ export const siteConfig: SiteConfig = {
 };
 
 export const mainNav = [
-  { label: "Deals", href: "/deals" },
+  { label: "All deals", href: "/deals" },
   { label: "Categories", href: "/categories" },
   { label: "Stats", href: "/stats" },
 ] as const;
