@@ -203,12 +203,6 @@ export function PromoteFlow({
           <p className="mt-1 text-sm leading-relaxed text-muted">Pay once for a fixed listing period. Reviewed before it goes live. No account needed to start.</p>
         </>
       )}
-      {resume && (
-        <p className="mt-3 flex items-start gap-2 rounded-lg border border-line bg-subtle px-3 py-2 text-[13px] text-muted">
-          <Icon name="check" size={14} className="mt-0.5 shrink-0 text-accent-ink" />
-          Welcome back. Your details are saved. You haven&apos;t been charged.
-        </p>
-      )}
 
       <div className={cn("grid grid-cols-1 gap-3 sm:grid-cols-2", heading ? "mt-5" : "")}>
         <Field label="Product name" name="productName" value={details.productName} error={errors.productName} onChange={(v) => update("productName", v)} placeholder="e.g. Acme Analytics" autoComplete="organization" maxLength={80} />
