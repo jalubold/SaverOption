@@ -61,6 +61,13 @@ export function MobileNav({ items }: { items: readonly { label: string; href: st
             Promote your SaaS
             <Icon name="arrow-up-right" size={14} />
           </PromoteTrigger>
+          <Link
+            href="/dashboard"
+            onClick={() => setOpen(false)}
+            className="mt-1 block rounded-lg px-3 py-3 text-center text-sm font-medium text-muted hover:bg-subtle hover:text-fg sm:hidden"
+          >
+            Advertiser sign in
+          </Link>
         </nav>
       )}
     </div>

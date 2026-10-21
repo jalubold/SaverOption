@@ -43,7 +43,7 @@ export default async function PromotePage(props: PageProps<"/promote">) {
 
           <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1">
             <div className="rounded-[20px] border border-line bg-surface p-5 shadow-[var(--shadow-card)] sm:p-7">
-              <PromoteFlow mode={ctx.mode} resume={ctx.resume} paidId={ctx.paidId} fresh={fresh} heading={false} />
+              <PromoteFlow mode={ctx.mode} resume={ctx.resume} paidId={ctx.paidId} signedIn={ctx.signedIn} fresh={fresh} heading={false} />
             </div>
           </div>
 

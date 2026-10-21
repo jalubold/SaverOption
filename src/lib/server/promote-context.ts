@@ -9,8 +9,14 @@ import { getUser, isAdmin } from "@/lib/server/supabase";
 
 /** What the promote form needs: checkout mode for this visitor, plus any submission this browser started. */
 export async function loadPromoteContext({ fresh = false }: { fresh?: boolean } = {}): Promise<PromoteContext> {
-  const mode = await checkoutMode({ admin: isAdmin(await getUser()) });
-  const ctx: PromoteContext = { mode: (mode === "live" || mode === "test" ? mode : "closed") as FlowMode, resume: null, paidId: null };
+  const user = await getUser();
+  const mode = await checkoutMode({ admin: isAdmin(user) });
+  const ctx: PromoteContext = {
+    mode: (mode === "live" || mode === "test" ? mode : "closed") as FlowMode,
+    resume: null,
+    paidId: null,
+    signedIn: Boolean(user),
+  };
   if (!dbConfigured() || fresh) return ctx;
   try {
     const sub = await getSubmissionByClaim(await readClaimCookie());

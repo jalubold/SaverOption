@@ -109,7 +109,7 @@ function PromoteModal({ open, onClose }: { open: boolean; onClose: () => void })
         </div>
         {ctx ? (
           // Stays mounted between openings, so typed details are kept.
-          <PromoteFlow mode={ctx.mode} resume={ctx.resume} paidId={ctx.paidId} titleId={titleId} />
+          <PromoteFlow mode={ctx.mode} resume={ctx.resume} paidId={ctx.paidId} signedIn={ctx.signedIn} titleId={titleId} />
         ) : failed ? (
           <div>
             <h2 id={titleId} className="display pr-10 text-[1.75rem]">

@@ -18,4 +18,5 @@ export interface PromoteContext {
   resume: ResumeData | null;
   /** A paid submission this browser started that isn't in an account yet. */
   paidId: string | null;
+  signedIn: boolean;
 }

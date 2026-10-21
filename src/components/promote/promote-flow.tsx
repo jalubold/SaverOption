@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 import { startCheckout } from "@/app/promote/actions";
@@ -35,6 +36,7 @@ export function PromoteFlow({
   mode,
   resume,
   paidId = null,
+  signedIn = false,
   fresh = false,
   titleId,
   heading = true,
@@ -43,6 +45,7 @@ export function PromoteFlow({
   resume: ResumeData | null;
   /** A paid submission from this browser that still needs an account. */
   paidId?: string | null;
+  signedIn?: boolean;
   fresh?: boolean;
   /** Id for the heading, so a dialog can point aria-labelledby at it. */
   titleId?: string;
@@ -302,6 +305,12 @@ export function PromoteFlow({
       <p className="mt-2.5 flex items-center justify-center gap-1.5 text-center text-xs text-faint">
         <Icon name="shield" size={13} />
         {mode === "closed" ? "Nothing is charged now." : "Secure payment by Lemon Squeezy. Taxes, if any, added at checkout."}
+      </p>
+      <p className="mt-4 border-t border-line pt-3 text-center text-[13px] text-muted">
+        Already advertising with us?{" "}
+        <Link href="/dashboard" className="font-medium text-accent-ink underline-offset-2 hover:underline">
+          {signedIn ? "Go to your dashboard" : "Sign in to your dashboard"} →
+        </Link>
       </p>
     </form>
   );
