@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, Container, Eyebrow } from "@/components/ui/primitives";
@@ -109,6 +110,12 @@ export default function PartnershipsPage() {
               {siteConfig.name} is a discovery site for software deals, free credits and perks. Every listing links to
               the provider, and sponsored placements and affiliate links are always labelled.
             </p>
+            <Link
+              href="/stats"
+              className="mt-3 inline-flex min-h-8 items-center gap-1 py-1.5 text-sm font-medium text-accent-ink underline-offset-4 hover:underline"
+            >
+              See our live traffic stats <Icon name="arrow-right" size={14} />
+            </Link>
           </div>
           <ul className="grid grid-cols-1 gap-px overflow-hidden rounded-[var(--radius-card)] border border-line bg-line shadow-[var(--shadow-card)]">
             {benefits.map((b) => (
