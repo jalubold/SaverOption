@@ -312,6 +312,11 @@
     font-size: 1.125rem;
     margin-top: 2rem;
     margin-bottom: 0.5rem;
+    /* Clear the sticky header when linked to directly (e.g. /terms#refunds). */
+    scroll-margin-top: 5.5rem;
+  }
+  & ul + p {
+    margin-top: 0.9em;
   }
   & ul {
     list-style: disc;

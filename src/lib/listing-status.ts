@@ -28,8 +28,12 @@ export const listingLabels: Record<ListingState, string> = {
   expired: "Expired",
 };
 
+/**
+ * Whether the listing is paid for and can be published. A partial refund is how a
+ * cancellation is refunded (amount minus processing fees), so it counts as cancelled.
+ */
 export function isPaid(status: PaymentStatus): boolean {
-  return status === "paid" || status === "partially_refunded";
+  return status === "paid";
 }
 
 export function listingState(
@@ -57,6 +61,7 @@ export function statusTone(state: ListingState | PaymentStatus): "good" | "wait"
     case "failed":
     case "rejected":
     case "refunded":
+    case "partially_refunded":
       return "bad";
     default:
       return "neutral";

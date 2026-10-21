@@ -62,7 +62,7 @@ export async function recordListingEvent(submissionId: string, type: "view" | "c
     insert into listing_events (submission_id, type, day, visitor_hash)
     select id, ${type}, ${day}::date, ${visitorHash(visitor.ip, visitor.userAgent, day)}
     from submissions
-    where id = ${submissionId} and review_status = 'published' and payment_status in ('paid', 'partially_refunded')
+    where id = ${submissionId} and review_status = 'published' and payment_status = 'paid'
       and listing_starts_at <= now() and listing_ends_at > now()
     on conflict do nothing
     returning id`;

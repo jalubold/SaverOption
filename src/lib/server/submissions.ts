@@ -416,7 +416,7 @@ export async function listPublished(limit = 50): Promise<PublicListing[]> {
   return db()<PublicListing[]>`
     select id, product_name, website, description, logo_url, links, slug, listing_starts_at, listing_ends_at
     from submissions
-    where review_status = 'published' and payment_status in ('paid', 'partially_refunded')
+    where review_status = 'published' and payment_status = 'paid'
       and listing_starts_at <= now() and listing_ends_at > now()
     order by listing_starts_at desc limit ${limit}`;
 }
@@ -425,7 +425,7 @@ export async function getPublishedBySlug(slug: string): Promise<PublicListing | 
   const [row] = await db()<PublicListing[]>`
     select id, product_name, website, description, logo_url, links, slug, listing_starts_at, listing_ends_at
     from submissions
-    where slug = ${slug} and review_status = 'published' and payment_status in ('paid', 'partially_refunded')
+    where slug = ${slug} and review_status = 'published' and payment_status = 'paid'
       and listing_starts_at <= now() and listing_ends_at > now()`;
   return row ?? null;
 }

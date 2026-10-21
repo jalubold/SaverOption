@@ -143,7 +143,7 @@ function Status({ sub, owned, signedIn, google }: { sub: SafeSubmission; owned: 
     );
   }
 
-  if (sub.payment_status === "refunded") {
+  if (sub.payment_status === "refunded" || sub.payment_status === "partially_refunded") {
     return (
       <>
         <Tile icon="info" />

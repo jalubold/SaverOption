@@ -180,9 +180,10 @@ function NextStep({ sub, missing }: { sub: SafeSubmission; missing: string[] }) 
   let title: string;
   let body: string;
   if (!isPaid(sub.payment_status)) {
-    title = sub.payment_status === "refunded" ? "Payment refunded" : "Awaiting payment";
+    const refunded = sub.payment_status === "refunded" || sub.payment_status === "partially_refunded";
+    title = refunded ? "Payment refunded" : "Awaiting payment";
     body =
-      sub.payment_status === "refunded"
+      refunded
         ? "This listing won't be published."
         : "We'll update this page as soon as Lemon Squeezy confirms the payment.";
   } else if (pub === "published") {

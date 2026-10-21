@@ -306,6 +306,17 @@ export function PromoteFlow({
         <Icon name="shield" size={13} />
         {mode === "closed" ? "Nothing is charged now." : "Secure payment by Lemon Squeezy. Taxes, if any, added at checkout."}
       </p>
+      <p className="mt-1 text-center text-xs text-faint">
+        By continuing you agree to our{" "}
+        <Link href="/terms#sponsored-listings" className="underline underline-offset-2 hover:text-muted">
+          terms
+        </Link>
+        , including the{" "}
+        <Link href="/terms#refunds" className="underline underline-offset-2 hover:text-muted">
+          refund policy
+        </Link>
+        .
+      </p>
       <p className="mt-4 border-t border-line pt-3 text-center text-[13px] text-muted">
         Already advertising with us?{" "}
         <Link href="/dashboard" className="font-medium text-accent-ink underline-offset-2 hover:underline">
