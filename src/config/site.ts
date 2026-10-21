@@ -32,6 +32,8 @@ export interface SiteConfig {
   contactEmail: string;
   /** Where the Partnerships page CTAs send partnership enquiries. */
   partnershipsEmail: string;
+  /** Receives "Promote your SaaS" listing submissions (sent from the visitor's own email app). */
+  listingsEmail: string;
   social: { label: string; href: string }[];
   /**
    * Pre-launch: keeps the site out of search indexes. Set to false when the
@@ -61,6 +63,7 @@ export const siteConfig: SiteConfig = {
   },
   contactEmail: "jalubold@gmail.com",
   partnershipsEmail: "jalubold@gmail.com",
+  listingsEmail: "jalubold@gmail.com",
   social: [],
   prelaunch: true,
   newsletter: false,

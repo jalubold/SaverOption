@@ -3,18 +3,19 @@
 import { createContext, useCallback, useContext, useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { siteConfig } from "@/config/site";
 import { listingPlans, type ListingPlan } from "@/config/listing-plans";
+import { buildListingEmail, formatPlanPrice } from "@/components/promote/submission";
 import { emptyDetails, validateDetails, type PromoteDetails, type PromoteErrors } from "@/components/promote/validation";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, cn } from "@/components/ui/primitives";
 
 /**
- * "Promote your SaaS" — UI-only prototype of the paid deal-listing flow.
- * One compact form (details + plan). Everything lives in local state:
- * nothing is saved, sent or charged. Real checkout can replace the
- * "Coming soon" view later without changing the form.
+ * "Promote your SaaS" — listing request form (details + plan).
+ * For now, Continue opens the visitor's email app with the submission
+ * pre-filled (see ./submission.ts); nothing is saved, sent from the site
+ * or charged. A real checkout can replace `buildListingEmail` later.
  */
 
-type View = "form" | "soon";
+type View = "form" | "email";
 
 const PromoteContext = createContext<(() => void) | null>(null);
 
@@ -59,7 +60,7 @@ export function PromoteSaasTrigger({
 
 function PromoteSaasModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const soonHeadingRef = useRef<HTMLHeadingElement>(null);
+  const emailHeadingRef = useRef<HTMLHeadingElement>(null);
   const titleId = useId();
   const descId = useId();
   const planErrorId = useId();
@@ -82,9 +83,9 @@ function PromoteSaasModal({ open, onClose }: { open: boolean; onClose: () => voi
     }
   }, [open]);
 
-  // Announce the "Coming soon" message by moving focus to it.
+  // Announce the follow-up message by moving focus to it.
   useEffect(() => {
-    if (view === "soon") soonHeadingRef.current?.focus();
+    if (view === "email") emailHeadingRef.current?.focus();
   }, [view]);
 
   function handleClosed() {
@@ -104,11 +105,14 @@ function PromoteSaasModal({ open, onClose }: { open: boolean; onClose: () => voi
       dialogRef.current?.querySelector<HTMLInputElement>(`[name="${first}"]`)?.focus();
       return;
     }
-    if (!planId) {
+    const chosen = listingPlans.find((p) => p.id === planId);
+    if (!chosen) {
       dialogRef.current?.querySelector<HTMLInputElement>('input[name="plan"]')?.focus();
       return;
     }
-    setView("soon");
+    // Hand off to the visitor's email app; the follow-up view covers devices without one.
+    window.location.href = buildListingEmail(details, chosen).href;
+    setView("email");
   }
 
   function update(field: keyof PromoteDetails, value: string) {
@@ -118,6 +122,7 @@ function PromoteSaasModal({ open, onClose }: { open: boolean; onClose: () => voi
   }
 
   const plan = listingPlans.find((p) => p.id === planId);
+  const email = plan ? buildListingEmail(details, plan) : null;
 
   return (
     <dialog
@@ -212,31 +217,12 @@ function PromoteSaasModal({ open, onClose }: { open: boolean; onClose: () => voi
               Continue
               <Icon name="arrow-right" size={16} />
             </button>
+            <p className="mt-2.5 text-center text-xs leading-relaxed text-faint">
+              Your email app will open with your submission details. We&apos;ll guide you through the next steps.
+            </p>
           </form>
         ) : (
-          <div>
-            <span className="icon-tile size-11">
-              <Icon name="clock" size={20} />
-            </span>
-            <h2 id={titleId} ref={soonHeadingRef} tabIndex={-1} className="display mt-4 pr-10 text-[1.75rem] outline-none sm:text-[2.1rem]">
-              Coming <em className="accent">soon</em>
-            </h2>
-            <p id={descId} className="mt-1.5 text-sm leading-relaxed text-muted">
-              We&apos;re preparing self-serve deal listings for {siteConfig.name}. Leave your details and we&apos;ll let you know
-              when submissions open.
-            </p>
-            {plan && (
-              <p className="mt-4 rounded-xl border border-line bg-subtle px-4 py-3 text-sm text-muted">
-                <span className="font-medium text-fg">{details.productName.trim()}</span> · {plan.name} · {formatPrice(plan)}
-              </p>
-            )}
-            <p className="mt-3 text-xs leading-relaxed text-faint">
-              Nothing has been submitted or charged, and the details you entered haven&apos;t been sent or saved.
-            </p>
-            <button type="button" onClick={() => dialogRef.current?.close()} className={buttonClass("primary", "lg", "mt-5 w-full")}>
-              Close
-            </button>
-          </div>
+          email && <EmailFallback email={email} headingRef={emailHeadingRef} titleId={titleId} descId={descId} onEdit={() => setView("form")} onClose={() => dialogRef.current?.close()} />
         )}
       </div>
     </dialog>
@@ -317,7 +303,7 @@ function PlanOption({ plan, selected, onSelect }: { plan: ListingPlan; selected:
         </span>
       )}
       <span className={cn("text-[12px] font-medium", selected ? "text-fg" : "text-muted")}>{plan.name}</span>
-      <span className="tabular mt-0.5 text-[1.35rem] font-semibold leading-tight tracking-tight text-heading">{formatPrice(plan)}</span>
+      <span className="tabular mt-0.5 text-[1.35rem] font-semibold leading-tight tracking-tight text-heading">{formatPlanPrice(plan)}</span>
       <span className="flex items-center gap-1 text-[11px] text-faint">
         {selected && <Icon name="check" size={11} className="text-accent-ink" />}
         {plan.days} days
@@ -326,6 +312,80 @@ function PlanOption({ plan, selected, onSelect }: { plan: ListingPlan; selected:
   );
 }
 
-function formatPrice(plan: ListingPlan) {
-  return new Intl.NumberFormat("en-US", { style: "currency", currency: plan.currency, maximumFractionDigits: 0 }).format(plan.price);
+/** Shown after Continue: confirms the hand-off and offers a manual route if no email app opened. */
+function EmailFallback({
+  email,
+  headingRef,
+  titleId,
+  descId,
+  onEdit,
+  onClose,
+}: {
+  email: ReturnType<typeof buildListingEmail>;
+  headingRef: React.RefObject<HTMLHeadingElement | null>;
+  titleId: string;
+  descId: string;
+  onEdit: () => void;
+  onClose: () => void;
+}) {
+  const [copied, setCopied] = useState<"address" | "message" | null>(null);
+
+  async function copy(kind: "address" | "message") {
+    const text = kind === "address" ? email.to : `To: ${email.to}\nSubject: ${email.subject}\n\n${email.body.replace(/\r\n/g, "\n")}`;
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(kind);
+    } catch {
+      setCopied(null);
+    }
+  }
+
+  return (
+    <div>
+      <span className="icon-tile size-11">
+        <Icon name="mail" size={20} />
+      </span>
+      <h2 id={titleId} ref={headingRef} tabIndex={-1} className="display mt-4 pr-10 text-[1.75rem] outline-none sm:text-[2.1rem]">
+        Check your <em className="accent">email app</em>
+      </h2>
+      <p id={descId} className="mt-1.5 text-sm leading-relaxed text-muted">
+        We&apos;ve opened a draft with your submission details. Send it, and we&apos;ll reply with the next steps to complete
+        your listing. Nothing is sent or charged until you send that email.
+      </p>
+
+      <div className="mt-4 rounded-xl border border-line bg-subtle p-4 text-sm">
+        <p className="font-medium text-fg">Email app didn&apos;t open?</p>
+        <p className="mt-1 leading-relaxed text-muted">
+          Email your submission to{" "}
+          <a href={email.href} className="font-medium text-accent-ink underline underline-offset-2 [overflow-wrap:anywhere]">
+            {email.to}
+          </a>{" "}
+          with the subject &ldquo;{email.subject}&rdquo;.
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <button type="button" onClick={() => copy("address")} className={buttonClass("secondary", "sm")}>
+            <Icon name={copied === "address" ? "check" : "mail"} size={13} />
+            {copied === "address" ? "Address copied" : "Copy address"}
+          </button>
+          <button type="button" onClick={() => copy("message")} className={buttonClass("secondary", "sm")}>
+            <Icon name={copied === "message" ? "check" : "file"} size={13} />
+            {copied === "message" ? "Message copied" : "Copy message"}
+          </button>
+        </div>
+        <p className="sr-only" aria-live="polite">
+          {copied ? `${copied === "address" ? "Address" : "Message"} copied to clipboard` : ""}
+        </p>
+      </div>
+
+      <div className="mt-5 flex flex-col-reverse gap-3 sm:flex-row">
+        <button type="button" onClick={onEdit} className={buttonClass("secondary", "lg", "w-full sm:w-auto")}>
+          <Icon name="arrow-left" size={16} />
+          Edit details
+        </button>
+        <button type="button" onClick={onClose} className={buttonClass("primary", "lg", "w-full sm:flex-1")}>
+          Done
+        </button>
+      </div>
+    </div>
+  );
 }
