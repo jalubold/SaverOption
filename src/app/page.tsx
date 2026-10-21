@@ -26,7 +26,8 @@ export const revalidate = 3600;
 // Rows in the hero side panel: offers with a published end date first, then the largest credit programs.
 const HERO_ROWS = 5;
 
-const quickCategories = ["ai-tools", "free-credits", "startup-perks", "student-discounts", "lifetime-deals", "open-source"];
+// Header nav stays short (Deals · Categories · Stats); these are the shortcuts into popular categories.
+const quickCategories = ["ai-tools", "free-credits", "startup-perks", "student-discounts", "lifetime-deals"];
 
 const principles = [
   {
@@ -77,8 +78,6 @@ export default async function HomePage() {
             <div className="min-w-0">
               <Eyebrow>
                 <strong className="tabular">{stats.offers}</strong> active offers
-                <span aria-hidden="true">•</span>
-                <strong className="tabular">{stats.products}</strong> products
                 {stats.lastChecked && (
                   <>
                     <span aria-hidden="true">•</span>
@@ -95,10 +94,7 @@ export default async function HomePage() {
                 Discounts, free credits, startup perks and student offers on SaaS, AI and developer tools. Each one links
                 to the original provider, with terms and end dates up front.
               </p>
-              <div className="mt-8">
-                <p className="mb-2.5 text-xs font-medium uppercase tracking-wider text-faint">Popular categories</p>
-                <CategoryChips categories={chips} />
-              </div>
+              <CategoryChips categories={chips} className="mt-8" />
             </div>
 
             <aside aria-labelledby="ending-heading" className="rounded-[18px] border border-line bg-surface p-3">

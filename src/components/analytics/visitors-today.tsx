@@ -36,12 +36,6 @@ export function VisitorsToday({ separator = true }: { separator?: boolean }) {
         <span aria-hidden="true" className="size-1.5 rounded-full bg-success" />
         <strong className="tabular">{fmt.format(stats.visitorsToday)}</strong> visitors today
       </span>
-      {stats.dealsOpenedToday ? (
-        <>
-          <span aria-hidden="true">•</span>
-          <strong className="tabular">{fmt.format(stats.dealsOpenedToday)}</strong> deals opened
-        </>
-      ) : null}
     </>
   );
 }
