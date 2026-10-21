@@ -73,10 +73,7 @@ export function PromoteFlow({
         sessionStorage.removeItem(DRAFT_KEY);
         sessionStorage.setItem(IDEM_KEY, newKey());
       }
-      if (resume) {
-        sessionStorage.setItem(IDEM_KEY, resume.idempotencyKey);
-        return;
-      }
+      if (resume) return;
       if (!sessionStorage.getItem(IDEM_KEY)) sessionStorage.setItem(IDEM_KEY, newKey());
       const raw = sessionStorage.getItem(DRAFT_KEY);
       if (raw) {
@@ -88,7 +85,24 @@ export function PromoteFlow({
     } catch {
       // Storage unavailable (private mode); the form still works, just without restore.
     }
-  }, [resume, fresh]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- once, on mount
+  }, []);
+
+  // The popup opens before the server has answered, so a saved or paid submission can arrive
+  // after the form is showing. It wins over the local draft, unless they've started typing.
+  useEffect(() => {
+    if (!resume) return;
+    try {
+      sessionStorage.setItem(IDEM_KEY, resume.idempotencyKey);
+    } catch {}
+    if (started.current) return;
+    setDetails(resume.details);
+    setPlanId(resume.planId);
+  }, [resume]);
+
+  useEffect(() => {
+    if (paidId && !started.current) setShowPaid(true);
+  }, [paidId]);
 
   useEffect(() => {
     try {
@@ -204,6 +218,12 @@ export function PromoteFlow({
             Promote your <em className="accent">SaaS</em>
           </h2>
           <p className="mt-1 text-sm leading-relaxed text-muted">Pay once for a fixed listing period. Reviewed before it goes live. No account needed to start.</p>
+          <p className="mt-2 text-[13px] text-muted">
+            Already advertising with us?{" "}
+            <Link href="/dashboard" className="font-medium text-accent-ink underline-offset-2 hover:underline">
+              {signedIn ? "Go to your dashboard" : "Sign in to your dashboard"} →
+            </Link>
+          </p>
         </>
       )}
 
@@ -316,12 +336,6 @@ export function PromoteFlow({
           refund policy
         </Link>
         .
-      </p>
-      <p className="mt-4 border-t border-line pt-3 text-center text-[13px] text-muted">
-        Already advertising with us?{" "}
-        <Link href="/dashboard" className="font-medium text-accent-ink underline-offset-2 hover:underline">
-          {signedIn ? "Go to your dashboard" : "Sign in to your dashboard"} →
-        </Link>
       </p>
     </form>
   );

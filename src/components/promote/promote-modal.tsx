@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { createContext, useCallback, useContext, useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import { getPromoteContext } from "@/app/promote/actions";
 import type { PromoteContext } from "@/components/promote/flow-types";
 import { PromoteFlow } from "@/components/promote/promote-flow";
@@ -10,33 +10,63 @@ import { Icon } from "@/components/ui/icon";
 
 /**
  * "Promote your SaaS" popup. The provider renders the dialog once; any
- * PromoteTrigger below it opens it. The checkout mode and any saved submission
- * are fetched from the server when it opens, so cached pages stay static.
+ * PromoteTrigger below it opens it. The form shows straight away; the visitor's
+ * details (signed in, a saved or paid submission, checkout mode) are fetched in
+ * the background, starting on hover, so cached pages stay static.
  */
 
-const OpenContext = createContext<(() => void) | null>(null);
+const OpenContext = createContext<{ open: () => void; prefetch: () => void } | null>(null);
+
+/** Until the server answers. Checkout itself always re-checks on the server. */
+const fallbackContext: PromoteContext = { mode: "live", resume: null, paidId: null, signedIn: false };
 
 export function PromoteProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
-  const openModal = useCallback(() => setOpen(true), []);
+  // The form mounts on first open (not on every page), then stays mounted so typed details are kept.
+  const [opened, setOpened] = useState(false);
+  const [ctx, setCtx] = useState<PromoteContext | null>(null);
+  const requested = useRef(false);
+
+  const prefetch = useCallback(() => {
+    if (requested.current) return;
+    requested.current = true;
+    getPromoteContext().then(setCtx, () => {
+      requested.current = false; // try again next time
+    });
+  }, []);
+
+  const value = useMemo(
+    () => ({
+      prefetch,
+      open: () => {
+        prefetch();
+        setOpened(true);
+        setOpen(true);
+      },
+    }),
+    [prefetch],
+  );
+
   return (
-    <OpenContext.Provider value={openModal}>
+    <OpenContext.Provider value={value}>
       {children}
-      <PromoteModal open={open} onClose={() => setOpen(false)} />
+      <PromoteModal open={open} ctx={opened ? (ctx ?? fallbackContext) : null} onClose={() => setOpen(false)} />
     </OpenContext.Provider>
   );
 }
 
 /** Opens the popup. Falls back to the /promote page if there's no provider (or JS hasn't loaded). */
 export function PromoteTrigger({ className, onOpen, children }: { className?: string; onOpen?: () => void; children: ReactNode }) {
-  const open = useContext(OpenContext);
+  const modal = useContext(OpenContext);
   return (
     <a
       href="/promote"
+      onPointerEnter={modal?.prefetch}
+      onFocus={modal?.prefetch}
       onClick={(e) => {
-        if (!open || e.metaKey || e.ctrlKey || e.shiftKey) return;
+        if (!modal || e.metaKey || e.ctrlKey || e.shiftKey) return;
         e.preventDefault();
-        open();
+        modal.open();
         onOpen?.();
       }}
       aria-haspopup="dialog"
@@ -47,11 +77,9 @@ export function PromoteTrigger({ className, onOpen, children }: { className?: st
   );
 }
 
-function PromoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+function PromoteModal({ open, ctx, onClose }: { open: boolean; ctx: PromoteContext | null; onClose: () => void }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
-  const [ctx, setCtx] = useState<PromoteContext | null>(null);
-  const [failed, setFailed] = useState(false);
   const pathname = usePathname();
 
   // Any navigation (a link inside, or "already paid" → status page) closes the popup.
@@ -70,18 +98,6 @@ function PromoteModal({ open, onClose }: { open: boolean; onClose: () => void })
       dialog.close();
     }
   }, [open]);
-
-  // Load the visitor's checkout mode (and any saved submission) the first time it opens.
-  useEffect(() => {
-    if (!open || ctx) return;
-    let cancelled = false;
-    getPromoteContext()
-      .then((c) => !cancelled && setCtx(c))
-      .catch(() => !cancelled && setFailed(true));
-    return () => {
-      cancelled = true;
-    };
-  }, [open, ctx]);
 
   return (
     <dialog
@@ -107,31 +123,7 @@ function PromoteModal({ open, onClose }: { open: boolean; onClose: () => void })
         <div className="mb-3">
           <TrafficPill />
         </div>
-        {ctx ? (
-          // Stays mounted between openings, so typed details are kept.
-          <PromoteFlow mode={ctx.mode} resume={ctx.resume} paidId={ctx.paidId} signedIn={ctx.signedIn} titleId={titleId} />
-        ) : failed ? (
-          <div>
-            <h2 id={titleId} className="display pr-10 text-[1.75rem]">
-              Promote your <em className="accent">SaaS</em>
-            </h2>
-            <p className="mt-2 text-sm text-muted">
-              Couldn&apos;t load the form.{" "}
-              <a href="/promote" className="font-medium text-accent-ink underline underline-offset-2">
-                Open it on its own page
-              </a>
-              .
-            </p>
-          </div>
-        ) : (
-          <div className="flex min-h-[420px] items-center justify-center" aria-live="polite">
-            <h2 id={titleId} className="sr-only">
-              Promote your SaaS
-            </h2>
-            <span aria-hidden="true" className="size-6 animate-spin rounded-full border-2 border-line-strong border-t-accent" />
-            <span className="sr-only">Loading…</span>
-          </div>
-        )}
+        {ctx && <PromoteFlow mode={ctx.mode} resume={ctx.resume} paidId={ctx.paidId} signedIn={ctx.signedIn} titleId={titleId} />}
       </div>
     </dialog>
   );
