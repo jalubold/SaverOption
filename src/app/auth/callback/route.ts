@@ -43,8 +43,7 @@ export async function GET(request: NextRequest) {
     } catch {}
   }
 
-  const target = type === "recovery" ? "/update-password" : next;
-  const res = NextResponse.redirect(new URL(target, url.origin));
+  const res = NextResponse.redirect(new URL(next, url.origin));
   res.headers.set("Cache-Control", "no-store");
   return res;
 }

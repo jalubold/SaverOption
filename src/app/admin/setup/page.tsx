@@ -69,7 +69,7 @@ export default async function AdminSetupPage() {
               ok={google}
               label="Google sign-in"
               detail={google ? "Advertisers sign in with Google; no emails needed." : undefined}
-              hint="Supabase → Authentication → Sign In / Providers → Google: turn it on and paste the Client ID and Secret from Google Cloud. Until then, login falls back to email and password."
+              hint="Supabase → Authentication → Sign In / Providers → Google: turn it on and paste the Client ID and Secret from Google Cloud. Until then, nobody can sign in."
             />
           </ul>
         </Panel>

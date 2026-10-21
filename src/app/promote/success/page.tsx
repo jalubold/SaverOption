@@ -10,7 +10,7 @@ import { isPaid } from "@/lib/listing-status";
 import { readClaimCookie } from "@/lib/server/claim";
 import { dbConfigured } from "@/lib/server/db";
 import { getForUser, getSubmissionByClaim, type SafeSubmission } from "@/lib/server/submissions";
-import { getUser, googleSignInEnabled } from "@/lib/server/supabase";
+import { getUser } from "@/lib/server/supabase";
 import { recordFunnelEvent } from "@/lib/server/tracking";
 import { pageMetadata } from "@/lib/seo";
 
@@ -32,7 +32,6 @@ export default async function PromoteSuccessPage(props: PageProps<"/promote/succ
   const { s } = await props.searchParams;
   const id = typeof s === "string" && UUID.test(s) ? s.toLowerCase() : null;
   const user = await getUser();
-  const google = await googleSignInEnabled();
 
   let sub: SafeSubmission | null = null;
   let owned = false;
@@ -58,7 +57,7 @@ export default async function PromoteSuccessPage(props: PageProps<"/promote/succ
       <section className="hero-glow min-h-[70vh] border-b border-line">
         <Container className="max-w-2xl py-14 sm:py-20">
           <div className="rounded-[20px] border border-line bg-surface p-6 shadow-[var(--shadow-card)] sm:p-8">
-            {sub ? <Status sub={sub} owned={owned} signedIn={Boolean(user)} google={google} /> : <Unknown signedIn={Boolean(user)} />}
+            {sub ? <Status sub={sub} owned={owned} signedIn={Boolean(user)} /> : <Unknown signedIn={Boolean(user)} />}
           </div>
         </Container>
       </section>
@@ -66,7 +65,7 @@ export default async function PromoteSuccessPage(props: PageProps<"/promote/succ
   );
 }
 
-function Status({ sub, owned, signedIn, google }: { sub: SafeSubmission; owned: boolean; signedIn: boolean; google: boolean }) {
+function Status({ sub, owned, signedIn }: { sub: SafeSubmission; owned: boolean; signedIn: boolean }) {
   const plan = getPlan(sub.plan);
   const summary = (
     <dl className="mt-6 divide-y divide-line rounded-[14px] border border-line bg-subtle text-sm">
@@ -107,20 +106,11 @@ function Status({ sub, owned, signedIn, google }: { sub: SafeSubmission; owned: 
             <a href="/claim" className={buttonClass("primary", "lg", "w-full sm:flex-1")}>
               Add to my dashboard <Icon name="arrow-right" size={16} />
             </a>
-          ) : google ? (
+          ) : (
             <div className="w-full">
               <GoogleButton next="/claim" />
               <p className="mt-2 text-center text-xs text-faint">Creates your account, or signs you in if you already have one.</p>
             </div>
-          ) : (
-            <>
-              <Link href="/signup?next=/claim" className={buttonClass("primary", "lg", "w-full sm:flex-1")}>
-                Create Account <Icon name="arrow-right" size={16} />
-              </Link>
-              <Link href="/login?next=/claim" className={buttonClass("secondary", "lg", "w-full sm:w-auto")}>
-                Already have an account? Log in
-              </Link>
-            </>
           )}
         </div>
         {!owned && (
@@ -210,11 +200,11 @@ function Unknown({ signedIn }: { signedIn: boolean }) {
       </h1>
       <p className="mt-2 text-[15px] leading-relaxed text-muted">
         For your privacy, payment status is only shown in the browser that started checkout, or in your account. Use the link in your receipt
-        email, or {signedIn ? "open your dashboard" : "log in"} to see your listings.
+        email, or {signedIn ? "open your dashboard" : "sign in"} to see your listings.
       </p>
       <div className="mt-7 flex flex-col gap-3 sm:flex-row">
         <Link href={signedIn ? "/dashboard" : "/login?next=/dashboard"} className={buttonClass("primary", "lg", "w-full sm:flex-1")}>
-          {signedIn ? "Go to dashboard" : "Log in"} <Icon name="arrow-right" size={16} />
+          {signedIn ? "Go to dashboard" : "Sign in"} <Icon name="arrow-right" size={16} />
         </Link>
         <Link href="/promote" className={buttonClass("secondary", "lg", "w-full sm:w-auto")}>
           Promote your SaaS

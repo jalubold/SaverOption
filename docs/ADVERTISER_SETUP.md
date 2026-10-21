@@ -63,7 +63,7 @@ Paid "Promote your SaaS" listings. A founder submits a product, pays once throug
      - Authorized JavaScript origin: `https://www.saveroption.com`
      - Authorized redirect URI: the **Callback URL** shown on Supabase's Google provider page (`https://<project-ref>.supabase.co/auth/v1/callback`).
    - Supabase → **Authentication → Sign In / Providers → Google**: enable it, paste the Client ID and Client Secret, then save.
-   - `/admin/setup` shows **Google sign-in ✓** once it's on. Until then, the login pages fall back to email and password.
+   - `/admin/setup` shows **Google sign-in ✓** once it's on. Google is the only way to sign in.
    - An existing email/password account with the same Gmail address is linked automatically, and keeps admin rights.
 
 ## 2. Environment variables (Vercel → Settings → Environment Variables)
