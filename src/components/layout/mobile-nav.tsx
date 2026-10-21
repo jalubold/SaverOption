@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
+import { PromoteSaasTrigger } from "@/components/promote/promote-saas";
 import { Icon } from "@/components/ui/icon";
+import { buttonClass } from "@/components/ui/primitives";
 
 export function MobileNav({ items }: { items: readonly { label: string; href: string }[] }) {
   const [open, setOpen] = useState(false);
@@ -54,6 +56,14 @@ export function MobileNav({ items }: { items: readonly { label: string; href: st
               </li>
             ))}
           </ul>
+          {/* The header CTA is hidden on phones, so the menu offers it instead. */}
+          <PromoteSaasTrigger
+            onOpen={() => setOpen(false)}
+            className={buttonClass("primary", "md", "mt-2 w-full sm:hidden")}
+          >
+            Promote your SaaS
+            <Icon name="arrow-up-right" size={14} />
+          </PromoteSaasTrigger>
         </nav>
       )}
     </div>

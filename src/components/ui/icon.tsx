@@ -5,6 +5,8 @@ type GlyphName =
   | IconName
   | "search"
   | "arrow-right"
+  | "arrow-up-right"
+  | "arrow-left"
   | "external"
   | "check"
   | "info"
@@ -74,6 +76,8 @@ const paths: Record<GlyphName, React.ReactNode> = {
     </>
   ),
   "arrow-right": <path d="M5 12h14m-5-5 5 5-5 5" />,
+  "arrow-up-right": <path d="M7 17 17 7M8.5 7H17v8.5" />,
+  "arrow-left": <path d="M19 12H5m5-5-5 5 5 5" />,
   external: (
     <>
       <path d="M14 4.5h5.5V10" />

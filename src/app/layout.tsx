@@ -7,6 +7,7 @@ import type { CSSProperties } from "react";
 import { siteConfig } from "@/config/site";
 import { VisitBeacon } from "@/components/analytics/visit-beacon";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { PromoteSaasProvider } from "@/components/promote/promote-saas";
 import { SiteHeader } from "@/components/layout/site-header";
 import { JsonLd } from "@/components/seo/json-ld";
 import { websiteJsonLd } from "@/lib/seo";
@@ -61,11 +62,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         >
           Skip to content
         </a>
-        <SiteHeader />
-        <main id="main" className="flex-1">
-          {children}
-        </main>
-        <SiteFooter />
+        <PromoteSaasProvider>
+          <SiteHeader />
+          <main id="main" className="flex-1">
+            {children}
+          </main>
+          <SiteFooter />
+        </PromoteSaasProvider>
         <JsonLd data={websiteJsonLd()} />
         <VisitBeacon />
         <Analytics />
