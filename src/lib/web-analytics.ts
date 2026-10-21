@@ -13,7 +13,7 @@ export const ANALYTICS_SINCE = "2026-10-19";
 // ─── Query model (shared with the page; URL-safe) ───────────────────────────
 
 export const RANGES = {
-  "24h": { label: "Last 24 hours", short: "24h", days: 1 },
+  today: { label: "Today", short: "Today", days: 1 },
   "7d": { label: "Last 7 days", short: "7d", days: 7 },
   "30d": { label: "Last 30 days", short: "30d", days: 30 },
   all: { label: "All time", short: "All", days: Infinity },
@@ -230,23 +230,29 @@ export type TrafficStatsResult =
 export async function getTrafficStats(q: StatsQuery, now = new Date()): Promise<TrafficStatsResult> {
   if (!trafficStatsConfigured()) return { ok: false, reason: "not configured" };
 
-  const granularity = q.range === "24h" ? "hour" : "day";
-  const days = RANGES[q.range].days;
+  // Windows are aligned to UTC days because the count endpoint works in whole days: it rounds
+  // `since` and `until` down to midnight and treats `until` as exclusive. The aggregate endpoint
+  // rounds `until` up to the end of its bucket, so it gets the last millisecond of the window.
+  const granularity = q.range === "today" ? "hour" : "day";
   const unit = granularity === "hour" ? HOUR : DAY;
-  // Bucket-aligned window ending now, never before analytics was switched on.
-  const end = Math.floor(now.getTime() / unit) * unit + unit;
-  const wanted = Number.isFinite(days) ? end - days * DAY : launch;
-  const start = Math.max(launch, Math.floor(wanted / unit) * unit);
+  const dayStart = Math.floor(now.getTime() / DAY) * DAY;
+  const dayEnd = dayStart + DAY;
+  const days = RANGES[q.range].days;
+  const start = q.range === "today" ? dayStart : Math.max(launch, Number.isFinite(days) ? dayEnd - days * DAY : launch);
+  // Today's chart runs to the current hour; daily charts include today.
+  const end = q.range === "today" ? Math.floor(now.getTime() / HOUR) * HOUR + HOUR : dayEnd;
   const since = new Date(start).toISOString();
-  const until = now.toISOString();
+  const until = new Date(end - 1).toISOString();
   const filter = odata(q.filters);
   // Hourly data goes stale faster than daily.
   const revalidate = granularity === "hour" ? 900 : 3600;
   const range = { since, until, filter };
+  const countRange = { since, until: new Date(dayEnd).toISOString(), filter };
 
-  const span = end - start;
-  const prevStart = start - span;
-  const hasPrevious = Number.isFinite(days) && prevStart >= launch;
+  // Compare with the same number of days just before, once that period has data (not for "today",
+  // which is still in progress).
+  const prevStart = start - (dayEnd - start);
+  const hasPrevious = q.range !== "today" && Number.isFinite(days) && prevStart >= launch;
 
   try {
     const dims = Object.keys(DIMENSIONS) as Dimension[];
@@ -257,10 +263,10 @@ export async function getTrafficStats(q: StatsQuery, now = new Date()): Promise<
         return fallback;
       });
     const [totals, series, previous, ...lists] = await Promise.all([
-      query<Totals>("count", range, revalidate),
+      query<Totals>("count", countRange, revalidate),
       query<ApiRow[]>("aggregate", { ...range, by: granularity, limit: 100 }, revalidate),
       hasPrevious
-        ? optional(query<Totals | null>("count", { since: new Date(prevStart).toISOString(), until: new Date(start - 1).toISOString(), filter }, revalidate), null)
+        ? optional(query<Totals | null>("count", { since: new Date(prevStart).toISOString(), until: since, filter }, revalidate), null)
         : Promise.resolve(null),
       ...dims.map((dim) => optional(query<ApiRow[]>("aggregate", { ...range, by: dim, limit: 10 }, revalidate), [] as ApiRow[])),
     ]);
@@ -297,9 +303,12 @@ export async function getTrafficStats(q: StatsQuery, now = new Date()): Promise<
 /** Unique visitors so far today (UTC), or null when unavailable. Cached for five minutes. */
 export async function getVisitorsTodayFromVercel(now = new Date()): Promise<number | null> {
   if (!trafficStatsConfigured()) return null;
-  const since = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())).toISOString();
+  const dayStart = Math.floor(now.getTime() / DAY) * DAY;
+  const since = new Date(dayStart).toISOString();
+  // Next midnight, not "now": the count endpoint rounds `until` down to the day (exclusive).
+  const until = new Date(dayStart + DAY).toISOString();
   try {
-    const totals = await query<Totals>("count", { since, until: now.toISOString() }, 300);
+    const totals = await query<Totals>("count", { since, until }, 300);
     return totals.visitors ?? null;
   } catch (err) {
     console.error("[traffic-stats]", err instanceof Error ? err.message : err);
