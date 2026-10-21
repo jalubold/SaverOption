@@ -11,6 +11,9 @@ import { getSettings } from "@/lib/server/settings";
 import { authConfigured, requireAdmin, storageAdmin } from "@/lib/server/supabase";
 import { pageMetadata } from "@/lib/seo";
 
+// The Connect action calls the Lemon Squeezy API several times; give it room beyond the default.
+export const maxDuration = 60;
+
 export const metadata = pageMetadata({ title: "Setup", description: "Integration status.", path: "/admin/setup", noIndex: true });
 
 const modeText = {

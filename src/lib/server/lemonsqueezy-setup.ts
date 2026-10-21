@@ -52,6 +52,13 @@ async function api<T>(apiKey: string, path: string, init?: { method: string; bod
     },
     body: init ? JSON.stringify(init.body) : undefined,
     cache: "no-store",
+    // Never leave the admin waiting on a hung request.
+    signal: AbortSignal.timeout(15_000),
+  }).catch((err: unknown) => {
+    if (err instanceof Error && (err.name === "TimeoutError" || err.name === "AbortError")) {
+      throw new SetupError("Lemon Squeezy took too long to respond. Please try again in a moment.");
+    }
+    throw err;
   });
   if (res.status === 401) throw new SetupError("Lemon Squeezy rejected the API key. Check LEMONSQUEEZY_API_KEY in Vercel.");
   if (!res.ok) {
@@ -99,8 +106,9 @@ export async function setupLemonSqueezy(origin: string): Promise<SetupResult> {
     const inventory: string[] = [];
     const drafts: string[] = []; // unpublished products that carry plan prices
     const candidates: { id: string; name: string; product: string; price: number; published: boolean; preferred: boolean }[] = [];
-    for (const product of products) {
-      const variants = await list<VariantAttrs>(apiKey, `/variants?filter[product_id]=${product.id}`);
+    const variantsByProduct = await Promise.all(products.map((p) => list<VariantAttrs>(apiKey, `/variants?filter[product_id]=${p.id}`)));
+    for (const [i, product] of products.entries()) {
+      const variants = variantsByProduct[i];
       const shown = variants.filter((v) => v.attributes.status !== "pending" || variants.length === 1);
       inventory.push(
         `"${product.attributes.name}" (${product.attributes.status}): ${
