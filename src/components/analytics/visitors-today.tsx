@@ -10,8 +10,8 @@ interface Stats {
 const fmt = new Intl.NumberFormat("en-US");
 
 /**
- * Live "visitors today" figure from /api/stats. Renders nothing until a real,
- * measured count above the display threshold exists.
+ * Live "visitors today" figure from /api/stats. Shows the real measured count,
+ * however small; renders nothing only when no count is available.
  */
 export function VisitorsToday({ separator = true }: { separator?: boolean }) {
   const [stats, setStats] = useState<Stats | null>(null);
@@ -27,7 +27,8 @@ export function VisitorsToday({ separator = true }: { separator?: boolean }) {
     };
   }, []);
 
-  if (!stats?.visitorsToday) return null;
+  // Zero is a real figure too; only hide when nothing was measured.
+  if (stats?.visitorsToday == null) return null;
   return (
     <>
       {separator && <span aria-hidden="true">•</span>}

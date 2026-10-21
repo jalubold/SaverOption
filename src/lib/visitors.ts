@@ -13,10 +13,10 @@ import { dayKey, redisPipeline, redisRead } from "@/lib/redis";
 const KEEP_DAYS = 40;
 const BOT_RE = /bot|crawl|spider|slurp|preview|headless|lighthouse|monitor|curl|wget|python|httpclient/i;
 
-/** Below this many visitors the count isn't shown (a tiny number reads as "empty"). */
+/** Below this many visitors the count isn't shown. Default 0: the real figure is always shown, however small. */
 export function visitorDisplayThreshold(): number {
   const n = Number(process.env.VISITORS_MIN_TO_SHOW);
-  return Number.isFinite(n) && n >= 0 ? n : 50;
+  return Number.isFinite(n) && n >= 0 ? n : 0;
 }
 
 export function isLikelyBot(userAgent: string | null): boolean {

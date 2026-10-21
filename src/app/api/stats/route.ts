@@ -5,9 +5,10 @@ import { getVisitorsTodayFromVercel } from "@/lib/web-analytics";
 
 /**
  * Public, real-time-ish counters for the site. Each figure is null unless
- * it's measured and above the display threshold, so the UI never shows
- * a made-up or embarrassingly small number. Visitors come from Vercel Web
- * Analytics (the same source as /stats), falling back to our own counter.
+ * it's actually measured (and at least VISITORS_MIN_TO_SHOW, 0 by default),
+ * so the UI shows the real number or nothing — never a made-up one. Visitors
+ * come from Vercel Web Analytics (the same source as /stats), falling back to
+ * our own counter.
  */
 export async function GET() {
   const [vercelVisitors, ownVisitors, clicks] = await Promise.all([getVisitorsTodayFromVercel(), getVisitorsToday(), getClicksToday()]);

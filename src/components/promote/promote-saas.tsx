@@ -318,7 +318,7 @@ const countFormat = new Intl.NumberFormat("en-US");
 
 /**
  * "N visitors today" pill linking to /stats. Uses the same public counter as the homepage
- * (/api/stats); without a measured figure it still links to the stats page.
+ * (/api/stats) and shows the real figure, however small; without one it still links to /stats.
  */
 function TrafficPill({ open, onNavigate }: { open: boolean; onNavigate: () => void }) {
   const [visitors, setVisitors] = useState<number | null>(null);

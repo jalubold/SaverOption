@@ -110,7 +110,7 @@ With Upstash Redis configured (`UPSTASH_REDIS_REST_URL`/`_TOKEN`, or the `KV_RES
 
 - **Visitors today.** `VisitBeacon` posts one beacon per page view to `/api/visit`. The server hashes (daily salt + IP + user agent), adds the hash to a per-day HyperLogLog, and skips obvious bots. No cookies are set and raw IPs are never stored. Set `VISITOR_SALT` to a long random string.
 - **Deals opened today / Popular.** `/go/[slug]` counts clicks per offer and day with `after()`, so the redirect is never slowed. "Popular this month" appears once at least 3 offers have clicks in the last 30 days.
-- **Display.** `/api/stats` returns figures only when they're measured and today's visitors reach `VISITORS_MIN_TO_SHOW` (default 50). Below that, the hero shows nothing rather than a tiny or invented number. Keys expire after 40 days.
+- **Display.** `/api/stats` returns figures only when they're actually measured, and shows the real number however small (set `VISITORS_MIN_TO_SHOW` to hide counts below a minimum; default 0). Nothing is ever invented. Keys expire after 40 days.
 
 Without Redis, every counter is hidden and nothing is recorded.
 
