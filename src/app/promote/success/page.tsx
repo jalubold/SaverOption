@@ -58,7 +58,7 @@ export default async function PromoteSuccessPage(props: PageProps<"/promote/succ
       <section className="hero-glow min-h-[70vh] border-b border-line">
         <Container className="max-w-2xl py-14 sm:py-20">
           <div className="rounded-[20px] border border-line bg-surface p-6 shadow-[var(--shadow-card)] sm:p-8">
-            {sub ? <Status sub={sub} owned={owned} signedIn={Boolean(user)} google={google} /> : <Unknown signedIn={Boolean(user)} google={google} />}
+            {sub ? <Status sub={sub} owned={owned} signedIn={Boolean(user)} google={google} /> : <Unknown signedIn={Boolean(user)} />}
           </div>
         </Container>
       </section>
