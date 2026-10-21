@@ -74,4 +74,5 @@ export const mainNav = [
   { label: "Categories", href: "/categories" },
   { label: "Free credits", href: "/categories/free-credits" },
   { label: "Startup perks", href: "/categories/startup-perks" },
+  { label: "Stats", href: "/stats" },
 ] as const;

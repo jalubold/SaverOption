@@ -1,110 +1,127 @@
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { PromoteSaasTrigger } from "@/components/promote/promote-saas";
-import { DailyChart } from "@/components/stats/daily-chart";
+import { BreakdownPanel, type PanelTab } from "@/components/stats/breakdown-panel";
+import { TrafficChart } from "@/components/stats/daily-chart";
 import { Icon } from "@/components/ui/icon";
-import { buttonClass, Container, Eyebrow } from "@/components/ui/primitives";
+import { buttonClass, cn, Container } from "@/components/ui/primitives";
 import { pageMetadata } from "@/lib/seo";
-import { ANALYTICS_SINCE, getTrafficStats, type Breakdown } from "@/lib/web-analytics";
-
-// Re-render at most hourly; the API responses are cached for the same period.
-export const revalidate = 3600;
+import {
+  ANALYTICS_SINCE,
+  DIMENSIONS,
+  dimensionValueLabel,
+  getTrafficStats,
+  parseStatsQuery,
+  RANGES,
+  statsHref,
+  type Dimension,
+  type RangeKey,
+  type StatsQuery,
+  type TrafficStats,
+} from "@/lib/web-analytics";
 
 export const metadata = pageMetadata({
   title: "Traffic stats",
-  description: `${siteConfig.name}'s audience in the open: visitors, pageviews, countries and traffic sources from Vercel Web Analytics, updated hourly.`,
+  description: `${siteConfig.name}'s audience in the open: visitors, pageviews, pages, traffic sources, countries and devices from Vercel Web Analytics.`,
   path: "/stats",
 });
 
 const num = (n: number) => n.toLocaleString("en-US");
-const date = (iso: string) =>
-  new Intl.DateTimeFormat("en-US", { timeZone: "UTC", month: "short", day: "numeric", year: "numeric" }).format(new Date(`${iso}T00:00:00Z`));
+const fmtDate = (iso: string, withTime = false) =>
+  new Intl.DateTimeFormat("en-US", {
+    timeZone: "UTC",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    ...(withTime ? { hour: "numeric", minute: "2-digit" } : {}),
+  }).format(new Date(iso));
 
-export default async function StatsPage() {
-  const stats = await getTrafficStats();
+export default async function StatsPage(props: PageProps<"/stats">) {
+  const q = parseStatsQuery(await props.searchParams);
+  const stats = await getTrafficStats(q);
+  const activeFilters = Object.entries(q.filters) as [Dimension, string][];
 
   return (
-    <>
-      <section className="theme-dark hero-glow border-b border-line bg-bg">
-        <Container className="py-12 sm:py-16">
-          <Eyebrow>
-            <span aria-hidden="true" className="size-1.5 rounded-full bg-[#22c58b]" />
+    <div className="theme-dark bg-bg text-fg">
+      <section className="hero-glow border-b border-line">
+        <Container className="pb-8 pt-12 sm:pb-10 sm:pt-16">
+          <p className="eyebrow">
+            <span aria-hidden="true" className="relative inline-flex size-1.5">
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-[#22c58b] opacity-60" />
+              <span className="relative inline-flex size-1.5 rounded-full bg-[#22c58b]" />
+            </span>
             Live data
             <span aria-hidden="true">•</span>
-            Updated hourly
-            <span aria-hidden="true">•</span>
             Source: <strong>Vercel Web Analytics</strong>
-          </Eyebrow>
+          </p>
           <h1 className="display mt-4 text-[2.75rem] sm:text-[4rem]">
             Traffic, <em>in the open.</em>
           </h1>
           <p className="mt-3 max-w-2xl text-[16px] leading-relaxed text-muted">
             Real audience numbers for advertisers and partners, counted by Vercel Web Analytics on {siteConfig.name}&apos;s
-            production site.
-            {stats && (
-              <>
-                {" "}
-                Showing {date(stats.since)} – {date(stats.until)}.
-              </>
-            )}
+            production site. Filter by period, page, source, country or device.
           </p>
+
+          {/* Toolbar: period + active filters */}
+          <div className="mt-8 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <nav aria-label="Period" className="-mx-1 overflow-x-auto px-1">
+              <ul className="inline-flex rounded-full border border-line bg-surface p-1">
+                {(Object.entries(RANGES) as [RangeKey, (typeof RANGES)[RangeKey]][]).map(([key, r]) => (
+                  <li key={key}>
+                    <Link
+                      href={statsHref(q, { range: key })}
+                      scroll={false}
+                      aria-current={q.range === key ? "page" : undefined}
+                      className={cn(
+                        "inline-flex h-9 items-center whitespace-nowrap rounded-full px-3.5 text-[13px] font-medium transition-colors sm:px-4",
+                        q.range === key ? "bg-accent text-[var(--accent-contrast)] shadow-sm" : "text-muted hover:text-fg",
+                      )}
+                    >
+                      <span className="sm:hidden">{r.short}</span>
+                      <span className="hidden sm:inline">{r.label}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
+            {activeFilters.length > 0 ? (
+              <ul aria-label="Active filters" className="flex flex-wrap items-center gap-2">
+                {activeFilters.map(([dim, value]) => (
+                  <li key={dim}>
+                    <Link
+                      href={statsHref(q, { unset: dim })}
+                      scroll={false}
+                      className="inline-flex h-9 items-center gap-1.5 rounded-full border border-accent/50 bg-accent/15 pl-3 pr-2 text-[13px] text-fg transition-colors hover:border-accent"
+                    >
+                      <span className="text-muted">{DIMENSIONS[dim].label}:</span>
+                      <span className="max-w-[12rem] truncate font-medium">{dimensionValueLabel(dim, value)}</span>
+                      <Icon name="x" size={14} className="text-muted" />
+                      <span className="sr-only">Remove filter</span>
+                    </Link>
+                  </li>
+                ))}
+                {activeFilters.length > 1 && (
+                  <li>
+                    <Link href={statsHref(q, { unset: "all" })} scroll={false} className="inline-flex h-9 items-center px-2 text-[13px] font-medium text-accent-ink hover:underline">
+                      Clear all
+                    </Link>
+                  </li>
+                )}
+              </ul>
+            ) : (
+              <p className="text-[13px] text-faint">Tip: click any row below to filter the whole dashboard.</p>
+            )}
+          </div>
         </Container>
       </section>
 
-      <Container className="space-y-6 pb-24 pt-10 sm:pt-14">
-        {stats ? (
-          <>
-            <section aria-label="Summary" className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-              <StatTile label="Visitors" value={num(stats.visitors)} note={`Last ${stats.days} ${stats.days === 1 ? "day" : "days"}`} />
-              <StatTile label="Pageviews" value={num(stats.pageviews)} note={`Last ${stats.days} ${stats.days === 1 ? "day" : "days"}`} />
-              <StatTile
-                label="Pages per visitor"
-                value={stats.visitors ? (stats.pageviews / stats.visitors).toFixed(1) : "–"}
-                note="Pageviews ÷ visitors"
-              />
-              <StatTile
-                label="Avg. daily visitors"
-                value={num(Math.round(stats.daily.reduce((s, d) => s + d.visitors, 0) / Math.max(stats.days, 1)))}
-                note="Unique per day"
-              />
-            </section>
-
-            <Card title="Daily visitors" subtitle={`Unique visitors per day (UTC), ${date(stats.since)} – ${date(stats.until)}`}>
-              <DailyChart days={stats.daily} />
-            </Card>
-
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-              <Card title="Top countries" subtitle="By visitors">
-                <BarList rows={stats.countries} />
-              </Card>
-              <Card title="Traffic sources" subtitle="Referring sites, by visitors">
-                <BarList rows={stats.referrers} />
-              </Card>
-              <Card title="Top pages" subtitle="By pageviews">
-                <BarList rows={stats.pages} metric="pageviews" mono />
-              </Card>
-              <Card title="Devices" subtitle="By visitors">
-                <BarList rows={stats.devices} />
-              </Card>
-            </div>
-
-            <p className="text-xs leading-relaxed text-faint">
-              Figures come straight from Vercel Web Analytics (production traffic only, no cookies). Visitors are
-              counted per day, so a person who returns on another day counts again. Data starts on {date(ANALYTICS_SINCE)},
-              when analytics was switched on. Last refreshed{" "}
-              {new Intl.DateTimeFormat("en-US", { timeZone: "UTC", dateStyle: "medium", timeStyle: "short" }).format(new Date(stats.fetchedAt))} UTC.
-            </p>
-          </>
-        ) : (
-          <div className="rounded-[var(--radius-card)] border border-dashed border-line-strong bg-surface px-6 py-14 text-center">
-            <h2 className="text-lg font-semibold">Traffic stats are temporarily unavailable</h2>
-            <p className="mt-1.5 text-sm text-muted">We couldn&apos;t load the latest numbers. Please check back shortly.</p>
-          </div>
-        )}
+      <Container className="space-y-4 pb-24 pt-8 sm:space-y-5 sm:pt-10">
+        {stats ? <Dashboard stats={stats} q={q} /> : <Unavailable />}
 
         <section
           aria-labelledby="advertise-heading"
-          className="theme-dark hero-glow mt-10 overflow-hidden rounded-2xl border border-line bg-bg px-6 py-10 text-center sm:px-10 sm:py-12"
+          className="hero-glow !mt-12 overflow-hidden rounded-2xl border border-line bg-surface px-6 py-10 text-center sm:px-10 sm:py-12"
         >
           <h2 id="advertise-heading" className="display text-[2rem] sm:text-[2.6rem]">
             Reach these <em className="accent">visitors</em>
@@ -123,47 +140,113 @@ export default async function StatsPage() {
           </div>
         </section>
       </Container>
-    </>
-  );
-}
-
-function StatTile({ label, value, note }: { label: string; value: string; note: string }) {
-  return (
-    <div className="rounded-[18px] border border-line bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-faint">{label}</p>
-      <p className="tabular mt-2 text-[2rem] font-semibold leading-none tracking-tight text-heading sm:text-[2.4rem]">{value}</p>
-      <p className="mt-2 text-xs text-muted">{note}</p>
     </div>
   );
 }
 
-function Card({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) {
+function Dashboard({ stats, q }: { stats: TrafficStats; q: StatsQuery }) {
+  const { totals, previous } = stats;
+  const periodLabel = q.range === "all" ? "since launch" : RANGES[q.range].label.toLowerCase();
+  const buckets = Math.max(stats.series.length, 1);
+  const avg = Math.round(stats.series.reduce((s, p) => s + p.visitors, 0) / buckets);
+
+  // Rows link to the same view with that value added as a filter; the active value links back out.
+  const tab = (id: Dimension, label: string, mono = false): PanelTab => ({
+    id,
+    label,
+    mono,
+    rows: stats.breakdowns[id].map((r) => {
+      const active = q.filters[id] === r.value;
+      return {
+        label: r.label,
+        visitors: r.visitors,
+        active,
+        href: r.other ? undefined : active ? statsHref(q, { unset: id }) : statsHref(q, { set: [id, r.value] }),
+      };
+    }),
+  });
+
   return (
-    <section className="rounded-[18px] border border-line bg-surface p-4 shadow-[var(--shadow-card)] sm:p-6">
-      <h2 className="text-[15px] font-semibold text-fg">{title}</h2>
-      <p className="mt-0.5 text-xs text-muted">{subtitle}</p>
-      <div className="mt-4">{children}</div>
-    </section>
+    <>
+      <section aria-label="Summary" className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+        <StatTile label="Visitors" value={num(totals.visitors)} delta={change(totals.visitors, previous?.visitors)} note={periodLabel} />
+        <StatTile label="Pageviews" value={num(totals.pageviews)} delta={change(totals.pageviews, previous?.pageviews)} note={periodLabel} />
+        <StatTile
+          label="Pages per visitor"
+          value={totals.visitors ? (totals.pageviews / totals.visitors).toFixed(1) : "–"}
+          note="Pageviews ÷ visitors"
+        />
+        <StatTile
+          label={stats.granularity === "hour" ? "Avg. visitors / hour" : "Avg. visitors / day"}
+          value={num(avg)}
+          note={stats.granularity === "hour" ? "Unique per hour" : "Unique per day"}
+        />
+      </section>
+
+      <section className="rounded-[18px] border border-line bg-surface p-4 sm:p-6">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h2 className="text-[15px] font-semibold text-fg">Traffic over time</h2>
+          <p className="text-xs text-muted">
+            {fmtDate(stats.since)} – {fmtDate(stats.until)}
+          </p>
+        </div>
+        <div className="mt-4">
+          <TrafficChart points={stats.series} granularity={stats.granularity} />
+        </div>
+      </section>
+
+      <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-2">
+        <BreakdownPanel tabs={[tab("requestPath", "Pages", true)]} />
+        <BreakdownPanel tabs={[tab("referrerHostname", "Referrers"), tab("utmSource", "UTM sources")]} />
+        <BreakdownPanel tabs={[tab("country", "Countries")]} />
+        <BreakdownPanel tabs={[tab("deviceType", "Devices"), tab("browserName", "Browsers"), tab("osName", "OS")]} />
+      </div>
+
+      <p className="text-xs leading-relaxed text-faint">
+        Figures come straight from Vercel Web Analytics (production traffic only, no cookies). Visitors are unique within
+        the selected period; changes compare with the period of the same length just before it. Data starts on{" "}
+        {fmtDate(`${ANALYTICS_SINCE}T00:00:00Z`)}, when analytics was switched on. Refreshed {fmtDate(stats.fetchedAt, true)} UTC
+        and cached for up to an hour.
+      </p>
+    </>
   );
 }
 
-/** Ranked list with a single-hue magnitude bar behind each row; values stay in text ink. */
-function BarList({ rows, metric = "visitors", mono = false }: { rows: Breakdown[]; metric?: "visitors" | "pageviews"; mono?: boolean }) {
-  if (rows.length === 0) return <p className="py-6 text-center text-sm text-muted">No data yet.</p>;
-  const max = Math.max(...rows.map((r) => r[metric]), 1);
+/** Percent change vs the previous period, or null when there is no comparable period. */
+function change(current: number, previous: number | undefined): number | null {
+  if (previous === undefined || previous === 0) return null;
+  return Math.round(((current - previous) / previous) * 100);
+}
+
+function StatTile({ label, value, note, delta = null }: { label: string; value: string; note: string; delta?: number | null }) {
   return (
-    <ul className="space-y-1.5">
-      {rows.map((r) => (
-        <li key={r.label} className="relative flex items-center justify-between gap-3 overflow-hidden rounded-md px-2.5 py-1.5">
+    <div className="relative overflow-hidden rounded-[18px] border border-line bg-surface p-4 sm:p-5">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-faint">{label}</p>
+      <p className="tabular mt-2 text-[2rem] font-semibold leading-none tracking-tight text-heading sm:text-[2.4rem]">{value}</p>
+      <p className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted">
+        {delta !== null && (
           <span
-            aria-hidden="true"
-            className="absolute inset-y-0 left-0 rounded-md bg-accent/15"
-            style={{ width: `${(r[metric] / max) * 100}%` }}
-          />
-          <span className={`relative min-w-0 truncate text-sm text-fg ${mono ? "font-mono text-[13px]" : ""}`}>{r.label}</span>
-          <span className="tabular relative shrink-0 text-sm font-medium text-fg">{num(r[metric])}</span>
-        </li>
-      ))}
-    </ul>
+            className={cn(
+              "tabular inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 font-medium",
+              delta >= 0 ? "bg-[#22c58b]/15 text-[#5fe0a8]" : "bg-danger/15 text-danger",
+            )}
+          >
+            <Icon name="arrow-up-right" size={11} className={cn(delta < 0 && "rotate-90")} />
+            {delta >= 0 ? "+" : ""}
+            {delta}%
+          </span>
+        )}
+        <span>{note}</span>
+      </p>
+    </div>
+  );
+}
+
+function Unavailable() {
+  return (
+    <div className="rounded-[18px] border border-dashed border-line-strong bg-surface px-6 py-14 text-center">
+      <h2 className="text-lg font-semibold">Traffic stats are temporarily unavailable</h2>
+      <p className="mt-1.5 text-sm text-muted">We couldn&apos;t load the latest numbers. Please check back shortly.</p>
+    </div>
   );
 }
