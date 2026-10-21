@@ -13,7 +13,8 @@ function publicConfig() {
   const key =
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
-    process.env.SUPABASE_ANON_KEY;
+    process.env.SUPABASE_ANON_KEY ||
+    process.env.SUPABASE_PUBLISHABLE_KEY;
   return url && key ? { url, key } : null;
 }
 
@@ -87,7 +88,8 @@ export async function requireAdmin(): Promise<SessionUser> {
 /** Service-role client for Storage uploads. Server-only; never sent to the browser. */
 export function storageAdmin(): SupabaseClient | null {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  // Legacy service-role JWT or the newer `sb_secret_…` key; both bypass RLS and stay server-side.
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY;
   if (!url || !key) return null;
   return createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
 }
