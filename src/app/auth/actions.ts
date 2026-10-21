@@ -12,8 +12,9 @@ import { recordFunnelEvent } from "@/lib/server/tracking";
 import { safeNext } from "@/lib/safe-next";
 
 /**
- * Email + password accounts on Supabase Auth. Supabase sends the confirmation
- * and reset emails; their links come back through /auth/callback.
+ * Accounts on Supabase Auth. Sign-in is with Google; email + password remains
+ * only as a fallback while the Google provider isn't switched on in Supabase.
+ * Provider redirects and email links come back through /auth/callback.
  */
 
 export type AuthState = {
@@ -53,6 +54,28 @@ async function afterAuth(next: string, user: { id: string; email?: string; email
 }
 
 const unavailable: AuthState = { error: "Accounts aren't available right now. Please try again later." };
+
+/** Starts Google sign-in (new and returning users alike) and comes back to `next`. */
+export async function signInWithGoogleAction(form: FormData): Promise<void> {
+  if (!authConfigured()) redirect("/login?error=unavailable");
+  const next = safeNext(form.get("next"));
+  const supabase = await supabaseServer();
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: { redirectTo: await callbackUrl(next), queryParams: { prompt: "select_account" } },
+  });
+  if (error || !data.url) {
+    console.error("[auth] google start failed:", error?.code ?? error?.status ?? "no url");
+    redirect("/login?error=google");
+  }
+  if (dbConfigured()) {
+    try {
+      const claim = await getSubmissionByClaim(await readClaimCookie());
+      await recordFunnelEvent("account_signup_started", { submissionId: claim && !claim.user_id ? claim.id : null, sessionId: await readFunnelSession() });
+    } catch {}
+  }
+  redirect(data.url);
+}
 
 export async function signUpAction(_prev: AuthState, form: FormData): Promise<AuthState> {
   if (!authConfigured()) return unavailable;

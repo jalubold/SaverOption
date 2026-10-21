@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { SignupForm } from "@/components/auth/auth-forms";
+import { GoogleButton, SignupForm } from "@/components/auth/auth-forms";
 import { AuthShell, AuthUnavailable } from "@/components/auth/auth-shell";
 import { readClaimCookie } from "@/lib/server/claim";
 import { dbConfigured } from "@/lib/server/db";
 import { getSubmissionByClaim } from "@/lib/server/submissions";
-import { authConfigured, getUser } from "@/lib/server/supabase";
+import { authConfigured, getUser, googleSignInEnabled } from "@/lib/server/supabase";
 import { safeNext } from "@/lib/safe-next";
 import { pageMetadata } from "@/lib/seo";
 
@@ -30,6 +30,7 @@ export default async function SignupPage(props: PageProps<"/signup">) {
     } catch {}
   }
   const loginHref = next === "/dashboard" ? "/login" : `/login?next=${encodeURIComponent(next)}`;
+  const google = await googleSignInEnabled();
 
   return (
     <AuthShell
@@ -48,15 +49,19 @@ export default async function SignupPage(props: PageProps<"/signup">) {
         )
       }
       aside={
+        google ? (
+          "Already have an account? The same button signs you in."
+        ) : (
         <>
           Already have an account?{" "}
           <Link href={loginHref} className="font-medium text-accent-ink underline-offset-2 hover:underline">
             Log in
           </Link>
         </>
+        )
       }
     >
-      {authConfigured() ? <SignupForm next={next} email={email} /> : <AuthUnavailable />}
+      {!authConfigured() ? <AuthUnavailable /> : google ? <GoogleButton next={next} /> : <SignupForm next={next} email={email} />}
     </AuthShell>
   );
 }

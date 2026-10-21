@@ -2,6 +2,7 @@ import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { formatCents, getPlan } from "@/config/listing-plans";
 import { TestModeBadge } from "@/components/advertiser/status-pill";
+import { GoogleButton } from "@/components/auth/auth-forms";
 import { StatusPoller } from "@/components/promote/status-poller";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, Container } from "@/components/ui/primitives";
@@ -9,7 +10,7 @@ import { isPaid } from "@/lib/listing-status";
 import { readClaimCookie } from "@/lib/server/claim";
 import { dbConfigured } from "@/lib/server/db";
 import { getForUser, getSubmissionByClaim, type SafeSubmission } from "@/lib/server/submissions";
-import { getUser } from "@/lib/server/supabase";
+import { getUser, googleSignInEnabled } from "@/lib/server/supabase";
 import { recordFunnelEvent } from "@/lib/server/tracking";
 import { pageMetadata } from "@/lib/seo";
 
@@ -31,6 +32,7 @@ export default async function PromoteSuccessPage(props: PageProps<"/promote/succ
   const { s } = await props.searchParams;
   const id = typeof s === "string" && UUID.test(s) ? s.toLowerCase() : null;
   const user = await getUser();
+  const google = await googleSignInEnabled();
 
   let sub: SafeSubmission | null = null;
   let owned = false;
@@ -56,7 +58,7 @@ export default async function PromoteSuccessPage(props: PageProps<"/promote/succ
       <section className="hero-glow min-h-[70vh] border-b border-line">
         <Container className="max-w-2xl py-14 sm:py-20">
           <div className="rounded-[20px] border border-line bg-surface p-6 shadow-[var(--shadow-card)] sm:p-8">
-            {sub ? <Status sub={sub} owned={owned} signedIn={Boolean(user)} /> : <Unknown signedIn={Boolean(user)} />}
+            {sub ? <Status sub={sub} owned={owned} signedIn={Boolean(user)} google={google} /> : <Unknown signedIn={Boolean(user)} />}
           </div>
         </Container>
       </section>
@@ -64,7 +66,7 @@ export default async function PromoteSuccessPage(props: PageProps<"/promote/succ
   );
 }
 
-function Status({ sub, owned, signedIn }: { sub: SafeSubmission; owned: boolean; signedIn: boolean }) {
+function Status({ sub, owned, signedIn, google }: { sub: SafeSubmission; owned: boolean; signedIn: boolean; google: boolean }) {
   const plan = getPlan(sub.plan);
   const summary = (
     <dl className="mt-6 divide-y divide-line rounded-[14px] border border-line bg-subtle text-sm">
@@ -105,6 +107,11 @@ function Status({ sub, owned, signedIn }: { sub: SafeSubmission; owned: boolean;
             <a href="/claim" className={buttonClass("primary", "lg", "w-full sm:flex-1")}>
               Add to my dashboard <Icon name="arrow-right" size={16} />
             </a>
+          ) : google ? (
+            <div className="w-full">
+              <GoogleButton next="/claim" />
+              <p className="mt-2 text-center text-xs text-faint">Creates your account, or signs you in if you already have one.</p>
+            </div>
           ) : (
             <>
               <Link href="/signup?next=/claim" className={buttonClass("primary", "lg", "w-full sm:flex-1")}>

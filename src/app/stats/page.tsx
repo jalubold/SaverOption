@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
+import { PromoteTrigger } from "@/components/promote/promote-modal";
 import { BreakdownPanel, type PanelTab } from "@/components/stats/breakdown-panel";
 import { TrafficChart } from "@/components/stats/daily-chart";
 import { Icon } from "@/components/ui/icon";
@@ -129,10 +130,10 @@ export default async function StatsPage(props: PageProps<"/stats">) {
             List your software deal or talk to us about sponsored placements and partnerships.
           </p>
           <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
-            <Link href="/promote" className={buttonClass("primary", "lg", "w-full sm:w-auto")}>
+            <PromoteTrigger className={buttonClass("primary", "lg", "w-full sm:w-auto")}>
               Promote your SaaS
               <Icon name="arrow-up-right" size={15} />
-            </Link>
+            </PromoteTrigger>
             <Link href="/partnerships" className={buttonClass("secondary", "lg", "w-full sm:w-auto")}>
               Partnerships
             </Link>

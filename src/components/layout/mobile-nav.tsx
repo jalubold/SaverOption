@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { PromoteTrigger } from "@/components/promote/promote-modal";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
 import { Icon } from "@/components/ui/icon";
@@ -56,14 +57,10 @@ export function MobileNav({ items }: { items: readonly { label: string; href: st
             ))}
           </ul>
           {/* The header CTA is hidden on phones, so the menu offers it instead. */}
-          <Link
-            href="/promote"
-            onClick={() => setOpen(false)}
-            className={buttonClass("primary", "md", "mt-2 w-full sm:hidden")}
-          >
+          <PromoteTrigger onOpen={() => setOpen(false)} className={buttonClass("primary", "md", "mt-2 w-full sm:hidden")}>
             Promote your SaaS
             <Icon name="arrow-up-right" size={14} />
-          </Link>
+          </PromoteTrigger>
         </nav>
       )}
     </div>

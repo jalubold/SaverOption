@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
+import { PromoteTrigger } from "@/components/promote/promote-modal";
 import { getPlan } from "@/config/listing-plans";
 import { DashboardShell, fmtDate, StatCard } from "@/components/advertiser/dashboard-shell";
 import { PaymentPill, StatusPill, TestModeBadge } from "@/components/advertiser/status-pill";
@@ -56,9 +57,9 @@ export default async function DashboardPage(props: PageProps<"/dashboard">) {
           <p className="mt-1 text-[15px] text-muted">Status, next steps and performance for everything you&apos;ve listed.</p>
         </div>
         {listings.length > 0 && (
-          <Link href="/promote?new=1" className={buttonClass("primary", "md")}>
+          <PromoteTrigger className={buttonClass("primary", "md")}>
             Submit a Listing <Icon name="arrow-right" size={15} />
-          </Link>
+          </PromoteTrigger>
         )}
       </div>
 
@@ -90,9 +91,9 @@ export default async function DashboardPage(props: PageProps<"/dashboard">) {
             List your product for a fixed period with a one-time payment. Already paid? Open the &ldquo;Manage your listing&rdquo; link in your
             receipt email to add it to this account.
           </p>
-          <Link href="/promote" className={buttonClass("primary", "lg", "mt-6")}>
+          <PromoteTrigger className={buttonClass("primary", "lg", "mt-6")}>
             Submit a Listing <Icon name="arrow-right" size={16} />
-          </Link>
+          </PromoteTrigger>
         </div>
       ) : (
         <>

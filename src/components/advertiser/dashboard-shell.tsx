@@ -45,9 +45,6 @@ export function DashboardShell({
           </nav>
           <div className="ml-auto flex min-w-0 items-center gap-2">
             <span className="hidden min-w-0 truncate text-[13px] text-faint sm:inline">{email}</span>
-            <Link href="/update-password" className={buttonClass("ghost", "sm")}>
-              Password
-            </Link>
             <form action="/auth/sign-out" method="post">
               <button type="submit" className={buttonClass("secondary", "sm")}>
                 <Icon name="log-out" size={14} /> Sign out

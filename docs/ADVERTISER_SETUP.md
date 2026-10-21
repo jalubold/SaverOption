@@ -4,7 +4,7 @@ Paid "Promote your SaaS" listings. A founder submits a product, pays once throug
 
 ## Advertiser flow
 
-1. **`/promote`**: the founder enters the product name, website, work email and an optional description. No account is needed.
+1. **"Promote your SaaS"** opens a one-screen popup (also available at `/promote`). The founder enters the product name, website, work email and an optional description, and picks a plan, with no account needed.
 2. **Plan**: 1 Month $9.99, 3 Months $19.99 or 1 Year $49.99, all one-time payments. An order summary is shown, then **Continue to Checkout — $X**.
 3. **Saving and checkout**:
    - The server saves the submission (`awaiting_payment`, keyed by an idempotency key from the tab).
@@ -17,7 +17,7 @@ Paid "Promote your SaaS" listings. A founder submits a product, pays once throug
    - Shows a pending poller until the webhook arrives.
    - When paid it shows "Your listing submission is received!" with **Create Account** / **Log in**.
 7. **Account**:
-   - Supabase email/password, with email confirmation and password reset.
+   - "Continue with Google" (Supabase Auth). It is one button for new and returning advertisers.
    - The paid submission is claimed with the single-use claim token: from the cookie, or from the "Manage your listing" button in the Lemon Squeezy receipt (`/claim?s=…&t=…`), which works on any device for 30 days after payment.
 8. **`/dashboard`**:
    - Summary counts.
@@ -55,8 +55,16 @@ Paid "Promote your SaaS" listings. A founder submits a product, pays once throug
      - `https://www.saveroption.com/auth/callback`
      - `https://*-aa-6e10.vercel.app/**` (previews)
      - `http://localhost:3000/auth/callback`
-4. **Authentication → Providers → Email**: keep **Confirm email** on.
-5. **Authentication → SMTP**: set up a custom SMTP sender (for example Resend). Supabase's built-in mailer only delivers to project members and is heavily rate-limited, so real advertisers won't get confirmation or reset emails without it.
+4. **Sign-in is with Google** (one button for new and returning advertisers; no confirmation or reset emails, so no SMTP setup is needed).
+   - Google Cloud Console → create a project.
+   - **Google Auth Platform → Branding**: app name "Saver Option", support email, authorized domain `saveroption.com`.
+   - **Audience**: External, then **Publish app**. The basic email and profile scopes don't need Google verification.
+   - **Clients → Create client → Web application**:
+     - Authorized JavaScript origin: `https://www.saveroption.com`
+     - Authorized redirect URI: the **Callback URL** shown on Supabase's Google provider page (`https://<project-ref>.supabase.co/auth/v1/callback`).
+   - Supabase → **Authentication → Sign In / Providers → Google**: enable it, paste the Client ID and Client Secret, then save.
+   - `/admin/setup` shows **Google sign-in ✓** once it's on. Until then, the login pages fall back to email and password.
+   - An existing email/password account with the same Gmail address is linked automatically, and keeps admin rights.
 
 ## 2. Environment variables (Vercel → Settings → Environment Variables)
 

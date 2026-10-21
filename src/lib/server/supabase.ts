@@ -41,6 +41,28 @@ export async function supabaseServer(): Promise<SupabaseClient> {
   });
 }
 
+let googleCache: { at: number; enabled: boolean } | null = null;
+
+/**
+ * Whether the Google provider is switched on in Supabase (public /auth/v1/settings).
+ * Until it is, the login pages fall back to email and password.
+ */
+export async function googleSignInEnabled(): Promise<boolean> {
+  const cfg = publicConfig();
+  if (!cfg) return false;
+  if (googleCache && Date.now() - googleCache.at < 60_000) return googleCache.enabled;
+  let enabled = false;
+  try {
+    const res = await fetch(`${cfg.url}/auth/v1/settings`, { headers: { apikey: cfg.key }, cache: "no-store", signal: AbortSignal.timeout(5_000) });
+    const body = (await res.json()) as { external?: { google?: boolean } };
+    enabled = res.ok && body.external?.google === true;
+  } catch {
+    enabled = false;
+  }
+  googleCache = { at: Date.now(), enabled };
+  return enabled;
+}
+
 export interface SessionUser {
   id: string;
   email: string;

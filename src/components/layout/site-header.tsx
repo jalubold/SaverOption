@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PromoteTrigger } from "@/components/promote/promote-modal";
 import { mainNav } from "@/config/site";
 import { Logo } from "@/components/brand/logo";
 import { MobileNav } from "@/components/layout/mobile-nav";
@@ -27,10 +28,10 @@ export function SiteHeader() {
         </nav>
         <div className="ml-auto flex items-center gap-2">
           <HeaderSearch />
-          <Link href="/promote" className={buttonClass("primary", "sm", "hidden whitespace-nowrap sm:inline-flex")}>
+          <PromoteTrigger className={buttonClass("primary", "sm", "hidden whitespace-nowrap sm:inline-flex")}>
             Promote your SaaS
             <Icon name="arrow-up-right" size={13} />
-          </Link>
+          </PromoteTrigger>
           <MobileNav items={mainNav} />
         </div>
       </Container>

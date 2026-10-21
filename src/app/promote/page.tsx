@@ -1,16 +1,10 @@
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
-import { getPlan } from "@/config/listing-plans";
-import { PromoteFlow, type FlowMode, type ResumeData } from "@/components/promote/promote-flow";
+import { PromoteFlow } from "@/components/promote/promote-flow";
 import { TrafficPill } from "@/components/promote/traffic-pill";
 import { Icon } from "@/components/ui/icon";
-import { buttonClass, Container } from "@/components/ui/primitives";
-import { isPaid } from "@/lib/listing-status";
-import { readClaimCookie } from "@/lib/server/claim";
-import { dbConfigured } from "@/lib/server/db";
-import { checkoutMode } from "@/lib/server/lemonsqueezy";
-import { getSubmissionByClaim } from "@/lib/server/submissions";
-import { getUser, isAdmin } from "@/lib/server/supabase";
+import { Container } from "@/components/ui/primitives";
+import { loadPromoteContext } from "@/lib/server/promote-context";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -22,35 +16,14 @@ export const metadata = pageMetadata({
 const steps = [
   { icon: "pen" as const, title: "Add your product", body: "Name, website and email. No account needed yet." },
   { icon: "credit-card" as const, title: "Pay once", body: "Secure checkout by Lemon Squeezy. No subscription." },
-  { icon: "user" as const, title: "Finish your profile", body: "Create an account to add a logo, links and details." },
+  { icon: "user" as const, title: "Finish your profile", body: "Sign in with Google to add a logo, links and details." },
   { icon: "check" as const, title: "We review it", body: "Your listing goes live once it's approved." },
 ];
 
 export default async function PromotePage(props: PageProps<"/promote">) {
   const fresh = (await props.searchParams).new === "1";
-  const user = await getUser();
-  const mode = await checkoutMode({ admin: isAdmin(user) });
-  const flowMode: FlowMode = mode === "live" || mode === "test" ? mode : "closed";
-
   // Coming back from a cancelled checkout: pick up the saved submission this browser started.
-  let resume: ResumeData | null = null;
-  let paidId: string | null = null;
-  if (dbConfigured() && !fresh) {
-    try {
-      const sub = await getSubmissionByClaim(await readClaimCookie());
-      if (sub && isPaid(sub.payment_status)) paidId = sub.id;
-      else if (sub && !sub.user_id) {
-        resume = {
-          submissionId: sub.id,
-          idempotencyKey: sub.idempotency_key,
-          details: { productName: sub.product_name, website: sub.website, email: sub.contact_email, description: sub.description ?? "" },
-          planId: getPlan(sub.plan)?.id ?? "3m",
-        };
-      }
-    } catch (err) {
-      console.error("[promote] resume lookup failed:", err instanceof Error ? err.message : err);
-    }
-  }
+  const ctx = await loadPromoteContext({ fresh });
 
   return (
     <div className="theme-dark bg-bg text-fg">
@@ -69,27 +42,9 @@ export default async function PromotePage(props: PageProps<"/promote">) {
           </div>
 
           <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1">
-            {paidId ? (
-              <div className="rounded-[20px] border border-line bg-surface p-5 sm:p-7">
-                <span className="icon-tile size-11">
-                  <Icon name="check" size={20} />
-                </span>
-                <h2 className="display mt-4 text-[1.9rem] sm:text-[2.2rem]">
-                  You&apos;ve already <em className="accent">paid</em>
-                </h2>
-                <p className="mt-2 text-sm leading-relaxed text-muted">
-                  Your listing submission is in. Create an account or log in to finish your listing profile.
-                </p>
-                <Link href={`/promote/success?s=${paidId}`} className={buttonClass("primary", "lg", "mt-6 w-full")}>
-                  Continue <Icon name="arrow-right" size={16} />
-                </Link>
-                <Link href="/promote?new=1" className="mt-4 block text-center text-sm font-medium text-accent-ink underline-offset-2 hover:underline">
-                  Submit another product
-                </Link>
-              </div>
-            ) : (
-              <PromoteFlow mode={flowMode} resume={resume} fresh={fresh} />
-            )}
+            <div className="rounded-[20px] border border-line bg-surface p-5 shadow-[var(--shadow-card)] sm:p-7">
+              <PromoteFlow mode={ctx.mode} resume={ctx.resume} paidId={ctx.paidId} fresh={fresh} heading={false} />
+            </div>
           </div>
 
           <div className="lg:col-start-1 lg:row-start-2">

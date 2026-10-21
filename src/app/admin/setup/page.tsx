@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { siteConfig } from "@/config/site";
 import { formatPlanPrice, listingPlans } from "@/config/listing-plans";
 import { DashboardShell, fmtDate, Panel } from "@/components/advertiser/dashboard-shell";
 import { ConnectLemonSqueezy } from "@/components/advertiser/setup-forms";
@@ -8,7 +7,7 @@ import { cn } from "@/components/ui/primitives";
 import { db, dbConfigured } from "@/lib/server/db";
 import { checkoutMode, liveCheckoutEnabled, lsApiKey, lsCatalog, webhookSecret } from "@/lib/server/lemonsqueezy";
 import { getSettings } from "@/lib/server/settings";
-import { authConfigured, requireAdmin, storageAdmin } from "@/lib/server/supabase";
+import { authConfigured, googleSignInEnabled, requireAdmin, storageAdmin } from "@/lib/server/supabase";
 import { pageMetadata } from "@/lib/seo";
 
 // The Connect action calls the Lemon Squeezy API several times; give it room beyond the default.
@@ -34,12 +33,13 @@ export default async function AdminSetupPage() {
       migrations = null;
     }
   }
-  const [catalog, secret, saved, visitorMode, adminMode] = await Promise.all([
+  const [catalog, secret, saved, visitorMode, adminMode, google] = await Promise.all([
     lsCatalog(),
     webhookSecret(),
     getSettings(),
     checkoutMode({ admin: false }),
     checkoutMode({ admin: true }),
+    googleSignInEnabled(),
   ]);
   const hasKey = Boolean(lsApiKey());
   const variantsOk = listingPlans.every((p) => catalog.variants[p.id]);
@@ -66,9 +66,10 @@ export default async function AdminSetupPage() {
             <Check ok={authConfigured()} label="Accounts (Supabase Auth)" hint="Set by the Supabase integration." />
             <Check ok={storageAdmin() !== null} label="Logo uploads (Storage)" hint="Needs SUPABASE_SERVICE_ROLE_KEY (set by the integration)." />
             <Check
-              ok={null}
-              label="Email delivery"
-              hint={`Supabase's built-in mailer only reaches your own team. Before launch, connect an SMTP sender (e.g. Resend) and set Site URL to ${siteConfig.url}.`}
+              ok={google}
+              label="Google sign-in"
+              detail={google ? "Advertisers sign in with Google; no emails needed." : undefined}
+              hint="Supabase → Authentication → Sign In / Providers → Google: turn it on and paste the Client ID and Secret from Google Cloud. Until then, login falls back to email and password."
             />
           </ul>
         </Panel>

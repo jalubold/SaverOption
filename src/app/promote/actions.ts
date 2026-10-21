@@ -1,6 +1,7 @@
 "use server";
 
 import { getPlan } from "@/config/listing-plans";
+import type { PromoteContext } from "@/components/promote/flow-types";
 import { buildListingEmail } from "@/components/promote/submission";
 import { normalizeWebsite, validateDetails, type PromoteDetails, type PromoteErrors } from "@/components/promote/validation";
 import { CLAIM_TTL_DAYS, claimTokenMatches, newClaimToken, readClaimCookie, writeClaimCookie } from "@/lib/server/claim";
@@ -9,6 +10,7 @@ import { ensureFunnelSession } from "@/lib/server/funnel-session";
 import { checkoutMode, createCheckout, LemonSqueezyError } from "@/lib/server/lemonsqueezy";
 import { requestOrigin } from "@/lib/server/origin";
 import { recordCheckout, reusableCheckout, setClaimToken, upsertPendingSubmission } from "@/lib/server/submissions";
+import { loadPromoteContext } from "@/lib/server/promote-context";
 import { getUser, isAdmin } from "@/lib/server/supabase";
 import { recordFunnelEvent } from "@/lib/server/tracking";
 
@@ -115,4 +117,9 @@ export async function startCheckout(input: {
           : "Something went wrong saving your submission. Please try again.",
     };
   }
+}
+
+/** Called when the promote popup opens: checkout mode for this visitor and any submission to resume. */
+export async function getPromoteContext(): Promise<PromoteContext> {
+  return loadPromoteContext();
 }
