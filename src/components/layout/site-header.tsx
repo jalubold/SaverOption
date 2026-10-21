@@ -2,7 +2,6 @@ import Link from "next/link";
 import { mainNav } from "@/config/site";
 import { Logo } from "@/components/brand/logo";
 import { MobileNav } from "@/components/layout/mobile-nav";
-import { PromoteSaasTrigger } from "@/components/promote/promote-saas";
 import { HeaderSearch } from "@/components/search/header-search";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, Container } from "@/components/ui/primitives";
@@ -28,10 +27,10 @@ export function SiteHeader() {
         </nav>
         <div className="ml-auto flex items-center gap-2">
           <HeaderSearch />
-          <PromoteSaasTrigger className={buttonClass("primary", "sm", "hidden whitespace-nowrap sm:inline-flex")}>
+          <Link href="/promote" className={buttonClass("primary", "sm", "hidden whitespace-nowrap sm:inline-flex")}>
             Promote your SaaS
             <Icon name="arrow-up-right" size={13} />
-          </PromoteSaasTrigger>
+          </Link>
           <MobileNav items={mainNav} />
         </div>
       </Container>

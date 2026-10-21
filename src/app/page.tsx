@@ -5,6 +5,7 @@ import { CategoryChips } from "@/components/categories/category-links";
 import { NewsletterSection } from "@/components/newsletter/newsletter-section";
 import { OfferGrid } from "@/components/offers/offer-card";
 import { OfferRow } from "@/components/offers/offer-row";
+import { SponsoredStrip } from "@/components/listings/sponsored-strip";
 import { VisitorsToday } from "@/components/analytics/visitors-today";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, Container, Eyebrow, SectionHeading } from "@/components/ui/primitives";
@@ -186,6 +187,9 @@ export default async function HomePage() {
           />
           <AudienceGrid audiences={audiences} />
         </section>
+
+        {/* ── Sponsored (only when live paid listings exist) ───────── */}
+        <SponsoredStrip />
 
         {/* ── Recently added ───────────────────────────────────────── */}
         <section aria-labelledby="recent-heading">

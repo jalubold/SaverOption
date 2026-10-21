@@ -1,11 +1,10 @@
 import { siteConfig } from "@/config/site";
-import type { ListingPlan } from "@/config/listing-plans";
+import { formatPlanPrice, type ListingPlan } from "@/config/listing-plans";
 import { normalizeWebsite, type PromoteDetails } from "@/components/promote/validation";
 
 /**
- * Temporary manual submission: the listing request is composed as an email the
- * founder sends from their own email app. Nothing is sent from the site.
- * Replace this module with a checkout call once online payments are available.
+ * Email fallback while online checkout is closed (or not configured): the listing
+ * request is composed as an email the founder sends from their own email app.
  */
 
 export interface ListingEmail {
@@ -16,11 +15,7 @@ export interface ListingEmail {
   href: string;
 }
 
-export function formatPlanPrice(plan: ListingPlan): string {
-  return new Intl.NumberFormat("en-US", { style: "currency", currency: plan.currency, maximumFractionDigits: 0 }).format(plan.price);
-}
-
-export function buildListingEmail(details: PromoteDetails, plan: ListingPlan): ListingEmail {
+export function buildListingEmail(details: PromoteDetails, plan: ListingPlan, reference?: string): ListingEmail {
   const to = siteConfig.listingsEmail;
   const subject = `${siteConfig.name} — SaaS Deal Listing Submission`;
   const website = normalizeWebsite(details.website) ?? details.website.trim();
@@ -33,6 +28,8 @@ export function buildListingEmail(details: PromoteDetails, plan: ListingPlan): L
     `- Product Name: ${details.productName.trim()}`,
     `- Product Website: ${website}`,
     `- Contact Email: ${details.email.trim()}`,
+    ...(details.description?.trim() ? [`- Description: ${details.description.trim()}`] : []),
+    ...(reference ? [`- Submission reference: ${reference}`] : []),
     "",
     "Selected Listing Plan",
     `- Plan: ${plan.name} (${plan.days}-day listing)`,

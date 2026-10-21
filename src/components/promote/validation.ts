@@ -1,13 +1,17 @@
-/** Basic details collected in the first step of the "Promote your SaaS" modal. */
+/** Essential details collected before checkout. Shared by the browser form and the server. */
 export interface PromoteDetails {
   productName: string;
   website: string;
   email: string;
+  /** Optional short description. */
+  description: string;
 }
 
 export type PromoteErrors = Partial<Record<keyof PromoteDetails, string>>;
 
-export const emptyDetails: PromoteDetails = { productName: "", website: "", email: "" };
+export const emptyDetails: PromoteDetails = { productName: "", website: "", email: "", description: "" };
+
+export const DESCRIPTION_MAX = 600;
 
 /** Accepts "example.com" as well as full URLs; returns null when it isn't a public http(s) address. */
 export function normalizeWebsite(value: string): string | null {
@@ -38,7 +42,9 @@ export function validateDetails(d: PromoteDetails): PromoteErrors {
 
   const email = d.email.trim();
   if (!email) errors.email = "Enter your work email.";
-  else if (!EMAIL_RE.test(email)) errors.email = "Enter a valid email address, like you@company.com.";
+  else if (!EMAIL_RE.test(email) || email.length > 254) errors.email = "Enter a valid email address, like you@company.com.";
+
+  if ((d.description ?? "").trim().length > DESCRIPTION_MAX) errors.description = `Keep the description under ${DESCRIPTION_MAX} characters.`;
 
   return errors;
 }

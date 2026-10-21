@@ -15,7 +15,17 @@ type GlyphName =
   | "shield"
   | "alert"
   | "mail"
-  | "calendar";
+  | "calendar"
+  | "credit-card"
+  | "lock"
+  | "log-out"
+  | "chart"
+  | "link"
+  | "image"
+  | "eye"
+  | "pointer"
+  | "refresh"
+  | "grid";
 
 /** 24×24, 1.75 stroke line icons. Inline so there's no icon dependency. */
 const paths: Record<GlyphName, React.ReactNode> = {
@@ -154,6 +164,64 @@ const paths: Record<GlyphName, React.ReactNode> = {
     <>
       <rect x="3.5" y="5" width="17" height="15" rx="2" />
       <path d="M3.5 10h17M8 3v4M16 3v4" />
+    </>
+  ),
+  "credit-card": (
+    <>
+      <rect x="2.5" y="5" width="19" height="14" rx="2" />
+      <path d="M2.5 10h19M6.5 15h4" />
+    </>
+  ),
+  lock: (
+    <>
+      <rect x="4.5" y="10.5" width="15" height="10" rx="2" />
+      <path d="M8 10.5V7a4 4 0 0 1 8 0v3.5" />
+    </>
+  ),
+  "log-out": (
+    <>
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+      <path d="m16 17 5-5-5-5M21 12H9" />
+    </>
+  ),
+  chart: <path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />,
+  link: (
+    <>
+      <path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7" />
+      <path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7" />
+    </>
+  ),
+  image: (
+    <>
+      <rect x="3" y="3" width="18" height="18" rx="2" />
+      <circle cx="9" cy="9" r="2" />
+      <path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21" />
+    </>
+  ),
+  eye: (
+    <>
+      <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z" />
+      <circle cx="12" cy="12" r="3" />
+    </>
+  ),
+  pointer: (
+    <>
+      <path d="m4 4 7 17 2.5-7.5L21 11 4 4Z" />
+      <path d="m13.5 13.5 5 5" />
+    </>
+  ),
+  refresh: (
+    <>
+      <path d="M21 12a9 9 0 0 1-15.5 6.2L3 16M3 12a9 9 0 0 1 15.5-6.2L21 8" />
+      <path d="M21 3v5h-5M3 21v-5h5" />
+    </>
+  ),
+  grid: (
+    <>
+      <rect x="3" y="3" width="7" height="7" rx="1.5" />
+      <rect x="14" y="3" width="7" height="7" rx="1.5" />
+      <rect x="3" y="14" width="7" height="7" rx="1.5" />
+      <rect x="14" y="14" width="7" height="7" rx="1.5" />
     </>
   ),
 };
