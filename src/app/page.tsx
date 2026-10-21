@@ -6,7 +6,6 @@ import { NewsletterSection } from "@/components/newsletter/newsletter-section";
 import { OfferGrid } from "@/components/offers/offer-card";
 import { OfferRow } from "@/components/offers/offer-row";
 import { VisitorsToday } from "@/components/analytics/visitors-today";
-import { SearchBox } from "@/components/search/search-box";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, Container, Eyebrow, SectionHeading } from "@/components/ui/primitives";
 import { formatDate } from "@/lib/format";
@@ -95,8 +94,7 @@ export default async function HomePage() {
                 Discounts, free credits, startup perks and student offers on SaaS, AI and developer tools. Each one links
                 to the original provider, with terms and end dates up front.
               </p>
-              <SearchBox className="mt-8 max-w-2xl" />
-              <div className="mt-6">
+              <div className="mt-8">
                 <p className="mb-2.5 text-xs font-medium uppercase tracking-wider text-faint">Popular categories</p>
                 <CategoryChips categories={chips} />
               </div>
