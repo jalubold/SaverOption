@@ -76,7 +76,7 @@ export async function startCheckout(input: {
       ? { token: cookie.token, hash: sub.claim_token_hash!, expiresAt: new Date(Date.now() + CLAIM_TTL_DAYS * 86400_000) }
       : newClaimToken();
 
-    const mode = checkoutMode({ admin: isAdmin(await getUser()) });
+    const mode = await checkoutMode({ admin: isAdmin(await getUser()) });
     if (mode !== "live" && mode !== "test") {
       await setClaimToken(sub.id, claim);
       await writeClaimCookie(sub.id, claim.token);

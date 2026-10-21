@@ -29,7 +29,7 @@ const steps = [
 export default async function PromotePage(props: PageProps<"/promote">) {
   const fresh = (await props.searchParams).new === "1";
   const user = await getUser();
-  const mode = checkoutMode({ admin: isAdmin(user) });
+  const mode = await checkoutMode({ admin: isAdmin(user) });
   const flowMode: FlowMode = mode === "live" || mode === "test" ? mode : "closed";
 
   // Coming back from a cancelled checkout: pick up the saved submission this browser started.

@@ -2,7 +2,7 @@ import { getPlan, planPriceCents, type ListingPlan, type ListingPlanId } from "@
 import { isPaid, type PaymentStatus, type ReviewStatus } from "@/lib/listing-status";
 import { claimTokenMatches } from "@/lib/server/claim";
 import { db } from "@/lib/server/db";
-import { planForVariant, storeId, type OrderEvent, type OrderStatus } from "@/lib/server/lemonsqueezy";
+import { planForVariant, type LsCatalog, type OrderEvent, type OrderStatus } from "@/lib/server/lemonsqueezy";
 import { recordFunnelEvent } from "@/lib/server/tracking";
 
 /**
@@ -175,15 +175,15 @@ export type WebhookOutcome =
  * Lemon Squeezy's retry is processed, while a repeat of a processed delivery is
  * ignored. Orders are keyed by Lemon Squeezy's order id, so revenue can't double.
  */
-export async function applyOrderEvent(ev: OrderEvent, deliveryId: string): Promise<WebhookOutcome> {
+export async function applyOrderEvent(ev: OrderEvent, deliveryId: string, catalog: LsCatalog): Promise<WebhookOutcome> {
   return db().begin(async (tx) => {
     const fresh = await tx`insert into webhook_events (id, event_name) values (${deliveryId}, ${ev.eventName.slice(0, 60)})
       on conflict (id) do nothing returning id`;
     if (fresh.length === 0) return { result: "duplicate" } as const;
 
-    if (ev.storeId !== storeId()) return { result: "ignored", reason: "other store" } as const;
+    if (ev.storeId !== catalog.storeId) return { result: "ignored", reason: "other store" } as const;
     if (!ev.submissionId) return { result: "ignored", reason: "no submission_id in custom data" } as const;
-    const plan = planForVariant(ev.variantId);
+    const plan = planForVariant(catalog, ev.variantId);
     if (!plan) return { result: "ignored", reason: "unknown variant" } as const;
 
     const [sub] = await tx<Submission[]>`select * from submissions where id = ${ev.submissionId} for update`;

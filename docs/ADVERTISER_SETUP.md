@@ -36,8 +36,12 @@ Paid "Promote your SaaS" listings. A founder submits a product, pays once throug
 
 ## 1. Supabase
 
-1. Create a Supabase project, or add it from **Vercel → Storage → Supabase** so the env vars are set for you.
-2. **SQL editor** → run `supabase/migrations/20261021000000_advertiser_listings.sql`. It is safe to run again.
+1. Add it from **Vercel → project → Storage → Supabase → Connect**. This sets the env vars for you.
+2. **Tables are created automatically.** `npm run build` runs `scripts/migrate.mjs` first.
+   - It applies each file in `supabase/migrations/` once, records it in `schema_migrations`, and uses a lock so parallel builds don't collide.
+   - A failing migration fails the build, so the previous deployment stays live.
+   - Without a database configured it does nothing.
+   - To run it by hand: `npm run db:migrate`.
    - Tables: `advertiser_profiles`, `submissions`, `orders`, `webhook_events`, `listing_events`, `funnel_events`, with check constraints and indexes.
    - **RLS on every table.**
      - Advertisers may only `select` their own profile, submissions and orders.
@@ -63,12 +67,10 @@ Paid "Promote your SaaS" listings. A founder submits a product, pays once throug
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | public | Set by the integration. Used for Auth only. `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` also works. |
 | `SUPABASE_SERVICE_ROLE_KEY` | **server only** | Logo uploads. Never prefix with `NEXT_PUBLIC_`. |
 | `ADMIN_EMAILS` | server | Comma-separated. The account must have a confirmed email. |
-| `LEMONSQUEEZY_API_KEY` | **server only** | Lemon Squeezy → Settings → API. |
-| `LEMONSQUEEZY_STORE_ID` | server | Numeric store ID. |
-| `LEMONSQUEEZY_WEBHOOK_SECRET` | **server only** | The signing secret you type when creating the webhook. |
-| `LEMONSQUEEZY_VARIANT_ID_MONTHLY` | server | Variant ID of the $9 plan. |
-| `LEMONSQUEEZY_VARIANT_ID_QUARTERLY` | server | Variant ID of the $19 plan. |
-| `LEMONSQUEEZY_VARIANT_ID_YEARLY` | server | Variant ID of the $49 plan. |
+| `LEMONSQUEEZY_API_KEY` | **server only** | Lemon Squeezy → Settings → API. **The only Lemon Squeezy variable you need.** |
+| `LEMONSQUEEZY_STORE_ID` | server | Optional. Found automatically by **/admin/setup → Connect**; set it only if the key can see several stores. |
+| `LEMONSQUEEZY_WEBHOOK_SECRET` | **server only** | Optional. Generated and registered automatically by Connect. |
+| `LEMONSQUEEZY_VARIANT_ID_MONTHLY` / `_QUARTERLY` / `_YEARLY` | server | Optional. Matched automatically by price ($9 / $19 / $49). Env values override what Connect found. |
 | `LEMONSQUEEZY_LIVE_CHECKOUT_ENABLED` | server | Leave it `false` until Lemon Squeezy approves in writing. |
 
 Redeploy after changing variables. The `NEXT_PUBLIC_*` values are read at build time.
@@ -90,13 +92,15 @@ Redeploy after changing variables. The `NEXT_PUBLIC_*` values are read at build 
    - "3 Months": $19
    - "1 Year": $49
 
-   Keep these prices identical to `src/config/listing-plans.ts`. Copy each variant ID into the matching env var.
-3. **Settings → Webhooks → +**:
-   - URL: `https://www.saveroption.com/api/webhooks/lemonsqueezy`. For a preview, use that deployment's URL with the same path; Vercel Deployment Protection must allow it.
-   - Signing secret: a long random string, also set as `LEMONSQUEEZY_WEBHOOK_SECRET`.
-   - Events: **`order_created`** and **`order_refunded`**.
-   - Test-mode and live-mode webhooks are configured separately.
-4. Refunds are made in Lemon Squeezy. The `order_refunded` webhook updates the status, and a refunded listing disappears from public pages. There are no automatic refunds.
+   Keep these prices identical to `src/config/listing-plans.ts`, and publish the product. The Lemon Squeezy API can't create products, so this step is manual.
+3. **Settings → API → create a key** (test mode), and add it in Vercel as `LEMONSQUEEZY_API_KEY`, type Sensitive. Redeploy.
+4. Log in at **`/admin/setup`** with an `ADMIN_EMAILS` account and click **Connect Lemon Squeezy automatically**. It:
+   - finds the store;
+   - matches the three variants by price;
+   - creates (or updates) the webhook `https://www.saveroption.com/api/webhooks/lemonsqueezy` for `order_created` and `order_refunded`, with a generated signing secret.
+
+   Everything is saved in the server-only `app_settings` table. Run it again after switching to a live key; the same secret is reused.
+5. Refunds are made in Lemon Squeezy. The `order_refunded` webhook updates the status, and a refunded listing disappears from public pages. There are no automatic refunds.
 
 > **Blocker:** Lemon Squeezy's prohibited-products list includes advertising on websites, newsletters and social media, and marketplaces. Ask their support whether paid SaaS directory listings are allowed and get the answer in writing before setting `LEMONSQUEEZY_LIVE_CHECKOUT_ENABLED=true`. If they decline, only `lemonsqueezy.ts` and the webhook route need replacing (for example with Stripe or Paddle). Submissions, claims, dashboard, admin and analytics stay as they are.
 

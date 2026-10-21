@@ -1,5 +1,6 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { getPlan, listingPlans, type ListingPlan, type ListingPlanId } from "@/config/listing-plans";
+import { getSettings } from "@/lib/server/settings";
 
 /**
  * Lemon Squeezy integration, isolated behind three functions (checkoutMode,
@@ -11,21 +12,51 @@ import { getPlan, listingPlans, type ListingPlan, type ListingPlanId } from "@/c
  * in writing (their prohibited-products list includes website advertising).
  */
 
-const API = "https://api.lemonsqueezy.com/v1";
+export const LS_API = (process.env.LEMONSQUEEZY_API_URL?.replace(/\/$/, "") || "https://api.lemonsqueezy.com/v1") as string;
 
-function config() {
-  const apiKey = process.env.LEMONSQUEEZY_API_KEY?.trim();
-  const storeId = process.env.LEMONSQUEEZY_STORE_ID?.trim();
-  const variants = Object.fromEntries(listingPlans.map((p) => [p.id, process.env[p.variantEnv]?.trim() || null])) as Record<
-    ListingPlanId,
-    string | null
-  >;
-  if (!apiKey || !storeId || Object.values(variants).some((v) => !v)) return null;
+export interface LsCatalog {
+  storeId: string | null;
+  variants: Record<ListingPlanId, string | null>;
+}
+export interface LsConfig {
+  apiKey: string;
+  storeId: string;
+  variants: Record<ListingPlanId, string>;
+}
+
+/**
+ * Store and variant IDs: from env vars when set, otherwise from what the admin
+ * "Connect Lemon Squeezy" button found and saved (see lemonsqueezy-setup.ts).
+ */
+export async function lsCatalog(): Promise<LsCatalog> {
+  const saved = await getSettings();
+  return {
+    storeId: process.env.LEMONSQUEEZY_STORE_ID?.trim() || saved.get("ls_store_id") || null,
+    variants: Object.fromEntries(
+      listingPlans.map((p) => [p.id, process.env[p.variantEnv]?.trim() || saved.get(`ls_variant_${p.id}`) || null]),
+    ) as Record<ListingPlanId, string | null>,
+  };
+}
+
+export function lsApiKey(): string | null {
+  return process.env.LEMONSQUEEZY_API_KEY?.trim() || null;
+}
+
+/** Everything needed to create a checkout, or null if anything is missing. */
+export async function lsConfig(): Promise<LsConfig | null> {
+  const apiKey = lsApiKey();
+  if (!apiKey) return null;
+  const { storeId, variants } = await lsCatalog();
+  if (!storeId || Object.values(variants).some((v) => !v)) return null;
   return { apiKey, storeId, variants: variants as Record<ListingPlanId, string> };
 }
 
-export function webhookSecret(): string | null {
-  return process.env.LEMONSQUEEZY_WEBHOOK_SECRET?.trim() || null;
+export async function webhookSecret(): Promise<string | null> {
+  return process.env.LEMONSQUEEZY_WEBHOOK_SECRET?.trim() || (await getSettings()).get("ls_webhook_secret") || null;
+}
+
+export function liveCheckoutEnabled(): boolean {
+  return process.env.LEMONSQUEEZY_LIVE_CHECKOUT_ENABLED === "true";
 }
 
 export type CheckoutMode = "live" | "test" | "disabled" | "unconfigured";
@@ -36,26 +67,16 @@ export type CheckoutMode = "live" | "test" | "disabled" | "unconfigured";
  *  - test: Lemon Squeezy test mode — preview/development deployments, or admins on production
  *  - disabled: configured but not approved; the flow saves the submission and offers email instead
  */
-export function checkoutMode({ admin = false }: { admin?: boolean } = {}): CheckoutMode {
-  if (!config()) return "unconfigured";
-  if (process.env.LEMONSQUEEZY_LIVE_CHECKOUT_ENABLED === "true") return "live";
+export async function checkoutMode({ admin = false }: { admin?: boolean } = {}): Promise<CheckoutMode> {
+  if (!(await lsConfig())) return "unconfigured";
+  if (liveCheckoutEnabled()) return "live";
   if (process.env.VERCEL_ENV !== "production" || admin) return "test";
   return "disabled";
 }
 
-export function variantFor(plan: ListingPlan): string | null {
-  return config()?.variants[plan.id] ?? null;
-}
-
-export function planForVariant(variantId: string): ListingPlan | undefined {
-  const cfg = config();
-  if (!cfg) return undefined;
-  const id = (Object.keys(cfg.variants) as ListingPlanId[]).find((k) => cfg.variants[k] === variantId);
+export function planForVariant(catalog: LsCatalog, variantId: string): ListingPlan | undefined {
+  const id = (Object.keys(catalog.variants) as ListingPlanId[]).find((k) => catalog.variants[k] === variantId);
   return getPlan(id);
-}
-
-export function storeId(): string | null {
-  return config()?.storeId ?? null;
 }
 
 export class LemonSqueezyError extends Error {}
@@ -69,12 +90,12 @@ export async function createCheckout(opts: {
   redirectUrl: string;
   receiptLinkUrl: string;
 }): Promise<{ id: string; url: string; expiresAt: string }> {
-  const cfg = config();
+  const cfg = await lsConfig();
   if (!cfg) throw new LemonSqueezyError("Lemon Squeezy is not configured");
   const variantId = cfg.variants[opts.plan.id];
   const expiresAt = new Date(Date.now() + 24 * 3600_000).toISOString();
 
-  const res = await fetch(`${process.env.LEMONSQUEEZY_API_URL?.replace(/\/$/, "") || API}/checkouts`, {
+  const res = await fetch(`${LS_API}/checkouts`, {
     method: "POST",
     headers: {
       Accept: "application/vnd.api+json",

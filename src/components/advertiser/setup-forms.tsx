@@ -1,0 +1,24 @@
+"use client";
+
+import { useActionState } from "react";
+import { connectLemonSqueezyAction, type ConnectState } from "@/app/admin/setup/actions";
+import { FormMessage, SubmitButton } from "@/components/ui/form";
+import { Icon } from "@/components/ui/icon";
+
+export function ConnectLemonSqueezy({ connected, disabled }: { connected: boolean; disabled: boolean }) {
+  const [state, action, pending] = useActionState<ConnectState>(connectLemonSqueezyAction, null);
+  return (
+    <form action={action} className="space-y-3">
+      <SubmitButton pending={pending} pendingLabel="Connecting…" size="md" disabled={disabled}>
+        <Icon name="refresh" size={15} /> {connected ? "Re-check and reconnect" : "Connect Lemon Squeezy automatically"}
+      </SubmitButton>
+      {state?.ok === false && <FormMessage tone="error">{state.error}</FormMessage>}
+      {state?.ok && (
+        <FormMessage tone="success">
+          Connected to {state.store.name}. Variants matched and webhook {state.webhook.created ? "created" : "updated"}
+          {state.webhook.testMode ? " (test mode)" : ""}.
+        </FormMessage>
+      )}
+    </form>
+  );
+}
