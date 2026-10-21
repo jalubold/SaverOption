@@ -65,7 +65,7 @@ export const siteConfig: SiteConfig = {
   partnershipsEmail: "jalubold@gmail.com",
   listingsEmail: "jalubold@gmail.com",
   social: [],
-  prelaunch: true,
+  prelaunch: false,
   newsletter: false,
 };
 
