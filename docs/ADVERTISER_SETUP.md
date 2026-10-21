@@ -108,7 +108,12 @@ Redeploy after changing variables. The `NEXT_PUBLIC_*` values are read at build 
    - creates (or updates) the webhook `https://www.saveroption.com/api/webhooks/lemonsqueezy` for `order_created` and `order_refunded`, with a generated signing secret.
 
    Everything is saved in the server-only `app_settings` table. Run it again after switching to a live key; the same secret is reused.
-5. Refunds are made in Lemon Squeezy. The `order_refunded` webhook updates the status, and a refunded listing disappears from public pages. There are no automatic refunds.
+5. Refunds are made in Lemon Squeezy (Orders → the order → Refund), following the policy on `/terms#refunds`:
+   - **Declined listing:** refund the full amount.
+   - **Cancelled before going live:** a partial refund of the amount minus Lemon Squeezy's processing fee. The site treats a partial refund as a cancellation, so the listing can't be published.
+   - **Live listing:** no refund.
+
+   The `order_refunded` webhook updates the status automatically. There are no automatic refunds.
 
 > **Blocker:** Lemon Squeezy's prohibited-products list includes advertising on websites, newsletters and social media, and marketplaces. Ask their support whether paid SaaS directory listings are allowed and get the answer in writing before setting `LEMONSQUEEZY_LIVE_CHECKOUT_ENABLED=true`. If they decline, only `lemonsqueezy.ts` and the webhook route need replacing (for example with Stripe or Paddle). Submissions, claims, dashboard, admin and analytics stay as they are.
 
