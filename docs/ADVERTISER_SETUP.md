@@ -5,7 +5,7 @@ Paid "Promote your SaaS" listings. A founder submits a product, pays once throug
 ## Advertiser flow
 
 1. **`/promote`**: the founder enters the product name, website, work email and an optional description. No account is needed.
-2. **Plan**: 1 Month $9, 3 Months $19 or 1 Year $49, all one-time payments. An order summary is shown, then **Continue to Checkout — $X**.
+2. **Plan**: 1 Month $9.99, 3 Months $19.99 or 1 Year $49.99, all one-time payments. An order summary is shown, then **Continue to Checkout — $X**.
 3. **Saving and checkout**:
    - The server saves the submission (`awaiting_payment`, keyed by an idempotency key from the tab).
    - It sets an httpOnly claim cookie.
@@ -70,7 +70,7 @@ Paid "Promote your SaaS" listings. A founder submits a product, pays once throug
 | `LEMONSQUEEZY_API_KEY` | **server only** | Lemon Squeezy → Settings → API. **The only Lemon Squeezy variable you need.** |
 | `LEMONSQUEEZY_STORE_ID` | server | Optional. Found automatically by **/admin/setup → Connect**; set it only if the key can see several stores. |
 | `LEMONSQUEEZY_WEBHOOK_SECRET` | **server only** | Optional. Generated and registered automatically by Connect. |
-| `LEMONSQUEEZY_VARIANT_ID_MONTHLY` / `_QUARTERLY` / `_YEARLY` | server | Optional. Matched automatically by price ($9 / $19 / $49). Env values override what Connect found. |
+| `LEMONSQUEEZY_VARIANT_ID_MONTHLY` / `_QUARTERLY` / `_YEARLY` | server | Optional. Matched automatically by price ($9.99 / $19.99 / $49.99). Env values override what Connect found. |
 | `LEMONSQUEEZY_LIVE_CHECKOUT_ENABLED` | server | Leave it `false` until Lemon Squeezy approves in writing. |
 
 Redeploy after changing variables. The `NEXT_PUBLIC_*` values are read at build time.
@@ -88,9 +88,9 @@ Redeploy after changing variables. The `NEXT_PUBLIC_*` values are read at build 
 
 1. Use **Test mode** (toggle at the bottom left of the dashboard) for everything until approval.
 2. **Products → New product** "Saver Option listing", with three **single payment** variants (not subscriptions):
-   - "1 Month": $9
-   - "3 Months": $19
-   - "1 Year": $49
+   - "1 Month": $9.99
+   - "3 Months": $19.99
+   - "1 Year": $49.99
 
    Keep these prices identical to `src/config/listing-plans.ts`, and publish the product. The Lemon Squeezy API can't create products, so this step is manual.
 3. **Settings → API → create a key** (test mode), and add it in Vercel as `LEMONSQUEEZY_API_KEY`, type Sensitive. Redeploy.

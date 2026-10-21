@@ -1,5 +1,5 @@
 import { randomBytes } from "node:crypto";
-import { listingPlans, type ListingPlanId } from "@/config/listing-plans";
+import { formatPlanPrice, listingPlans, type ListingPlanId } from "@/config/listing-plans";
 import { liveCheckoutEnabled, lsApiKey, LS_API } from "@/lib/server/lemonsqueezy";
 import { getSettings, saveSettings } from "@/lib/server/settings";
 
@@ -10,7 +10,7 @@ import { getSettings, saveSettings } from "@/lib/server/settings";
  * results are saved in app_settings; env vars, when set, still win.
  *
  * Products and variants can't be created through the Lemon Squeezy API, so those
- * must exist first (one product with $9 / $19 / $49 single-payment variants).
+ * must exist first (one product with single-payment variants at the plan prices).
  */
 
 type Resource<A> = { id: string; attributes: A };
@@ -21,6 +21,8 @@ type WebhookAttrs = { url: string; events: string[]; test_mode: boolean; store_i
 
 export const WEBHOOK_EVENTS = ["order_created", "order_refunded"];
 
+const PRICES = listingPlans.map((p) => formatPlanPrice(p)).join(", ").replace(/, ([^,]*)$/, " and $1");
+
 export type SetupResult =
   | {
       ok: true;
@@ -28,9 +30,17 @@ export type SetupResult =
       variants: Record<ListingPlanId, { id: string; name: string; product: string; price: number }>;
       webhook: { id: string; url: string; created: boolean; testMode: boolean };
     }
-  | { ok: false; error: string };
+  /** `details` lists what was found in Lemon Squeezy (names and prices only), to show what's missing. */
+  | { ok: false; error: string; details?: string[] };
 
-class SetupError extends Error {}
+class SetupError extends Error {
+  constructor(
+    message: string,
+    readonly details?: string[],
+  ) {
+    super(message);
+  }
+}
 
 async function api<T>(apiKey: string, path: string, init?: { method: string; body: unknown }): Promise<T> {
   const res = await fetch(path.startsWith("http") ? path : `${LS_API}${path}`, {
@@ -77,10 +87,32 @@ export async function setupLemonSqueezy(origin: string): Promise<SetupResult> {
     }
 
     // 2. Variants: one-time, priced exactly like each plan.
-    const products = (await list<ProductAttrs>(apiKey, `/products?filter[store_id]=${store.id}`)).filter((p) => p.attributes.status === "published");
+    const currency = store.attributes.currency || "USD";
+    const money = (cents: number) => {
+      try {
+        return new Intl.NumberFormat("en-US", { style: "currency", currency }).format(cents / 100);
+      } catch {
+        return `${cents / 100} ${currency}`;
+      }
+    };
+    const products = await list<ProductAttrs>(apiKey, `/products?filter[store_id]=${store.id}`);
+    const inventory: string[] = [];
+    const drafts: string[] = []; // unpublished products that carry plan prices
     const candidates: { id: string; name: string; product: string; price: number; published: boolean; preferred: boolean }[] = [];
     for (const product of products) {
       const variants = await list<VariantAttrs>(apiKey, `/variants?filter[product_id]=${product.id}`);
+      const shown = variants.filter((v) => v.attributes.status !== "pending" || variants.length === 1);
+      inventory.push(
+        `"${product.attributes.name}" (${product.attributes.status}): ${
+          shown
+            .map((v) => `${v.attributes.name} ${money(v.attributes.price)} ${v.attributes.is_subscription ? "subscription" : "one-time"}${v.attributes.status === "draft" ? " (draft)" : ""}`)
+            .join(", ") || "no variants"
+        }`,
+      );
+      if (product.attributes.status !== "published") {
+        if (variants.some((v) => listingPlans.some((p) => p.priceCents === v.attributes.price))) drafts.push(product.attributes.name);
+        continue;
+      }
       for (const v of variants) {
         if (v.attributes.is_subscription || v.attributes.status === "draft") continue;
         candidates.push({
@@ -97,15 +129,25 @@ export async function setupLemonSqueezy(origin: string): Promise<SetupResult> {
     const missing: string[] = [];
     for (const plan of listingPlans) {
       const match = candidates
-        .filter((c) => c.price === plan.price * 100)
+        .filter((c) => c.price === plan.priceCents)
         .sort((a, b) => Number(b.preferred) - Number(a.preferred) || Number(b.published) - Number(a.published))[0];
       if (match) variants[plan.id] = { id: match.id, name: match.name, product: match.product, price: match.price };
-      else missing.push(`${plan.name} ($${plan.price})`);
+      else missing.push(`${plan.name} (${formatPlanPrice(plan)})`);
     }
     if (missing.length) {
-      throw new SetupError(
-        `No published one-time variant priced for: ${missing.join(", ")}. In Lemon Squeezy, create a product (e.g. "Saver Option listing") with single-payment variants $9, $19 and $49, publish it, then try again.`,
-      );
+      const details = [`Store "${store.attributes.name}", currency ${currency}`, ...(inventory.length ? inventory.slice(0, 12) : ["No products"])];
+      let hint: string;
+      if (currency !== "USD") {
+        hint = `Your Lemon Squeezy store is priced in ${currency}, but the plans are ${PRICES} in USD. Change the store currency to USD in Lemon Squeezy (Settings → Stores), then try again.`;
+      } else if (products.length === 0) {
+        hint =
+          "This API key can't see any products in your store. Lemon Squeezy keeps Test mode and live mode separate: create the product while Test mode is ON (or use an API key from the same mode as your products), then try again.";
+      } else if (drafts.length) {
+        hint = `"${drafts.join('", "')}" is still a draft. Publish it in Lemon Squeezy, then try again.`;
+      } else {
+        hint = `Couldn't find a published single-payment variant for: ${missing.join(", ")}. Give one product variants priced exactly ${PRICES} (single payment, not subscription), then try again.`;
+      }
+      throw new SetupError(hint, details);
     }
 
     // 3. Webhook: reuse the saved secret so earlier (test or live) webhooks keep working.
@@ -150,7 +192,7 @@ export async function setupLemonSqueezy(origin: string): Promise<SetupResult> {
     });
     return { ok: true, store: { id: store.id, name: store.attributes.name }, variants, webhook: { id: webhookId, url, created: !existing, testMode } };
   } catch (err) {
-    if (err instanceof SetupError) return { ok: false, error: err.message };
+    if (err instanceof SetupError) return { ok: false, error: err.message, details: err.details };
     console.error("[ls-setup]", err instanceof Error ? err.message : err);
     return { ok: false, error: "Couldn't reach Lemon Squeezy. Please try again." };
   }

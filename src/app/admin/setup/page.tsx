@@ -78,7 +78,7 @@ export default async function AdminSetupPage() {
               ok={variantsOk}
               label="Plan variants"
               detail={variantsOk ? listingPlans.map((p) => `${p.name} ${formatPlanPrice(p)} → #${catalog.variants[p.id]}`).join(" · ") : undefined}
-              hint="One product with single-payment variants $9, $19 and $49."
+              hint={`One product with single-payment variants ${listingPlans.map((p) => formatPlanPrice(p)).join(", ")}.`}
             />
             <Check
               ok={Boolean(secret)}

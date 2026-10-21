@@ -13,6 +13,18 @@ export function ConnectLemonSqueezy({ connected, disabled }: { connected: boolea
         <Icon name="refresh" size={15} /> {connected ? "Re-check and reconnect" : "Connect Lemon Squeezy automatically"}
       </SubmitButton>
       {state?.ok === false && <FormMessage tone="error">{state.error}</FormMessage>}
+      {state?.ok === false && state.details && (
+        <div className="rounded-lg border border-line bg-subtle px-3 py-2.5 text-[13px]">
+          <p className="font-medium text-fg">What we found in Lemon Squeezy</p>
+          <ul className="mt-1.5 space-y-1 text-muted">
+            {state.details.map((d) => (
+              <li key={d} className="[overflow-wrap:anywhere]">
+                {d}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       {state?.ok && (
         <FormMessage tone="success">
           Connected to {state.store.name}. Variants matched and webhook {state.webhook.created ? "created" : "updated"}
