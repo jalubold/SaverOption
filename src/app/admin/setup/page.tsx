@@ -46,6 +46,7 @@ export default async function AdminSetupPage() {
   const plans = withPrices(catalog.prices);
   const lsReady = hasKey && Boolean(catalog.storeId) && variantsOk && Boolean(secret);
   const setupAt = saved.get("ls_setup_at");
+  const upgradeError = saved.get("ls_upgrade_error");
 
   return (
     <DashboardShell email={user.email} admin section="setup">
@@ -92,6 +93,11 @@ export default async function AdminSetupPage() {
             />
           </ul>
           <div className="mt-5 border-t border-line pt-5">
+            {upgradeError && !variantsOk && (
+              <p className="mb-3 rounded-lg border border-warn/40 bg-warn-soft px-3 py-2 text-[13px] text-fg">
+                Automatic switch to the subscription plans didn&apos;t work: {upgradeError}
+              </p>
+            )}
             <ConnectLemonSqueezy connected={lsReady} disabled={!hasKey || !dbConfigured()} />
             {setupAt && <p className="mt-2 text-xs text-faint">Last connected {fmtDate(new Date(setupAt))}.</p>}
           </div>

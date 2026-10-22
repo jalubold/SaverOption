@@ -111,6 +111,8 @@ Redeploy after changing variables. The `NEXT_PUBLIC_*` values are read at build 
    - matches the three subscription variants by billing interval (preferring one product that has all three) and saves their prices;
    - creates (or updates) the webhook `https://www.saveroption.com/api/webhooks/lemonsqueezy` for orders, subscription changes and subscription payments, with a generated signing secret.
 
+   A site that was connected to the old one-time product switches itself over: in production, the first server to start (or the first checkout) runs the same Connect step once, keeping the store, webhook URL and secret. Until it succeeds the old one-time variants are never sold, and any error shows on `/admin/setup`.
+
    Everything is saved in the server-only `app_settings` table, and cached pages are refreshed with the new prices. Run it again after changing prices, after switching to a live key, or after turning live checkout on (that registers the live-mode webhook); the same secret is reused.
 5. Refunds are made in Lemon Squeezy (Orders → the order → Refund), following the policy on `/terms#refunds`:
    - **Declined listing:** refund the first payment in full **and cancel the subscription** (Subscriptions → the subscription → Cancel), so it doesn't renew.

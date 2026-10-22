@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { getPlan } from "@/config/listing-plans";
 import type { PromoteContext } from "@/components/promote/flow-types";
 import { buildListingEmail } from "@/components/promote/submission";
@@ -8,6 +9,7 @@ import { CLAIM_TTL_DAYS, claimTokenMatches, newClaimToken, readClaimCookie, writ
 import { dbConfigured } from "@/lib/server/db";
 import { ensureFunnelSession } from "@/lib/server/funnel-session";
 import { checkoutMode, createCheckout, getListingPlans, LemonSqueezyError } from "@/lib/server/lemonsqueezy";
+import { upgradeLegacyCatalog } from "@/lib/server/lemonsqueezy-setup";
 import { requestOrigin } from "@/lib/server/origin";
 import { recordCheckout, reusableCheckout, setClaimToken, upsertPendingSubmission } from "@/lib/server/submissions";
 import { loadPromoteContext } from "@/lib/server/promote-context";
@@ -38,6 +40,8 @@ export async function startCheckout(input: {
   /** Hidden field humans leave empty. */
   company?: string;
 }): Promise<StartCheckoutResult> {
+  // Never sell the old one-time product: switch to the subscription plans first if needed.
+  if (await upgradeLegacyCatalog().catch(() => false)) revalidatePath("/", "layout");
   const plan = getPlan(input.planId, await getListingPlans());
   if (!plan) return { kind: "error", message: "Choose a listing plan." };
   if (input.company) return { kind: "error", message: "Something went wrong. Please try again." };

@@ -44,10 +44,20 @@ export async function lsCatalog(): Promise<LsCatalog> {
   return {
     storeId: process.env.LEMONSQUEEZY_STORE_ID?.trim() || saved.get("ls_store_id") || null,
     variants: Object.fromEntries(
-      listingPlans.map((p) => [p.id, process.env[p.variantEnv]?.trim() || saved.get(`ls_variant_${p.id}`) || null]),
+      listingPlans.map((p) => [
+        p.id,
+        // A saved variant without a saved price comes from before plans were subscriptions
+        // (the old one-time product), so it isn't sold; see upgradeLegacyCatalog().
+        process.env[p.variantEnv]?.trim() || (saved.get(`ls_price_${p.id}`) ? saved.get(`ls_variant_${p.id}`) : null) || null,
+      ]),
     ) as Record<ListingPlanId, string | null>,
     prices,
   };
+}
+
+/** Whether the saved catalog is the old one-time product (connected before subscriptions). */
+export function isLegacyCatalog(saved: Map<string, string>): boolean {
+  return Boolean(saved.get("ls_variant_1m")) && !saved.get("ls_price_1m");
 }
 
 /** The plans as sold right now: prices from the connected Lemon Squeezy variants, defaults otherwise. */

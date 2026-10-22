@@ -125,7 +125,7 @@ function PromoteModal({ open, plans, ctx, onClose }: { open: boolean; plans: Lis
         <div className="mb-3">
           <TrafficPill />
         </div>
-        {ctx && <PromoteFlow mode={ctx.mode} plans={plans} resume={ctx.resume} paidId={ctx.paidId} signedIn={ctx.signedIn} titleId={titleId} />}
+        {ctx && <PromoteFlow mode={ctx.mode} plans={ctx.plans ?? plans} resume={ctx.resume} paidId={ctx.paidId} signedIn={ctx.signedIn} titleId={titleId} />}
       </div>
     </dialog>
   );

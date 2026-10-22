@@ -1,4 +1,4 @@
-import type { ListingPlanId } from "@/config/listing-plans";
+import type { ListingPlan, ListingPlanId } from "@/config/listing-plans";
 import type { PromoteDetails } from "@/components/promote/validation";
 
 /** Shared between the server (which decides) and the promote form (which renders). */
@@ -19,4 +19,6 @@ export interface PromoteContext {
   /** A paid submission this browser started that isn't in an account yet. */
   paidId: string | null;
   signedIn: boolean;
+  /** Current plans and prices, fresher than a cached page's. */
+  plans?: ListingPlan[];
 }

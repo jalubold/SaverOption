@@ -1,6 +1,8 @@
 import { randomBytes } from "node:crypto";
 import { listingPlans, type ListingPlan, type ListingPlanId } from "@/config/listing-plans";
-import { liveCheckoutEnabled, lsApiKey, LS_API } from "@/lib/server/lemonsqueezy";
+import { siteConfig } from "@/config/site";
+import { db, dbConfigured } from "@/lib/server/db";
+import { isLegacyCatalog, liveCheckoutEnabled, lsApiKey, LS_API } from "@/lib/server/lemonsqueezy";
 import { getSettings, saveSettings } from "@/lib/server/settings";
 
 /**
@@ -272,4 +274,38 @@ export async function setupLemonSqueezy(origin: string): Promise<SetupResult> {
     console.error("[ls-setup]", err instanceof Error ? err.message : err);
     return { ok: false, error: "Couldn't reach Lemon Squeezy. Please try again." };
   }
+}
+
+const UPGRADE_RETRY_MS = 10 * 60_000;
+
+/**
+ * Sites connected before plans became subscriptions still have the old one-time
+ * variants saved, which aren't sold any more. Production reconnects itself once
+ * (when a server starts, or before a checkout) so nobody has to press Connect
+ * again: same store, same webhook URL and secret, now with the subscription
+ * variants and their prices. One server at a time; a failure is saved for
+ * /admin/setup and retried after 10 minutes. Returns true if it reconnected.
+ */
+export async function upgradeLegacyCatalog(): Promise<boolean> {
+  if (process.env.VERCEL_ENV !== "production" || !dbConfigured() || !lsApiKey()) return false;
+  const saved = await getSettings();
+  if (!isLegacyCatalog(saved)) return false;
+  if (Date.now() - Number(saved.get("ls_upgrade_tried_at") ?? 0) < UPGRADE_RETRY_MS) return false;
+
+  return db().begin(async (tx) => {
+    const [{ locked }] = await tx<{ locked: boolean }[]>`select pg_try_advisory_xact_lock(hashtext('saveroption:ls-upgrade')) as locked`;
+    if (!locked) return false;
+    // Another server may have just finished (this one's settings are cached).
+    const done = await tx`select 1 from app_settings where key = 'ls_price_1m'`;
+    if (done.length) return false;
+    await saveSettings({ ls_upgrade_tried_at: String(Date.now()) });
+
+    const hook = saved.get("ls_webhook_url");
+    const origin = hook ? new URL(hook).origin : siteConfig.url;
+    const result = await setupLemonSqueezy(origin);
+    await saveSettings({ ls_upgrade_error: result.ok ? null : result.error });
+    if (result.ok) console.log(`[ls-setup] reconnected to the subscription plans in ${result.store.name}`);
+    else console.error(`[ls-setup] automatic reconnect failed: ${result.error}`);
+    return result.ok;
+  });
 }
