@@ -87,8 +87,8 @@ function Status({ sub, owned, signedIn, google }: { sub: SafeSubmission; owned: 
         </h1>
         <p className="mt-2 flex flex-wrap items-center gap-2 text-[15px] leading-relaxed text-muted">
           {owned
-            ? "Payment confirmed. It's in your dashboard, where you can complete your product details and track its performance."
-            : "Payment confirmed. Create an account to manage your submission, complete your product details, and track its performance."}{" "}
+            ? "Payment confirmed and your subscription is active. It's in your dashboard, where you can complete your product details, track its performance and manage your subscription."
+            : "Payment confirmed and your subscription is active. Create an account to manage your submission, complete your product details, and track its performance."}{" "}
           {testBadge}
         </p>
         {summary}

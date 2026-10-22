@@ -75,7 +75,7 @@ export default async function ListingPage(props: PageProps<"/listings/[slug]">) 
           </ul>
         )}
         <p className="mt-10 rounded-xl border border-line bg-subtle p-4 text-[13px] leading-relaxed text-muted">
-          <strong className="text-fg">Sponsored listing.</strong> The maker paid to list this product on {siteConfig.name}. We review listings
+          <strong className="text-fg">Sponsored listing.</strong> The maker pays to list this product on {siteConfig.name}. We review listings
           before they go live, but this isn&apos;t an editorial recommendation. Check the provider&apos;s site for current pricing and terms.
         </p>
       </Container>

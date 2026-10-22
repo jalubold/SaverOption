@@ -27,7 +27,7 @@ export default function TermsPage() {
           <p>
             {name} lists software offers published by software providers and other sellers. We don&apos;t sell software or
             run the offers ourselves. You claim every offer with the provider, under the provider&apos;s own terms. The only
-            thing we sell is sponsored listings for software makers, described below.
+            thing we sell is sponsored listing subscriptions for software makers, described below.
           </p>
 
           <h2>Accuracy of listings</h2>
@@ -45,7 +45,7 @@ export default function TermsPage() {
           </p>
 
           <h2 id="sponsored-listings">Sponsored listings</h2>
-          <p>These terms apply when you buy a sponsored listing (&ldquo;Promote your SaaS&rdquo;).</p>
+          <p>These terms apply when you subscribe to a sponsored listing (&ldquo;Promote your SaaS&rdquo;).</p>
           <ul>
             <li>
               <strong>What you buy.</strong> A subscription that keeps a listing for one product on {name} while it&apos;s

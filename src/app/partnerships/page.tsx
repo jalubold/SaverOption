@@ -28,7 +28,7 @@ const opportunities = [
   {
     icon: "sparkles" as const,
     title: "Sponsored Listings",
-    body: "Increase product visibility through featured placements in relevant categories.",
+    body: "Keep your product on our Sponsored listings page and homepage with a monthly, quarterly or yearly subscription. Cancel anytime.",
   },
   {
     icon: "mail" as const,
