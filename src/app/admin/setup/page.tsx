@@ -83,7 +83,11 @@ export default async function AdminSetupPage() {
             <Check
               ok={variantsOk}
               label="Subscription plans"
-              detail={variantsOk ? plans.map((p) => `${p.name} ${formatPlanRate(p)} → #${catalog.variants[p.id]}`).join(" · ") : undefined}
+              detail={
+                variantsOk
+                  ? `${saved.get("ls_product_name") ? `"${saved.get("ls_product_name")}": ` : ""}${plans.map((p) => `${p.name} ${formatPlanRate(p)} → #${catalog.variants[p.id]}`).join(" · ")}`
+                  : undefined
+              }
               hint="One subscription product with variants billed every month, every 3 months and every year. Prices are read from Lemon Squeezy."
             />
             <Check

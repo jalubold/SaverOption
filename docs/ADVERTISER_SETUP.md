@@ -108,7 +108,7 @@ Redeploy after changing variables. The `NEXT_PUBLIC_*` values are read at build 
 3. **Settings → API → create a key** (test mode), and add it in Vercel as `LEMONSQUEEZY_API_KEY`, type Sensitive. Redeploy.
 4. Log in at **`/admin/setup`** with an `ADMIN_EMAILS` account and click **Connect Lemon Squeezy automatically**. It:
    - finds the store;
-   - matches the three subscription variants by billing interval (preferring one product that has all three) and saves their prices;
+   - matches the three subscription variants by billing interval and saves their prices. When a product is named like "Subscription", all three must come from it (other products, such as an older listing product, are ignored); otherwise one product that has all three is preferred;
    - creates (or updates) the webhook `https://www.saveroption.com/api/webhooks/lemonsqueezy` for orders, subscription changes and subscription payments, with a generated signing secret.
 
    A site that was connected to the old one-time product switches itself over: in production, the first server to start (or the first checkout) runs the same Connect step once, keeping the store, webhook URL and secret. Until it succeeds the old one-time variants are never sold, and any error shows on `/admin/setup`.
@@ -126,7 +126,7 @@ Redeploy after changing variables. The `NEXT_PUBLIC_*` values are read at build 
 ## 4. Test checklist (Lemon Squeezy test mode, on a preview deployment or as an admin)
 
 - [ ] `/promote`: fill in the details, change the plan, go back with **Edit**. Nothing is lost.
-- [ ] **Continue to Checkout** opens the Lemon Squeezy test checkout for the right plan and price. The submission appears in `/admin` as *Awaiting payment*.
+- [ ] **Continue to Checkout** opens the Lemon Squeezy test checkout for the right plan and price, on the "Subscription" product. A checkout opened before the last Connect is never reused. The submission appears in `/admin` as *Awaiting payment*.
 - [ ] Close the checkout and go back to `/promote`: your details and plan are still filled in.
 - [ ] Pay with test card `4242 4242 4242 4242`. The success page shows "Confirming your payment" until the webhook arrives, then "received!".
 - [ ] Lemon Squeezy → Webhooks → recent deliveries show `200`. A resent delivery returns `{"result":"duplicate"}`.

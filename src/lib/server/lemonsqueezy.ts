@@ -33,11 +33,19 @@ export interface LsConfig {
  * Store and variant IDs: from env vars when set, otherwise from what the admin
  * "Connect Lemon Squeezy" button found and saved (see lemonsqueezy-setup.ts).
  */
+/**
+ * Saved by Connect along with the variants. A catalog saved by an older version of
+ * Connect (e.g. the one-time product from before plans were subscriptions) isn't
+ * sold; production reconnects itself instead (see upgradeLegacyCatalog).
+ */
+export const CATALOG_VERSION = "subscriptions-2";
+
 export async function lsCatalog(): Promise<LsCatalog> {
   const saved = await getSettings();
+  const current = saved.get("ls_catalog") === CATALOG_VERSION;
   const prices: Partial<Record<ListingPlanId, number>> = {};
   for (const p of listingPlans) {
-    const cents = Number(saved.get(`ls_price_${p.id}`));
+    const cents = current ? Number(saved.get(`ls_price_${p.id}`)) : NaN;
     // A variant set by env var may not be the one whose price was saved.
     if (!process.env[p.variantEnv]?.trim() && Number.isInteger(cents) && cents > 0) prices[p.id] = cents;
   }
@@ -46,18 +54,16 @@ export async function lsCatalog(): Promise<LsCatalog> {
     variants: Object.fromEntries(
       listingPlans.map((p) => [
         p.id,
-        // A saved variant without a saved price comes from before plans were subscriptions
-        // (the old one-time product), so it isn't sold; see upgradeLegacyCatalog().
-        process.env[p.variantEnv]?.trim() || (saved.get(`ls_price_${p.id}`) ? saved.get(`ls_variant_${p.id}`) : null) || null,
+        process.env[p.variantEnv]?.trim() || (current ? saved.get(`ls_variant_${p.id}`) : null) || null,
       ]),
     ) as Record<ListingPlanId, string | null>,
     prices,
   };
 }
 
-/** Whether the saved catalog is the old one-time product (connected before subscriptions). */
+/** Whether the saved catalog was made by an older version of Connect, so it needs reconnecting. */
 export function isLegacyCatalog(saved: Map<string, string>): boolean {
-  return Boolean(saved.get("ls_variant_1m")) && !saved.get("ls_price_1m");
+  return Boolean(saved.get("ls_variant_1m")) && saved.get("ls_catalog") !== CATALOG_VERSION;
 }
 
 /** The plans as sold right now: prices from the connected Lemon Squeezy variants, defaults otherwise. */

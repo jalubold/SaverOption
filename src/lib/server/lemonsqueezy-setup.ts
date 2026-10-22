@@ -2,7 +2,7 @@ import { randomBytes } from "node:crypto";
 import { listingPlans, type ListingPlan, type ListingPlanId } from "@/config/listing-plans";
 import { siteConfig } from "@/config/site";
 import { db, dbConfigured } from "@/lib/server/db";
-import { isLegacyCatalog, liveCheckoutEnabled, lsApiKey, LS_API } from "@/lib/server/lemonsqueezy";
+import { CATALOG_VERSION, isLegacyCatalog, liveCheckoutEnabled, lsApiKey, LS_API } from "@/lib/server/lemonsqueezy";
 import { getSettings, saveSettings } from "@/lib/server/settings";
 
 /**
@@ -177,18 +177,21 @@ export async function setupLemonSqueezy(origin: string): Promise<SetupResult> {
         });
       }
     }
-    // Take all three plans from one product when one has them all (e.g. "Subscription"),
-    // even if another subscription product in the store bills monthly too.
+    // A product named like "Subscription" is the one to sell: all three plans come from it,
+    // never from another product (such as an older listing product that also has subscriptions).
+    const named = candidates.filter((c) => c.preferred === 2);
+    const pool = named.length ? named : candidates;
+    // Otherwise take all three from one product when one has them all.
     const coverage = new Map<string, number>();
     for (const plan of listingPlans) {
-      for (const product of new Set(candidates.filter((c) => billsLike(plan, c.attrs)).map((c) => c.product))) {
+      for (const product of new Set(pool.filter((c) => billsLike(plan, c.attrs)).map((c) => c.product))) {
         coverage.set(product, (coverage.get(product) ?? 0) + 1);
       }
     }
     const variants = {} as Record<ListingPlanId, { id: string; name: string; product: string; price: number }>;
     const missing: string[] = [];
     for (const plan of listingPlans) {
-      const match = candidates
+      const match = pool
         .filter((c) => billsLike(plan, c.attrs) && c.price > 0)
         .sort(
           (a, b) =>
@@ -199,7 +202,9 @@ export async function setupLemonSqueezy(origin: string): Promise<SetupResult> {
       if (match) variants[plan.id] = { id: match.id, name: match.name, product: match.product, price: match.price };
       else missing.push(`${plan.name} (every ${plan.intervalCount === 1 ? plan.interval : plan.period})`);
     }
-    if (currency !== "USD" || missing.length) {
+    // A "Subscription" product that's still a draft must be published, not replaced by another product.
+    const draftOnly = !named.length && drafts.some((d) => /subscri/i.test(d));
+    if (currency !== "USD" || missing.length || draftOnly) {
       const details = [`Store "${store.attributes.name}", currency ${currency}`, ...(inventory.length ? inventory.slice(0, 12) : ["No products"])];
       let hint: string;
       if (currency !== "USD") {
@@ -207,10 +212,11 @@ export async function setupLemonSqueezy(origin: string): Promise<SetupResult> {
       } else if (products.length === 0) {
         hint =
           "This API key can't see any products in your store. Lemon Squeezy keeps Test mode and live mode separate: create the product while Test mode is ON (or use an API key from the same mode as your products), then try again.";
-      } else if (drafts.length) {
+      } else if (draftOnly || drafts.length) {
         hint = `"${drafts.join('", "')}" is still a draft. Publish it in Lemon Squeezy, then try again.`;
       } else {
-        hint = `Couldn't find a published subscription variant for: ${missing.join(", ")}. Give your subscription product three variants billed ${CADENCES} (Pricing → Subscription, "Repeat payment every"), then try again.`;
+        const where = named.length ? `"${[...new Set(named.map((c) => c.product))].join('", "')}" has` : "Couldn't find";
+        hint = `${where} no published subscription variant for: ${missing.join(", ")}. Give your subscription product three variants billed ${CADENCES} (Pricing → Subscription, "Repeat payment every"), then try again.`;
       }
       throw new SetupError(hint, details);
     }
@@ -262,6 +268,8 @@ export async function setupLemonSqueezy(origin: string): Promise<SetupResult> {
       ls_price_1m: String(variants["1m"].price),
       ls_price_3m: String(variants["3m"].price),
       ls_price_1y: String(variants["1y"].price),
+      ls_product_name: variants["1m"].product,
+      ls_catalog: CATALOG_VERSION,
       ls_webhook_secret: secret,
       ls_webhook_id: webhookId,
       ls_webhook_url: url,
@@ -279,8 +287,8 @@ export async function setupLemonSqueezy(origin: string): Promise<SetupResult> {
 const UPGRADE_RETRY_MS = 10 * 60_000;
 
 /**
- * Sites connected before plans became subscriptions still have the old one-time
- * variants saved, which aren't sold any more. Production reconnects itself once
+ * Sites connected by an older version of Connect (e.g. to the old one-time
+ * product) have a catalog that isn't sold any more. Production reconnects itself once
  * (when a server starts, or before a checkout) so nobody has to press Connect
  * again: same store, same webhook URL and secret, now with the subscription
  * variants and their prices. One server at a time; a failure is saved for
@@ -290,13 +298,14 @@ export async function upgradeLegacyCatalog(): Promise<boolean> {
   if (process.env.VERCEL_ENV !== "production" || !dbConfigured() || !lsApiKey()) return false;
   const saved = await getSettings();
   if (!isLegacyCatalog(saved)) return false;
-  if (Date.now() - Number(saved.get("ls_upgrade_tried_at") ?? 0) < UPGRADE_RETRY_MS) return false;
+  // After a failed attempt, wait before asking Lemon Squeezy again.
+  if (saved.get("ls_upgrade_error") && Date.now() - Number(saved.get("ls_upgrade_tried_at") ?? 0) < UPGRADE_RETRY_MS) return false;
 
   return db().begin(async (tx) => {
     const [{ locked }] = await tx<{ locked: boolean }[]>`select pg_try_advisory_xact_lock(hashtext('saveroption:ls-upgrade')) as locked`;
     if (!locked) return false;
     // Another server may have just finished (this one's settings are cached).
-    const done = await tx`select 1 from app_settings where key = 'ls_price_1m'`;
+    const done = await tx`select 1 from app_settings where key = 'ls_catalog' and value = ${CATALOG_VERSION}`;
     if (done.length) return false;
     await saveSettings({ ls_upgrade_tried_at: String(Date.now()) });
 

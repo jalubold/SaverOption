@@ -10,6 +10,7 @@ import { dbConfigured } from "@/lib/server/db";
 import { ensureFunnelSession } from "@/lib/server/funnel-session";
 import { checkoutMode, createCheckout, getListingPlans, LemonSqueezyError } from "@/lib/server/lemonsqueezy";
 import { upgradeLegacyCatalog } from "@/lib/server/lemonsqueezy-setup";
+import { getSettings } from "@/lib/server/settings";
 import { requestOrigin } from "@/lib/server/origin";
 import { recordCheckout, reusableCheckout, setClaimToken, upsertPendingSubmission } from "@/lib/server/submissions";
 import { loadPromoteContext } from "@/lib/server/promote-context";
@@ -92,7 +93,8 @@ export async function startCheckout(input: {
 
     const testMode = mode === "test";
     // Reuse a recent checkout for the same plan if this browser started it.
-    const reuse = ownsCookie ? reusableCheckout(sub, plan, testMode) : null;
+    const connectedAt = (await getSettings()).get("ls_setup_at");
+    const reuse = ownsCookie ? reusableCheckout(sub, plan, testMode, connectedAt ? new Date(connectedAt) : null) : null;
     if (reuse) {
       await recordFunnelEvent("checkout_started", { submissionId: sub.id, sessionId });
       return { kind: "redirect", url: reuse, testMode };

@@ -143,9 +143,13 @@ export async function getSubmissionByClaim(claim: { submissionId: string; token:
   return sub;
 }
 
-/** A checkout less than 23 hours old for the same plan and mode can be reused instead of creating another. */
-export function reusableCheckout(sub: Submission, plan: ListingPlan, testMode: boolean): string | null {
+/**
+ * A checkout less than 23 hours old for the same plan and mode can be reused instead of creating another,
+ * unless Lemon Squeezy was (re)connected since (`connectedAt`): it may be for another product or price.
+ */
+export function reusableCheckout(sub: Submission, plan: ListingPlan, testMode: boolean, connectedAt: Date | null): string | null {
   if (!sub.checkout_url || !sub.checkout_created_at) return null;
+  if (connectedAt && sub.checkout_created_at <= connectedAt) return null;
   const fresh = Date.now() - sub.checkout_created_at.getTime() < 23 * 3600_000;
   return fresh && sub.checkout_plan === plan.id && sub.checkout_test_mode === testMode ? sub.checkout_url : null;
 }
