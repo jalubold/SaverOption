@@ -1,17 +1,20 @@
 # Advertiser listings: setup and operations
 
-Paid "Promote your SaaS" listings. A founder submits a product, pays once through Lemon Squeezy, creates an account and completes a profile. An admin then reviews and publishes it. Everything below the payment provider is provider-agnostic: only `src/lib/server/lemonsqueezy.ts` and `src/app/api/webhooks/lemonsqueezy` know about Lemon Squeezy.
+Paid "Promote your SaaS" listings, sold as subscriptions. A founder submits a product, subscribes through Lemon Squeezy, creates an account and completes a profile. An admin then reviews and publishes it. Everything below the payment provider is provider-agnostic: only `src/lib/server/lemonsqueezy.ts` and `src/app/api/webhooks/lemonsqueezy` know about Lemon Squeezy.
 
 ## Advertiser flow
 
 1. **"Promote your SaaS"** opens a one-screen popup (also available at `/promote`). The founder enters the product name, website, work email and an optional description, and picks a plan, with no account needed.
-2. **Plan**: 1 Month $9.99, 3 Months $19.99 or 1 Year $49.99, all one-time payments. An order summary is shown, then **Continue to Checkout — $X**.
+2. **Plan**: Monthly, Quarterly (every 3 months) or Yearly subscription, at the prices set on the Lemon Squeezy variants (read by **Connect**; defaults in `src/config/listing-plans.ts` until then). Cancel anytime. A summary is shown, then **Continue to Checkout — $X/month**.
 3. **Saving and checkout**:
    - The server saves the submission (`awaiting_payment`, keyed by an idempotency key from the tab).
    - It sets an httpOnly claim cookie.
-   - It creates a Lemon Squeezy hosted checkout. The variant comes from env and the price from `src/config/listing-plans.ts`. `submission_id` goes in custom data.
+   - It creates a Lemon Squeezy hosted checkout for the plan's subscription variant. `submission_id` goes in custom data, which Lemon Squeezy also attaches to the subscription's webhooks.
 4. **Cancel**: going back to `/promote` resumes the saved submission at the plan step. A checkout under 23h old for the same plan is reused.
-5. **Webhook**: `order_created` is signature-checked. It marks the submission `paid` and moves review to `pending_review`. Nothing is approved or published automatically.
+5. **Webhooks** (all signature-checked):
+   - `order_created` (the first payment) marks the submission `paid` and moves review to `pending_review`. Nothing is approved or published automatically.
+   - `subscription_*` events record the subscription's status and its next renewal or end date. The listing's **paid-through** date is the next renewal plus 2 days of grace while active, or the end date once cancelled. A failed or paused subscription gets no more time until a payment succeeds.
+   - `subscription_payment_*` events record renewal payments as orders of kind `renewal`, so revenue includes them. Only the first order decides whether the listing is paid for.
 6. **`/promote/success`**:
    - Shows only the status verified in the database, and only to the browser that started checkout.
    - Shows a pending poller until the webhook arrives.
@@ -23,10 +26,11 @@ Paid "Promote your SaaS" listings. A founder submits a product, pays once throug
    - Summary counts.
    - Listings with payment, review and publication status shown separately.
    - Listing page: edit details and links, upload a logo, see missing fields, review feedback, dates, payments, views, clicks and CTR.
+   - **Subscription** panel: plan, status, next renewal (or end date), and **Manage subscription**, which opens Lemon Squeezy's customer portal (update card, switch plan, cancel) through `/dashboard/listings/<id>/billing`.
 9. **`/admin`** (emails in `ADMIN_EMAILS`):
    - Filter by payment and review status.
    - Approve, or reject with notes.
-   - Publish with start/expiry dates (the default expiry is the plan length).
+   - Publish with a start date. A subscription listing then stays live as long as it's paid for, and renewals and cancellations move its end date automatically. (Older one-time listings use the plan length.)
    - Unpublish.
    - `/admin/metrics` shows funnel counts, conversion rates and revenue from verified non-test orders.
 10. **Public**:
@@ -78,7 +82,7 @@ Paid "Promote your SaaS" listings. A founder submits a product, pays once throug
 | `LEMONSQUEEZY_API_KEY` | **server only** | Lemon Squeezy → Settings → API. **The only Lemon Squeezy variable you need.** |
 | `LEMONSQUEEZY_STORE_ID` | server | Optional. Found automatically by **/admin/setup → Connect**; set it only if the key can see several stores. |
 | `LEMONSQUEEZY_WEBHOOK_SECRET` | **server only** | Optional. Generated and registered automatically by Connect. |
-| `LEMONSQUEEZY_VARIANT_ID_MONTHLY` / `_QUARTERLY` / `_YEARLY` | server | Optional. Matched automatically by price ($9.99 / $19.99 / $49.99). Env values override what Connect found. |
+| `LEMONSQUEEZY_VARIANT_ID_MONTHLY` / `_QUARTERLY` / `_YEARLY` | server | Optional. Matched automatically by billing interval (every month / 3 months / year). Env values override what Connect found. |
 | `LEMONSQUEEZY_LIVE_CHECKOUT_ENABLED` | server | Leave it `false` until Lemon Squeezy approves in writing. |
 
 Redeploy after changing variables. The `NEXT_PUBLIC_*` values are read at build time.
@@ -95,25 +99,25 @@ Redeploy after changing variables. The `NEXT_PUBLIC_*` values are read at build 
 ## 3. Lemon Squeezy
 
 1. Use **Test mode** (toggle at the bottom left of the dashboard) for everything until approval.
-2. **Products → New product** "Saver Option listing", with three **single payment** variants (not subscriptions):
-   - "1 Month": $9.99
-   - "3 Months": $19.99
-   - "1 Year": $49.99
+2. **Products → New product** "Subscription", with three **subscription** variants:
+   - Monthly: repeat payment every 1 month
+   - Quarterly: every 3 months
+   - Yearly: every 1 year (or 12 months)
 
-   Keep these prices identical to `src/config/listing-plans.ts`, and publish the product. The Lemon Squeezy API can't create products, so this step is manual.
+   Set any prices you like and publish the product; the site reads the prices from these variants. The Lemon Squeezy API can't create products, so this step is manual. An older one-time product can stay in the store; it's ignored.
 3. **Settings → API → create a key** (test mode), and add it in Vercel as `LEMONSQUEEZY_API_KEY`, type Sensitive. Redeploy.
 4. Log in at **`/admin/setup`** with an `ADMIN_EMAILS` account and click **Connect Lemon Squeezy automatically**. It:
    - finds the store;
-   - matches the three variants by price;
-   - creates (or updates) the webhook `https://www.saveroption.com/api/webhooks/lemonsqueezy` for `order_created` and `order_refunded`, with a generated signing secret.
+   - matches the three subscription variants by billing interval (preferring one product that has all three) and saves their prices;
+   - creates (or updates) the webhook `https://www.saveroption.com/api/webhooks/lemonsqueezy` for orders, subscription changes and subscription payments, with a generated signing secret.
 
-   Everything is saved in the server-only `app_settings` table. Run it again after switching to a live key; the same secret is reused.
+   Everything is saved in the server-only `app_settings` table, and cached pages are refreshed with the new prices. Run it again after changing prices, after switching to a live key, or after turning live checkout on (that registers the live-mode webhook); the same secret is reused.
 5. Refunds are made in Lemon Squeezy (Orders → the order → Refund), following the policy on `/terms#refunds`:
-   - **Declined listing:** refund the full amount.
-   - **Cancelled before going live:** a partial refund of the amount minus Lemon Squeezy's processing fee. The site treats a partial refund as a cancellation, so the listing can't be published.
-   - **Live listing:** no refund.
+   - **Declined listing:** refund the first payment in full **and cancel the subscription** (Subscriptions → the subscription → Cancel), so it doesn't renew.
+   - **Cancelled before going live:** a partial refund of the first payment minus Lemon Squeezy's processing fee, and cancel the subscription. The site treats a partial refund as a cancellation, so the listing can't be published.
+   - **Live listing:** no refund, including renewals. Advertisers cancel from their dashboard; the listing stays live until the end of the paid period.
 
-   The `order_refunded` webhook updates the status automatically. There are no automatic refunds.
+   The webhooks update the status automatically. There are no automatic refunds or cancellations.
 
 > **Blocker:** Lemon Squeezy's prohibited-products list includes advertising on websites, newsletters and social media, and marketplaces. Ask their support whether paid SaaS directory listings are allowed and get the answer in writing before setting `LEMONSQUEEZY_LIVE_CHECKOUT_ENABLED=true`. If they decline, only `lemonsqueezy.ts` and the webhook route need replacing (for example with Stripe or Paddle). Submissions, claims, dashboard, admin and analytics stay as they are.
 
@@ -121,7 +125,7 @@ Redeploy after changing variables. The `NEXT_PUBLIC_*` values are read at build 
 
 - [ ] `/promote`: fill in the details, change the plan, go back with **Edit**. Nothing is lost.
 - [ ] **Continue to Checkout** opens the Lemon Squeezy test checkout for the right plan and price. The submission appears in `/admin` as *Awaiting payment*.
-- [ ] Close the checkout and go back to `/promote`: it shows "Welcome back" with your details at the plan step.
+- [ ] Close the checkout and go back to `/promote`: your details and plan are still filled in.
 - [ ] Pay with test card `4242 4242 4242 4242`. The success page shows "Confirming your payment" until the webhook arrives, then "received!".
 - [ ] Lemon Squeezy → Webhooks → recent deliveries show `200`. A resent delivery returns `{"result":"duplicate"}`.
 - [ ] **Create Account** (email prefilled) → confirmation email → link → the listing is in `/dashboard`.
@@ -130,8 +134,9 @@ Redeploy after changing variables. The `NEXT_PUBLIC_*` values are read at build 
 - [ ] Another account can't open your listing URL. A used or expired claim link is refused.
 - [ ] As admin: approve, then publish. The listing shows at `/listings` and on the homepage labelled Sponsored.
 - [ ] View the listing and click **Visit**. The dashboard shows 1 view and 1 click.
+- [ ] **Manage subscription** in the dashboard opens Lemon Squeezy's portal. Cancel there: the dashboard shows *Subscription cancelled* with the end date, and the listing stays live until then.
 - [ ] Refund the test order. The status becomes *Refunded* and the listing leaves public pages.
 - [ ] `/admin/metrics` shows the funnel, and test orders are not counted as revenue.
 - [ ] In production with the flag `false` and logged out, `/promote` offers **Submit listing** with no checkout.
 
-An automated version of this flow (41 checks against local Postgres with mocked Lemon Squeezy and Supabase Auth) was run before release.
+An automated version of this flow (checks against local Postgres with mocked Lemon Squeezy and Supabase Auth, including renewals, cancellation and expiry) was run before release.

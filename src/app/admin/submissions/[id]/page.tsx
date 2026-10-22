@@ -1,12 +1,22 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { formatCents, getPlan } from "@/config/listing-plans";
+import { formatCents, formatPlanRate, getPlan } from "@/config/listing-plans";
 import { PublishForm, ReviewForm } from "@/components/advertiser/admin-forms";
 import { DashboardShell, fmtDate, Panel, StatCard } from "@/components/advertiser/dashboard-shell";
 import { PaymentPill, StatusPill, TestModeBadge } from "@/components/advertiser/status-pill";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass } from "@/components/ui/primitives";
-import { isPaid, paymentLabels, publicationLabels, publicationState, publicationTone, reviewLabels, reviewTone } from "@/lib/listing-status";
+import {
+  isPaid,
+  paymentLabels,
+  publicationLabels,
+  publicationState,
+  publicationTone,
+  reviewLabels,
+  reviewTone,
+  subscriptionLabels,
+  subscriptionTone,
+} from "@/lib/listing-status";
 import { getSubmission, missingProfileFields, ordersFor } from "@/lib/server/submissions";
 import { requireAdmin } from "@/lib/server/supabase";
 import { listingStats } from "@/lib/server/tracking";
@@ -47,6 +57,9 @@ export default async function AdminSubmissionPage(props: PageProps<"/admin/submi
             <PaymentPill status={sub.payment_status} />
             <StatusPill tone={reviewTone(sub.review_status)}>{reviewLabels[sub.review_status]}</StatusPill>
             <StatusPill tone={publicationTone(pub)}>{publicationLabels[pub]}</StatusPill>
+            {sub.subscription_status && (
+              <StatusPill tone={subscriptionTone(sub.subscription_status)}>Subscription {subscriptionLabels[sub.subscription_status].toLowerCase()}</StatusPill>
+            )}
             {sub.checkout_test_mode && <TestModeBadge />}
           </div>
         </div>
@@ -68,7 +81,20 @@ export default async function AdminSubmissionPage(props: PageProps<"/admin/submi
               </Field>
               <Field label="Contact email">{sub.contact_email}</Field>
               <Field label="Plan">
-                {plan?.name ?? sub.plan} · {formatCents(sub.price_cents, sub.currency)} · {plan?.days} days
+                {plan ? `${plan.name} · ${formatPlanRate(plan, sub.price_cents)}` : `${sub.plan} · ${formatCents(sub.price_cents, sub.currency)}`}
+              </Field>
+              <Field label="Subscription">
+                {sub.subscription_status ? (
+                  <>
+                    {subscriptionLabels[sub.subscription_status]}
+                    {sub.subscription_status === "cancelled" || sub.subscription_status === "expired"
+                      ? ` · ends ${fmtDate(sub.subscription_ends_at)}`
+                      : ` · renews ${fmtDate(sub.subscription_renews_at)}`}
+                    <span className="block font-mono text-[11px] text-faint">LS {sub.subscription_id}</span>
+                  </>
+                ) : (
+                  <span className="text-faint">{paid ? "One-time payment (no subscription)" : "—"}</span>
+                )}
               </Field>
               <Field label="Account">{sub.user_id ? `Claimed ${fmtDate(sub.claimed_at)}` : "Not claimed yet"}</Field>
               <Field label="Submitted">{fmtDate(sub.created_at)}</Field>
@@ -116,7 +142,7 @@ export default async function AdminSubmissionPage(props: PageProps<"/admin/submi
                     {orders.map((o) => (
                       <tr key={o.id} className="border-t border-line">
                         <td className="py-2">
-                          <span className="font-mono text-[12px] text-fg">#{o.order_number ?? "—"}</span>
+                          <span className="font-mono text-[12px] text-fg">{o.kind === "renewal" ? "Renewal" : `#${o.order_number ?? "—"}`}</span>
                           <span className="block font-mono text-[11px] text-faint">LS {o.provider_order_id}</span>
                         </td>
                         <td className="py-2">
@@ -155,6 +181,7 @@ export default async function AdminSubmissionPage(props: PageProps<"/admin/submi
                 id={sub.id}
                 startsAt={day(sub.listing_starts_at) || new Date().toISOString().slice(0, 10)}
                 endsAt={day(sub.listing_ends_at)}
+                paidThrough={sub.paid_through ? fmtDate(sub.paid_through) : null}
                 published={published}
                 canPublish={paid && missing.length === 0}
               />

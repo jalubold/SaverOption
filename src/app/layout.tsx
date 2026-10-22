@@ -10,6 +10,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { PromoteProvider } from "@/components/promote/promote-modal";
 import { SiteHeader } from "@/components/layout/site-header";
 import { JsonLd } from "@/components/seo/json-ld";
+import { getListingPlans } from "@/lib/server/lemonsqueezy";
 import { websiteJsonLd } from "@/lib/seo";
 import "./globals.css";
 
@@ -52,7 +53,9 @@ const brandVars = {
   "--brand-accent-contrast": siteConfig.theme.accentContrast,
 } as CSSProperties;
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  // Current prices for the promote popup; cached pages are rebuilt when Lemon Squeezy is (re)connected.
+  const plans = await getListingPlans();
   return (
     <html lang={siteConfig.locale} style={brandVars} className={`${GeistSans.variable} ${GeistMono.variable} ${instrumentSerif.variable}`}>
       <body className="flex min-h-dvh flex-col">
@@ -62,7 +65,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         >
           Skip to content
         </a>
-        <PromoteProvider>
+        <PromoteProvider plans={plans}>
           <SiteHeader />
           <main id="main" className="flex-1">
             {children}

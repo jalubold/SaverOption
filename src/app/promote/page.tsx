@@ -4,18 +4,19 @@ import { PromoteFlow } from "@/components/promote/promote-flow";
 import { TrafficPill } from "@/components/promote/traffic-pill";
 import { Icon } from "@/components/ui/icon";
 import { Container } from "@/components/ui/primitives";
+import { getListingPlans } from "@/lib/server/lemonsqueezy";
 import { loadPromoteContext } from "@/lib/server/promote-context";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
   title: "Promote your SaaS",
-  description: `List your software on ${siteConfig.name}. One-time payment for a fixed listing period, reviewed before it goes live.`,
+  description: `List your software on ${siteConfig.name}. Monthly, quarterly or yearly subscription, cancel anytime. Reviewed before it goes live.`,
   path: "/promote",
 });
 
 const steps = [
   { icon: "pen" as const, title: "Add your product", body: "Name, website and email. No account needed yet." },
-  { icon: "credit-card" as const, title: "Pay once", body: "Secure checkout by Lemon Squeezy. No subscription." },
+  { icon: "credit-card" as const, title: "Subscribe", body: "Secure checkout by Lemon Squeezy. Cancel anytime." },
   { icon: "user" as const, title: "Finish your profile", body: "Sign in with Google to add a logo, links and details." },
   { icon: "check" as const, title: "We review it", body: "Your listing goes live once it's approved." },
 ];
@@ -23,7 +24,7 @@ const steps = [
 export default async function PromotePage(props: PageProps<"/promote">) {
   const fresh = (await props.searchParams).new === "1";
   // Coming back from a cancelled checkout: pick up the saved submission this browser started.
-  const ctx = await loadPromoteContext({ fresh });
+  const [ctx, plans] = await Promise.all([loadPromoteContext({ fresh }), getListingPlans()]);
 
   return (
     <div className="theme-dark bg-bg text-fg">
@@ -36,14 +37,14 @@ export default async function PromotePage(props: PageProps<"/promote">) {
               Promote your SaaS on <em className="accent">{siteConfig.name}</em>
             </h1>
             <p className="mt-4 max-w-lg text-[16px] leading-relaxed text-muted">
-              Put your product in front of people looking for software and deals. Pay once for a fixed listing period —
-              every listing is reviewed before it goes live.
+              Put your product in front of people looking for software and deals. Subscribe monthly, quarterly or yearly
+              and cancel anytime — every listing is reviewed before it goes live.
             </p>
           </div>
 
           <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1">
             <div className="rounded-[20px] border border-line bg-surface p-5 shadow-[var(--shadow-card)] sm:p-7">
-              <PromoteFlow mode={ctx.mode} resume={ctx.resume} paidId={ctx.paidId} signedIn={ctx.signedIn} fresh={fresh} heading={false} />
+              <PromoteFlow mode={ctx.mode} plans={plans} resume={ctx.resume} paidId={ctx.paidId} signedIn={ctx.signedIn} fresh={fresh} heading={false} />
             </div>
           </div>
 

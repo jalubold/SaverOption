@@ -9,7 +9,7 @@ export const metadata = pageMetadata({
   path: "/terms",
 });
 
-const LAST_UPDATED = "October 21, 2026";
+const LAST_UPDATED = "October 22, 2026";
 
 export default function TermsPage() {
   const name = siteConfig.name;
@@ -48,15 +48,15 @@ export default function TermsPage() {
           <p>These terms apply when you buy a sponsored listing (&ldquo;Promote your SaaS&rdquo;).</p>
           <ul>
             <li>
-              <strong>What you buy.</strong> A listing for one product for a fixed period (30, 90 or 365 days, depending on
-              the plan), paid once. It isn&apos;t a subscription and doesn&apos;t renew. Live listings appear on our
-              Sponsored listings page and in the Sponsored section of the homepage, and are always labelled
-              &ldquo;Sponsored&rdquo;.
+              <strong>What you buy.</strong> A subscription that keeps a listing for one product on {name} while it&apos;s
+              active. You&apos;re billed in advance every month, every 3 months or every year, depending on the plan, and it
+              renews automatically until you cancel. Live listings appear on our Sponsored listings page and in the Sponsored
+              section of the homepage, and are always labelled &ldquo;Sponsored&rdquo;.
             </li>
             <li>
               <strong>Payment.</strong> Payments are processed by Lemon Squeezy, which acts as the merchant of record for
-              the purchase; its terms also apply. Applicable taxes are added at checkout. We never see or store your card
-              details.
+              the purchase; its terms also apply. Applicable taxes are added at checkout. Renewals are charged to the same
+              payment method on the renewal date shown in your dashboard. We never see or store your card details.
             </li>
             <li>
               <strong>Review.</strong> Every listing is reviewed before it goes live. We may decline a listing that is
@@ -64,8 +64,18 @@ export default function TermsPage() {
               the right to use. We may remove a live listing that breaks these rules.
             </li>
             <li>
-              <strong>Listing period.</strong> The period starts on the day your listing is published and ends
-              automatically on the expiry date shown in your dashboard.
+              <strong>When your listing is live.</strong> Billing starts at checkout. Your listing goes live once
+              it&apos;s approved and stays live while your subscription is paid up. If a renewal payment fails, Lemon
+              Squeezy retries it, and your listing may be hidden until the payment goes through.
+            </li>
+            <li>
+              <strong>Cancelling.</strong> You can cancel anytime from your dashboard (&ldquo;Manage subscription&rdquo;).
+              You won&apos;t be charged again, and your listing stays live until the end of the period you&apos;ve
+              already paid for.
+            </li>
+            <li>
+              <strong>Price changes.</strong> New prices apply to new subscriptions. We&apos;ll email you before any change
+              to the price of your subscription takes effect, so you can cancel first.
             </li>
             <li>
               <strong>No guaranteed results.</strong> We don&apos;t guarantee any number of views, clicks, sign-ups or
@@ -73,7 +83,7 @@ export default function TermsPage() {
             </li>
             <li>
               <strong>Your content.</strong> You&apos;re responsible for the accuracy of your listing and for having the
-              right to use its name, logo and description. You allow us to display them for the listing period.
+              right to use its name, logo and description. You allow us to display them while your listing is live.
             </li>
             <li>
               <strong>Your account.</strong> You sign in with Google and are responsible for activity on your account.
@@ -83,15 +93,17 @@ export default function TermsPage() {
           <h2 id="refunds">Refunds</h2>
           <ul>
             <li>
-              <strong>If we decline your listing</strong>, you get a full refund.
+              <strong>If we decline your listing</strong>, you get a full refund and we cancel the subscription.
             </li>
             <li>
-              <strong>If you cancel before your listing goes live</strong>, you get a refund of the amount paid minus the
-              payment processing fees, which aren&apos;t returned to us.
+              <strong>If you cancel before your listing goes live</strong>, you get a refund of your first payment minus
+              the payment processing fees, which aren&apos;t returned to us.
             </li>
             <li>
-              <strong>Once your listing is live</strong>, the purchase is non-refundable, except where the law requires
-              otherwise. If we remove a live listing for breaking these terms, no refund is due for the remaining period.
+              <strong>Once your listing is live</strong>, payments for the current billing period, including renewals,
+              are non-refundable, except where the law requires otherwise. Cancel before your renewal date to avoid the
+              next charge. If we remove a live listing for breaking these terms, no refund is due for the rest of the
+              period.
             </li>
           </ul>
           <p>

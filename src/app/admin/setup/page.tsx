@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { formatPlanPrice, listingPlans } from "@/config/listing-plans";
+import { formatPlanRate, listingPlans, withPrices } from "@/config/listing-plans";
 import { DashboardShell, fmtDate, Panel } from "@/components/advertiser/dashboard-shell";
 import { ConnectLemonSqueezy } from "@/components/advertiser/setup-forms";
 import { Icon } from "@/components/ui/icon";
@@ -43,6 +43,7 @@ export default async function AdminSetupPage() {
   ]);
   const hasKey = Boolean(lsApiKey());
   const variantsOk = listingPlans.every((p) => catalog.variants[p.id]);
+  const plans = withPrices(catalog.prices);
   const lsReady = hasKey && Boolean(catalog.storeId) && variantsOk && Boolean(secret);
   const setupAt = saved.get("ls_setup_at");
 
@@ -80,9 +81,9 @@ export default async function AdminSetupPage() {
             <Check ok={Boolean(catalog.storeId)} label="Store" detail={saved.get("ls_store_name") ?? (catalog.storeId ? `#${catalog.storeId}` : undefined)} />
             <Check
               ok={variantsOk}
-              label="Plan variants"
-              detail={variantsOk ? listingPlans.map((p) => `${p.name} ${formatPlanPrice(p)} → #${catalog.variants[p.id]}`).join(" · ") : undefined}
-              hint={`One product with single-payment variants ${listingPlans.map((p) => formatPlanPrice(p)).join(", ")}.`}
+              label="Subscription plans"
+              detail={variantsOk ? plans.map((p) => `${p.name} ${formatPlanRate(p)} → #${catalog.variants[p.id]}`).join(" · ") : undefined}
+              hint="One subscription product with variants billed every month, every 3 months and every year. Prices are read from Lemon Squeezy."
             />
             <Check
               ok={Boolean(secret)}

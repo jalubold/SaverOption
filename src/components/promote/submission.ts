@@ -1,5 +1,5 @@
 import { siteConfig } from "@/config/site";
-import { formatPlanPrice, type ListingPlan } from "@/config/listing-plans";
+import { formatPlanRate, type ListingPlan } from "@/config/listing-plans";
 import { normalizeWebsite, type PromoteDetails } from "@/components/promote/validation";
 
 /**
@@ -32,8 +32,8 @@ export function buildListingEmail(details: PromoteDetails, plan: ListingPlan, re
     ...(reference ? [`- Submission reference: ${reference}`] : []),
     "",
     "Selected Listing Plan",
-    `- Plan: ${plan.name} (${plan.days}-day listing)`,
-    `- Price: ${formatPlanPrice(plan)}`,
+    `- Plan: ${plan.name} subscription`,
+    `- Price: ${formatPlanRate(plan)}`,
     "",
     "Please let me know the next steps to complete my listing.",
     "",

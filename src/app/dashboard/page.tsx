@@ -14,6 +14,7 @@ import {
   publicationTone,
   reviewLabels,
   reviewTone,
+  subscriptionLabels,
 } from "@/lib/listing-status";
 import { dbConfigured } from "@/lib/server/db";
 import { readClaimCookie } from "@/lib/server/claim";
@@ -88,8 +89,8 @@ export default async function DashboardPage(props: PageProps<"/dashboard">) {
             Promote your SaaS on <em className="accent">{siteConfig.name}</em>
           </h2>
           <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-muted">
-            List your product for a fixed period with a one-time payment. Already paid? Open the &ldquo;Manage your listing&rdquo; link in your
-            receipt email to add it to this account.
+            List your product with a monthly, quarterly or yearly subscription, and cancel anytime. Already paid? Open the &ldquo;Manage your
+            listing&rdquo; link in your receipt email to add it to this account.
           </p>
           <PromoteTrigger className={buttonClass("primary", "lg", "mt-6")}>
             Submit a Listing <Icon name="arrow-right" size={16} />
@@ -129,7 +130,8 @@ export default async function DashboardPage(props: PageProps<"/dashboard">) {
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-[15px] font-semibold text-fg">{l.product_name}</p>
                         <p className="text-[13px] text-muted">
-                          {plan?.name ?? l.plan} · {plan?.days}-day listing {l.checkout_test_mode && <TestModeBadge />}
+                          {plan?.name ?? l.plan} subscription
+                          {l.subscription_status && ` · ${subscriptionLabels[l.subscription_status]}`} {l.checkout_test_mode && <TestModeBadge />}
                         </p>
                       </div>
                       <span className="inline-flex items-center gap-1 text-sm font-medium text-accent-ink">

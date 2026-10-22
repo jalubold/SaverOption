@@ -133,7 +133,7 @@ The form posts to `/api/newsletter`. With no provider configured, development lo
 
 ## Advertiser listings (paid "Promote your SaaS")
 
-`/promote` → Lemon Squeezy checkout → account → `/dashboard`, with admin review at `/admin` and published listings at `/listings`. It runs on Supabase (Postgres + Auth + Storage) and is off until its environment variables are set: without them `/promote` falls back to an email submission. Live payments stay disabled behind `LEMONSQUEEZY_LIVE_CHECKOUT_ENABLED`. Database tables are created automatically on build (`scripts/migrate.mjs`), and `/admin/setup` connects Lemon Squeezy in one click from just an API key. Setup, env vars and test checklist: [`docs/ADVERTISER_SETUP.md`](docs/ADVERTISER_SETUP.md).
+`/promote` → Lemon Squeezy subscription checkout (monthly, quarterly or yearly) → account → `/dashboard`, with admin review at `/admin` and published listings at `/listings`. It runs on Supabase (Postgres + Auth + Storage) and is off until its environment variables are set: without them `/promote` falls back to an email submission. Live payments stay disabled behind `LEMONSQUEEZY_LIVE_CHECKOUT_ENABLED`. Database tables are created automatically on build (`scripts/migrate.mjs`), and `/admin/setup` connects Lemon Squeezy in one click from just an API key. Setup, env vars and test checklist: [`docs/ADVERTISER_SETUP.md`](docs/ADVERTISER_SETUP.md).
 
 ## Next step: admin for deals and persistent storage (proposed, not built)
 

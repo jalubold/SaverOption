@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
-import { formatCents, getPlan } from "@/config/listing-plans";
+import { formatPlanRate, getPlan } from "@/config/listing-plans";
 import { TestModeBadge } from "@/components/advertiser/status-pill";
 import { GoogleButton } from "@/components/auth/auth-forms";
 import { StatusPoller } from "@/components/promote/status-poller";
@@ -71,8 +71,8 @@ function Status({ sub, owned, signedIn, google }: { sub: SafeSubmission; owned: 
   const summary = (
     <dl className="mt-6 divide-y divide-line rounded-[14px] border border-line bg-subtle text-sm">
       <Row label="Product" value={sub.product_name} />
-      <Row label="Plan" value={`${plan?.name ?? sub.plan} · ${plan?.days ?? "—"}-day listing`} />
-      <Row label="Price" value={formatCents(sub.price_cents, sub.currency)} />
+      <Row label="Plan" value={`${plan?.name ?? sub.plan} subscription`} />
+      <Row label="Price" value={plan ? formatPlanRate(plan, sub.price_cents) : "—"} />
       <Row label="Reference" value={<span className="font-mono">{sub.id.slice(0, 8).toUpperCase()}</span>} />
     </dl>
   );
@@ -95,7 +95,7 @@ function Status({ sub, owned, signedIn, google }: { sub: SafeSubmission; owned: 
         <ol className="mt-6 space-y-2 text-sm text-muted">
           <Step n={1} done>Payment verified by Lemon Squeezy. Your receipt is on its way to {sub.contact_email}.</Step>
           <Step n={2}>Add a logo and a short description so your listing is ready to publish.</Step>
-          <Step n={3}>We review it, then publish it for {plan?.days ?? "the"} days.</Step>
+          <Step n={3}>We review it, then publish it. It stays live while your subscription is active; cancel anytime.</Step>
         </ol>
         <div className="mt-7 flex flex-col gap-3 sm:flex-row">
           {owned ? (

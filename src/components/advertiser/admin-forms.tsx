@@ -38,7 +38,22 @@ export function ReviewForm({ id, notes, canApprove, canReject }: { id: string; n
   );
 }
 
-export function PublishForm({ id, startsAt, endsAt, published, canPublish }: { id: string; startsAt: string; endsAt: string; published: boolean; canPublish: boolean }) {
+export function PublishForm({
+  id,
+  startsAt,
+  endsAt,
+  paidThrough,
+  published,
+  canPublish,
+}: {
+  id: string;
+  startsAt: string;
+  endsAt: string;
+  /** Set for subscription listings: the end date follows the subscription. */
+  paidThrough: string | null;
+  published: boolean;
+  canPublish: boolean;
+}) {
   const { state, pending, onSubmit } = useFormAction<AdminState>(adminAction, null);
   return (
     <form
@@ -58,14 +73,20 @@ export function PublishForm({ id, startsAt, endsAt, published, canPublish }: { i
           </label>
           <input id="admin-start" name="startsAt" type="date" defaultValue={startsAt} className={inputClass()} />
         </div>
-        <div>
-          <label htmlFor="admin-end" className="block text-[13px] font-medium text-fg">
-            Expires (UTC)
-          </label>
-          <input id="admin-end" name="endsAt" type="date" defaultValue={endsAt} className={inputClass()} />
-        </div>
+        {!paidThrough && (
+          <div>
+            <label htmlFor="admin-end" className="block text-[13px] font-medium text-fg">
+              Expires (UTC)
+            </label>
+            <input id="admin-end" name="endsAt" type="date" defaultValue={endsAt} className={inputClass()} />
+          </div>
+        )}
       </div>
-      <p className="text-[12px] text-faint">Leave expiry empty to use the plan length from the start date.</p>
+      <p className="text-[12px] text-faint">
+        {paidThrough
+          ? `Stays live while the subscription is paid (currently through ${paidThrough}); renewals and cancellations update it automatically.`
+          : "Leave expiry empty to use the plan length from the start date."}
+      </p>
       <FormMessage tone={state?.ok ? "success" : "error"}>{state?.message}</FormMessage>
       <div className="flex flex-wrap gap-2">
         <SubmitButton pending={pending} pendingLabel="Saving…" size="sm" value="publish" disabled={!canPublish}>

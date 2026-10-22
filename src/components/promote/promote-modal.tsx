@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { createContext, useCallback, useContext, useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import { getPromoteContext } from "@/app/promote/actions";
+import type { ListingPlan } from "@/config/listing-plans";
 import type { PromoteContext } from "@/components/promote/flow-types";
 import { PromoteFlow } from "@/components/promote/promote-flow";
 import { TrafficPill } from "@/components/promote/traffic-pill";
@@ -20,7 +21,8 @@ const OpenContext = createContext<{ open: () => void; prefetch: () => void } | n
 /** Until the server answers. Checkout itself always re-checks on the server. */
 const fallbackContext: PromoteContext = { mode: "live", resume: null, paidId: null, signedIn: false };
 
-export function PromoteProvider({ children }: { children: ReactNode }) {
+/** `plans` carry the current Lemon Squeezy prices, read by the (cached) root layout. */
+export function PromoteProvider({ plans, children }: { plans: ListingPlan[]; children: ReactNode }) {
   const [open, setOpen] = useState(false);
   // The form mounts on first open (not on every page), then stays mounted so typed details are kept.
   const [opened, setOpened] = useState(false);
@@ -50,7 +52,7 @@ export function PromoteProvider({ children }: { children: ReactNode }) {
   return (
     <OpenContext.Provider value={value}>
       {children}
-      <PromoteModal open={open} ctx={opened ? (ctx ?? fallbackContext) : null} onClose={() => setOpen(false)} />
+      <PromoteModal open={open} plans={plans} ctx={opened ? (ctx ?? fallbackContext) : null} onClose={() => setOpen(false)} />
     </OpenContext.Provider>
   );
 }
@@ -77,7 +79,7 @@ export function PromoteTrigger({ className, onOpen, children }: { className?: st
   );
 }
 
-function PromoteModal({ open, ctx, onClose }: { open: boolean; ctx: PromoteContext | null; onClose: () => void }) {
+function PromoteModal({ open, plans, ctx, onClose }: { open: boolean; plans: ListingPlan[]; ctx: PromoteContext | null; onClose: () => void }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
   const pathname = usePathname();
@@ -123,7 +125,7 @@ function PromoteModal({ open, ctx, onClose }: { open: boolean; ctx: PromoteConte
         <div className="mb-3">
           <TrafficPill />
         </div>
-        {ctx && <PromoteFlow mode={ctx.mode} resume={ctx.resume} paidId={ctx.paidId} signedIn={ctx.signedIn} titleId={titleId} />}
+        {ctx && <PromoteFlow mode={ctx.mode} plans={plans} resume={ctx.resume} paidId={ctx.paidId} signedIn={ctx.signedIn} titleId={titleId} />}
       </div>
     </dialog>
   );

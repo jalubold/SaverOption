@@ -9,7 +9,7 @@ export const metadata = pageMetadata({
   path: "/privacy",
 });
 
-const LAST_UPDATED = "October 21, 2026";
+const LAST_UPDATED = "October 22, 2026";
 
 export default function PrivacyPage() {
   const name = siteConfig.name;
@@ -55,8 +55,8 @@ export default function PrivacyPage() {
             </li>
             <li>
               <strong>Listing submissions and orders.</strong> The product details and work email you enter, and from
-              Lemon Squeezy the order number, plan, amounts, tax and payment or refund status. Card details are handled
-              by Lemon Squeezy and never reach us.
+              Lemon Squeezy the order number, plan, amounts, tax, payment or refund status, and your subscription&apos;s
+              status and renewal or end date. Card details are handled by Lemon Squeezy and never reach us.
             </li>
             <li>
               <strong>Sponsored listing statistics.</strong> Views of a sponsored listing and clicks to the

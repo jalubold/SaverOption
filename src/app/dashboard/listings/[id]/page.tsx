@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { siteConfig } from "@/config/site";
-import { formatCents, getPlan } from "@/config/listing-plans";
+import { formatCents, formatPlanRate, getPlan } from "@/config/listing-plans";
 import { DashboardShell, fmtDate, Panel, StatCard } from "@/components/advertiser/dashboard-shell";
 import { ListingEditor, LogoUploader } from "@/components/advertiser/listing-editor";
 import { PaymentPill, StatusPill, TestModeBadge } from "@/components/advertiser/status-pill";
@@ -16,6 +16,8 @@ import {
   publicationTone,
   reviewLabels,
   reviewTone,
+  subscriptionLabels,
+  subscriptionTone,
 } from "@/lib/listing-status";
 import { getForUser, isLocked, missingProfileFields, ordersFor, type SafeSubmission } from "@/lib/server/submissions";
 import { isAdmin, requireUser, storageAdmin } from "@/lib/server/supabase";
@@ -39,7 +41,9 @@ export default async function ListingDetailPage(props: PageProps<"/dashboard/lis
   const now = new Date();
   const pub = publicationState(sub, now);
   const missing = missingProfileFields(sub);
-  const daysLeft = pub === "published" && sub.listing_ends_at ? Math.ceil((sub.listing_ends_at.getTime() - now.getTime()) / 86400_000) : null;
+  const subscribed = sub.subscription_status !== null;
+  // Older one-time listings count down to a fixed end date; subscriptions renew.
+  const daysLeft = !subscribed && pub === "published" && sub.listing_ends_at ? Math.ceil((sub.listing_ends_at.getTime() - now.getTime()) / 86400_000) : null;
 
   return (
     <DashboardShell email={user.email} admin={isAdmin(user)} section="dashboard">
@@ -54,6 +58,9 @@ export default async function ListingDetailPage(props: PageProps<"/dashboard/lis
             <PaymentPill status={sub.payment_status} />
             <StatusPill tone={reviewTone(sub.review_status)}>{reviewLabels[sub.review_status]}</StatusPill>
             <StatusPill tone={publicationTone(pub)}>{publicationLabels[pub]}</StatusPill>
+            {sub.subscription_status && (
+              <StatusPill tone={subscriptionTone(sub.subscription_status)}>Subscription {subscriptionLabels[sub.subscription_status].toLowerCase()}</StatusPill>
+            )}
             {sub.checkout_test_mode && <TestModeBadge />}
           </div>
         </div>
@@ -67,6 +74,13 @@ export default async function ListingDetailPage(props: PageProps<"/dashboard/lis
       {q.welcome === "1" && (
         <div className="mt-6">
           <FormMessage tone="success">This listing is now linked to your account.</FormMessage>
+        </div>
+      )}
+      {q.billing === "unavailable" && (
+        <div className="mt-6">
+          <FormMessage tone="error">
+            Couldn&apos;t open your subscription settings just now. Please try again in a moment, or use the link in your Lemon Squeezy receipt email.
+          </FormMessage>
         </div>
       )}
 
@@ -114,6 +128,29 @@ export default async function ListingDetailPage(props: PageProps<"/dashboard/lis
         </div>
 
         <div className="space-y-6">
+          {sub.subscription_status && plan && (
+            <Panel title="Subscription">
+              <dl className="space-y-2 text-sm">
+                <DateRow label="Plan" value={`${plan.name} · ${formatPlanRate(plan, sub.price_cents)}`} />
+                <DateRow label="Status" value={subscriptionLabels[sub.subscription_status]} />
+                {sub.subscription_status === "cancelled" || sub.subscription_status === "expired" ? (
+                  <DateRow label="Listing ends" value={fmtDate(sub.subscription_ends_at)} />
+                ) : (
+                  <DateRow label="Next renewal" value={fmtDate(sub.subscription_renews_at)} />
+                )}
+              </dl>
+              {sub.subscription_status !== "expired" && (
+                // A plain link: the billing route redirects to Lemon Squeezy.
+                <a href={`/dashboard/listings/${sub.id}/billing`} className={buttonClass("secondary", "md", "mt-4 w-full")}>
+                  Manage subscription <Icon name="arrow-up-right" size={14} />
+                </a>
+              )}
+              <p className="mt-3 text-xs leading-relaxed text-faint">
+                Update your card, switch plan or cancel in Lemon Squeezy&apos;s billing portal. If you cancel, your listing stays live until the
+                end of the period you&apos;ve paid for.
+              </p>
+            </Panel>
+          )}
           {sub.review_notes && (
             <Panel title="Review feedback">
               <p className="whitespace-pre-line text-sm leading-relaxed text-fg">{sub.review_notes}</p>
@@ -141,9 +178,13 @@ export default async function ListingDetailPage(props: PageProps<"/dashboard/lis
             <dl className="space-y-2 text-sm">
               <DateRow label="Submitted" value={fmtDate(sub.created_at)} />
               <DateRow label="Paid" value={fmtDate(sub.paid_at)} />
-              <DateRow label="Listing duration" value={`${plan?.days ?? "—"} days`} />
               <DateRow label="Listing starts" value={fmtDate(sub.listing_starts_at)} />
-              <DateRow label="Listing expires" value={fmtDate(sub.listing_ends_at)} />
+              {!subscribed && (
+                <>
+                  <DateRow label="Listing duration" value={`${plan?.days ?? "—"} days`} />
+                  <DateRow label="Listing expires" value={fmtDate(sub.listing_ends_at)} />
+                </>
+              )}
               {daysLeft !== null && <DateRow label="Days left" value={String(daysLeft)} />}
             </dl>
           </Panel>
@@ -155,7 +196,7 @@ export default async function ListingDetailPage(props: PageProps<"/dashboard/lis
                 {orders.map((o) => (
                   <li key={o.id} className="rounded-lg border border-line bg-subtle px-3 py-2.5">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="font-medium text-fg">Order #{o.order_number ?? o.provider_order_id}</span>
+                      <span className="font-medium text-fg">{o.kind === "renewal" ? "Renewal" : `Order #${o.order_number ?? o.provider_order_id}`}</span>
                       <span className="tabular text-fg">{formatCents(o.total_cents, o.currency)}</span>
                     </div>
                     <div className="mt-1 flex flex-wrap items-center gap-2 text-[12px] text-muted">
@@ -186,9 +227,20 @@ function NextStep({ sub, missing }: { sub: SafeSubmission; missing: string[] }) 
       refunded
         ? "This listing won't be published."
         : "We'll update this page as soon as Lemon Squeezy confirms the payment.";
+  } else if (sub.subscription_status === "past_due" || sub.subscription_status === "unpaid") {
+    title = "Renewal payment failed";
+    body = "Lemon Squeezy couldn't charge your card and will retry. Update your payment method from Manage subscription to keep your listing live.";
+  } else if (sub.subscription_status === "expired") {
+    title = "Subscription ended";
+    body = "Your listing is no longer shown. Submit a new listing any time.";
+  } else if (pub === "published" && sub.subscription_status === "cancelled") {
+    title = "Subscription cancelled";
+    body = `Your listing stays live until ${fmtDate(sub.subscription_ends_at)}, and you won't be charged again.`;
   } else if (pub === "published") {
     title = "Your listing is live";
-    body = `Shown until ${fmtDate(sub.listing_ends_at)}. Keep your details up to date — changes appear right away.`;
+    body = sub.subscription_status
+      ? `It stays live while your subscription is active (next renewal ${fmtDate(sub.subscription_renews_at)}). Keep your details up to date — changes appear right away.`
+      : `Shown until ${fmtDate(sub.listing_ends_at)}. Keep your details up to date — changes appear right away.`;
   } else if (pub === "expired") {
     title = "Listing period ended";
     body = "Thanks for listing with us. Submit a new listing any time.";

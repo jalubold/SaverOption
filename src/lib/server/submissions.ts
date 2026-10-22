@@ -1,8 +1,17 @@
-import { getPlan, planPriceCents, type ListingPlan, type ListingPlanId } from "@/config/listing-plans";
+import type postgres from "postgres";
+import { getPlan, planPriceCents, withPrices, type ListingPlan, type ListingPlanId } from "@/config/listing-plans";
 import { isPaid, type PaymentStatus, type ReviewStatus } from "@/lib/listing-status";
 import { claimTokenMatches } from "@/lib/server/claim";
 import { db } from "@/lib/server/db";
-import { planForVariant, type LsCatalog, type OrderEvent, type OrderStatus } from "@/lib/server/lemonsqueezy";
+import {
+  planForVariant,
+  type InvoiceEvent,
+  type LsCatalog,
+  type OrderEvent,
+  type OrderStatus,
+  type SubscriptionEvent,
+  type SubscriptionStatus,
+} from "@/lib/server/lemonsqueezy";
 import { recordFunnelEvent } from "@/lib/server/tracking";
 
 /**
@@ -40,6 +49,12 @@ export interface Submission {
   slug: string | null;
   listing_starts_at: Date | null;
   listing_ends_at: Date | null;
+  subscription_id: string | null;
+  subscription_status: SubscriptionStatus | null;
+  subscription_renews_at: Date | null;
+  subscription_ends_at: Date | null;
+  subscription_updated_at: Date | null;
+  paid_through: Date | null;
   checkout_id: string | null;
   checkout_url: string | null;
   checkout_plan: ListingPlanId | null;
@@ -58,6 +73,8 @@ export interface Order {
   id: string;
   submission_id: string;
   provider_order_id: string;
+  /** The first payment, or a subscription renewal. */
+  kind: "initial" | "renewal";
   order_identifier: string | null;
   order_number: number | null;
   plan: ListingPlanId;
@@ -77,8 +94,8 @@ export interface Order {
 const PUBLIC_COLUMNS = [
   "id", "user_id", "product_name", "website", "contact_email", "description", "logo_url", "links", "plan",
   "price_cents", "currency", "payment_status", "paid_at", "review_status", "review_notes", "reviewed_at", "slug",
-  "listing_starts_at", "listing_ends_at", "checkout_test_mode", "claimed_at", "profile_started_at",
-  "profile_completed_at", "created_at", "updated_at",
+  "listing_starts_at", "listing_ends_at", "subscription_status", "subscription_renews_at", "subscription_ends_at",
+  "paid_through", "checkout_test_mode", "claimed_at", "profile_started_at", "profile_completed_at", "created_at", "updated_at",
 ] as const;
 export type SafeSubmission = Pick<Submission, (typeof PUBLIC_COLUMNS)[number]>;
 
@@ -207,7 +224,8 @@ export async function applyOrderEvent(ev: OrderEvent, deliveryId: string, catalo
         paid_at = coalesce(orders.paid_at, excluded.paid_at), refunded_at = coalesce(excluded.refunded_at, orders.refunded_at),
         updated_at = now()`;
 
-    const statuses = await tx<{ status: OrderStatus }[]>`select status from orders where submission_id = ${sub.id}`;
+    // The first payment decides whether the listing is paid for; renewals don't undo a refund.
+    const statuses = await tx<{ status: OrderStatus }[]>`select status from orders where submission_id = ${sub.id} and kind = 'initial'`;
     const paymentStatus = rollUp(statuses.map((r) => r.status));
     const becamePaid = isPaid(paymentStatus) && !isPaid(sub.payment_status) && !sub.paid_at;
 
@@ -217,7 +235,7 @@ export async function applyOrderEvent(ev: OrderEvent, deliveryId: string, catalo
         paid_at = ${becamePaid ? new Date() : sub.paid_at},
         -- The paid plan is the truth, even if the visitor switched plans in another tab.
         plan = ${becamePaid ? plan.id : sub.plan},
-        price_cents = ${becamePaid ? planPriceCents(plan) : sub.price_cents},
+        price_cents = ${becamePaid ? ev.subtotalCents || planPriceCents(getPlan(plan.id, withPrices(catalog.prices))!) : sub.price_cents},
         -- Payment queues the listing for review; it never approves or publishes it.
         review_status = ${becamePaid && sub.review_status === "draft" ? "pending_review" : sub.review_status},
         -- The receipt email's claim link stays valid for 30 days after payment (still single-use).
@@ -230,6 +248,137 @@ export async function applyOrderEvent(ev: OrderEvent, deliveryId: string, catalo
     if (ev.status === "failed") await recordFunnelEvent("payment_failed", { submissionId: sub.id }, tx);
     return { result: "applied", submissionId: sub.id, paymentStatus } as const;
   });
+}
+
+// ─── Subscriptions (verified webhooks only) ──────────────────────────────────
+
+/** Lemon Squeezy charges renewals on the renewal date; this covers the time a renewal takes to come through. */
+const RENEWAL_GRACE_MS = 2 * 86400_000;
+
+/**
+ * When the paid-for time runs out, given a subscription's state. Only an active
+ * subscription moves it forward (to its next renewal); a cancelled one runs to
+ * its end date; a failed or paused one gets no more time until a payment succeeds.
+ */
+export function paidThrough(
+  ev: Pick<SubscriptionEvent, "status" | "renewsAt" | "endsAt">,
+  current: Date | null,
+  now = new Date(),
+): Date | null {
+  switch (ev.status) {
+    case "active":
+    case "on_trial":
+      return ev.renewsAt ? new Date(ev.renewsAt.getTime() + RENEWAL_GRACE_MS) : current;
+    case "cancelled":
+      return ev.endsAt ?? current;
+    case "expired":
+      return ev.endsAt && ev.endsAt < now ? ev.endsAt : now;
+    default: // past_due, unpaid, paused
+      return current;
+  }
+}
+
+/** The submission a subscription belongs to: by subscription id, then the checkout's custom data, then its first order. */
+async function lockSubmissionForSubscription(
+  tx: postgres.TransactionSql,
+  ev: { subscriptionId: string; submissionId: string | null; orderId?: string | null },
+): Promise<Submission | null> {
+  const [bySub] = await tx<Submission[]>`select * from submissions where subscription_id = ${ev.subscriptionId} for update`;
+  if (bySub) return bySub;
+  if (ev.submissionId) {
+    const [byId] = await tx<Submission[]>`select * from submissions where id = ${ev.submissionId} for update`;
+    if (byId) return byId;
+  }
+  if (ev.orderId) {
+    const [byOrder] = await tx<Submission[]>`select s.* from submissions s join orders o on o.submission_id = s.id
+      where o.provider_order_id = ${ev.orderId} and o.kind = 'initial' for update of s`;
+    if (byOrder) return byOrder;
+  }
+  return null;
+}
+
+/**
+ * Applies a verified subscription_* webhook: records the subscription's status
+ * and dates, and moves a published listing's end date to match what's paid for.
+ * Older events (by Lemon Squeezy's updated_at) are ignored.
+ */
+export async function applySubscriptionEvent(ev: SubscriptionEvent, deliveryId: string, catalog: LsCatalog): Promise<WebhookOutcome> {
+  return db().begin(async (tx) => {
+    const fresh = await tx`insert into webhook_events (id, event_name) values (${deliveryId}, ${ev.eventName.slice(0, 60)})
+      on conflict (id) do nothing returning id`;
+    if (fresh.length === 0) return { result: "duplicate" } as const;
+    if (ev.storeId !== catalog.storeId) return { result: "ignored", reason: "other store" } as const;
+
+    const sub = await lockSubmissionForSubscription(tx, ev);
+    if (!sub) return { result: "ignored", reason: "unknown subscription" } as const;
+    if (sub.subscription_id && sub.subscription_id !== ev.subscriptionId) return { result: "ignored", reason: "submission has another subscription" } as const;
+    if (sub.subscription_updated_at && ev.updatedAt && ev.updatedAt < sub.subscription_updated_at) return { result: "stale" } as const;
+
+    // Switching plan in the customer portal changes the variant.
+    const plan = planForVariant(catalog, ev.variantId);
+    const price = plan && plan.id !== sub.plan ? getPlan(plan.id, withPrices(catalog.prices))!.priceCents : sub.price_cents;
+    const through = paidThrough(ev, sub.paid_through);
+
+    await tx`
+      update submissions set
+        subscription_id = ${ev.subscriptionId},
+        subscription_status = ${ev.status},
+        subscription_renews_at = ${ev.renewsAt},
+        subscription_ends_at = ${ev.endsAt},
+        subscription_updated_at = ${ev.updatedAt ?? new Date()},
+        paid_through = ${through},
+        plan = ${plan?.id ?? sub.plan},
+        price_cents = ${price},
+        -- A listing that has been published stays live exactly as long as it's paid for.
+        listing_ends_at = case when listing_starts_at is not null and ${through}::timestamptz is not null
+          then greatest(${through}::timestamptz, listing_starts_at + interval '1 second') else listing_ends_at end,
+        updated_at = now()
+      where id = ${sub.id}`;
+    return { result: "applied", submissionId: sub.id, paymentStatus: sub.payment_status } as const;
+  });
+}
+
+/**
+ * Records a verified renewal payment (subscription_payment_*) next to the first
+ * order, so revenue includes it. The first payment is recorded from its order,
+ * so "initial" invoices are skipped. Renewals never change the payment status.
+ */
+export async function applyInvoiceEvent(ev: InvoiceEvent, deliveryId: string, catalog: LsCatalog): Promise<WebhookOutcome> {
+  return db().begin(async (tx) => {
+    const fresh = await tx`insert into webhook_events (id, event_name) values (${deliveryId}, ${ev.eventName.slice(0, 60)})
+      on conflict (id) do nothing returning id`;
+    if (fresh.length === 0) return { result: "duplicate" } as const;
+    if (ev.storeId !== catalog.storeId) return { result: "ignored", reason: "other store" } as const;
+    if (ev.billingReason === "initial") return { result: "ignored", reason: "first payment is recorded from its order" } as const;
+
+    const sub = await lockSubmissionForSubscription(tx, ev);
+    if (!sub || (sub.subscription_id && sub.subscription_id !== ev.subscriptionId)) return { result: "ignored", reason: "unknown subscription" } as const;
+
+    const providerId = `invoice-${ev.invoiceId}`;
+    const [prev] = await tx<{ provider_updated_at: Date | null }[]>`
+      select provider_updated_at from orders where provider_order_id = ${providerId} for update`;
+    if (prev?.provider_updated_at && ev.updatedAt && ev.updatedAt < prev.provider_updated_at) return { result: "stale" } as const;
+
+    await tx`
+      insert into orders (submission_id, provider_order_id, kind, variant_id, plan, status, currency, subtotal_cents, tax_cents,
+        total_cents, refunded_cents, test_mode, provider_updated_at, paid_at, refunded_at)
+      values (${sub.id}, ${providerId}, 'renewal', ${catalog.variants[sub.plan] ?? ""}, ${sub.plan}, ${ev.status}, ${ev.currency},
+        ${ev.subtotalCents}, ${ev.taxCents}, ${ev.totalCents}, ${ev.refundedCents}, ${ev.testMode}, ${ev.updatedAt},
+        ${ev.status === "paid" || ev.status === "refunded" || ev.status === "partially_refunded" ? (ev.createdAt ?? new Date()) : null},
+        ${ev.refundedAt})
+      on conflict (provider_order_id) do update set
+        status = excluded.status, subtotal_cents = excluded.subtotal_cents, tax_cents = excluded.tax_cents,
+        total_cents = excluded.total_cents, refunded_cents = excluded.refunded_cents, provider_updated_at = excluded.provider_updated_at,
+        paid_at = coalesce(orders.paid_at, excluded.paid_at), refunded_at = coalesce(excluded.refunded_at, orders.refunded_at),
+        updated_at = now()`;
+    return { result: "applied", submissionId: sub.id, paymentStatus: sub.payment_status } as const;
+  });
+}
+
+/** The Lemon Squeezy subscription behind the advertiser's own listing, if it has one. */
+export async function subscriptionIdFor(id: string, userId: string): Promise<string | null> {
+  const [row] = await db()<{ subscription_id: string | null }[]>`select subscription_id from submissions where id = ${id} and user_id = ${userId}`;
+  return row?.subscription_id ?? null;
 }
 
 // ─── Claiming by an account ──────────────────────────────────────────────────
@@ -389,7 +538,13 @@ export async function adminAct(id: string, action: AdminAction): Promise<{ ok: t
         if (missing.length) return { ok: false as const, error: `Profile incomplete: ${missing.join(", ")}.` };
         const plan = getPlan(sub.plan)!;
         const startsAt = action.startsAt ?? sub.listing_starts_at ?? new Date();
-        const endsAt = action.endsAt ?? new Date(startsAt.getTime() + plan.days * 86400_000);
+        // A subscription listing runs as long as it's paid for; webhooks keep the end date current.
+        // Older one-time listings (and a subscription whose first event hasn't arrived) use the plan length.
+        const endsAt = sub.paid_through ?? action.endsAt ?? new Date(startsAt.getTime() + plan.days * 86400_000);
+        const now = new Date();
+        if (sub.paid_through && endsAt <= (startsAt > now ? startsAt : now)) {
+          return { ok: false as const, error: `The subscription isn't paid up (paid through ${endsAt.toISOString().slice(0, 10)}), so the listing can't go live.` };
+        }
         if (endsAt <= startsAt) return { ok: false as const, error: "End date must be after the start date." };
         let slug = sub.slug;
         if (!slug) {

@@ -7,7 +7,7 @@ import { normalizeWebsite, validateDetails, type PromoteDetails, type PromoteErr
 import { CLAIM_TTL_DAYS, claimTokenMatches, newClaimToken, readClaimCookie, writeClaimCookie } from "@/lib/server/claim";
 import { dbConfigured } from "@/lib/server/db";
 import { ensureFunnelSession } from "@/lib/server/funnel-session";
-import { checkoutMode, createCheckout, LemonSqueezyError } from "@/lib/server/lemonsqueezy";
+import { checkoutMode, createCheckout, getListingPlans, LemonSqueezyError } from "@/lib/server/lemonsqueezy";
 import { requestOrigin } from "@/lib/server/origin";
 import { recordCheckout, reusableCheckout, setClaimToken, upsertPendingSubmission } from "@/lib/server/submissions";
 import { loadPromoteContext } from "@/lib/server/promote-context";
@@ -29,7 +29,7 @@ const KEY_RE = /^[A-Za-z0-9_-]{16,64}$/;
 /**
  * Saves the pending submission and sends the visitor to Lemon Squeezy's hosted
  * checkout. Everything that matters is decided here on the server: the details
- * are re-validated, the price comes from the plan list, and the variant from env.
+ * are re-validated, and the price and variant come from the connected Lemon Squeezy plans.
  */
 export async function startCheckout(input: {
   details: PromoteDetails;
@@ -38,7 +38,7 @@ export async function startCheckout(input: {
   /** Hidden field humans leave empty. */
   company?: string;
 }): Promise<StartCheckoutResult> {
-  const plan = getPlan(input.planId);
+  const plan = getPlan(input.planId, await getListingPlans());
   if (!plan) return { kind: "error", message: "Choose a listing plan." };
   if (input.company) return { kind: "error", message: "Something went wrong. Please try again." };
   const details: PromoteDetails = {

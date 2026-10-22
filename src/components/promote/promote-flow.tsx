@@ -4,14 +4,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 import { startCheckout } from "@/app/promote/actions";
-import { formatPlanPrice, listingBenefits, listingPlans, type ListingPlanId } from "@/config/listing-plans";
+import { formatPlanPrice, formatPlanRate, listingBenefits, listingPlans, type ListingPlan, type ListingPlanId } from "@/config/listing-plans";
 import type { FlowMode, ResumeData } from "@/components/promote/flow-types";
 import { DESCRIPTION_MAX, emptyDetails, validateDetails, type PromoteDetails, type PromoteErrors } from "@/components/promote/validation";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, cn } from "@/components/ui/primitives";
 
 /**
- * Promote form: details and plan on one screen, then Lemon Squeezy checkout.
+ * Promote form: details and subscription plan on one screen, then Lemon Squeezy checkout.
  * No account before checkout. The draft lives in sessionStorage so a refresh or
  * a cancelled checkout never loses it; an idempotency key stops duplicate submissions.
  */
@@ -34,6 +34,7 @@ type Closed = { saved: boolean; reference: string | null; mailto: string };
 
 export function PromoteFlow({
   mode,
+  plans = listingPlans,
   resume,
   paidId = null,
   signedIn = false,
@@ -42,6 +43,8 @@ export function PromoteFlow({
   heading = true,
 }: {
   mode: FlowMode;
+  /** The plans with their current Lemon Squeezy prices (from the server). */
+  plans?: ListingPlan[];
   resume: ResumeData | null;
   /** A paid submission from this browser that still needs an account. */
   paidId?: string | null;
@@ -63,7 +66,7 @@ export function PromoteFlow({
   const [company, setCompany] = useState("");
   const started = useRef(false);
   const formRef = useRef<HTMLFormElement>(null);
-  const plan = listingPlans.find((p) => p.id === planId)!;
+  const plan = plans.find((p) => p.id === planId)!;
 
   // Restore a draft (refresh, or back from checkout) unless the server handed us a saved submission.
   useEffect(() => {
@@ -208,7 +211,7 @@ export function PromoteFlow({
     );
   }
 
-  if (closed) return <ClosedState closed={closed} details={details} planId={planId} titleId={titleId} onEdit={() => setClosed(null)} />;
+  if (closed) return <ClosedState closed={closed} details={details} plan={plan} titleId={titleId} onEdit={() => setClosed(null)} />;
 
   return (
     <form ref={formRef} noValidate onSubmit={submit}>
@@ -217,7 +220,7 @@ export function PromoteFlow({
           <h2 id={titleId} className="display pr-10 text-[1.75rem] sm:text-[2.1rem]">
             Promote your <em className="accent">SaaS</em>
           </h2>
-          <p className="mt-1 text-sm leading-relaxed text-muted">Pay once for a fixed listing period. Reviewed before it goes live. No account needed to start.</p>
+          <p className="mt-1 text-sm leading-relaxed text-muted">Subscribe monthly, quarterly or yearly, and cancel anytime. Reviewed before it goes live. No account needed to start.</p>
           <p className="mt-2 text-[13px] text-muted">
             Already advertising with us?{" "}
             <Link href="/dashboard" className="font-medium text-accent-ink underline-offset-2 hover:underline">
@@ -241,7 +244,7 @@ export function PromoteFlow({
       <fieldset className="mt-5">
         <legend className="text-[13px] font-medium text-fg">Listing plan</legend>
         <div className="mt-1.5 grid grid-cols-3 gap-2 pt-2">
-          {listingPlans.map((p) => (
+          {plans.map((p) => (
             <label
               key={p.id}
               className={cn(
@@ -269,7 +272,7 @@ export function PromoteFlow({
               <span className="tabular mt-0.5 text-[1.15rem] font-semibold leading-tight tracking-tight text-heading sm:text-[1.3rem]">{formatPlanPrice(p)}</span>
               <span className="flex items-center gap-1 text-[11px] text-faint">
                 {p.id === planId && <Icon name="check" size={11} className="text-accent-ink" />}
-                {p.days} days
+                /{p.period}
               </span>
             </label>
           ))}
@@ -295,9 +298,9 @@ export function PromoteFlow({
 
       <div className="mt-4 flex items-baseline justify-between gap-3 border-t border-line pt-4 text-sm">
         <span className="text-muted">
-          {plan.name} · {plan.days}-day listing · one-time
+          {plan.name} · cancel anytime
         </span>
-        <span className="tabular text-base font-semibold text-fg">{formatPlanPrice(plan)}</span>
+        <span className="tabular whitespace-nowrap text-base font-semibold text-fg">{formatPlanRate(plan)}</span>
       </div>
 
       {mode === "test" && (
@@ -317,14 +320,14 @@ export function PromoteFlow({
           </>
         ) : (
           <>
-            {mode === "closed" ? "Submit listing" : "Continue to Checkout"} — {formatPlanPrice(plan)}
+            {mode === "closed" ? "Submit listing" : "Continue to Checkout"} — {formatPlanRate(plan)}
             <Icon name="arrow-right" size={16} />
           </>
         )}
       </button>
       <p className="mt-2.5 flex items-center justify-center gap-1.5 text-center text-xs text-faint">
         <Icon name="shield" size={13} />
-        {mode === "closed" ? "Nothing is charged now." : "Secure payment by Lemon Squeezy. Taxes, if any, added at checkout."}
+        {mode === "closed" ? "Nothing is charged now." : "Secure checkout by Lemon Squeezy. Renews until you cancel."}
       </p>
       <p className="mt-1 text-center text-xs text-faint">
         By continuing you agree to our{" "}
@@ -341,8 +344,7 @@ export function PromoteFlow({
   );
 }
 
-function ClosedState({ closed, details, planId, titleId, onEdit }: { closed: Closed; details: PromoteDetails; planId: ListingPlanId; titleId?: string; onEdit: () => void }) {
-  const plan = listingPlans.find((p) => p.id === planId)!;
+function ClosedState({ closed, details, plan, titleId, onEdit }: { closed: Closed; details: PromoteDetails; plan: ListingPlan; titleId?: string; onEdit: () => void }) {
   return (
     <div>
       <span className="icon-tile size-11">
@@ -362,7 +364,7 @@ function ClosedState({ closed, details, planId, titleId, onEdit }: { closed: Clo
       <p className="mt-2 text-sm leading-relaxed text-muted">
         Online checkout isn&apos;t open yet.{" "}
         {closed.saved
-          ? `We've saved ${details.productName.trim()} (${plan.name}, ${formatPlanPrice(plan)}) and will email you at ${details.email.trim()} when payments open. You haven't been charged.`
+          ? `We've saved ${details.productName.trim()} (${plan.name}, ${formatPlanRate(plan)}) and will email you at ${details.email.trim()} when payments open. You haven't been charged.`
           : "Email us your details and we'll reply with the next steps. You haven't been charged."}
       </p>
       {closed.reference && (

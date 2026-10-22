@@ -27,8 +27,10 @@ export function ConnectLemonSqueezy({ connected, disabled }: { connected: boolea
       )}
       {state?.ok && (
         <FormMessage tone="success">
-          Connected to {state.store.name}. Variants matched and webhook {state.webhook.created ? "created" : "updated"}
+          Connected to {state.store.name}. Subscription plans matched ({Object.values(state.variants).map((v) => v.name).join(", ")}) and webhook{" "}
+          {state.webhook.created ? "created" : "updated"}
           {state.webhook.testMode ? " (test mode)" : ""}.
+          {state.coreEventsOnly ? " Lemon Squeezy refused some event types, so only the essential ones were registered." : ""}
         </FormMessage>
       )}
     </form>

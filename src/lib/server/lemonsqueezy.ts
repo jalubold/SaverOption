@@ -1,11 +1,14 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
-import { getPlan, listingPlans, type ListingPlan, type ListingPlanId } from "@/config/listing-plans";
+import { getPlan, listingPlans, withPrices, type ListingPlan, type ListingPlanId } from "@/config/listing-plans";
+import type { SubscriptionStatus } from "@/lib/listing-status";
 import { getSettings } from "@/lib/server/settings";
 
 /**
- * Lemon Squeezy integration, isolated behind three functions (checkoutMode,
- * createCheckout, parseOrderWebhook) so another provider can replace it without
- * touching the advertiser flow.
+ * Lemon Squeezy integration, isolated behind a few functions (checkoutMode,
+ * createCheckout, the webhook parsers, subscriptionPortalUrl) so another
+ * provider can replace it without touching the advertiser flow. Listing plans
+ * are subscriptions: the first payment arrives as an order, renewals as
+ * subscription invoices, and status changes as subscription events.
  *
  * Live payments stay off until LEMONSQUEEZY_LIVE_CHECKOUT_ENABLED=true is set,
  * which must only happen once Lemon Squeezy has approved paid directory listings
@@ -17,6 +20,8 @@ export const LS_API = (process.env.LEMONSQUEEZY_API_URL?.replace(/\/$/, "") || "
 export interface LsCatalog {
   storeId: string | null;
   variants: Record<ListingPlanId, string | null>;
+  /** Prices (cents) of the variants the Connect button matched, by plan. */
+  prices: Partial<Record<ListingPlanId, number>>;
 }
 export interface LsConfig {
   apiKey: string;
@@ -30,12 +35,24 @@ export interface LsConfig {
  */
 export async function lsCatalog(): Promise<LsCatalog> {
   const saved = await getSettings();
+  const prices: Partial<Record<ListingPlanId, number>> = {};
+  for (const p of listingPlans) {
+    const cents = Number(saved.get(`ls_price_${p.id}`));
+    // A variant set by env var may not be the one whose price was saved.
+    if (!process.env[p.variantEnv]?.trim() && Number.isInteger(cents) && cents > 0) prices[p.id] = cents;
+  }
   return {
     storeId: process.env.LEMONSQUEEZY_STORE_ID?.trim() || saved.get("ls_store_id") || null,
     variants: Object.fromEntries(
       listingPlans.map((p) => [p.id, process.env[p.variantEnv]?.trim() || saved.get(`ls_variant_${p.id}`) || null]),
     ) as Record<ListingPlanId, string | null>,
+    prices,
   };
+}
+
+/** The plans as sold right now: prices from the connected Lemon Squeezy variants, defaults otherwise. */
+export async function getListingPlans(): Promise<ListingPlan[]> {
+  return withPrices((await lsCatalog()).prices);
 }
 
 export function lsApiKey(): string | null {
@@ -184,6 +201,7 @@ function mapStatus(s: unknown): OrderStatus | null {
       return "paid";
     case "failed":
     case "fraudulent":
+    case "void": // an invoice that was never paid
       return "failed";
     case "refunded":
       return "refunded";
@@ -227,4 +245,135 @@ export function parseOrderWebhook(body: unknown, headerEventName: string | null)
     updatedAt: str(a.updated_at),
     refundedAt: str(a.refunded_at),
   };
+}
+
+// ─── Subscriptions ───────────────────────────────────────────────────────────
+
+export type { SubscriptionStatus };
+const SUBSCRIPTION_STATUSES = new Set<string>(["on_trial", "active", "paused", "past_due", "unpaid", "cancelled", "expired"]);
+
+export interface SubscriptionEvent {
+  eventName: string;
+  submissionId: string | null;
+  subscriptionId: string;
+  storeId: string;
+  /** The first order, which links the subscription to our submission. */
+  orderId: string | null;
+  variantId: string;
+  status: SubscriptionStatus;
+  renewsAt: Date | null;
+  endsAt: Date | null;
+  updatedAt: Date | null;
+  testMode: boolean;
+}
+
+/** A renewal (or first) payment of a subscription. */
+export interface InvoiceEvent {
+  eventName: string;
+  submissionId: string | null;
+  invoiceId: string;
+  subscriptionId: string;
+  storeId: string;
+  billingReason: string;
+  status: OrderStatus;
+  currency: string;
+  subtotalCents: number;
+  taxCents: number;
+  totalCents: number;
+  refundedCents: number;
+  testMode: boolean;
+  createdAt: Date | null;
+  updatedAt: Date | null;
+  refundedAt: Date | null;
+}
+
+const date = (v: unknown) => {
+  const d = typeof v === "string" && v ? new Date(v) : null;
+  return d && !Number.isNaN(d.getTime()) ? d : null;
+};
+
+type WebhookBody = {
+  meta?: { event_name?: string; test_mode?: boolean; custom_data?: Record<string, unknown> };
+  data?: { type?: string; id?: string | number; attributes?: Record<string, unknown> };
+};
+
+function customSubmissionId(b: WebhookBody): string | null {
+  const custom = b.meta?.custom_data?.submission_id;
+  return typeof custom === "string" && UUID.test(custom) ? custom.toLowerCase() : null;
+}
+
+/** Extracts the fields we use from a subscription_* webhook, or null if it isn't one. */
+export function parseSubscriptionWebhook(body: unknown, headerEventName: string | null): SubscriptionEvent | null {
+  const b = body as WebhookBody;
+  if (b?.data?.type !== "subscriptions" || b.data.id === undefined || !b.data.attributes) return null;
+  const a = b.data.attributes;
+  const status = typeof a.status === "string" && SUBSCRIPTION_STATUSES.has(a.status) ? (a.status as SubscriptionStatus) : null;
+  if (!status || a.variant_id === undefined || a.store_id === undefined) return null;
+  return {
+    eventName: headerEventName || b.meta?.event_name || "",
+    submissionId: customSubmissionId(b),
+    subscriptionId: String(b.data.id),
+    storeId: String(a.store_id),
+    orderId: a.order_id !== undefined && a.order_id !== null ? String(a.order_id) : null,
+    variantId: String(a.variant_id),
+    status,
+    renewsAt: date(a.renews_at),
+    endsAt: date(a.ends_at),
+    updatedAt: date(a.updated_at),
+    testMode: Boolean(a.test_mode ?? b.meta?.test_mode),
+  };
+}
+
+/** Extracts the fields we use from a subscription_payment_* webhook, or null if it isn't one. */
+export function parseInvoiceWebhook(body: unknown, headerEventName: string | null): InvoiceEvent | null {
+  const b = body as WebhookBody;
+  if (b?.data?.type !== "subscription-invoices" || b.data.id === undefined || !b.data.attributes) return null;
+  const a = b.data.attributes;
+  const status = mapStatus(a.status);
+  if (!status || a.subscription_id === undefined || a.store_id === undefined) return null;
+  return {
+    eventName: headerEventName || b.meta?.event_name || "",
+    submissionId: customSubmissionId(b),
+    invoiceId: String(b.data.id),
+    subscriptionId: String(a.subscription_id),
+    storeId: String(a.store_id),
+    billingReason: str(a.billing_reason) ?? "renewal",
+    status,
+    currency: str(a.currency) ?? "USD",
+    subtotalCents: int(a.subtotal),
+    taxCents: int(a.tax),
+    totalCents: int(a.total),
+    refundedCents: int(a.refunded_amount),
+    testMode: Boolean(a.test_mode ?? b.meta?.test_mode),
+    createdAt: date(a.created_at),
+    updatedAt: date(a.updated_at),
+    refundedAt: date(a.refunded_at),
+  };
+}
+
+/**
+ * A signed link to Lemon Squeezy's customer portal for one subscription, where
+ * the advertiser updates their card, switches plan or cancels. Links expire
+ * after 24 hours, so one is fetched each time. Null if it can't be had.
+ */
+export async function subscriptionPortalUrl(subscriptionId: string): Promise<string | null> {
+  const apiKey = lsApiKey();
+  if (!apiKey || !/^[0-9]{1,20}$/.test(subscriptionId)) return null;
+  try {
+    const res = await fetch(`${LS_API}/subscriptions/${subscriptionId}`, {
+      headers: { Accept: "application/vnd.api+json", Authorization: `Bearer ${apiKey}` },
+      cache: "no-store",
+      signal: AbortSignal.timeout(10_000),
+    });
+    if (!res.ok) {
+      console.error(`[ls] subscription ${subscriptionId} lookup failed (${res.status})`);
+      return null;
+    }
+    const json = (await res.json()) as { data?: { attributes?: { urls?: { customer_portal?: unknown } } } };
+    const url = json.data?.attributes?.urls?.customer_portal;
+    return typeof url === "string" && url.startsWith("https://") ? url : null;
+  } catch (err) {
+    console.error("[ls] subscription lookup failed:", err instanceof Error ? err.message : err);
+    return null;
+  }
 }

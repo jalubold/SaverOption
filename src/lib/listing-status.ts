@@ -5,6 +5,8 @@
  */
 
 export type PaymentStatus = "awaiting_payment" | "pending" | "paid" | "failed" | "refunded" | "partially_refunded";
+/** Lemon Squeezy's subscription status. */
+export type SubscriptionStatus = "on_trial" | "active" | "paused" | "past_due" | "unpaid" | "cancelled" | "expired";
 export type ReviewStatus = "draft" | "pending_review" | "approved" | "rejected" | "published";
 /** Review status plus what time does to a published listing. */
 export type ListingState = Exclude<ReviewStatus, "published"> | "scheduled" | "published" | "expired";
@@ -100,4 +102,30 @@ export function publicationState(
 
 export function publicationTone(state: PublicationState): "good" | "wait" | "bad" | "neutral" {
   return state === "published" ? "good" : state === "scheduled" ? "wait" : "neutral";
+}
+
+export const subscriptionLabels: Record<SubscriptionStatus, string> = {
+  on_trial: "Trial",
+  active: "Active",
+  paused: "Paused",
+  past_due: "Payment failed",
+  unpaid: "Unpaid",
+  cancelled: "Cancelled",
+  expired: "Ended",
+};
+
+/** A cancelled subscription still runs to the end of its paid period, so it's "waiting", not bad. */
+export function subscriptionTone(status: SubscriptionStatus): "good" | "wait" | "bad" | "neutral" {
+  switch (status) {
+    case "active":
+    case "on_trial":
+      return "good";
+    case "cancelled":
+      return "wait";
+    case "past_due":
+    case "unpaid":
+      return "bad";
+    default:
+      return "neutral";
+  }
 }
