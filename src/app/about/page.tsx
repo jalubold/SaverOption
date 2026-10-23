@@ -3,7 +3,7 @@ import { Container } from "@/components/ui/primitives";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: `About ${siteConfig.name}`,
+  title: "How we find and check software deals",
   description: `${siteConfig.name} collects software deals, free credits and perks in one place and links every offer to its source.`,
   path: "/about",
 });

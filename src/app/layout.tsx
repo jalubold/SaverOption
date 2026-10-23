@@ -11,7 +11,7 @@ import { PromoteProvider } from "@/components/promote/promote-modal";
 import { SiteHeader } from "@/components/layout/site-header";
 import { JsonLd } from "@/components/seo/json-ld";
 import { getListingPlans } from "@/lib/server/lemonsqueezy";
-import { websiteJsonLd } from "@/lib/seo";
+import { organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 import "./globals.css";
 
 const instrumentSerif = Instrument_Serif({
@@ -24,7 +24,8 @@ const instrumentSerif = Instrument_Serif({
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.name} — ${siteConfig.tagline}`,
+    // What people search for, then the brand (the tagline is on the page itself).
+    default: `${siteConfig.name}: software deals, free credits and startup perks`,
     template: `%s · ${siteConfig.name}`,
   },
   description: siteConfig.description,
@@ -40,8 +41,15 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image" },
   // Keep pre-launch builds out of search indexes.
   robots: siteConfig.prelaunch ? { index: false, follow: false } : undefined,
-  // Google Search Console "HTML tag" verification: the content value of the tag Google gives you.
-  verification: process.env.GOOGLE_SITE_VERIFICATION ? { google: process.env.GOOGLE_SITE_VERIFICATION.trim() } : undefined,
+  // Search engine "HTML tag" verification: the content value of the tag each one gives you.
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION?.trim() || undefined,
+    yandex: process.env.YANDEX_SITE_VERIFICATION?.trim() || undefined,
+    other: process.env.BING_SITE_VERIFICATION?.trim() ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION.trim() } : undefined,
+  },
+  alternates: {
+    types: { "application/rss+xml": [{ url: "/feed.xml", title: `${siteConfig.name}: new software deals` }] },
+  },
 };
 
 export const viewport: Viewport = {
@@ -75,6 +83,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           <SiteFooter />
         </PromoteProvider>
         <JsonLd data={websiteJsonLd()} />
+        <JsonLd data={organizationJsonLd()} />
         <VisitBeacon />
         <Analytics />
       </body>

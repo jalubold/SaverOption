@@ -13,7 +13,7 @@ import { getAllOfferSlugs, getOfferBySlug, getRelatedOffers } from "@/lib/catalo
 import { estimatedSavings, formatDate, formatMoney, headlineValue, renewalLabel, summarizePrice } from "@/lib/format";
 import { claimMethodLabels, offerSourceLabels, offerTypeLabels } from "@/lib/labels";
 import { destinationUrl, hostname, outboundHref, outboundRel } from "@/lib/outbound";
-import { breadcrumbJsonLd, offerJsonLd, pageMetadata } from "@/lib/seo";
+import { breadcrumbJsonLd, dealPageJsonLd, offerJsonLd, pageMetadata } from "@/lib/seo";
 
 export const revalidate = 3600;
 
@@ -29,6 +29,7 @@ export async function generateMetadata(props: PageProps<"/deals/[slug]">): Promi
     title: `${offer.title}${offer.isExpired ? " (ended)" : ""}`,
     description: offer.summary,
     path: `/deals/${offer.slug}`,
+    ownImage: true,
   });
 }
 
@@ -80,6 +81,7 @@ export default async function DealPage(props: PageProps<"/deals/[slug]">) {
     <>
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", path: "/" }, ...crumbs])} />
       <JsonLd data={offerJsonLd(offer)} />
+      <JsonLd data={dealPageJsonLd(offer)} />
 
       <Container className="pt-8">
         <nav aria-label="Breadcrumb">

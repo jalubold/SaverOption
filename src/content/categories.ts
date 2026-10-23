@@ -3,6 +3,7 @@ import type { Category } from "@/lib/types";
 export const categories: Category[] = [
   {
     slug: "software-deals",
+    seoTitle: "Software deals and discounts",
     name: "Software Deals",
     description: "Discounts and promotions across desktop, web and developer software.",
     intro:
@@ -13,6 +14,7 @@ export const categories: Category[] = [
   },
   {
     slug: "ai-tools",
+    seoTitle: "AI tool deals, credits and free plans",
     name: "AI Tools",
     description: "Offers on AI assistants, model APIs, and AI-powered creative tools.",
     intro:
@@ -23,6 +25,7 @@ export const categories: Category[] = [
   },
   {
     slug: "saas-discounts",
+    seoTitle: "SaaS discounts and promo pricing",
     name: "SaaS Discounts",
     description: "Reduced pricing on subscription software for teams and businesses.",
     intro:
@@ -33,6 +36,7 @@ export const categories: Category[] = [
   },
   {
     slug: "lifetime-deals",
+    seoTitle: "Lifetime software deals (pay once)",
     name: "Lifetime Deals",
     description: "Pay once instead of a recurring subscription.",
     intro:
@@ -43,6 +47,7 @@ export const categories: Category[] = [
   },
   {
     slug: "free-credits",
+    seoTitle: "Free cloud, API and AI credits",
     name: "Free Credits",
     description: "Usage credits for cloud, API and infrastructure providers.",
     intro:
@@ -53,6 +58,7 @@ export const categories: Category[] = [
   },
   {
     slug: "free-trials",
+    seoTitle: "Extended and no-card software free trials",
     name: "Free Trials",
     description: "Extended or no-card trials so you can evaluate properly.",
     intro:
@@ -63,6 +69,7 @@ export const categories: Category[] = [
   },
   {
     slug: "student-discounts",
+    seoTitle: "Student software discounts and free plans",
     name: "Student Discounts",
     description: "Free or reduced plans for students and educators.",
     intro:
@@ -73,6 +80,7 @@ export const categories: Category[] = [
   },
   {
     slug: "startup-perks",
+    seoTitle: "Startup credits and perks programs",
     name: "Startup Perks",
     description: "Programs offering credits and discounts to early-stage companies.",
     intro:
@@ -83,6 +91,7 @@ export const categories: Category[] = [
   },
   {
     slug: "open-source",
+    seoTitle: "Open-source alternatives to paid software",
     name: "Open-Source Alternatives",
     description: "Free, self-hostable alternatives to paid software.",
     intro:
@@ -93,6 +102,7 @@ export const categories: Category[] = [
   },
   {
     slug: "exclusive",
+    seoTitle: "Exclusive software offers",
     name: "Exclusive Offers",
     description: "Offers arranged specifically for this site's readers.",
     intro:

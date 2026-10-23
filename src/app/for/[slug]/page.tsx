@@ -8,7 +8,7 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { Icon } from "@/components/ui/icon";
 import { Container } from "@/components/ui/primitives";
 import { getAudience, getAudiences, queryOffers } from "@/lib/catalog";
-import { breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
+import { breadcrumbJsonLd, clampDescription, collectionJsonLd, freshnessLabel, pageMetadata } from "@/lib/seo";
 
 export const revalidate = 3600;
 
@@ -19,10 +19,14 @@ export async function generateStaticParams() {
 export async function generateMetadata(props: PageProps<"/for/[slug]">): Promise<Metadata> {
   const audience = await getAudience((await props.params).slug);
   if (!audience) return {};
+  const { offers } = await queryOffers({ audience: audience.slug });
+  const fresh = freshnessLabel(offers.map((o) => o.updatedAt));
   return pageMetadata({
-    title: `${siteConfig.name} for ${audience.name}`,
-    description: audience.intro,
+    // e.g. "Software deals for Startups: 41 offers (October 2026)"
+    title: `Software deals for ${audience.name}${offers.length ? `: ${offers.length} offers` : ""}${fresh ? ` (${fresh})` : ""}`,
+    description: clampDescription(`${audience.description} ${audience.intro}`),
     path: `/for/${audience.slug}`,
+    ownImage: true,
   });
 }
 
@@ -42,6 +46,7 @@ export default async function AudiencePage(props: PageProps<"/for/[slug]">) {
           { name: title, path: `/for/${audience.slug}` },
         ])}
       />
+      <JsonLd data={collectionJsonLd({ name: `Software deals for ${audience.name}`, description: audience.intro, path: `/for/${audience.slug}`, offers })} />
       <section className="hero-glow border-b border-line">
         <Container className="py-12 sm:py-16">
           <nav aria-label="Breadcrumb" className="text-xs text-faint">

@@ -7,8 +7,9 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { Icon } from "@/components/ui/icon";
 import { Badge, buttonClass, Container } from "@/components/ui/primitives";
 import { getAllProductSlugs, getOffersForProduct, getProductBySlug } from "@/lib/catalog";
+import { offerTypeLabels } from "@/lib/labels";
 import { hostname } from "@/lib/outbound";
-import { breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
+import { breadcrumbJsonLd, clampDescription, collectionJsonLd, freshnessLabel, pageMetadata } from "@/lib/seo";
 
 export const revalidate = 3600;
 
@@ -19,10 +20,16 @@ export async function generateStaticParams() {
 export async function generateMetadata(props: PageProps<"/products/[slug]">): Promise<Metadata> {
   const product = await getProductBySlug((await props.params).slug);
   if (!product) return {};
+  const live = (await getOffersForProduct(product.id)).filter((o) => !o.isExpired);
+  const fresh = freshnessLabel(live.map((o) => o.updatedAt));
+  const kinds = [...new Set(live.map((o) => offerTypeLabels[o.type].toLowerCase()).filter(Boolean))].slice(0, 3).join(", ");
   return pageMetadata({
-    title: `${product.name} deals, discounts and offers`,
-    description: `Current ${product.name} offers — discounts, credits, trials and programs. ${product.tagline}.`,
+    title: `${product.name} deals and discounts${fresh ? ` (${fresh})` : ""}`,
+    description: clampDescription(
+      `${live.length ? `${live.length} current ${product.name} offer${live.length === 1 ? "" : "s"}${kinds ? ` (${kinds})` : ""}` : `${product.name} offers`}, linked to ${product.provider.name}'s own pages. ${product.description}`,
+    ),
     path: `/products/${product.slug}`,
+    ownImage: true,
   });
 }
 
@@ -43,6 +50,7 @@ export default async function ProductPage(props: PageProps<"/products/[slug]">) 
           { name: product.name, path: `/products/${product.slug}` },
         ])}
       />
+      <JsonLd data={collectionJsonLd({ name: `${product.name} deals and offers`, description: product.description, path: `/products/${product.slug}`, offers: active })} />
       <section className="hero-glow border-b border-line">
         <Container className="py-12 sm:py-16">
           <nav aria-label="Breadcrumb" className="text-xs text-faint">

@@ -4,11 +4,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CategoryChips } from "@/components/categories/category-links";
 import { OfferGrid } from "@/components/offers/offer-card";
+import { FaqSection } from "@/components/seo/faq-section";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, Container } from "@/components/ui/primitives";
 import { getCategories, getCategory, getSponsoredOffers, queryOffers } from "@/lib/catalog";
-import { breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
+import { categoryFaq } from "@/lib/faq";
+import { breadcrumbJsonLd, clampDescription, collectionJsonLd, faqJsonLd, freshnessLabel, pageMetadata } from "@/lib/seo";
 
 export const revalidate = 3600;
 
@@ -19,10 +21,15 @@ export async function generateStaticParams() {
 export async function generateMetadata(props: PageProps<"/categories/[slug]">): Promise<Metadata> {
   const category = await getCategory((await props.params).slug);
   if (!category) return {};
+  const { offers } = await queryOffers({ category: category.slug });
+  const fresh = freshnessLabel(offers.map((o) => o.updatedAt));
+  const count = offers.length ? `${offers.length} offer${offers.length === 1 ? "" : "s"}` : null;
   return pageMetadata({
-    title: `${category.name} — software offers`,
-    description: category.intro,
+    // e.g. "Free cloud, API and AI credits: 36 offers (October 2026)"
+    title: `${category.seoTitle ?? category.name}${count ? `: ${count}` : ""}${fresh ? ` (${fresh})` : ""}`,
+    description: clampDescription(`${category.description} ${category.intro}`),
     path: `/categories/${category.slug}`,
+    ownImage: true,
   });
 }
 
@@ -39,6 +46,7 @@ export default async function CategoryPage(props: PageProps<"/categories/[slug]"
   const offers = allOffers.filter((o) => !sponsoredSlot.some((s) => s.id === o.id));
   const total = allOffers.length;
   const others = all.filter((c) => c.slug !== category.slug && c.count > 0);
+  const faq = categoryFaq(category, allOffers);
 
   return (
     <div className="theme-dark">
@@ -49,6 +57,8 @@ export default async function CategoryPage(props: PageProps<"/categories/[slug]"
           { name: category.name, path: `/categories/${category.slug}` },
         ])}
       />
+      <JsonLd data={collectionJsonLd({ name: category.name, description: category.intro, path: `/categories/${category.slug}`, offers: allOffers })} />
+      <JsonLd data={faqJsonLd(faq)} />
       <section className="hero-glow border-b border-line">
         <Container className="py-12 sm:py-16">
           <nav aria-label="Breadcrumb" className="text-xs text-faint">
@@ -97,6 +107,8 @@ export default async function CategoryPage(props: PageProps<"/categories/[slug]"
             <p className="mt-1.5 text-sm text-muted">New offers are added regularly. Browse another category in the meantime.</p>
           </div>
         )}
+
+        <FaqSection id="category-faq" title={`${category.name}: common questions`} items={faq} />
 
         {others.length > 0 && (
           <section aria-labelledby="other-cats" className="mt-16">

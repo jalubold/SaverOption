@@ -26,6 +26,8 @@ export interface Category {
   description: string;
   /** Longer intro shown at the top of the category page (SEO copy). */
   intro: string;
+  /** What people search for, used in the page title, e.g. "Free cloud, API and AI credits". */
+  seoTitle?: string;
   icon: IconName;
   /** Gradient for the icon tile and hover glow. */
   color: { from: string; to: string };
