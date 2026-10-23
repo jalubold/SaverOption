@@ -3,7 +3,31 @@ import { siteConfig } from "@/config/site";
 import { absoluteUrl } from "@/lib/seo";
 
 /** Private and redirect routes: never useful in search results or AI answers. */
-const PRIVATE = ["/go/", "/api/", "/dashboard", "/admin", "/claim", "/auth/", "/login", "/signup", "/promote/success", "/listings/*/visit"];
+const PRIVATE = [
+  "/go/",
+  "/api/",
+  "/dashboard",
+  "/admin",
+  "/claim",
+  "/auth/",
+  "/login",
+  "/signup",
+  "/promote/success",
+  "/listings/*/visit",
+  // The signed-in Saver Option Business app (the /business landing page stays public).
+  "/business/dashboard",
+  "/business/subscriptions",
+  "/business/software",
+  "/business/licenses",
+  "/business/renewals",
+  "/business/savings",
+  "/business/reports",
+  "/business/team",
+  "/business/settings",
+  "/business/onboarding",
+  "/business/notifications",
+  "/business/search",
+];
 
 /**
  * AI search and assistant crawlers, named so it's explicit they're welcome on

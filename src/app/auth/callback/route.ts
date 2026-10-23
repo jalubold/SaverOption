@@ -17,7 +17,12 @@ const OTP_TYPES = new Set<EmailOtpType>(["signup", "email", "recovery", "invite"
 export async function GET(request: NextRequest) {
   const url = request.nextUrl;
   const next = safeNext(url.searchParams.get("next"));
-  const fail = NextResponse.redirect(new URL("/login?error=link", url.origin));
+  const business = next.startsWith("/business");
+  // Google returns error=access_denied when someone cancels on the consent screen.
+  const cancelled = url.searchParams.get("error") === "access_denied";
+  const fail = NextResponse.redirect(
+    new URL(business ? `/business/login?error=${cancelled ? "cancelled" : "google"}&next=${encodeURIComponent(next)}` : "/login?error=link", url.origin),
+  );
   if (!authConfigured() || url.searchParams.get("error")) return fail;
 
   const supabase = await supabaseServer();
@@ -36,7 +41,7 @@ export async function GET(request: NextRequest) {
   if (!ok) return fail;
 
   // A user created in the last few minutes signed up just now.
-  if (createdAt && Date.now() - new Date(createdAt).getTime() < 10 * 60_000 && dbConfigured()) {
+  if (!business && createdAt && Date.now() - new Date(createdAt).getTime() < 10 * 60_000 && dbConfigured()) {
     try {
       const claim = await getSubmissionByClaim(await readClaimCookie());
       await recordFunnelEvent("account_created", { submissionId: claim && !claim.user_id ? claim.id : null, sessionId: await readFunnelSession() });

@@ -8,6 +8,7 @@ import { siteConfig } from "@/config/site";
 import { VisitBeacon } from "@/components/analytics/visit-beacon";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { PromoteProvider } from "@/components/promote/promote-modal";
+import { SiteChrome } from "@/components/layout/site-chrome";
 import { SiteHeader } from "@/components/layout/site-header";
 import { JsonLd } from "@/components/seo/json-ld";
 import { getListingPlans } from "@/lib/server/lemonsqueezy";
@@ -76,11 +77,9 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           Skip to content
         </a>
         <PromoteProvider plans={plans}>
-          <SiteHeader />
-          <main id="main" className="flex-1">
+          <SiteChrome header={<SiteHeader />} footer={<SiteFooter />}>
             {children}
-          </main>
-          <SiteFooter />
+          </SiteChrome>
         </PromoteProvider>
         <JsonLd data={websiteJsonLd()} />
         <JsonLd data={organizationJsonLd()} />

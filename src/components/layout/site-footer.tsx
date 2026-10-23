@@ -27,6 +27,7 @@ export async function SiteFooter() {
       title: "About",
       links: [
         { label: `About ${siteConfig.name}`, href: "/about" },
+        { label: "Saver Option Business", href: "/business" },
         { label: "Promote your SaaS", href: "/promote" },
         { label: "Advertiser sign in", href: "/dashboard" },
         { label: "Partnerships", href: "/partnerships" },

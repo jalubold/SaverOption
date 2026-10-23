@@ -1,0 +1,204 @@
+import Link from "next/link";
+import type { ReactNode } from "react";
+import { createDemoAction, switchWorkspaceAction } from "@/app/business/actions/workspace";
+import { roleLabels } from "@/lib/business/constants";
+import { can } from "@/lib/business/permissions";
+import { displayName, type BizContext } from "@/lib/server/business/context";
+import { BrandMark } from "@/components/brand/logo";
+import { Icon } from "@/components/ui/icon";
+import { buttonClass, cn } from "@/components/ui/primitives";
+import { MobileMenuButton, Popover, SidebarFrame, SidebarNav, type NavItem } from "@/components/business/shell-client";
+
+const main: NavItem[] = [
+  { label: "Overview", href: "/business/dashboard", icon: "home" },
+  { label: "Subscriptions", href: "/business/subscriptions", icon: "layers" },
+  { label: "Software Inventory", href: "/business/software", icon: "box" },
+  { label: "Licenses & Seats", href: "/business/licenses", icon: "key" },
+  { label: "Renewals", href: "/business/renewals", icon: "calendar" },
+  { label: "Savings Opportunities", href: "/business/savings", icon: "piggy" },
+  { label: "Reports", href: "/business/reports", icon: "chart" },
+];
+const workspaceNav: NavItem[] = [
+  { label: "Team Members", href: "/business/team", icon: "users" },
+  { label: "Departments", href: "/business/settings/departments", icon: "building" },
+  { label: "Settings", href: "/business/settings", icon: "gear" },
+];
+const groups = [
+  { label: "Spend", items: main },
+  { label: "Workspace", items: workspaceNav },
+];
+
+function Avatar({ name, src, size = 28 }: { name: string; src: string | null; size?: number }) {
+  const initials = name
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((p) => p[0]?.toUpperCase() ?? "")
+    .join("");
+  return src ? (
+    // eslint-disable-next-line @next/next/no-img-element -- Google profile photo; no image optimisation needed
+    <img src={src} alt="" width={size} height={size} referrerPolicy="no-referrer" className="shrink-0 rounded-full object-cover" style={{ width: size, height: size }} />
+  ) : (
+    <span aria-hidden="true" className="flex shrink-0 items-center justify-center rounded-full bg-accent-soft text-[11px] font-semibold text-accent-ink" style={{ width: size, height: size }}>
+      {initials || "?"}
+    </span>
+  );
+}
+
+function WorkspaceSwitcher({ ctx, collapsed }: { ctx: BizContext; collapsed?: boolean }) {
+  const hasDemo = ctx.memberships.some((m) => m.isDemo);
+  const trigger = (
+    <span className={cn("flex w-full items-center gap-2.5 rounded-lg border border-line px-2 py-2 text-left hover:bg-subtle", collapsed && "justify-center border-0 px-0")}>
+      <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-subtle text-[12px] font-semibold text-fg">{ctx.workspace.name.slice(0, 1).toUpperCase()}</span>
+      {!collapsed && (
+        <>
+          <span className="min-w-0 flex-1">
+            <span className="block truncate text-[13px] font-semibold text-fg">{ctx.workspace.name}</span>
+            <span className="block text-[11.5px] text-faint">{roleLabels[ctx.role]}</span>
+          </span>
+          <Icon name="chevron-down" size={14} className="text-faint" />
+        </>
+      )}
+    </span>
+  );
+  return (
+    <Popover label="Switch workspace" trigger={trigger}>
+      <p className="px-2 pb-1 pt-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-faint">Workspaces</p>
+      <ul>
+        {ctx.memberships.map((m) => (
+          <li key={m.workspaceId}>
+            <form action={switchWorkspaceAction}>
+              <input type="hidden" name="workspaceId" value={m.workspaceId} />
+              <button type="submit" className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-[13px] hover:bg-subtle">
+                <span className="min-w-0 flex-1 truncate">{m.name}</span>
+                {m.isDemo && <span className="rounded bg-warn-soft px-1 text-[10.5px] font-medium text-warn">Demo</span>}
+                {m.workspaceId === ctx.workspace.id && <Icon name="check" size={14} className="text-accent-ink" />}
+              </button>
+            </form>
+          </li>
+        ))}
+      </ul>
+      <div className="mt-1 border-t border-line pt-1">
+        <Link href="/business/onboarding?new=1" className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-[13px] text-muted hover:bg-subtle hover:text-fg">
+          <Icon name="plus" size={14} /> Create a workspace
+        </Link>
+        {!hasDemo && (
+          <form action={createDemoAction}>
+            <button type="submit" className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-[13px] text-muted hover:bg-subtle hover:text-fg">
+              <Icon name="sparkles" size={14} /> Open a demo workspace
+            </button>
+          </form>
+        )}
+      </div>
+    </Popover>
+  );
+}
+
+function Sidebar({ ctx, collapsed }: { ctx: BizContext; collapsed?: boolean }) {
+  return (
+    <>
+      <Link href="/business/dashboard" className={cn("flex h-14 shrink-0 items-center gap-2 px-1.5", collapsed && "justify-center px-0")} aria-label="Saver Option Business overview">
+        <BrandMark size={26} />
+        {!collapsed && (
+          <span className="text-[14px] font-semibold tracking-tight text-fg">
+            Saver Option <span className="text-accent-ink">Business</span>
+          </span>
+        )}
+      </Link>
+      <div className="mb-3">
+        <WorkspaceSwitcher ctx={ctx} collapsed={collapsed} />
+      </div>
+      {can(ctx.role, "records.manage") && (
+        <Link href="/business/subscriptions/new" className={buttonClass("primary", "sm", cn("mb-5 w-full", collapsed && "px-0"))} title={collapsed ? "Add software" : undefined}>
+          <Icon name="plus" size={15} />
+          <span className={collapsed ? "sr-only" : undefined}>Add software</span>
+        </Link>
+      )}
+      <SidebarNav groups={groups} collapsed={collapsed} />
+      <div className="mt-auto pt-6">
+        <Link href="/deals" className={cn("flex h-9 items-center gap-2.5 rounded-lg px-2.5 text-[13px] text-faint hover:bg-subtle hover:text-fg", collapsed && "justify-center px-0")} title={collapsed ? "Saver Option deals" : undefined}>
+          <Icon name="tag" size={16} />
+          <span className={collapsed ? "sr-only" : undefined}>Browse software deals</span>
+        </Link>
+      </div>
+    </>
+  );
+}
+
+export function AppShell({ ctx, unread, children }: { ctx: BizContext; unread: number; children: ReactNode }) {
+  const name = displayName(ctx.user);
+  return (
+    <SidebarFrame sidebar={<Sidebar ctx={ctx} />} collapsedSidebar={<Sidebar ctx={ctx} collapsed />}>
+      <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b border-line bg-bg/95 px-3 backdrop-blur sm:px-5">
+        <MobileMenuButton />
+        <form action="/business/search" method="get" role="search" className="relative min-w-0 max-w-md flex-1">
+          <Icon name="search" size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-faint" />
+          <label htmlFor="biz-search" className="sr-only">
+            Search software, subscriptions, vendors and people
+          </label>
+          <input
+            id="biz-search"
+            name="q"
+            type="search"
+            placeholder="Search software, vendors, people…"
+            className="h-9 w-full rounded-lg border border-line bg-surface pl-9 pr-3 text-[13.5px] outline-none placeholder:text-faint focus:border-accent focus:ring-4 focus:ring-accent/15"
+          />
+        </form>
+        <div className="ml-auto flex items-center gap-1">
+          <Link href="/business/notifications" className="relative inline-flex size-9 items-center justify-center rounded-lg text-muted hover:bg-subtle hover:text-fg" aria-label={unread ? `Notifications, ${unread} unread` : "Notifications"}>
+            <Icon name="bell" size={18} />
+            {unread > 0 && (
+              <span className="absolute right-1 top-1 min-w-4 rounded-full bg-accent px-1 text-center text-[10px] font-semibold leading-4 text-accent-fg">{unread > 99 ? "99+" : unread}</span>
+            )}
+          </Link>
+          <Popover
+            label="Account menu"
+            align="right"
+            className="w-auto"
+            trigger={
+              <span className="flex items-center gap-2 rounded-lg px-1.5 py-1 hover:bg-subtle">
+                <Avatar name={name} src={ctx.user.avatarUrl} />
+                <span className="hidden max-w-36 truncate text-[13px] font-medium text-fg sm:block">{name}</span>
+                <Icon name="chevron-down" size={13} className="hidden text-faint sm:block" />
+              </span>
+            }
+          >
+            <div className="flex items-center gap-2.5 px-2 py-2">
+              <Avatar name={name} src={ctx.user.avatarUrl} size={34} />
+              <div className="min-w-0">
+                <p className="truncate text-[13.5px] font-semibold">{name}</p>
+                <p className="truncate text-[12px] text-faint">{ctx.user.email}</p>
+              </div>
+            </div>
+            <div className="border-t border-line pt-1">
+              <Link href="/business/settings" className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-[13px] text-muted hover:bg-subtle hover:text-fg">
+                <Icon name="user" size={14} /> Account settings
+              </Link>
+              <Link href="/deals" className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-[13px] text-muted hover:bg-subtle hover:text-fg">
+                <Icon name="tag" size={14} /> Saver Option deals
+              </Link>
+              <form action="/auth/sign-out" method="post">
+                <input type="hidden" name="next" value="/business" />
+                <button type="submit" className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-[13px] text-muted hover:bg-subtle hover:text-fg">
+                  <Icon name="log-out" size={14} /> Sign out
+                </button>
+              </form>
+            </div>
+          </Popover>
+        </div>
+      </header>
+      {ctx.workspace.isDemo && (
+        <div className="border-b border-warn/30 bg-warn-soft px-4 py-2 text-[12.5px] text-fg sm:px-6">
+          <Icon name="info" size={13} className="mr-1.5 inline text-warn" />
+          <strong className="font-semibold">Demo workspace.</strong> Northwind Studio is a fictional company with sample prices — not real customer data or vendor quotes. Reset it any time in{" "}
+          <Link href="/business/settings" className="underline underline-offset-2">
+            Settings
+          </Link>
+          .
+        </div>
+      )}
+      <main id="main" className="mx-auto w-full max-w-[1280px] flex-1 px-4 pb-16 pt-6 sm:px-6 lg:px-8">
+        {children}
+      </main>
+    </SidebarFrame>
+  );
+}

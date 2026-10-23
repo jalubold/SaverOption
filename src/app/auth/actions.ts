@@ -17,8 +17,10 @@ import { safeNext } from "@/lib/safe-next";
 
 /** Starts Google sign-in and comes back to `next`. */
 export async function signInWithGoogleAction(form: FormData): Promise<void> {
-  if (!authConfigured()) redirect("/login?error=unavailable");
   const next = safeNext(form.get("next"));
+  // Saver Option Business has its own sign-in page; errors go back there.
+  const loginPage = next.startsWith("/business") ? `/business/login?next=${encodeURIComponent(next)}&` : "/login?";
+  if (!authConfigured()) redirect(`${loginPage}error=unavailable`);
   const supabase = await supabaseServer();
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
@@ -29,9 +31,9 @@ export async function signInWithGoogleAction(form: FormData): Promise<void> {
   });
   if (error || !data.url) {
     console.error("[auth] google start failed:", error?.code ?? error?.status ?? "no url");
-    redirect("/login?error=google");
+    redirect(`${loginPage}error=google`);
   }
-  if (dbConfigured()) {
+  if (dbConfigured() && !next.startsWith("/business")) {
     try {
       const claim = await getSubmissionByClaim(await readClaimCookie());
       await recordFunnelEvent("account_signup_started", { submissionId: claim && !claim.user_id ? claim.id : null, sessionId: await readFunnelSession() });

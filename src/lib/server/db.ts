@@ -32,6 +32,8 @@ export function db(): postgres.Sql {
     max: 3,
     idle_timeout: 20,
     connect_timeout: 10,
+    // Calendar dates (`date` columns) stay as "YYYY-MM-DD" strings instead of becoming UTC-midnight Dates.
+    types: { date: { to: 1082, from: [1082], serialize: (x: string) => x, parse: (x: string) => x } },
   });
   globalForDb.__saverOptionSql = sql;
   return sql;

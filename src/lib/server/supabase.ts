@@ -67,6 +67,13 @@ export interface SessionUser {
   id: string;
   email: string;
   emailConfirmed: boolean;
+  /** From the Google profile, when the provider shares it. */
+  name: string | null;
+  avatarUrl: string | null;
+}
+
+function profileText(v: unknown, max: number): string | null {
+  return typeof v === "string" && v.trim() ? v.trim().slice(0, max) : null;
 }
 
 /** The signed-in user, verified with Supabase Auth (not just decoded from the cookie). */
@@ -78,7 +85,15 @@ export async function getUser(): Promise<SessionUser | null> {
     const supabase = await supabaseServer();
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user?.email) return null;
-    return { id: data.user.id, email: data.user.email.toLowerCase(), emailConfirmed: Boolean(data.user.email_confirmed_at) };
+    const meta = (data.user.user_metadata ?? {}) as Record<string, unknown>;
+    const avatar = profileText(meta.avatar_url ?? meta.picture, 500);
+    return {
+      id: data.user.id,
+      email: data.user.email.toLowerCase(),
+      emailConfirmed: Boolean(data.user.email_confirmed_at),
+      name: profileText(meta.full_name ?? meta.name, 120),
+      avatarUrl: avatar && avatar.startsWith("https://") ? avatar : null,
+    };
   } catch {
     return null;
   }

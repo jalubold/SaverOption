@@ -52,6 +52,7 @@ export async function siteUrls(): Promise<SiteUrl[]> {
       priority: o.isExpired ? 0.3 : 0.7,
     })),
     ...products.map((p) => ({ url: absoluteUrl(`/products/${p.slug}`), lastModified: p.lastModified, changeFrequency: "weekly" as const, priority: 0.5 })),
+    { url: absoluteUrl("/business"), changeFrequency: "monthly", priority: 0.6 },
     { url: absoluteUrl("/about"), changeFrequency: "yearly", priority: 0.3 },
     { url: absoluteUrl("/partnerships"), changeFrequency: "yearly", priority: 0.3 },
     { url: absoluteUrl("/promote"), changeFrequency: "monthly", priority: 0.4 },

@@ -25,7 +25,26 @@ type GlyphName =
   | "eye"
   | "pointer"
   | "refresh"
-  | "grid";
+  | "grid"
+  | "home"
+  | "layers"
+  | "box"
+  | "users"
+  | "key"
+  | "gear"
+  | "bell"
+  | "plus"
+  | "building"
+  | "download"
+  | "chevron-down"
+  | "chevron-right"
+  | "chevron-left"
+  | "archive"
+  | "panel-left"
+  | "trending-up"
+  | "trash"
+  | "copy"
+  | "piggy";
 
 /** 24×24, 1.75 stroke line icons. Inline so there's no icon dependency. */
 const paths: Record<GlyphName, React.ReactNode> = {
@@ -222,6 +241,86 @@ const paths: Record<GlyphName, React.ReactNode> = {
       <rect x="14" y="3" width="7" height="7" rx="1.5" />
       <rect x="3" y="14" width="7" height="7" rx="1.5" />
       <rect x="14" y="14" width="7" height="7" rx="1.5" />
+    </>
+  ),
+  home: (
+    <>
+      <path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1Z" />
+    </>
+  ),
+  layers: (
+    <>
+      <path d="m12 3.5 8.5 4.5-8.5 4.5L3.5 8Z" />
+      <path d="m3.5 12 8.5 4.5 8.5-4.5" />
+      <path d="m3.5 16 8.5 4.5 8.5-4.5" />
+    </>
+  ),
+  box: (
+    <>
+      <path d="M20.5 7.5 12 3 3.5 7.5v9L12 21l8.5-4.5Z" />
+      <path d="M3.5 7.5 12 12l8.5-4.5M12 12v9" />
+    </>
+  ),
+  users: (
+    <>
+      <circle cx="9" cy="8.5" r="3.5" />
+      <path d="M2.5 20c.6-3.4 3.2-5.5 6.5-5.5s5.9 2.1 6.5 5.5" />
+      <path d="M16 4.6a3.5 3.5 0 0 1 0 7.8M18 14.8c2 .7 3.2 2.5 3.5 5.2" />
+    </>
+  ),
+  key: (
+    <>
+      <circle cx="8" cy="15" r="4.5" />
+      <path d="m11.3 11.7 8.2-8.2M16.5 6.5l2.5 2.5M14 9l2 2" />
+    </>
+  ),
+  gear: (
+    <>
+      <circle cx="12" cy="12" r="3" />
+      <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z" />
+    </>
+  ),
+  bell: (
+    <>
+      <path d="M6 9a6 6 0 1 1 12 0c0 6 2.5 8 2.5 8h-17S6 15 6 9Z" />
+      <path d="M10 20.5a2.2 2.2 0 0 0 4 0" />
+    </>
+  ),
+  plus: <path d="M12 5v14M5 12h14" />,
+  building: (
+    <>
+      <path d="M4 21V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v16M15 9h4a1 1 0 0 1 1 1v11M2.5 21h19" />
+      <path d="M8 8h3M8 12h3M8 16h3" />
+    </>
+  ),
+  download: <path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M4.5 19.5h15" />,
+  "chevron-down": <path d="m6 9 6 6 6-6" />,
+  "chevron-right": <path d="m9 6 6 6-6 6" />,
+  "chevron-left": <path d="m15 6-6 6 6 6" />,
+  archive: (
+    <>
+      <rect x="3" y="4" width="18" height="4.5" rx="1" />
+      <path d="M5 8.5V19a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8.5M10 12.5h4" />
+    </>
+  ),
+  "panel-left": (
+    <>
+      <rect x="3.5" y="4" width="17" height="16" rx="2" />
+      <path d="M9.5 4v16" />
+    </>
+  ),
+  "trending-up": <path d="m3.5 17 6-6 4 4 7-7.5M15 7.5h5.5V13" />,
+  trash: <path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10 11v5.5M14 11v5.5" />,
+  copy: (
+    <>
+      <rect x="8.5" y="8.5" width="12" height="12" rx="2" />
+      <path d="M15.5 8.5V5a1.5 1.5 0 0 0-1.5-1.5H5A1.5 1.5 0 0 0 3.5 5v9A1.5 1.5 0 0 0 5 15.5h3.5" />
+    </>
+  ),
+  piggy: (
+    <>
+      <path d="M19 11.5c0-3.6-3.4-6.5-7.5-6.5S4 7.9 4 11.5c0 2 1 3.7 2.6 4.9L7 20h3l.5-1.6c.3 0 .7.1 1 .1s.7 0 1-.1L13 20h3l.6-3.2a6.3 6.3 0 0 0 1.4-1.3H20v-4h-1Z" />
+      <path d="M9.5 8.5h3.5M15.5 11h.01" />
     </>
   ),
 };
