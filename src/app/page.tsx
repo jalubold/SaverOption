@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { AudienceGrid } from "@/components/categories/audience-grid";
@@ -22,6 +23,10 @@ import {
 
 // Re-render hourly so expiry labels and "ending soon" stay accurate.
 export const revalidate = 3600;
+
+// Title and description come from the root layout; the canonical URL tells search
+// engines which address is the homepage (saveroption.com redirects to www).
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 // Rows in the hero side panel: offers with a published end date first, then the largest credit programs.
 const HERO_ROWS = 5;
