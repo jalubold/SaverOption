@@ -1,5 +1,5 @@
 /**
- * Providers and products — generated from research notes on 2026-10-17 and 2026-10-19.
+ * Providers and products — generated from research notes on 2026-10-17, 2026-10-19 and 2026-10-23.
  * Sources are the providers' own sites. `verification.status` says whether the
  * live page was checked ("verified") or the facts came from the provider's site
  * via search extracts only ("unverified"). Supporting quotes are kept in
@@ -356,6 +356,166 @@ export const providers: Provider[] = [
     "name": "Ahrefs",
     "website": "https://ahrefs.com",
     "about": "Ahrefs makes SEO tools for keyword research, backlink analysis and site audits."
+  },
+  {
+    "id": "sublime-hq",
+    "name": "Sublime HQ",
+    "website": "https://www.sublimehq.com"
+  },
+  {
+    "id": "typora",
+    "name": "Typora",
+    "website": "https://typora.io"
+  },
+  {
+    "id": "cleanshot",
+    "name": "CleanShot",
+    "website": "https://cleanshot.com"
+  },
+  {
+    "id": "panic",
+    "name": "Panic",
+    "website": "https://panic.com"
+  },
+  {
+    "id": "cultured-code",
+    "name": "Cultured Code",
+    "website": "https://culturedcode.com"
+  },
+  {
+    "id": "n8n",
+    "name": "n8n",
+    "website": "https://n8n.io"
+  },
+  {
+    "id": "immich",
+    "name": "Immich",
+    "website": "https://immich.app"
+  },
+  {
+    "id": "twenty",
+    "name": "Twenty",
+    "website": "https://twenty.com"
+  },
+  {
+    "id": "documenso",
+    "name": "Documenso",
+    "website": "https://documenso.com"
+  },
+  {
+    "id": "umami",
+    "name": "Umami",
+    "website": "https://umami.is"
+  },
+  {
+    "id": "heygen",
+    "name": "HeyGen",
+    "website": "https://www.heygen.com",
+    "about": "HeyGen makes AI video and voice generation tools, available in a web app and through a developer API."
+  },
+  {
+    "id": "mistral-ai",
+    "name": "Mistral AI",
+    "website": "https://mistral.ai",
+    "about": "Mistral AI is a French company that builds open-weight and commercial large language models."
+  },
+  {
+    "id": "lovable",
+    "name": "Lovable",
+    "website": "https://lovable.dev",
+    "about": "Lovable makes an AI app and website builder that works from chat prompts."
+  },
+  {
+    "id": "stackblitz",
+    "name": "StackBlitz",
+    "website": "https://stackblitz.com",
+    "about": "StackBlitz makes Bolt.new, an AI app builder, and the StackBlitz browser-based development environment."
+  },
+  {
+    "id": "deepl",
+    "name": "DeepL",
+    "website": "https://www.deepl.com",
+    "about": "DeepL is a German company that makes AI translation and writing tools."
+  },
+  {
+    "id": "railway",
+    "name": "Railway",
+    "website": "https://railway.com",
+    "about": "Railway is a cloud platform for deploying apps, databases and other services, billed by usage."
+  },
+  {
+    "id": "monday",
+    "name": "monday.com",
+    "website": "https://monday.com"
+  },
+  {
+    "id": "asana",
+    "name": "Asana",
+    "website": "https://asana.com"
+  },
+  {
+    "id": "hostinger",
+    "name": "Hostinger",
+    "website": "https://www.hostinger.com"
+  },
+  {
+    "id": "ibm",
+    "name": "IBM",
+    "website": "https://www.ibm.com"
+  },
+  {
+    "id": "raycast",
+    "name": "Raycast",
+    "website": "https://www.raycast.com"
+  },
+  {
+    "id": "pipedrive",
+    "name": "Pipedrive",
+    "website": "https://www.pipedrive.com",
+    "about": "Pipedrive makes a sales CRM for managing deals and pipelines."
+  },
+  {
+    "id": "freshworks",
+    "name": "Freshworks",
+    "website": "https://www.freshworks.com",
+    "about": "Freshworks makes customer service and business software, including Freshdesk."
+  },
+  {
+    "id": "apple",
+    "name": "Apple",
+    "website": "https://www.apple.com",
+    "about": "Apple makes Mac, iPad and iPhone hardware and software, including its pro creative apps."
+  },
+  {
+    "id": "unity",
+    "name": "Unity",
+    "website": "https://unity.com",
+    "about": "Unity makes a real-time 3D development platform and game engine."
+  },
+  {
+    "id": "okta",
+    "name": "Okta",
+    "website": "https://www.okta.com"
+  },
+  {
+    "id": "retool",
+    "name": "Retool",
+    "website": "https://retool.com"
+  },
+  {
+    "id": "amplitude",
+    "name": "Amplitude",
+    "website": "https://amplitude.com"
+  },
+  {
+    "id": "algolia",
+    "name": "Algolia",
+    "website": "https://www.algolia.com"
+  },
+  {
+    "id": "stripe",
+    "name": "Stripe",
+    "website": "https://stripe.com"
   }
 ];
 
@@ -1714,5 +1874,563 @@ export const products: Product[] = [
       "Analytics"
     ],
     "brandColor": "#054ADA"
+  },
+  {
+    "id": "sublime-text",
+    "slug": "sublime-text",
+    "name": "Sublime Text",
+    "providerId": "sublime-hq",
+    "tagline": "Code and text editor",
+    "description": "Sublime Text is a code and text editor from Sublime HQ. Personal licences are a one-time purchase, while business licences are sold as per-seat subscriptions.",
+    "website": "https://www.sublimetext.com",
+    "tags": [
+      "Code editor",
+      "Developer tools"
+    ],
+    "logo": {
+      "src": "/logos/sublime-text.svg",
+      "alt": "Sublime Text logo"
+    }
+  },
+  {
+    "id": "typora",
+    "slug": "typora",
+    "name": "Typora",
+    "providerId": "typora",
+    "tagline": "Markdown editor and reader",
+    "description": "Typora is a desktop Markdown editor and reader. It is sold as a one-time licence, with a 15-day free trial before purchase.",
+    "website": "https://typora.io",
+    "tags": [
+      "Markdown",
+      "Writing"
+    ]
+  },
+  {
+    "id": "cleanshot-x",
+    "slug": "cleanshot-x",
+    "name": "CleanShot X",
+    "providerId": "cleanshot",
+    "tagline": "Mac screenshots and screen recording",
+    "description": "CleanShot X is a macOS app for taking screenshots and screen recordings, with optional CleanShot Cloud storage for uploads. It requires macOS 13.0 or newer.",
+    "website": "https://cleanshot.com",
+    "tags": [
+      "macOS",
+      "Screenshots",
+      "Screen recording"
+    ]
+  },
+  {
+    "id": "nova",
+    "slug": "nova",
+    "name": "Nova",
+    "providerId": "panic",
+    "tagline": "Code editor for the Mac",
+    "description": "Nova is a code editor for macOS made by Panic. It is sold as a licence that never expires, with one year of updates included and a free trial.",
+    "website": "https://nova.app",
+    "tags": [
+      "Code editor",
+      "macOS"
+    ]
+  },
+  {
+    "id": "things-3",
+    "slug": "things-3",
+    "name": "Things 3",
+    "providerId": "cultured-code",
+    "tagline": "To-do list app for Apple devices",
+    "description": "Things 3 is a personal task manager from Cultured Code for Mac, iPhone, iPad, Apple Watch and Apple Vision Pro. Each platform version is a one-time App Store purchase, and sync through Things Cloud is free.",
+    "website": "https://culturedcode.com/things/",
+    "tags": [
+      "Task management",
+      "Productivity"
+    ],
+    "logo": {
+      "src": "/logos/things-3.svg",
+      "alt": "Things 3 logo"
+    }
+  },
+  {
+    "id": "n8n",
+    "slug": "n8n",
+    "name": "n8n",
+    "providerId": "n8n",
+    "tagline": "Fair-code workflow automation platform",
+    "description": "n8n is a workflow automation platform that combines visual building with custom code and offers 400+ integrations. It can be self-hosted under its fair-code Sustainable Use License or used through the paid n8n Cloud service.",
+    "website": "https://n8n.io",
+    "tags": [
+      "Workflow automation",
+      "Integrations",
+      "Self-hosted"
+    ],
+    "openSource": {
+      "license": "Sustainable Use License (fair-code, source-available; not OSI open source)",
+      "repoUrl": "https://github.com/n8n-io/n8n"
+    },
+    "logo": {
+      "src": "/logos/n8n.svg",
+      "alt": "n8n logo"
+    }
+  },
+  {
+    "id": "immich",
+    "slug": "immich",
+    "name": "Immich",
+    "providerId": "immich",
+    "tagline": "Self-hosted photo and video management",
+    "description": "Immich is a self-hosted application for browsing, searching and organising photos and videos on your own server. It is developed in the open under the AGPL-3.0 licence.",
+    "website": "https://immich.app",
+    "tags": [
+      "Photos",
+      "Video",
+      "Self-hosted"
+    ],
+    "openSource": {
+      "license": "AGPL-3.0",
+      "repoUrl": "https://github.com/immich-app/immich"
+    },
+    "logo": {
+      "src": "/logos/immich.svg",
+      "alt": "Immich logo"
+    }
+  },
+  {
+    "id": "twenty",
+    "slug": "twenty",
+    "name": "Twenty",
+    "providerId": "twenty",
+    "tagline": "Open-source, self-hostable CRM platform",
+    "description": "Twenty is an open-source customer relationship management (CRM) platform that can be self-hosted or used on Twenty's managed cloud. Its code is licensed mostly under AGPL-3.0, with some packages under MIT and some files under a commercial licence.",
+    "website": "https://twenty.com",
+    "tags": [
+      "CRM",
+      "Self-hosted"
+    ],
+    "openSource": {
+      "license": "AGPL-3.0",
+      "repoUrl": "https://github.com/twentyhq/twenty"
+    },
+    "logo": {
+      "src": "/logos/twenty.svg",
+      "alt": "Twenty logo"
+    }
+  },
+  {
+    "id": "documenso",
+    "slug": "documenso",
+    "name": "Documenso",
+    "providerId": "documenso",
+    "tagline": "Open-source document signing platform",
+    "description": "Documenso is an open-source e-signature platform for sending and signing documents, positioned as an alternative to DocuSign. It is available as a hosted service or self-hosted, with the core licensed under AGPL-3.0.",
+    "website": "https://documenso.com",
+    "tags": [
+      "E-signatures",
+      "Documents",
+      "Self-hosted"
+    ],
+    "openSource": {
+      "license": "AGPL-3.0",
+      "repoUrl": "https://github.com/documenso/documenso"
+    }
+  },
+  {
+    "id": "umami",
+    "slug": "umami",
+    "name": "Umami",
+    "providerId": "umami",
+    "tagline": "Privacy-focused web analytics",
+    "description": "Umami is an open-source, privacy-focused web and product analytics platform, positioned as an alternative to Google Analytics, Mixpanel and Amplitude. It is released under the MIT licence and can be self-hosted or used through Umami Cloud.",
+    "website": "https://umami.is",
+    "tags": [
+      "Analytics",
+      "Privacy",
+      "Self-hosted"
+    ],
+    "openSource": {
+      "license": "MIT",
+      "repoUrl": "https://github.com/umami-software/umami"
+    },
+    "logo": {
+      "src": "/logos/umami.svg",
+      "alt": "Umami logo"
+    }
+  },
+  {
+    "id": "heygen",
+    "slug": "heygen",
+    "name": "HeyGen",
+    "providerId": "heygen",
+    "tagline": "AI video and voice generation",
+    "description": "HeyGen is an AI video platform with avatar video, voice and text-to-speech tools, available in a web app and through a developer API.",
+    "website": "https://www.heygen.com",
+    "tags": [
+      "AI video",
+      "Text to speech",
+      "API"
+    ]
+  },
+  {
+    "id": "mistral-ai-studio",
+    "slug": "mistral-ai-studio",
+    "name": "Mistral AI Studio",
+    "providerId": "mistral-ai",
+    "tagline": "Mistral models through an API",
+    "description": "Mistral AI Studio is Mistral AI's developer platform for using Mistral models through an API, with plans from a free Experiment tier to pay-per-use Scale.",
+    "website": "https://mistral.ai",
+    "tags": [
+      "LLM API",
+      "AI models"
+    ],
+    "logo": {
+      "src": "/logos/mistral-ai-studio.svg",
+      "alt": "Mistral AI Studio logo"
+    }
+  },
+  {
+    "id": "lovable",
+    "slug": "lovable",
+    "name": "Lovable",
+    "providerId": "lovable",
+    "tagline": "AI app builder from prompts",
+    "description": "Lovable is an AI app builder that creates and edits web apps and websites from chat prompts, with a built-in Lovable Cloud backend.",
+    "website": "https://lovable.dev",
+    "tags": [
+      "AI app builder",
+      "No-code"
+    ],
+    "logo": {
+      "src": "/logos/lovable.svg",
+      "alt": "Lovable logo"
+    }
+  },
+  {
+    "id": "bolt-new",
+    "slug": "bolt-new",
+    "name": "Bolt.new",
+    "providerId": "stackblitz",
+    "tagline": "AI web app builder in the browser",
+    "description": "Bolt.new is StackBlitz's AI app builder that creates, runs and hosts web apps from chat prompts in the browser.",
+    "website": "https://bolt.new",
+    "tags": [
+      "AI app builder",
+      "Web development"
+    ],
+    "logo": {
+      "src": "/logos/bolt-new.svg",
+      "alt": "Bolt.new logo"
+    }
+  },
+  {
+    "id": "deepl-api",
+    "slug": "deepl-api",
+    "name": "DeepL API",
+    "providerId": "deepl",
+    "tagline": "Machine translation API",
+    "description": "The DeepL API gives developers programmatic access to DeepL's AI translation, with a free Developer plan for testing and paid Growth and Enterprise plans.",
+    "website": "https://www.deepl.com/pro-api",
+    "tags": [
+      "Translation API",
+      "AI"
+    ],
+    "logo": {
+      "src": "/logos/deepl-api.svg",
+      "alt": "DeepL API logo"
+    }
+  },
+  {
+    "id": "railway",
+    "slug": "railway",
+    "name": "Railway",
+    "providerId": "railway",
+    "tagline": "Cloud platform for deploying apps",
+    "description": "Railway is a usage-billed cloud platform for deploying web apps, databases and other services.",
+    "website": "https://railway.com",
+    "tags": [
+      "Cloud hosting",
+      "PaaS"
+    ],
+    "logo": {
+      "src": "/logos/railway.svg",
+      "alt": "Railway logo"
+    }
+  },
+  {
+    "id": "monday-com",
+    "slug": "monday-com",
+    "name": "monday.com",
+    "providerId": "monday",
+    "tagline": "Work management and CRM platform",
+    "description": "monday.com is a cloud work platform with separate products for work management, CRM, service and software development teams.",
+    "website": "https://monday.com",
+    "tags": [
+      "Project management",
+      "CRM",
+      "Work management"
+    ],
+    "logo": {
+      "src": "/logos/monday-com.svg",
+      "alt": "monday.com logo"
+    }
+  },
+  {
+    "id": "asana",
+    "slug": "asana",
+    "name": "Asana",
+    "providerId": "asana",
+    "tagline": "Work and project management platform",
+    "description": "Asana is a cloud work management tool for planning projects, assigning tasks and tracking team work.",
+    "website": "https://asana.com",
+    "tags": [
+      "Project management",
+      "Task management"
+    ],
+    "logo": {
+      "src": "/logos/asana.svg",
+      "alt": "Asana logo"
+    }
+  },
+  {
+    "id": "hostinger-web-hosting",
+    "slug": "hostinger-web-hosting",
+    "name": "Hostinger Web Hosting",
+    "providerId": "hostinger",
+    "tagline": "Web hosting, domains and website builder",
+    "description": "Hostinger sells web hosting plans along with VPS hosting, domain registration and an AI website builder.",
+    "website": "https://www.hostinger.com",
+    "tags": [
+      "Web hosting",
+      "Domains",
+      "Website builder"
+    ],
+    "logo": {
+      "src": "/logos/hostinger-web-hosting.svg",
+      "alt": "Hostinger Web Hosting logo"
+    }
+  },
+  {
+    "id": "ibm-bob",
+    "slug": "ibm-bob",
+    "name": "IBM Bob",
+    "providerId": "ibm",
+    "tagline": "AI coding agent from IBM",
+    "description": "IBM Bob is IBM's AI development partner for planning, building, testing, securing and modernizing applications, with usage billed in Bobcoins.",
+    "website": "https://www.ibm.com/products/ai-coding-agent",
+    "tags": [
+      "AI coding agent",
+      "Developer tools"
+    ],
+    "logo": {
+      "src": "/logos/ibm-bob.svg",
+      "alt": "IBM Bob logo"
+    }
+  },
+  {
+    "id": "raycast",
+    "slug": "raycast",
+    "name": "Raycast",
+    "providerId": "raycast",
+    "tagline": "Extendable launcher with built-in AI",
+    "description": "Raycast is a launcher and productivity app with extensions, snippets, notes and AI chat; the Pro plan adds Raycast AI and Cloud Sync across Mac, Windows and iOS.",
+    "website": "https://www.raycast.com",
+    "tags": [
+      "Launcher",
+      "Productivity",
+      "AI assistant"
+    ],
+    "logo": {
+      "src": "/logos/raycast.svg",
+      "alt": "Raycast logo"
+    }
+  },
+  {
+    "id": "zoho-one",
+    "slug": "zoho-one",
+    "name": "Zoho One",
+    "providerId": "zoho",
+    "tagline": "Bundle of Zoho business apps",
+    "description": "Zoho One is Zoho's suite of integrated business applications, which Zoho calls an operating system for business, with shared services such as AI, business intelligence and unified communication tools.",
+    "website": "https://www.zoho.com/one/",
+    "tags": [
+      "Business suite",
+      "CRM",
+      "Productivity"
+    ],
+    "logo": {
+      "src": "/logos/zoho-one.svg",
+      "alt": "Zoho One logo"
+    }
+  },
+  {
+    "id": "pipedrive",
+    "slug": "pipedrive",
+    "name": "Pipedrive",
+    "providerId": "pipedrive",
+    "tagline": "Sales CRM for closing deals",
+    "description": "Pipedrive is a sales CRM for tracking leads and deals through a visual sales pipeline.",
+    "website": "https://www.pipedrive.com",
+    "tags": [
+      "CRM",
+      "Sales"
+    ],
+    "logo": {
+      "src": "/logos/pipedrive.svg",
+      "alt": "Pipedrive logo"
+    }
+  },
+  {
+    "id": "freshdesk",
+    "slug": "freshdesk",
+    "name": "Freshdesk",
+    "providerId": "freshworks",
+    "tagline": "Help desk and ticketing software",
+    "description": "Freshdesk is Freshworks' customer support help desk, with ticketing, workflow automation, self-service and analytics.",
+    "website": "https://www.freshworks.com/freshdesk/",
+    "tags": [
+      "Help desk",
+      "Customer support",
+      "Ticketing"
+    ]
+  },
+  {
+    "id": "apple-creator-studio",
+    "slug": "apple-creator-studio",
+    "name": "Apple Creator Studio",
+    "providerId": "apple",
+    "tagline": "Subscription bundle of Apple's pro apps",
+    "description": "Apple Creator Studio is a subscription that includes Final Cut Pro, Logic Pro, Pixelmator Pro, Motion, Compressor and MainStage, plus premium content and AI features in Keynote, Pages, Numbers and Freeform.",
+    "website": "https://creatorstudio.apple.com/",
+    "tags": [
+      "Video editing",
+      "Music production",
+      "Creative suite"
+    ],
+    "brandColor": "#000000",
+    "logo": {
+      "src": "/logos/apple-creator-studio.svg",
+      "alt": "Apple Creator Studio logo"
+    }
+  },
+  {
+    "id": "adobe-creative-cloud",
+    "slug": "adobe-creative-cloud",
+    "name": "Adobe Creative Cloud Pro",
+    "providerId": "adobe",
+    "tagline": "Adobe's creative apps in one plan",
+    "description": "Creative Cloud Pro is Adobe's subscription plan with 20+ creative apps, such as Photoshop, Illustrator and Premiere Pro, along with Adobe Firefly generative AI.",
+    "website": "https://www.adobe.com/creativecloud.html",
+    "tags": [
+      "Design",
+      "Photo editing",
+      "Video editing"
+    ],
+    "brandColor": "#FA0F00",
+    "logo": {
+      "src": "/logos/adobe-creative-cloud.svg",
+      "alt": "Adobe Creative Cloud Pro logo"
+    }
+  },
+  {
+    "id": "unity",
+    "slug": "unity",
+    "name": "Unity",
+    "providerId": "unity",
+    "tagline": "Real-time 3D and game engine",
+    "description": "Unity is a real-time 3D development platform and editor used to build games and interactive 2D, 3D and XR experiences.",
+    "website": "https://unity.com",
+    "tags": [
+      "Game engine",
+      "3D",
+      "Developer tools"
+    ],
+    "brandColor": "#000000",
+    "logo": {
+      "src": "/logos/unity.svg",
+      "alt": "Unity logo"
+    }
+  },
+  {
+    "id": "auth0",
+    "slug": "auth0",
+    "name": "Auth0",
+    "providerId": "okta",
+    "tagline": "Customer identity and login platform",
+    "description": "Auth0, part of Okta, is a customer identity platform for adding login, single sign-on and multi-factor authentication to applications.",
+    "website": "https://auth0.com",
+    "tags": [
+      "Authentication",
+      "Identity"
+    ],
+    "logo": {
+      "src": "/logos/auth0.svg",
+      "alt": "Auth0 logo"
+    }
+  },
+  {
+    "id": "retool",
+    "slug": "retool",
+    "name": "Retool",
+    "providerId": "retool",
+    "tagline": "Build internal tools on your data",
+    "description": "Retool is a platform for building internal tools, apps and workflows on top of databases and APIs.",
+    "website": "https://retool.com",
+    "tags": [
+      "Internal tools",
+      "Low-code"
+    ],
+    "logo": {
+      "src": "/logos/retool.svg",
+      "alt": "Retool logo"
+    }
+  },
+  {
+    "id": "amplitude",
+    "slug": "amplitude",
+    "name": "Amplitude",
+    "providerId": "amplitude",
+    "tagline": "Product and digital analytics platform",
+    "description": "Amplitude is a digital analytics platform for tracking and analysing how people use products and websites.",
+    "website": "https://amplitude.com",
+    "tags": [
+      "Analytics",
+      "Product analytics"
+    ],
+    "logo": {
+      "src": "/logos/amplitude.svg",
+      "alt": "Amplitude logo"
+    }
+  },
+  {
+    "id": "algolia",
+    "slug": "algolia",
+    "name": "Algolia",
+    "providerId": "algolia",
+    "tagline": "Hosted search and discovery API",
+    "description": "Algolia is a hosted search and discovery platform that developers add to websites and apps through its APIs.",
+    "website": "https://www.algolia.com",
+    "tags": [
+      "Search API",
+      "Developer tools"
+    ],
+    "logo": {
+      "src": "/logos/algolia.svg",
+      "alt": "Algolia logo"
+    }
+  },
+  {
+    "id": "stripe-atlas",
+    "slug": "stripe-atlas",
+    "name": "Stripe Atlas",
+    "providerId": "stripe",
+    "tagline": "Online company incorporation for founders",
+    "description": "Stripe Atlas is Stripe's service for incorporating a startup online; its one-time fee covers incorporation and the first year of registered agent service.",
+    "website": "https://stripe.com/atlas",
+    "tags": [
+      "Incorporation",
+      "Payments"
+    ],
+    "brandColor": "#635BFF",
+    "logo": {
+      "src": "/logos/stripe-atlas.svg",
+      "alt": "Stripe Atlas logo"
+    }
   }
 ];

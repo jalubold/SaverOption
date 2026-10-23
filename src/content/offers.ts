@@ -1,5 +1,5 @@
 /**
- * Offers — generated from research notes on 2026-10-17 and 2026-10-19.
+ * Offers — generated from research notes on 2026-10-17, 2026-10-19 and 2026-10-23.
  * Sources are the providers' own sites. `verification.status` says whether the
  * live page was checked ("verified") or the facts came from the provider's site
  * via search extracts only ("unverified"). Supporting quotes are kept in
@@ -6639,6 +6639,3025 @@ export const offers: Offer[] = [
     "links": {
       "officialUrl": "https://help.ahrefs.com/en/articles/13002606-what-can-i-use-for-free-in-ahrefs",
       "redeemUrl": "https://ahrefs.com/webmaster-tools"
+    }
+  },
+  {
+    "id": "o-sublime-text-personal-licence-one-time",
+    "slug": "sublime-text-personal-licence-one-time",
+    "productId": "sublime-text",
+    "title": "Sublime Text personal licence: $99 one-time, with 3 years of updates",
+    "summary": "A Sublime Text personal licence is a one-time $99 purchase that includes three years of updates and keeps working after that window ends.",
+    "description": "Sublime Text is a code and text editor from Sublime HQ. Personal licences are sold as a one-time purchase rather than a subscription, with the store listing a total of $99 USD.\n\nEach personal licence includes three years of updates. The licence does not expire after that: you can keep using versions released within three years of purchase, and only newer versions need a paid upgrade. Licences are per user, so you can use your key on every computer where you are the primary user, including at work.\n\nPersonal licences are for personal ownership only. Businesses and organisations must buy business licences, which are per-seat subscriptions. Sublime HQ offers refunds within 30 days of purchase.",
+    "type": "lifetime",
+    "categories": [
+      "lifetime-deals",
+      "software-deals"
+    ],
+    "audiences": [
+      "developers"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 99,
+      "period": "one-time",
+      "savingsLabel": "One-time $99, 3 years of updates"
+    },
+    "claim": {
+      "method": "link",
+      "note": "Buy a personal licence on the Sublime Text page of the Sublime HQ store"
+    },
+    "lifetime": {
+      "licenceCovers": "One user on every computer where they are the primary user; 3 years of updates, and versions released in that window keep working after it ends",
+      "refundPolicy": "Refunds available within 30 days of purchase; email Sublime HQ to claim"
+    },
+    "eligibility": [
+      "Personal licences are only for personal ownership",
+      "Businesses and organisations must buy a business licence (a per-seat subscription) instead"
+    ],
+    "redemption": [
+      "Open the Sublime Text page in the Sublime HQ store",
+      "Buy a personal licence",
+      "Use the licence key on each computer where you are the primary user"
+    ],
+    "terms": [
+      "Store total listed as $99 USD",
+      "Includes 3 years of updates; after 3 years an upgrade is required to receive further updates",
+      "Licences do not expire; an upgrade fee applies only if you want versions released 3 or more years after purchase",
+      "Licences are per user, not per machine",
+      "Refunds available within 30 days of purchase"
+    ],
+    "links": {
+      "officialUrl": "https://www.sublimehq.com/store/text",
+      "redeemUrl": "https://www.sublimehq.com/store/text"
+    },
+    "source": "official",
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Sublime HQ's official page; live page not checked",
+      "note": "Quotes come from search extracts of sublimehq.com (store and Sales FAQ); the live store page was not opened. Re-check the $99 total (the extract shows it as a checkout total) and the upgrade price, which search extracts gave as $80 on the upgrade page but which is not included here. An older sublimetext.com copy of the FAQ describes Sublime Text 3 terms and was ignored.",
+      "evidence": [
+        {
+          "claim": "Price",
+          "quote": "Total: $99 USD"
+        },
+        {
+          "claim": "One-time purchase with 3 years of updates",
+          "quote": "a one-time purchase that includes 3 years of updates ... After 3 years, an upgrade will be required to receive further updates."
+        },
+        {
+          "claim": "Licence does not expire",
+          "quote": "Individual licenses are valid for 3 years of updates, but do not expire after 3 years. Only if you wish to use newer versions will an upgrade fee be required."
+        },
+        {
+          "claim": "Per-user licence on all your computers",
+          "quote": "As licenses are per-user, you're welcome to use your license key on all computers where you are the primary user, including at work."
+        },
+        {
+          "claim": "Personal vs business",
+          "quote": "Personal licenses are only available for personal ownership: businesses and organizations must purchase a business license."
+        },
+        {
+          "claim": "Business licences are subscriptions",
+          "quote": "first you purchase a subscription with a given number of seats, and then allocate the seats to individual users"
+        },
+        {
+          "claim": "Refunds",
+          "quote": "Refunds are available within 30 days of purchasing. Please send us an email if you wish to claim a refund."
+        }
+      ]
+    }
+  },
+  {
+    "id": "o-typora-one-time-licence-3-devices",
+    "slug": "typora-one-time-licence-3-devices",
+    "productId": "typora",
+    "title": "Typora: $14.99 one-time licence for up to 3 devices",
+    "summary": "Typora is a one-time $14.99 purchase (before tax) with no subscription; one licence activates on up to three of your own devices and does not expire.",
+    "description": "Typora is a Markdown editor and reader. Instead of a subscription, it is sold as a one-time licence listed at $14.99 before tax.\n\nA licence is granted to one person and can be activated on up to three of that person's devices, with no expiration. Different operating systems, user accounts and virtual machines count as separate devices, and activating a fourth device deactivates the oldest one. Typora does not sell bulk licences, so organisations need one licence per user.\n\nYou can evaluate Typora free for 15 days before buying, and Typora offers a full refund within 30 days of the licence purchase.",
+    "type": "lifetime",
+    "categories": [
+      "lifetime-deals",
+      "software-deals"
+    ],
+    "audiences": [
+      "creators",
+      "developers",
+      "office-tools"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 14.99,
+      "period": "one-time",
+      "savingsLabel": "One-time $14.99, no subscription"
+    },
+    "claim": {
+      "method": "link",
+      "note": "Buy at typora.io or store.typora.io; the licence code is emailed after purchase"
+    },
+    "lifetime": {
+      "licenceCovers": "One person, activated on up to 3 devices, with no expiration",
+      "refundPolicy": "Full refund within 30 days of the licence purchase"
+    },
+    "eligibility": [
+      "A licence is for one person; organisations need one licence per user (no bulk licences)"
+    ],
+    "redemption": [
+      "Optionally evaluate Typora free for 15 days",
+      "Buy a licence at typora.io or store.typora.io",
+      "Activate the emailed licence code on up to three of your devices"
+    ],
+    "terms": [
+      "Listed at $14.99, tax not included",
+      "One-time payment, not a subscription",
+      "Up to 3 devices per licence; different operating systems, user accounts and virtual machines count as separate devices",
+      "Activating a fourth device automatically deactivates the oldest",
+      "Full refund within 30 days of purchase; requests can be rejected if the licence code was resold"
+    ],
+    "links": {
+      "officialUrl": "https://support.typora.io/purchase/",
+      "redeemUrl": "https://store.typora.io/"
+    },
+    "source": "official",
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Typora's official page; live page not checked",
+      "note": "Quotes come from search extracts of typora.io, store.typora.io and support.typora.io; live pages not checked. The store FAQ was summarised as starting the 30-day refund window when evaluation begins, while the support FAQ says 30 days from purchase; the purchase-date wording is used here, so re-check it. Some store/support pages may be several years old.",
+      "evidence": [
+        {
+          "claim": "Price",
+          "quote": "$ 14.99 (without tax) x 1"
+        },
+        {
+          "claim": "One-time payment",
+          "quote": "It is one-time payment, not subscription."
+        },
+        {
+          "claim": "Three devices, no expiry",
+          "quote": "A Typora license is granted to the \"user\", which can be activated on up to 3 devices from one person for one license with no expiration time."
+        },
+        {
+          "claim": "Refund",
+          "quote": "If you're not satisfied with Typora for any reason, you will be able to get a full refund within 30 days from the license purchase."
+        },
+        {
+          "claim": "Free trial",
+          "quote": "Yes, we offer a 15-day free trial for the stable version, during which you can test and evaluate Typora."
+        }
+      ]
+    }
+  },
+  {
+    "id": "o-cleanshot-x-basic-one-time-licence",
+    "slug": "cleanshot-x-basic-one-time-licence",
+    "productId": "cleanshot-x",
+    "title": "CleanShot Basic: $35 one-time Mac licence with a year of updates",
+    "summary": "CleanShot Basic is a one-time $35 purchase for the Mac app with one year of updates and 1 GB of Cloud storage; renewing updates is optional at $19 a year.",
+    "description": "CleanShot X is a screenshot and screen recording app for macOS. Its Basic plan is a one-time purchase listed at $35, which CleanShot describes as \"pay once, use forever\".\n\nThe purchase includes one year of updates, after which renewing for further updates is optional at $19 per year. A free CleanShot Cloud account comes with the licence, with 1 GB of storage on Basic, but you don't need Cloud to use the app or its other features.\n\nCleanShot X requires macOS 13.0 or newer, and purchases come with a 30-day money-back guarantee.",
+    "type": "lifetime",
+    "categories": [
+      "lifetime-deals",
+      "software-deals"
+    ],
+    "audiences": [
+      "designers",
+      "creators",
+      "developers"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 35,
+      "period": "one-time",
+      "renewalPrice": 19,
+      "renewalPeriod": "year",
+      "savingsLabel": "Pay once, use forever"
+    },
+    "claim": {
+      "method": "link",
+      "note": "Buy CleanShot Basic on cleanshot.com/buy"
+    },
+    "lifetime": {
+      "licenceCovers": "Use of the Mac app with one year of updates; optional update renewal at $19/year; includes a free CleanShot Cloud account with 1 GB storage",
+      "refundPolicy": "30-day money-back guarantee"
+    },
+    "eligibility": [
+      "Requires a Mac running macOS 13.0 or newer"
+    ],
+    "redemption": [
+      "Open the CleanShot pricing page",
+      "Choose CleanShot Basic and complete the one-time purchase",
+      "Optionally renew updates at $19/year after the first year"
+    ],
+    "terms": [
+      "One-time price listed as $35",
+      "Includes one year of updates; renewal at $19/year is optional",
+      "Includes a free CleanShot Cloud account with 1 GB storage; Cloud isn't required to use the app",
+      "Basic Cloud fair-use limits: 5 GB bandwidth and 300 uploads per month",
+      "30-day money-back guarantee"
+    ],
+    "links": {
+      "officialUrl": "https://cleanshot.com/pricing",
+      "redeemUrl": "https://cleanshot.com/buy"
+    },
+    "source": "official",
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of CleanShot's official page; live page not checked",
+      "note": "Quotes come from search extracts of cleanshot.com (pricing, buy, FAQ, fair-use pages); live pages not checked. Many third-party listings still show an older $29 price for the former \"App + Cloud Basic\" plan; the official pricing extract shows CleanShot Basic at $35, so re-check the current price. The extracts did not say what happens to app versions released after the update year.",
+      "evidence": [
+        {
+          "claim": "Price and one-time model",
+          "quote": "CleanShot Basic $35 Pay once, use forever"
+        },
+        {
+          "claim": "Updates and renewal",
+          "quote": "Includes one year of updates, with optional renewal at $19/year"
+        },
+        {
+          "claim": "Cloud account optional",
+          "quote": "When purchasing a CleanShot license, you will get a free CleanShot Cloud account. However, using CleanShot Cloud isn't required to use the app or any other features."
+        },
+        {
+          "claim": "Refund",
+          "quote": "Try CleanShot risk-free with our 30-day money-back guarantee."
+        },
+        {
+          "claim": "System requirement",
+          "quote": "CleanShot requires macOS 13.0 or newer"
+        },
+        {
+          "claim": "Basic fair-use limits (search summary of cleanshot.com/fair-use)",
+          "quote": "5 GB bandwidth per month and 300 uploads per month"
+        }
+      ]
+    }
+  },
+  {
+    "id": "o-nova-one-time-licence-mac-code-editor",
+    "slug": "nova-one-time-licence-mac-code-editor",
+    "productId": "nova",
+    "title": "Nova by Panic: $99 licence that never expires, with a year of updates",
+    "summary": "Panic sells its Mac code editor Nova for $99 plus tax as a licence that never expires; it includes one year of updates, with optional renewals at $49 a year.",
+    "description": "Nova is Panic's code editor for the Mac. It is sold for $99 plus tax, and Panic says a purchased copy of Nova will never expire or deactivate.\n\nThe price includes one year of updates. After that year you stop receiving major updates until you renew, which is optional and costs $49 per year plus tax, the same rate however long ago the licence lapsed. You can keep using the latest version you were eligible for indefinitely, and minor point releases of that version still arrive.\n\nOne licence covers all the Macs you personally use, as long as you are the only user; people sharing a Mac each need their own licence. A free trial lets you use Nova for up to 30 days from first launch.",
+    "type": "lifetime",
+    "categories": [
+      "lifetime-deals",
+      "software-deals"
+    ],
+    "audiences": [
+      "developers",
+      "freelancers"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 99,
+      "period": "one-time",
+      "renewalPrice": 49,
+      "renewalPeriod": "year",
+      "savingsLabel": "$99 once; licence never expires"
+    },
+    "claim": {
+      "method": "link",
+      "note": "Buy at nova.app/buy"
+    },
+    "lifetime": {
+      "licenceCovers": "All Macs used by the buyer (single user); one year of updates; keep using the latest eligible version indefinitely; optional renewal at $49/year"
+    },
+    "eligibility": [
+      "Mac only",
+      "A licence covers one person; several people sharing one Mac each need a licence"
+    ],
+    "redemption": [
+      "Optionally try Nova free for up to 30 days",
+      "Buy a licence at nova.app/buy",
+      "Renew for another year of updates at $49/year if you want new major versions"
+    ],
+    "terms": [
+      "Price listed as $99 + tax",
+      "Includes one year of updates",
+      "Your purchased copy never expires or deactivates",
+      "After the update year, no further major updates until you renew; minor point releases of your eligible version continue",
+      "Renewal is $49/year + tax, regardless of how long ago the licence expired"
+    ],
+    "links": {
+      "officialUrl": "https://nova.app/buy/",
+      "redeemUrl": "https://nova.app/buy/"
+    },
+    "source": "official",
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Panic's official page; live page not checked",
+      "note": "Quotes come from search extracts of nova.app/buy and Panic's help pages (help.panic.com, help.nova.app); live pages not checked. No refund terms appeared in the extracts, so refundPolicy is omitted; check Panic's EULA. The multi-Mac quote is a close paraphrase from the search summary of Panic's help page.",
+      "evidence": [
+        {
+          "claim": "Price",
+          "quote": "for just $99 + tax"
+        },
+        {
+          "claim": "Renewal price",
+          "quote": "$49/year + tax starting the following year"
+        },
+        {
+          "claim": "Licence never expires",
+          "quote": "your purchased copy of Nova will never expire or deactivate"
+        },
+        {
+          "claim": "After the update year",
+          "quote": "once that one year period is over, you will not receive any further major updates until you renew your license. (You can keep using the latest version of Nova you were eligible for indefinitely, however!)"
+        },
+        {
+          "claim": "Renewal rate fixed",
+          "quote": "that rate remains the same no matter how long ago your license expired"
+        },
+        {
+          "claim": "Multiple Macs (close paraphrase)",
+          "quote": "Panic's license permits use of the app on all Macs in use by the buyer, provided the buyer is the only user"
+        },
+        {
+          "claim": "Free trial",
+          "quote": "Use it for up to 30 days from launch."
+        }
+      ]
+    }
+  },
+  {
+    "id": "o-things-3-one-time-purchase-no-subscription",
+    "slug": "things-3-one-time-purchase-no-subscription",
+    "productId": "things-3",
+    "title": "Things 3: one-time purchase per platform, no subscription",
+    "summary": "Things 3 is a one-time App Store purchase for each Apple platform with no subscription; the Mac version is listed at $49.99 in the US and Things Cloud sync is free.",
+    "description": "Things 3 is a to-do list app from Cultured Code for Apple devices. Cultured Code states that it is a one-time purchase for each platform and that there are no subscriptions. Syncing between devices with Things Cloud is free.\n\nThe Mac, iPhone, iPad and Vision Pro versions are sold separately. Things is sold only through Apple's App Store, where the Mac version is listed at $49.99 in the US; Cultured Code sets prices in US dollars and Apple converts them for other currencies.\n\nThe Mac version has a 15-day free trial, and buying from inside the trial keeps your existing to-dos. Recent releases such as Things 3.24 have shipped as free updates.",
+    "type": "lifetime",
+    "categories": [
+      "lifetime-deals",
+      "software-deals"
+    ],
+    "audiences": [
+      "office-tools",
+      "freelancers"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 49.99,
+      "period": "one-time",
+      "savingsLabel": "One-time purchase, no subscription"
+    },
+    "claim": {
+      "method": "link",
+      "note": "Buy from Apple's App Store; Things can't be bought outside the App Store"
+    },
+    "lifetime": {
+      "licenceCovers": "One-time purchase per platform (Mac, iPhone, iPad and Vision Pro sold separately); free Things Cloud sync; feature updates such as 3.24 delivered free"
+    },
+    "eligibility": [
+      "Requires an Apple device; each platform version is bought separately",
+      "Sold only through Apple's App Store"
+    ],
+    "redemption": [
+      "Optionally try the Mac version free for 15 days",
+      "Buy Things 3 from the App Store for each platform you use",
+      "Sign in to Things Cloud to sync your devices for free"
+    ],
+    "terms": [
+      "One-time purchase for each platform; no subscriptions",
+      "Mac version listed at $49.99 in the US; Apple converts prices for other currencies",
+      "Mac, iPhone, iPad and Vision Pro versions are sold separately",
+      "Things Cloud sync is free"
+    ],
+    "links": {
+      "officialUrl": "https://culturedcode.com/things/pricing/",
+      "redeemUrl": "https://culturedcode.com/things/mac/appstore/"
+    },
+    "source": "official",
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Cultured Code's official page; live page not checked",
+      "note": "Quotes come from search extracts of culturedcode.com (pricing page, support articles, Mac App Store page, blog); live pages not checked. Only the Mac price ($49.99) was consistently shown; older Cultured Code pages list iPhone $9.99 and iPad $19.99, and a February 2024 post lists Vision Pro at $29.99, so those are left out. App Store purchases follow Apple's refund process; Cultured Code's own refund wording was not found.",
+      "evidence": [
+        {
+          "claim": "One-time purchase, no subscription",
+          "quote": "Things 3 is a one-time purchase for each platform; there are no subscriptions."
+        },
+        {
+          "claim": "App Store only",
+          "quote": "it's not possible to buy Things outside the App Store"
+        },
+        {
+          "claim": "Mac price (Mac App Store listing linked from culturedcode.com)",
+          "quote": "$49.99"
+        },
+        {
+          "claim": "Platforms sold separately (search summary of pricing page)",
+          "quote": "Things for Mac, Things for iPad, Things for iPhone, and Things for Vision are sold separately"
+        },
+        {
+          "claim": "Free sync",
+          "quote": "Sync through Things Cloud is free."
+        },
+        {
+          "claim": "Free updates",
+          "quote": "a free update on the App Store for Mac, iPad, iPhone, Watch, and Vision Pro"
+        }
+      ]
+    }
+  },
+  {
+    "id": "o-n8n-community-edition-self-hosted",
+    "slug": "n8n-community-edition-self-hosted",
+    "productId": "n8n",
+    "title": "n8n Community Edition: free to self-host under a fair-code licence",
+    "summary": "n8n's Community Edition is free to self-host under the Sustainable Use License, a fair-code licence that n8n itself says is not open source; n8n Cloud is a separate paid subscription.",
+    "description": "n8n is a workflow automation platform that mixes visual building with custom code. The self-hosted Community Edition is free and runs on your own infrastructure. You can use it indefinitely without registering, or register for free to unlock extra features such as debugging in the editor and custom execution data.\n\nThe code is fair-code and source-available rather than open source: the Sustainable Use License only allows use or modification for your own internal business purposes, or for non-commercial or personal use. n8n says it does not call itself open source because OSI-approved licences cannot restrict use. Files marked \".ee.\" fall under a separate n8n Enterprise License, and a commercial licence is needed to host n8n as a service, white-label it, or let outside parties build or edit workflows.\n\nn8n Cloud is a paid subscription with its own terms; the Sustainable Use License does not apply to it.",
+    "type": "open-source",
+    "categories": [
+      "open-source"
+    ],
+    "audiences": [
+      "developers",
+      "businesses",
+      "startups"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "savingsLabel": "Free to self-host (fair-code)"
+    },
+    "claim": {
+      "method": "link",
+      "note": "Install the self-hosted Community Edition from the official repository or n8n's docs"
+    },
+    "eligibility": [
+      "Free for your own internal business purposes, or for non-commercial or personal use",
+      "A commercial licence is needed if outside parties create or edit workflows, or to host n8n as a service or white-label it"
+    ],
+    "redemption": [
+      "Follow n8n's self-hosting docs to install the Community Edition",
+      "Optionally register with an email for free to unlock extra features",
+      "Contact license@n8n.io about licence edge cases"
+    ],
+    "terms": [
+      "Licensed under the Sustainable Use License (fair-code), not an OSI-approved open-source licence",
+      "Use or modification only for your own internal business purposes or for non-commercial or personal use",
+      "Files with \".ee.\" in the filename or directory are licensed under the n8n Enterprise License, not the Sustainable Use License",
+      "Applies to self-hosted n8n only; n8n Cloud is a paid subscription with its own terms"
+    ],
+    "links": {
+      "officialUrl": "https://docs.n8n.io/n8n-community-license",
+      "redeemUrl": "https://github.com/n8n-io/n8n"
+    },
+    "source": "official",
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of n8n's official page; live page not checked",
+      "note": "Quotes come from search extracts of docs.n8n.io (Community license, Sustainable Use License, licence FAQ), support.n8n.io and the n8n-io/n8n GitHub repository; live pages not checked. n8n Cloud plan prices were left out because the pricing-page extract was about 14 months old and in euros. The outside-parties rule is summarised from the support FAQ; re-check the exact wording.",
+      "evidence": [
+        {
+          "claim": "Community licence is free for self-hosting",
+          "quote": "The Community license, officially the Sustainable Use License (\"SUL\"), is free and applies to the self-hosted version of n8n only."
+        },
+        {
+          "claim": "n8n Cloud is paid",
+          "quote": "n8n Cloud is a paid subscription with its own terms; this page doesn't apply to it."
+        },
+        {
+          "claim": "Fair-code licences (README)",
+          "quote": "n8n is fair-code distributed under the Sustainable Use License and n8n Enterprise License"
+        },
+        {
+          "claim": "Use restriction",
+          "quote": "You may use or modify the software only for your own internal business purposes or for non-commercial or personal use."
+        },
+        {
+          "claim": "Not called open source",
+          "quote": "according to the Open Source Initiative (OSI), open source licenses can't include limitations on use, so we do not call ourselves open source"
+        },
+        {
+          "claim": "Enterprise files",
+          "quote": "source code files that contain \".ee.\" in their filename or \".ee\" in their dirname are NOT licensed under the Sustainable Use License."
+        },
+        {
+          "claim": "Who can use it free (support FAQ, summarised)",
+          "quote": "if only you or people in your organization create or edit workflows, you can use the Community edition for free"
+        }
+      ]
+    }
+  },
+  {
+    "id": "o-immich-self-hosted-photo-video-management",
+    "slug": "immich-self-hosted-photo-video-management",
+    "productId": "immich",
+    "title": "Immich: free, self-hosted photo and video library (AGPL-3.0)",
+    "summary": "Immich is a self-hosted photo and video management solution licensed under AGPL-3.0; the maintainers say nothing sits behind a paywall and paying is optional.",
+    "description": "Immich is a self-hosted photo and video management solution that aims to let you browse, search and organise your photos and videos without sacrificing your privacy. It is licensed under the GNU AGPL v3, and the project says it will stay AGPL without a contributor licence agreement.\n\nThe recommended install uses Docker Compose. The docs list at least 6 GB of RAM and 2 CPU cores (8 GB and 4 cores recommended), and advise keeping the Postgres database on local SSD storage rather than a network share. The quick start points to Google Takeout for photos that are not on your phone, and existing photo folders can be added as an external library.\n\nThe maintainers say nothing will be put behind a paywall and that you are free to use the software without paying. An optional supporter purchase, for one user or a whole server, helps fund the project.",
+    "type": "open-source",
+    "categories": [
+      "open-source"
+    ],
+    "audiences": [
+      "creators",
+      "developers"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "savingsLabel": "Free to self-host"
+    },
+    "claim": {
+      "method": "link",
+      "note": "Install with Docker Compose following the official Immich docs"
+    },
+    "eligibility": [
+      "Anyone able to run Docker on their own server and accept the AGPL-3.0 terms"
+    ],
+    "redemption": [
+      "Read the Immich quick start or Docker Compose install guide",
+      "Download the compose file and example env file, then start the containers",
+      "Optionally buy a supporter licence to fund development"
+    ],
+    "terms": [
+      "Licensed under the GNU AGPL v3",
+      "At least 6 GB RAM and 2 CPU cores; 8 GB RAM and 4 cores recommended",
+      "Requires the docker compose command; the older docker-compose is no longer supported",
+      "No features behind a paywall; the supporter purchase is optional"
+    ],
+    "links": {
+      "officialUrl": "https://immich.app",
+      "redeemUrl": "https://docs.immich.app/overview/quick-start/"
+    },
+    "source": "official",
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Immich's official page; live page not checked",
+      "note": "Quotes come from search extracts of the immich-app/immich GitHub repository and discussions, and docs.immich.app; live pages not checked. Supporter prices from a July 2024 announcement ($24.99 individual, $99.99 server) are left out because they may have changed. Immich offers no paid cloud version in the sources found. The hardware figures are summarised from the quick start and requirements pages.",
+      "evidence": [
+        {
+          "claim": "What it is (repository description)",
+          "quote": "High performance self-hosted photo and video management solution."
+        },
+        {
+          "claim": "Licence",
+          "quote": "Immich is available as open source under the terms of the GNU AGPL v3 License."
+        },
+        {
+          "claim": "No paywall",
+          "quote": "nothing will ever be put behind any paywalls"
+        },
+        {
+          "claim": "Paying is optional",
+          "quote": "you are free to use the software without purchasing, with no paywalls, ever. However, we do ask that if you find value in the software and are able to, you purchase immich."
+        },
+        {
+          "claim": "Database storage advice",
+          "quote": "The Postgres database (DB_DATA_LOCATION) should ideally use local SSD storage, and never a network share of any kind."
+        },
+        {
+          "claim": "Goal",
+          "quote": "browse, search and organize your photos and videos with ease, without sacrificing your privacy"
+        }
+      ]
+    }
+  },
+  {
+    "id": "o-twenty-crm-self-hosted-free",
+    "slug": "twenty-crm-self-hosted-free",
+    "productId": "twenty",
+    "title": "Twenty CRM: self-host free with all Pro features",
+    "summary": "Twenty's open-source CRM is free to self-host and includes all Pro features; its managed cloud plans start at $9 per user per month.",
+    "description": "Twenty is an open-source CRM you can self-host to fully own your infrastructure, or run on Twenty's managed cloud. The free self-hosted edition includes all Pro features, community support via Discord and full control over your data.\n\nThe code is licensed mostly under AGPLv3, with certain packages under MIT and certain files under a commercial licence. Commercial self-hosted features, such as SSO and row-level permissions in the Organization tier ($19 per user per month), need a licence key; if that subscription ends, those features stop working but your instance and data keep running on your servers.\n\nSelf-hosting uses Docker Compose and needs at least 2 GB of RAM. Twenty's paid plans start at $9 per user per month for Pro.",
+    "type": "open-source",
+    "categories": [
+      "open-source"
+    ],
+    "audiences": [
+      "businesses",
+      "startups",
+      "developers"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "savingsLabel": "Free to self-host"
+    },
+    "claim": {
+      "method": "link",
+      "note": "Install with the Docker Compose guide in Twenty's self-hosting docs"
+    },
+    "eligibility": [
+      "Anyone able to run Docker on their own server and accept the AGPL-3.0 terms",
+      "SSO, row-level permissions and audit logs need a paid Organization licence key"
+    ],
+    "redemption": [
+      "Follow the Docker Compose guide in Twenty's self-host docs",
+      "Use the install script, or download .env and docker-compose.yml and run docker compose up -d",
+      "Set SERVER_URL to your public URL and use a reverse proxy with SSL for production"
+    ],
+    "terms": [
+      "Code mostly AGPLv3; some packages MIT and some files under a commercial licence",
+      "Free self-hosted edition includes all Pro features, with community support via Discord",
+      "Commercial self-hosted features need a licence key; they stop if the subscription ends, but the instance and data keep running",
+      "Requires at least 2 GB RAM and Docker Compose"
+    ],
+    "links": {
+      "officialUrl": "https://twenty.com/pricing",
+      "redeemUrl": "https://docs.twenty.com/developers/self-host/capabilities/docker-compose"
+    },
+    "source": "official",
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Twenty's official page; live page not checked",
+      "note": "Quotes come from search extracts of twenty.com (home, pricing, terms) and docs.twenty.com (pricing plans, Docker Compose guide); live pages not checked. Re-check the $9 Pro and $19 Organization per-user prices and whether they assume annual billing, which the extracts did not say.",
+      "evidence": [
+        {
+          "claim": "Self-host or managed cloud",
+          "quote": "self-host to fully own their infrastructure, or run it on our managed cloud for a zero-ops setup"
+        },
+        {
+          "claim": "Free self-hosted edition",
+          "quote": "Free (Self-Hosted) includes all Pro features, community support via Discord, and full control over your data."
+        },
+        {
+          "claim": "Licence",
+          "quote": "the GNU Affero General Public License v3 (AGPLv3), with certain packages under the MIT license and certain files under a commercial license"
+        },
+        {
+          "claim": "Commercial features need a key",
+          "quote": "commercial features of the self-hosted edition require a valid license key purchased from us"
+        },
+        {
+          "claim": "Paid plans from $9 (pricing page title)",
+          "quote": "Twenty CRM Pricing — Plans from $9 per User per Month"
+        },
+        {
+          "claim": "Self-host requirement",
+          "quote": "at least 2GB of RAM"
+        }
+      ]
+    }
+  },
+  {
+    "id": "o-documenso-community-edition-self-hosted",
+    "slug": "documenso-community-edition-self-hosted",
+    "productId": "documenso",
+    "title": "Documenso Community Edition: free self-hosted e-signing (AGPL-3.0)",
+    "summary": "Documenso's self-hosted Community Edition is listed as free forever with no usage limits and includes the full core under AGPL-3.0; enterprise features need a licence key.",
+    "description": "Documenso is an open-source document signing platform that describes itself as the open-source DocuSign alternative. Self-hosted Documenso includes the full core functionality under the AGPL-3.0 licence.\n\nThe Community Edition is listed as free forever, with no usage limits and community-only support. Documenso's comparison table frames it for testing, evaluation and internal proofs of concept. Enterprise features such as SSO, white-labelling the embedded editor and 21 CFR Part 11 compliance are unlocked with a paid licence key, and Documenso also runs a hosted service with paid plans, including an Individual plan listed at $25 per month.\n\nThe docs cover Docker, Docker Compose, Railway and Kubernetes deployments. You must supply your own signing certificate, because the Docker image does not include one.",
+    "type": "open-source",
+    "categories": [
+      "open-source"
+    ],
+    "audiences": [
+      "businesses",
+      "freelancers",
+      "startups"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "savingsLabel": "Free forever to self-host"
+    },
+    "claim": {
+      "method": "link",
+      "note": "Deploy the Community Edition by following Documenso's self-hosting docs"
+    },
+    "eligibility": [
+      "Anyone able to run the app on their own infrastructure and accept the AGPL-3.0 terms",
+      "Enterprise features (SSO, embed editor white label, 21 CFR Part 11) require a licence key"
+    ],
+    "redemption": [
+      "Read Documenso's self-hosting docs",
+      "Deploy with Docker, Docker Compose, Railway or Kubernetes",
+      "Add your own signing certificate so documents can be signed"
+    ],
+    "terms": [
+      "Core functionality licensed under AGPL-3.0",
+      "Community Edition: free forever, no usage limits, community-only support",
+      "Intended use listed as testing, evaluation and internal proofs of concept",
+      "No signing certificate is bundled in the Docker image"
+    ],
+    "links": {
+      "officialUrl": "https://documenso.com/self-hosted",
+      "redeemUrl": "https://docs.documenso.com/docs/self-hosting"
+    },
+    "source": "official",
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Documenso's official page; live page not checked",
+      "note": "Quotes come from search extracts of documenso.com (self-hosted and pricing pages), docs.documenso.com and the documenso/documenso GitHub README; live pages not checked. Documenso's licensing page reportedly also describes the Community Edition as suited to open-source projects and internal tools, which is broader than the pricing table; re-check the intended-use wording. Re-check the $25/month hosted Individual price.",
+      "evidence": [
+        {
+          "claim": "Positioning (GitHub)",
+          "quote": "The Open Source DocuSign Alternative."
+        },
+        {
+          "claim": "Licence and enterprise key",
+          "quote": "Self-hosted Documenso includes full core functionality under the AGPL-3.0 license. If you need enterprise features such as SSO, embed editor white label, or 21 CFR Part 11 compliance, you can activate them with a license key."
+        },
+        {
+          "claim": "Community Edition is free forever",
+          "quote": "Pricing: Free Forever; Intended Use: Testing, Evaluation, Internal POCs; Usage Limits: None; Application Support: Community Only"
+        },
+        {
+          "claim": "Deployment options (README)",
+          "quote": "We support a variety of deployment methods including Docker, Docker Compose, Railway, Kubernetes, and manual deployment."
+        },
+        {
+          "claim": "Signing certificate",
+          "quote": "Documenso does not bundle a signing certificate in the Docker image."
+        },
+        {
+          "claim": "Hosted paid plan (search summary of pricing page)",
+          "quote": "a hosted \"Individual\" plan at $25/month"
+        }
+      ]
+    }
+  },
+  {
+    "id": "o-umami-self-hosted-analytics-free",
+    "slug": "umami-self-hosted-analytics-free",
+    "productId": "umami",
+    "title": "Umami: free, MIT-licensed self-hosted web analytics",
+    "summary": "Umami's privacy-focused analytics is open source under the MIT licence and free to self-host, including for commercial use; Umami Cloud adds a free Hobby plan and a $20/month Pro plan.",
+    "description": "Umami is a privacy-focused web and product analytics platform and an open-source alternative to Google Analytics, Mixpanel and Amplitude. It is released under the MIT licence, which allows unlimited commercial use, and Umami says it can be self-hosted for free.\n\nYou can run it on your own servers with Docker, Kubernetes or any Node.js hosting, then add one script tag to your site to start collecting data.\n\nUmami also runs a hosted service. Umami Cloud's Hobby plan is $0 per month for up to 100K events, one website and six months of data retention, and the Pro plan is $20 per month. Some features, such as email reports and the streaming API, are only in the cloud version.",
+    "type": "open-source",
+    "categories": [
+      "open-source"
+    ],
+    "audiences": [
+      "developers",
+      "marketing-tools",
+      "businesses"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "savingsLabel": "Free to self-host"
+    },
+    "claim": {
+      "method": "link",
+      "note": "Self-host from the official repository with Docker, Kubernetes or Node.js hosting"
+    },
+    "eligibility": [
+      "Anyone; the MIT licence allows commercial use"
+    ],
+    "redemption": [
+      "Deploy Umami on your own server with Docker, Kubernetes or Node.js hosting",
+      "Add the Umami tracking script tag to your website",
+      "View your analytics in your own Umami instance"
+    ],
+    "terms": [
+      "Released under the MIT licence",
+      "Free to self-host, including commercial use",
+      "Email reports and the streaming API are only available in Umami Cloud",
+      "Umami Cloud: Hobby $0/month (up to 100K events, 1 website, 6 months retention); Pro $20/month"
+    ],
+    "links": {
+      "officialUrl": "https://umami.is/pricing",
+      "redeemUrl": "https://github.com/umami-software/umami"
+    },
+    "source": "official",
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Umami's official page; live page not checked",
+      "note": "Quotes come from search extracts of umami.is (pricing and developers pages) and docs.umami.is; live pages not checked. The MIT licence was confirmed from GitHub listings that were mostly forks of the repository; the official repo URL (github.com/umami-software/umami) was not shown directly in the search results and should be re-checked.",
+      "evidence": [
+        {
+          "claim": "Free to self-host",
+          "quote": "Umami is open-source and can be self-hosted for free."
+        },
+        {
+          "claim": "Commercial use",
+          "quote": "The MIT license also allows unlimited commercial use."
+        },
+        {
+          "claim": "Cloud-only features",
+          "quote": "Cloud also includes additional features like email reports and the streaming API that are not available in the self-hosted version."
+        },
+        {
+          "claim": "Hosting options",
+          "quote": "with Docker, Kubernetes, or any Node.js hosting"
+        },
+        {
+          "claim": "Setup",
+          "quote": "add one script tag to your site and you are collecting data immediately"
+        },
+        {
+          "claim": "Hobby cloud plan (search summary of pricing page)",
+          "quote": "$0 per month and includes up to 100K events per month, 1 website, 6 months of data retention"
+        },
+        {
+          "claim": "Pro cloud plan (search summary of pricing page)",
+          "quote": "The Pro plan is $20 per month and includes 1 million events, up to 20 websites, and 2 years of retention."
+        }
+      ]
+    }
+  },
+  {
+    "id": "o-heygen-voice-turbo-free-api-november-2026",
+    "slug": "heygen-voice-turbo-free-api-november-2026",
+    "productId": "heygen",
+    "title": "HeyGen Voice Turbo text-to-speech free on the HeyGen API (through November 30, 2026)",
+    "summary": "HeyGen's Turbo Free text-to-speech model, heygen-voice-1-turbo-free, can be called at no cost through November 30, 2026, with no credit balance needed. It runs on shared capacity with no availability guarantee.",
+    "description": "HeyGen launched HeyGen Voice Turbo, a text-to-speech model, in October 2026. Until November 30, 2026, developers can use it for free by setting the model to heygen-voice-1-turbo-free on a HeyGen speech endpoint. Free requests do not need a credit balance.\n\nThe free model works with public voices and HeyGen Voice 1 instant clones. Requests to other models, including the default model and paid Turbo, are still billed, and a free request never switches to a paid model.\n\nEach endpoint allows 30 requests per minute per workspace member by default. All Turbo Free users share a limited pool of capacity, so requests can return HTTP 429 even below that limit, and HeyGen does not guarantee availability, response time or time to first audio for the free model.",
+    "type": "free-plan",
+    "categories": [
+      "ai-tools",
+      "free-credits"
+    ],
+    "audiences": [
+      "developers",
+      "ai-tools",
+      "creators"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Set the model to heygen-voice-1-turbo-free on a HeyGen text-to-speech endpoint; no credit balance is needed."
+    },
+    "eligibility": [
+      "Developers using the HeyGen API"
+    ],
+    "redemption": [
+      "Set up HeyGen API access for your workspace",
+      "Call a text-to-speech endpoint with the model set to heygen-voice-1-turbo-free",
+      "Use a public voice or a HeyGen Voice 1 instant clone"
+    ],
+    "terms": [
+      "Free until November 30, 2026",
+      "Works with public voices and HeyGen Voice 1 instant clones only",
+      "Other models, including paid Turbo, are still billed; free requests never switch to a paid model",
+      "30 requests per minute per workspace member per endpoint by default",
+      "Shared capacity: HTTP 429 is possible even below your request limit",
+      "Availability, response time and time to first audio are not guaranteed"
+    ],
+    "expiresAt": "2026-11-30",
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of HeyGen's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of HeyGen's developer docs (Text to Speech page) and HeyGen's blog post 'HeyGen Voice Turbo Is Free for Developers'; the live pages could not be fetched from the research environment. Extracts described the end date as both 'until' and 'through' November 30, 2026, so re-check the exact wording and whether the last day is included. Paid Turbo pricing differs between sources ($4 vs $7.50 per 1M characters), so no regular price is listed. No country or region restriction appeared in the extracts.",
+      "evidence": [
+        {
+          "claim": "Free window and model ID (developer docs)",
+          "quote": "HeyGen Voice Turbo Free is free until November 30, 2026. ... set the model to \"heygen-voice-1-turbo-free\""
+        },
+        {
+          "claim": "No credit balance; supported voices (developer docs)",
+          "quote": "Free requests do not require a credit balance. They work with a public voice or a HeyGen Voice 1 instant clone."
+        },
+        {
+          "claim": "Other models still billed (developer docs)",
+          "quote": "Other models are still billed, and a free request never switches to a paid model."
+        },
+        {
+          "claim": "Rate limit and shared capacity (developer docs)",
+          "quote": "Each endpoint allows 30 requests per minute per workspace member by default ... all Turbo Free users share a limited amount of capacity. You can receive HTTP 429 even if you are below your request limit."
+        },
+        {
+          "claim": "No service guarantee (developer docs)",
+          "quote": "service availability, response time, and time to first audio are not guaranteed"
+        },
+        {
+          "claim": "Notice before changes (HeyGen blog)",
+          "quote": "we'll give advance notice before anything changes"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.heygen.com/blog/heygen-voice-turbo",
+      "redeemUrl": "https://developers.heygen.com/docs/voices/heygen-voice-speech"
+    }
+  },
+  {
+    "id": "o-mistral-ai-studio-experiment-free-api-plan",
+    "slug": "mistral-ai-studio-experiment-free-api-plan",
+    "productId": "mistral-ai-studio",
+    "title": "Mistral Experiment plan: free API access with a verified phone number, no card",
+    "summary": "Mistral AI's Experiment plan lets developers try the Mistral API for free with only a verified phone number and no credit card. Requests on this plan may be used to train Mistral's models.",
+    "description": "Mistral AI's Experiment plan is a free tier of its API, intended for experimentation, evaluation and prototyping. Mistral says all you need is a verified phone number, one per plan, and no credit card is required.\n\nAPI requests made on the Experiment plan may be used to train Mistral's models. You can upgrade to the Scale plan at any time for higher limits and pay-per-use billing. If your phone number is already linked to another account, Mistral suggests cancelling that subscription, upgrading to Scale or using a different number.",
+    "type": "free-plan",
+    "categories": [
+      "ai-tools",
+      "free-credits"
+    ],
+    "audiences": [
+      "developers",
+      "ai-tools"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "link",
+      "note": "Activate the Experiment plan in Mistral's console and verify a phone number, then generate an API key."
+    },
+    "requirements": {
+      "cardRequired": false
+    },
+    "eligibility": [
+      "Anyone with a verified phone number (one phone number per plan)"
+    ],
+    "redemption": [
+      "Sign in to Mistral's console",
+      "Choose the Experiment plan and verify your phone number",
+      "Generate an API key"
+    ],
+    "terms": [
+      "One phone number per plan",
+      "API requests on the Experiment plan may be used to train Mistral's models",
+      "Upgrade to the Scale plan for higher limits and pay-per-use billing"
+    ],
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Mistral AI's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of Mistral's help center article on the Experiment plan, the docs page 'Activate Studio and generate an API key' and Mistral's September 2024 free-tier announcement; the live pages could not be fetched. Rate limits for the Experiment plan were not found on Mistral's own pages (third-party figures exist but were not used). An older quickstart mentioned adding payment information; the help center and current docs say no card is needed.",
+      "evidence": [
+        {
+          "claim": "Phone verification only (help center)",
+          "quote": "all you need is a verified phone number (one phone number per plan)"
+        },
+        {
+          "claim": "No card (help center)",
+          "quote": "no credit card is required"
+        },
+        {
+          "claim": "Training on requests (help center)",
+          "quote": "API requests made under the Experiment plan may be used to train our models"
+        },
+        {
+          "claim": "Upgrade path (help center)",
+          "quote": "upgrade to the Scale plan at any time for higher limits and pay-per-use billing"
+        },
+        {
+          "claim": "Free API access, phone prerequisite (docs)",
+          "quote": "Experiment plan: free API access, no credit card required ... a phone number for verification"
+        },
+        {
+          "claim": "Purpose of the free tier (Mistral announcement, September 2024)",
+          "quote": "experimentation, evaluation, and prototyping at no cost"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://help.mistral.ai/en/articles/455206-how-can-i-try-the-api-for-free-with-the-experiment-plan",
+      "redeemUrl": "https://console.mistral.ai"
+    }
+  },
+  {
+    "id": "o-lovable-free-plan-daily-credits",
+    "slug": "lovable-free-plan-daily-credits",
+    "productId": "lovable",
+    "title": "Lovable Free plan: 5 daily build credits (up to 30 a month)",
+    "summary": "Lovable's Free plan includes 5 build credits a day, up to 30 a month, plus monthly Cloud credits, for building apps with its AI builder at no cost.",
+    "description": "Lovable's Free plan costs $0 and grants 5 build credits per day, up to 30 per month. It also includes a monthly grant of 20 Cloud credits.\n\nDaily build credits expire at the end of each day and do not roll over. For more usage, Lovable lists the Pro plan at $25 per month with 100 monthly credits on top of 5 daily credits.",
+    "type": "free-plan",
+    "categories": [
+      "ai-tools",
+      "free-credits"
+    ],
+    "audiences": [
+      "ai-tools",
+      "developers",
+      "startups"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "savingsLabel": "5 daily credits, up to 30 a month"
+    },
+    "claim": {
+      "method": "link",
+      "note": "Sign up at lovable.dev to start on the Free plan."
+    },
+    "eligibility": [
+      "Anyone with a Lovable account"
+    ],
+    "redemption": [
+      "Create a Lovable account",
+      "Build from prompts; daily build credits are granted automatically"
+    ],
+    "terms": [
+      "5 build credits per day, up to 30 per month",
+      "Daily build credits expire at the end of each day and don't roll over",
+      "Monthly grant of 20 Cloud credits"
+    ],
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Lovable's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of lovable.dev/pricing and its FAQ; the live page could not be fetched, and the extracts were partly paraphrased. The pricing FAQ was summarised as saying some regional plans cap daily credits at 30 per month, which may change the Free plan's limits in some countries; re-check. The extracts also mentioned a small allowance of credits for AI features inside user apps; the figure was unclear, so it is left out.",
+      "evidence": [
+        {
+          "claim": "Daily build credits (pricing page)",
+          "quote": "daily grant of 5 build credits, up to 30 a month"
+        },
+        {
+          "claim": "Cloud credits (pricing page)",
+          "quote": "monthly grants of 20 Cloud credits"
+        },
+        {
+          "claim": "No rollover (pricing page)",
+          "quote": "Included daily build credits expire at the end of each day and don't roll over."
+        },
+        {
+          "claim": "Pro plan for comparison (pricing page)",
+          "quote": "Pro: $25 per month, 100 monthly credits and 5 daily credits"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://lovable.dev/pricing"
+    }
+  },
+  {
+    "id": "o-bolt-new-free-plan-1m-tokens",
+    "slug": "bolt-new-free-plan-1m-tokens",
+    "productId": "bolt-new",
+    "title": "Bolt.new Free plan: 1M tokens per month with a 300K daily limit",
+    "summary": "Bolt.new's Free plan includes 1 million tokens a month, with a daily limit of 300,000, plus website hosting and public and private projects.",
+    "description": "Bolt.new's Free plan costs $0 and includes 1M tokens per month, with a daily limit of 300K tokens. It covers public and private projects, website hosting with up to 333k web requests, and a 10MB file upload limit. Websites on the Free plan carry Bolt branding.\n\nThe Pro plan, at $25 per month, removes the daily token limit, starts at 10M tokens per month and rolls unused tokens over to the next month.",
+    "type": "free-plan",
+    "categories": [
+      "ai-tools",
+      "free-credits"
+    ],
+    "audiences": [
+      "ai-tools",
+      "developers",
+      "startups"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "savingsLabel": "1M tokens per month"
+    },
+    "claim": {
+      "method": "link",
+      "note": "Sign up at bolt.new to start on the Free plan."
+    },
+    "eligibility": [
+      "Anyone with a Bolt.new account"
+    ],
+    "redemption": [
+      "Sign up at bolt.new",
+      "Build from prompts; usage counts against the daily and monthly token limits"
+    ],
+    "terms": [
+      "1M tokens per month",
+      "300K tokens daily limit",
+      "Bolt branding on websites",
+      "10MB file upload limit",
+      "Hosting includes up to 333k web requests"
+    ],
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of StackBlitz's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of bolt.new/pricing; the live page could not be fetched. Third-party guides say Free plan tokens do not roll over; the official extracts only say rollover is a Pro feature, so the listing does not state it for Free. Re-check token figures, which Bolt has changed before.",
+      "evidence": [
+        {
+          "claim": "Free plan price and monthly tokens (pricing page)",
+          "quote": "Free $0 ... 1M tokens per month"
+        },
+        {
+          "claim": "Daily limit (pricing page)",
+          "quote": "300K tokens daily limit"
+        },
+        {
+          "claim": "Included features (pricing page)",
+          "quote": "Public and private projects ... Bolt branding on websites ... 10MB file upload limit ... Website hosting ... Up to 333k web requests"
+        },
+        {
+          "claim": "Pro plan for comparison (pricing page)",
+          "quote": "Pro $25/month ... No daily token limit ... Start at 10M tokens per month ... Unused tokens roll over to the next month"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://bolt.new/pricing"
+    }
+  },
+  {
+    "id": "o-deepl-api-developer-plan-1m-free-characters",
+    "slug": "deepl-api-developer-plan-1m-free-characters",
+    "productId": "deepl-api",
+    "title": "DeepL API Developer plan: test the API free with 1,000,000 characters",
+    "summary": "DeepL's API Developer plan lets developers test the DeepL API for free, with a one-time total of 1,000,000 characters that does not reset.",
+    "description": "DeepL's Developer plan is a free way to test the DeepL API. It has a total translation limit of 1,000,000 characters. This is a one-time allowance, not a monthly quota: once it is used it does not reset, and you need to upgrade to the Growth plan to keep translating.\n\nDeepL's help center also lists the older API Free plan, which allowed up to 500,000 characters per month; this listing covers the Developer plan. On the Growth plan with monthly billing, DeepL includes 1 million characters and 10 hours of speech-to-text.",
+    "type": "free-plan",
+    "categories": [
+      "ai-tools",
+      "free-credits"
+    ],
+    "audiences": [
+      "developers",
+      "ai-tools"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "savingsLabel": "1,000,000 characters free (one-time total)"
+    },
+    "claim": {
+      "method": "link",
+      "note": "Sign up for the DeepL API and choose the Developer plan."
+    },
+    "eligibility": [
+      "Developers signing up for the DeepL API"
+    ],
+    "redemption": [
+      "Sign up for the DeepL API and choose the Developer plan",
+      "Use your API key until the 1,000,000-character total is reached",
+      "Upgrade to the Growth plan to continue"
+    ],
+    "terms": [
+      "Total translation limit of 1,000,000 characters",
+      "The allowance does not reset",
+      "Upgrade to Growth is required once the limit is reached"
+    ],
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of DeepL's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of DeepL's help center articles 'DeepL API plans' and 'Usage count and billing in DeepL API'; the live pages could not be fetched, and some extracts were paraphrased. DeepL's API lineup changed in 2026 (third-party guides say API Free and API Pro can no longer be bought), so re-check that the Developer plan is still free and how sign-up works. Third-party sources say DeepL has asked for a card for identification on free API sign-ups; DeepL's own wording was not found, so card requirements are left out.",
+      "evidence": [
+        {
+          "claim": "Free testing plan (help center, DeepL API plans)",
+          "quote": "The Developer plan lets developers test the DeepL API for free"
+        },
+        {
+          "claim": "Total limit (help center, DeepL API plans)",
+          "quote": "total translation limit of 1,000,000 characters"
+        },
+        {
+          "claim": "No reset; upgrade to Growth (help center, DeepL API plans)",
+          "quote": "Once that is used, it will not reset and you must upgrade to Growth."
+        },
+        {
+          "claim": "Older API Free plan (help center)",
+          "quote": "DeepL API Free allows developers to translate up to 500,000 characters per month for free."
+        },
+        {
+          "claim": "Growth plan allowance (help center, usage and billing)",
+          "quote": "monthly billing term ... 1 million characters and 10 hours of speech to text"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://support.deepl.com/hc/en-us/articles/360021200939-DeepL-API-plans",
+      "redeemUrl": "https://www.deepl.com/pro-api"
+    }
+  },
+  {
+    "id": "o-railway-free-trial-5-dollar-credit",
+    "slug": "railway-free-trial-5-dollar-credit",
+    "productId": "railway",
+    "title": "Railway Free Trial: one-time $5 credit for up to 30 days, no card needed",
+    "summary": "New Railway users can start a Free Trial with a one-time $5 credit for any usage, valid for 30 days and with no credit card; afterwards the account moves to the Free plan with $1 of credit a month.",
+    "description": "Railway's Free Trial gives new users access to basic features for up to 30 days, with a one-time grant of $5. The credit applies to any usage on the platform and expires after 30 days. You can sign up without a credit card.\n\nWhen the 30 days pass or the $5 is spent, the account reverts to the Free plan, which includes $1 of free credit per month that does not roll over. Accounts that are not verified get a trial with some network restrictions. Trial credit left over when upgrading carries over to a paid plan, though it may not apply to the first billing cycle.",
+    "type": "free-credits",
+    "categories": [
+      "free-credits",
+      "free-trials"
+    ],
+    "audiences": [
+      "developers",
+      "startups"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "creditValue": 5,
+      "savingsLabel": "One-time $5 credit for 30 days"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "The one-time $5 grant is applied when a new user signs up for the Free Trial."
+    },
+    "requirements": {
+      "cardRequired": false,
+      "newCustomersOnly": true
+    },
+    "eligibility": [
+      "New Railway users"
+    ],
+    "redemption": [
+      "Sign up at railway.com to start the Free Trial",
+      "The one-time $5 credit is applied to usage on the platform",
+      "Unverified accounts get a trial with some network restrictions"
+    ],
+    "terms": [
+      "Trial lasts up to 30 days",
+      "The $5 credit expires in 30 days",
+      "Afterwards the account reverts to the Free plan with $1 of free credit per month, which does not roll over",
+      "Carried-over trial credit may not apply to the first billing cycle"
+    ],
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Railway's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of Railway's docs (Free Trial page and Pricing FAQs); the live pages could not be fetched. The trial terms matched across several versions of the docs, but plan prices differed between pages, so no paid-plan price is listed. Re-check what counts as a verified account.",
+      "evidence": [
+        {
+          "claim": "Trial length and $5 grant (Free Trial docs)",
+          "quote": "The trial gives access to basic features for up to 30 days and includes a one-time grant of $5."
+        },
+        {
+          "claim": "Credit use and expiry (Free Trial docs)",
+          "quote": "The credits will be applied towards any usage on the platform and expire in 30 days."
+        },
+        {
+          "claim": "After the trial (Free Trial docs)",
+          "quote": "After 30 days passes or $5 is spent, the free trial reverts to the Free plan, which provides $1 of free credit per month. The credit does not roll over month to month."
+        },
+        {
+          "claim": "No credit card (Pricing FAQs)",
+          "quote": "Can I try Railway without a credit-card? Yes. As a new Railway user, you can sign up for a Free Trial. You will receive a one-time grant of $5 to use on resources."
+        },
+        {
+          "claim": "Unverified accounts (Free Trial docs)",
+          "quote": "If your account is not verified, your trial will have some network restrictions."
+        },
+        {
+          "claim": "Credit on upgrade (Free Trial docs)",
+          "quote": "carried-over Trial credits may not be applied to your first billing cycle"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://docs.railway.com/pricing/free-trial",
+      "redeemUrl": "https://railway.com"
+    }
+  },
+  {
+    "id": "o-canva-for-nonprofits-free-team-50-users",
+    "slug": "canva-for-nonprofits-free-team-50-users",
+    "productId": "canva",
+    "title": "Canva for Nonprofits: Canva Pro features free for one team of up to 50 users",
+    "summary": "Eligible registered nonprofits get Canva's premium features plus team collaboration tools free for one team of up to 50 users, with extra seats at 50% off Canva Enterprise.",
+    "description": "Canva for Nonprofits gives eligible organizations one team of up to 50 users for free. The team gets the premium features of Canva Pro along with Canva's team and collaboration tools. Organizations that need more people can add seats at 50% off Canva Enterprise.\n\nThe program is for registered nonprofits, NGOs and social impact organizations with clearly stated charitable missions. The organization must be officially registered as a charitable nonprofit (such as a 501(c)(3) in the US), independent from government and not run for commercial profit. Government agencies, political organizations, educational institutions, for-profit companies, most other 501(c) types and grant-making foundations are not eligible.\n\nApplicants submit Canva's nonprofit application form and complete verification. Canva's help center says it replies by email, typically within 72 hours, though verification can take longer. Country-specific requirements and required documents are listed in Canva's eligibility guidelines.",
+    "type": "free-plan",
+    "categories": [
+      "saas-discounts",
+      "software-deals"
+    ],
+    "audiences": [
+      "designers",
+      "creators",
+      "businesses"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "savingsLabel": "Free for one team of up to 50 users; additional seats 50% off Canva Enterprise"
+    },
+    "claim": {
+      "method": "application",
+      "note": "Submit the Canva for Nonprofits application form from a Canva account, then complete verification."
+    },
+    "requirements": {
+      "approvalRequired": true
+    },
+    "eligibility": [
+      "Registered nonprofits, NGOs and social impact organizations with clearly stated charitable missions",
+      "Officially registered as a charitable nonprofit (such as a 501(c)(3) in the US), independent from government and not operating for commercial profit",
+      "Not eligible: government agencies, political organizations, educational institutions, for-profit companies, most other 501(c) types and grant-making foundations",
+      "Country-specific requirements and documents are set out in Canva's eligibility guidelines"
+    ],
+    "redemption": [
+      "Check Canva's nonprofit eligibility guidelines",
+      "Make sure you have a Canva account with a valid email address",
+      "Review the program Terms and Conditions",
+      "Submit the nonprofit application form",
+      "Complete verification; Canva replies by email"
+    ],
+    "terms": [
+      "One team of up to 50 users is free",
+      "Includes Canva Pro premium features plus team and collaboration tools",
+      "Additional seats are 50% off Canva Enterprise",
+      "Meeting the criteria does not guarantee approval",
+      "Applications are most often rejected for missing or unclear documentation, a mismatched organization category or unconfirmed affiliation"
+    ],
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Canva's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of canva.com nonprofit pages and help center articles because the pages could not be fetched from the research environment. Regional versions of the pages use slightly different wording (users vs members, organisation spelling) but agree on the 50-user team and the 50% Enterprise seat discount. Re-check the 72-hour reply time (shown on the US help page but not the UK one) and country-specific documentation rules on the live page. No region scope is set because Canva points to country-specific guidelines rather than stating global availability.",
+      "evidence": [
+        {
+          "claim": "Free team size (nonprofits FAQ)",
+          "quote": "All nonprofits can have one team of up to 50 users for free."
+        },
+        {
+          "claim": "Additional seat discount (nonprofits FAQ)",
+          "quote": "Additional seats are 50% off on Canva Enterprise."
+        },
+        {
+          "claim": "What the free team includes",
+          "quote": "all the premium features of Canva Pro, plus team and collaboration tools, for free"
+        },
+        {
+          "claim": "Who qualifies",
+          "quote": "registered nonprofits, NGOs, and social impact organizations with clearly stated charitable missions"
+        },
+        {
+          "claim": "Registration requirement",
+          "quote": "officially registered as a charitable nonprofit (like a 501(c)(3) in the US), independent from government, and not operating for commercial profit"
+        },
+        {
+          "claim": "Exclusions (as extracted)",
+          "quote": "Government agencies, political organizations, educational institutions, for-profit companies, most other 501(c) types, and grant-making foundations are not eligible."
+        },
+        {
+          "claim": "Country rules",
+          "quote": "check our full eligibility guidelines for country-specific requirements and required documentation"
+        },
+        {
+          "claim": "Seat limit change (newsroom)",
+          "quote": "Supporting nonprofits with 50 free Canva for Teams seats"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.canva.com/nonprofits/",
+      "redeemUrl": "https://www.canva.com/help/canva-for-nonprofits/"
+    }
+  },
+  {
+    "id": "o-monday-com-for-nonprofits-10-free-seats",
+    "slug": "monday-com-for-nonprofits-10-free-seats",
+    "productId": "monday-com",
+    "title": "monday.com for Nonprofits: 10 free Pro seats, then 70% off each additional seat",
+    "summary": "Eligible nonprofits get their first 10 Pro seats free on monday.com, 70% off every seat from the 11th, and 33% off an Enterprise upgrade, on an annual subscription.",
+    "description": "monday.com's nonprofit plan gives eligible organizations 10 free Pro seats on its Work Management, CRM, Service and Dev products. Seats from the 11th onward are 70% off, and nonprofits that need Enterprise can upgrade at 33% off. Campaigns, automation packages and WorkCanvas are also discounted (70% on Pro, 33% on Enterprise).\n\nThe organization must be recognized as a charity, nonprofit, nongovernmental or social change organization in its country; in the US, 501(c)(3) status qualifies. Trade associations, legislative or political organizations and educational institutions are among the excluded categories, and monday.com makes the final decision.\n\nTo apply, create a monday.com account and submit the nonprofit application form with your legal documents. Goodstack reviews applications, and approved accounts are moved to the nonprofit plan after the organization consents by email. The discount needs a one-year subscription, and eligibility must be reconfirmed each year.",
+    "type": "discount",
+    "categories": [
+      "saas-discounts",
+      "software-deals"
+    ],
+    "audiences": [
+      "office-tools",
+      "businesses"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "savingsLabel": "10 free seats, then 70% off each seat from the 11th"
+    },
+    "claim": {
+      "method": "application",
+      "note": "Create a monday.com account, then submit the nonprofit application form with your organization's legal documentation."
+    },
+    "requirements": {
+      "approvalRequired": true
+    },
+    "eligibility": [
+      "Organizations recognized as a charity, nonprofit, nongovernmental or social change organization in their country",
+      "US organizations can qualify with 501(c)(3) status; other countries' equivalent government-issued charitable status is accepted",
+      "Excluded categories include trade associations, legislative or political organizations and educational institutions",
+      "monday.com decides eligibility at its sole discretion"
+    ],
+    "redemption": [
+      "Create a monday.com account",
+      "Submit the nonprofit application form with your legal documentation",
+      "Goodstack reviews the application",
+      "After approval, give consent by email to move the account to the nonprofit plan",
+      "The discounted plan should appear on the account within about 2 to 3 days"
+    ],
+    "terms": [
+      "First 10 seats are free on the Pro plan",
+      "70% off each seat from the 11th seat",
+      "Enterprise upgrade at 33% off",
+      "Requires a one-year subscription; monthly plans don't get the discount",
+      "Eligibility must be reconfirmed every year, or full price applies"
+    ],
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of monday.com's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of monday.com's nonprofit eligibility and pricing pages and its support article, because the pages could not be fetched from the research environment. monday.com's support articles differ on product scope: the current one lists Work Management, CRM, Service and Dev on Pro, while another says accounts created after March 2024 get 10 free seats on each product and older accounts may only have Work Management. Re-check product scope and the annual-only rule on the live pages.",
+      "evidence": [
+        {
+          "claim": "Free seats (nonprofit pricing page)",
+          "quote": "your first 10 seats are free"
+        },
+        {
+          "claim": "Plan structure (eligibility page, as extracted)",
+          "quote": "Nonprofit Plan ... 10 free seats ... 70% discount per seat from the 11th seat ... Enterprise ... 33% discount"
+        },
+        {
+          "claim": "Products covered (support article, as extracted)",
+          "quote": "10 free seats on Work Management, CRM, Service, and Dev on the Pro plan"
+        },
+        {
+          "claim": "Products for newer accounts (support article)",
+          "quote": "accounts created after March 2024 can also enjoy the first 10 seats on each monday.com product for free"
+        },
+        {
+          "claim": "Eligibility (support article, as extracted)",
+          "quote": "recognized as a charity, nonprofit, nongovernmental, or social change organization in its country"
+        },
+        {
+          "claim": "Annual commitment (eligibility page, as extracted)",
+          "quote": "agree to a one-year subscription ... monthly plans don't get the discount ... eligibility must be reconfirmed each year, or the full price applies"
+        },
+        {
+          "claim": "Application process (support article, as extracted)",
+          "quote": "create a monday.com account first, then submit the nonprofit application form ... reviewed by Goodstack ... approved accounts should see the discounted plan within about 2 to 3 days"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://support.monday.com/hc/en-us/articles/115005321269-monday-com-for-nonprofits",
+      "redeemUrl": "https://monday.com/nonprofits/eligibility"
+    }
+  },
+  {
+    "id": "o-asana-for-nonprofits-50-off",
+    "slug": "asana-for-nonprofits-50-off",
+    "productId": "asana",
+    "title": "Asana for Nonprofits: 50% off paid Asana plans",
+    "summary": "Qualifying nonprofits and public libraries can get 50% off a paid Asana plan after verifying their status through Asana's nonprofit program.",
+    "description": "Asana for Nonprofits gives qualifying organizations 50% off a paid Asana plan. Asana says the discount applies to all eligible nonprofits regardless of budget size, and its help center says it can be applied to monthly or annual plans.\n\nThe program covers nonprofits with 501(c)(3) designation and public libraries with valid nonprofit status, plus organizations with equivalent international designations. Applicants fill out a short form confirming their affiliation and eligibility; Asana works with Goodstack to verify it, and eligible organizations receive a discount code with instructions for applying it to their plan.",
+    "type": "discount",
+    "categories": [
+      "saas-discounts",
+      "software-deals"
+    ],
+    "audiences": [
+      "office-tools",
+      "businesses"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "savingsLabel": "50% off"
+    },
+    "claim": {
+      "method": "application",
+      "note": "Complete Asana's nonprofit form; after Goodstack verifies eligibility you receive a discount code and instructions."
+    },
+    "requirements": {
+      "approvalRequired": true
+    },
+    "eligibility": [
+      "Nonprofits with 501(c)(3) designation",
+      "Public libraries with valid nonprofit status",
+      "Organizations with equivalent international designations",
+      "Available regardless of the organization's budget size"
+    ],
+    "redemption": [
+      "Fill out Asana's short nonprofit form confirming your affiliation and your organization's eligibility",
+      "Asana and Goodstack verify eligibility",
+      "If eligible, you get a discount code and instructions for applying it to your Asana plan"
+    ],
+    "terms": [
+      "50% off the paid plan you choose",
+      "Can be applied to monthly or annual plans, per Asana's help center",
+      "Asana's FAQ says the discount lasts as long as you stay with Asana"
+    ],
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Asana's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of asana.com and help.asana.com because the pages could not be fetched from the research environment. Asana's pages name the eligible plans differently (one says Premium or Business, an older page says Starter or Advanced, another says any plan), so the title says 'paid plans'; re-check which tiers the current form covers. Country coverage is unclear: the help center extract mentions 25 countries while Asana's forum announced worldwide availability, so no region scope is set. A separate Asana page was reported to exclude hospitals; confirm before relying on it.",
+      "evidence": [
+        {
+          "claim": "Discount size (nonprofit page)",
+          "quote": "50% off any plan of your choice"
+        },
+        {
+          "claim": "Plans named in expansion announcement",
+          "quote": "eligible nonprofits 50% off Premium or Business"
+        },
+        {
+          "claim": "Budget size",
+          "quote": "the 50% discount now applies to all eligible nonprofits, regardless of budget size"
+        },
+        {
+          "claim": "Who qualifies",
+          "quote": "available only to qualifying nonprofits with 501(c)(3) designation and public libraries with valid nonprofit status"
+        },
+        {
+          "claim": "International organizations",
+          "quote": "organizations with equivalent international designations"
+        },
+        {
+          "claim": "Monthly or annual (help center, as extracted)",
+          "quote": "eligible nonprofits can apply for the 50% discount on monthly or annual plans"
+        },
+        {
+          "claim": "Application and verification (as extracted)",
+          "quote": "fill out a short form to confirm you're affiliated with your organization and that it's eligible ... Asana then works with Goodstack to verify your eligibility ... your discount code, along with instructions to apply it to your Asana plan"
+        },
+        {
+          "claim": "Duration (FAQ, as extracted)",
+          "quote": "it lasts forever unless you choose to leave Asana"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://asana.com/industry/nonprofit"
+    }
+  },
+  {
+    "id": "o-hostinger-black-friday-2026-web-hosting-sale",
+    "slug": "hostinger-black-friday-2026-web-hosting-sale",
+    "productId": "hostinger-web-hosting",
+    "title": "Hostinger Black Friday 2026: up to 82% off web hosting (October 19 to December 14, 2026)",
+    "summary": "Hostinger's Black Friday sale runs from October 19 to December 14, 2026, with web hosting from $2.49/mo on a 48-month term and discounts on VPS, domains and its AI website builder.",
+    "description": "Hostinger's 2026 Black Friday sale runs from October 19 to December 14, 2026, covering Black Friday and Cyber Week. Hostinger advertises up to 82% off web hosting, with a free domain, email and SSL included. Premium web hosting is listed at $2.49/mo on a 48-month term ($119.52 in total, against a regular $585.12), renewing at $10.99/mo.\n\nThe sale also covers domains, the AI website builder, VPS hosting (listed at up to 67% off), ecommerce and web apps hosting. Hostinger's AI website builder deals page says early-access prices opened on October 19 and full Black Friday pricing begins on November 9, so listed prices may change during the sale.",
+    "type": "discount",
+    "categories": [
+      "saas-discounts",
+      "software-deals"
+    ],
+    "audiences": [
+      "businesses",
+      "freelancers",
+      "developers"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "regularPrice": 12.19,
+      "regularPeriod": "month",
+      "dealPrice": 2.49,
+      "period": "month",
+      "durationMonths": 48,
+      "renewalPrice": 10.99,
+      "renewalPeriod": "month",
+      "savingsLabel": "Up to 82% off web hosting"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Sale prices are listed on Hostinger's Black Friday pages; pick a plan and term and check out on hostinger.com."
+    },
+    "eligibility": [
+      "Purchases of Hostinger plans during the sale period, October 19 to December 14, 2026"
+    ],
+    "redemption": [
+      "Open Hostinger's Black Friday page",
+      "Choose a plan and billing term",
+      "Check out at the listed sale price"
+    ],
+    "terms": [
+      "Sale runs from October 19 to December 14, 2026",
+      "Premium web hosting: $2.49/mo on a 48-month term ($119.52 total, regular $585.12)",
+      "The 48-month Premium plan renews at $10.99/mo",
+      "Web hosting plans include a free domain, email and SSL",
+      "Full Black Friday pricing on the AI website builder begins November 9; early-access prices apply before then"
+    ],
+    "expiresAt": "2026-12-14",
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Hostinger's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of hostinger.com Black Friday pages because the pages could not be fetched from the research environment. Hostinger's pages disagree on the Premium discount (80% on the hosting page vs 82% elsewhere), and cached copies show other totals (e.g. $143.52) and coupon-only prices, so re-check the current price, term and renewal rate at checkout. The early-access vs full-price split (November 9) is stated on the AI builder deals page; it is not clear whether hosting prices also change on that date. Affiliate coupon codes seen on third-party sites are not included.",
+      "evidence": [
+        {
+          "claim": "Sale dates",
+          "quote": "The Hostinger Black Friday sale runs from October 19 to December 14, 2026"
+        },
+        {
+          "claim": "Headline discount and inclusions (as extracted)",
+          "quote": "up to 82% off web hosting, with a free domain, email, and SSL included"
+        },
+        {
+          "claim": "Starting price",
+          "quote": "From $12.19 $2.49/mo"
+        },
+        {
+          "claim": "Premium 48-month total and renewal (as extracted)",
+          "quote": "48-month total ... $119.52 ... regular price $585.12 ... renewal at $10.99/mo"
+        },
+        {
+          "claim": "Other categories (as extracted)",
+          "quote": "VPS plans show discounts of up to 67% off, and ecommerce is listed at 75% off"
+        },
+        {
+          "claim": "Early access vs full price (AI builder page, as extracted)",
+          "quote": "early access prices open on 19 October, and the full Black Friday price begins on 9 November"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.hostinger.com/black-friday",
+      "redeemUrl": "https://www.hostinger.com/black-friday-web-hosting-deals"
+    }
+  },
+  {
+    "id": "o-ibm-bob-annual-subscription-20-off-october-2026",
+    "slug": "ibm-bob-annual-subscription-20-off-october-2026",
+    "productId": "ibm-bob",
+    "title": "IBM Bob: 20% off a new annual subscription (through October 31, 2026)",
+    "summary": "IBM is taking 20% off new annual IBM Bob subscriptions bought on ibm.com, applied automatically at checkout, until October 31, 2026.",
+    "description": "IBM Bob is IBM's AI coding agent. Until October 31, 2026, IBM's store page for Bob Pro offers 20% off an annual subscription, applied automatically at checkout. The offer is for new subscriptions only.\n\nPromotional pricing covers only the first subscription term; renewals are excluded from promotions. Bob Pro is listed at $20 per month with 50 Bobcoins, IBM's usage unit for Bob.",
+    "type": "discount",
+    "categories": [
+      "saas-discounts",
+      "ai-tools"
+    ],
+    "audiences": [
+      "developers",
+      "ai-tools"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "savingsLabel": "20% off your annual subscription"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Choose the annual subscription for IBM Bob in the IBM store; the discount is applied at checkout."
+    },
+    "requirements": {
+      "newCustomersOnly": true
+    },
+    "eligibility": [
+      "New annual subscriptions to IBM Bob bought on ibm.com",
+      "Renewals are not eligible"
+    ],
+    "redemption": [
+      "Open the IBM Bob product page in the IBM store",
+      "Select the annual subscription",
+      "The 20% discount is applied automatically at checkout"
+    ],
+    "terms": [
+      "Offer valid until October 31, 2026",
+      "New subscriptions only",
+      "Promotional pricing applies only to the initial subscription term; renewals are excluded"
+    ],
+    "expiresAt": "2026-10-31",
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of IBM's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of IBM's store page for Bob Pro because the page could not be fetched from the research environment. The store lists Pro at $20.00/month or $240.00/year per instance with the annual option labelled 'Save 20%'; $240 is exactly 12 x $20, so it is unclear whether $240 is the price before or after the promotion, and no annual deal price is recorded. One search extract of ibm.com/products/offers-and-discounts described the offer as covering the first annual subscription to any Bob plan sold on ibm.com, but a second search could not find that wording, so the listing relies on the Bob Pro store page. Re-check before October 31.",
+      "evidence": [
+        {
+          "claim": "Offer, eligibility, end date and claim method (store page)",
+          "quote": "Get 20% off on your Annual subscription. New subscriptions only. Offer valid until October 31st, 2026 Offer applied automatically at checkout"
+        },
+        {
+          "claim": "Renewals excluded (store terms, as extracted)",
+          "quote": "promotional pricing is valid only for new subscriptions and the initial applicable subscription term. Renewals are excluded from promotions."
+        },
+        {
+          "claim": "Listed prices (store page)",
+          "quote": "$20.00/month per instance ... $240.00/year per instance ... Save 20%"
+        },
+        {
+          "claim": "Pro plan allowance (pricing page, as extracted)",
+          "quote": "Pro ... $20 per month with 50 Bobcoins"
+        },
+        {
+          "claim": "What Bob is (IBM product page)",
+          "quote": "the AI development partner that helps teams plan, build, test, secure, and modernize applications faster with built-in governance and control"
+        },
+        {
+          "claim": "Offers page description (single extract; not re-confirmed)",
+          "quote": "first annual subscription to any Bob plan sold via ibm.com ... October 31, 2026"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.ibm.com/store/en/us/products/EIDCYNQT",
+      "redeemUrl": "https://www.ibm.com/store/en/us/products/EIDCYNQT"
+    }
+  },
+  {
+    "id": "o-raycast-pro-yearly-billing-20-off",
+    "slug": "raycast-pro-yearly-billing-20-off",
+    "productId": "raycast",
+    "title": "Raycast Pro: 20% off with yearly billing ($96 a year instead of $120)",
+    "summary": "Raycast Pro costs $96 a year on yearly billing, 20% less than $120 for twelve months at the $10 monthly price, and comes with a 7-day free trial.",
+    "description": "Raycast Pro adds Raycast AI, Cloud Sync and other Pro features to the free Raycast app. It costs $10 a month on monthly billing, or $96 a year on yearly billing, which Raycast lists as 20% off ($8 a month instead of $120 a year).\n\nYearly subscriptions are billed on the day you subscribe and then on the same date each year. Pro comes with a 7-day free trial, and billing starts on the day the trial ends.",
+    "type": "discount",
+    "categories": [
+      "saas-discounts",
+      "software-deals"
+    ],
+    "audiences": [
+      "developers",
+      "office-tools",
+      "ai-tools"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "regularPrice": 120,
+      "regularPeriod": "year",
+      "dealPrice": 96,
+      "period": "year",
+      "savingsLabel": "Yearly -20%"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Choose yearly billing when subscribing to Raycast Pro."
+    },
+    "eligibility": [
+      "Anyone subscribing to Raycast Pro on yearly billing"
+    ],
+    "redemption": [
+      "Open Raycast's pricing page",
+      "Choose Raycast Pro with yearly billing",
+      "Start the 7-day free trial; billing starts when the trial ends"
+    ],
+    "terms": [
+      "Pro is $10 a month billed monthly, or $96 a year billed yearly",
+      "Yearly subscriptions bill on the day you subscribe, then on the same date each year",
+      "Pro comes with a 7-day free trial"
+    ],
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Raycast's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of raycast.com and manual.raycast.com because the pages could not be fetched from the research environment. Raycast changed its AI plans in September 2026 (Pro, Pro+ and Max); the extracts say Pro stays at $10 a month with 500 credits. Re-check the yearly price and the 20% label on the live pricing page.",
+      "evidence": [
+        {
+          "claim": "Yearly discount and price (Pro/pricing page)",
+          "quote": "Yearly -20% Raycast Pro Access to all features, and AI. $8/ month $120 $96 billed annually"
+        },
+        {
+          "claim": "Monthly vs yearly price (billing manual table)",
+          "quote": "Raycast Pro | $10 | $96 | 500 | Fast and powerful models"
+        },
+        {
+          "claim": "Yearly billing date (billing manual, as extracted)",
+          "quote": "Yearly subscriptions to Pro, Pro+, or Max bill on the day you subscribe, then on the same date each year"
+        },
+        {
+          "claim": "Free trial (billing manual, as extracted)",
+          "quote": "For the Pro plan, which comes with a 7-day free trial, billing starts on the day the trial ends"
+        },
+        {
+          "claim": "Cloud Sync platforms (Pro page)",
+          "quote": "syncing Snippets, Notes, Chats between your Mac, Windows, and iOS devices"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.raycast.com/pricing",
+      "redeemUrl": "https://www.raycast.com/pro"
+    }
+  },
+  {
+    "id": "o-notion-plus-yearly-billing-save-20",
+    "slug": "notion-plus-yearly-billing-save-20",
+    "productId": "notion",
+    "title": "Notion Plus: save up to 20% with yearly billing",
+    "summary": "Notion's pricing page offers savings of up to 20% when paid plans such as Plus are billed yearly instead of monthly.",
+    "description": "Notion's paid plans can be billed monthly or yearly, and Notion's pricing page says yearly billing saves up to 20%. Plus, the plan Notion describes as for small teams and professionals to work together, is listed at $10 per member per month.\n\nNotion says 'up to' 20%, so the exact saving depends on the plan. Check the billing toggle on the pricing page for the yearly per-member price before buying.",
+    "type": "discount",
+    "categories": [
+      "saas-discounts",
+      "software-deals"
+    ],
+    "audiences": [
+      "office-tools",
+      "businesses",
+      "freelancers"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "savingsLabel": "Save up to 20% with yearly"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Choose yearly billing when upgrading to a paid Notion plan."
+    },
+    "eligibility": [
+      "Notion workspaces upgrading to a paid plan, such as Plus, on yearly billing"
+    ],
+    "redemption": [
+      "Open Notion's pricing page",
+      "Switch the billing option to yearly",
+      "Upgrade to Plus"
+    ],
+    "terms": [
+      "Savings are 'up to' 20%; the exact saving varies by plan",
+      "Plus is listed at $10 per member per month"
+    ],
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Notion's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of notion.com/pricing because the page could not be fetched from the research environment. The extracts did not show which billing period the $10 Plus figure reflects or the yearly per-member price, so no regular or deal price is recorded. Re-check both prices on the live page.",
+      "evidence": [
+        {
+          "claim": "Yearly saving (pricing page toggle)",
+          "quote": "Save up to 20% with yearly"
+        },
+        {
+          "claim": "Plus listed price (pricing page)",
+          "quote": "$10 per member / month"
+        },
+        {
+          "claim": "Plus plan description (pricing page)",
+          "quote": "For small teams and professionals to work together"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.notion.com/pricing"
+    }
+  },
+  {
+    "id": "o-zoho-one-30-day-free-trial",
+    "slug": "zoho-one-30-day-free-trial",
+    "productId": "zoho-one",
+    "title": "Zoho One: 30-day free trial, no credit card required",
+    "summary": "Zoho's sign-up page for Zoho One offers a 30-day free trial of the whole suite with no credit card required.",
+    "description": "Zoho One bundles Zoho's business applications into one subscription, which Zoho describes as an operating system for business. Zoho's own sign-up page for Zoho One advertises a 30-day free trial and says no credit card is required.\n\nAt 30 days, the trial is about twice the length of the usual 14-day SaaS trial, which gives a business time to test several Zoho apps together before choosing a plan.",
+    "type": "free-trial",
+    "categories": [
+      "free-trials",
+      "saas-discounts"
+    ],
+    "audiences": [
+      "businesses",
+      "startups",
+      "office-tools"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "savingsLabel": "30-day free trial"
+    },
+    "claim": {
+      "method": "link",
+      "note": "Sign up on Zoho One's sign-up page; the trial starts with the new account."
+    },
+    "requirements": {
+      "cardRequired": false
+    },
+    "eligibility": [
+      "Businesses creating a Zoho One account through Zoho's sign-up page"
+    ],
+    "redemption": [
+      "Go to Zoho One's sign-up page",
+      "Enter your name, company, email and password",
+      "Confirm the one-time password Zoho sends by email to start the trial"
+    ],
+    "terms": [
+      "The trial lasts 30 days",
+      "No credit card is required to start"
+    ],
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Zoho's official page; live page not checked",
+      "note": "Quotes come from search extracts of Zoho's own Zoho One sign-up and product pages; zoho.com was not opened directly. The 30-day, no-card wording appears on several Zoho One sign-up variants. Re-check the trial length and post-trial pricing on zoho.com/one/pricing before marking verified; pricing and the app count were not confirmed from Zoho's own pages, so they are left out.",
+      "evidence": [
+        {
+          "claim": "Trial length (Zoho One sign-up page banner)",
+          "quote": "30-days free trial"
+        },
+        {
+          "claim": "No card needed (Zoho One sign-up page banner)",
+          "quote": "No credit card required"
+        },
+        {
+          "claim": "What Zoho One is (zoho.com/one/business-software.html)",
+          "quote": "Meet the Operating System for Business"
+        },
+        {
+          "claim": "Shared services across the suite (zoho.com/one/business-software.html)",
+          "quote": "Zoho One Services work across the system, giving you out-of-the-box AI, business intelligence, unified communication tools, and simplified software administration."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.zoho.com/one/",
+      "redeemUrl": "https://www.zoho.com/one/signup.html"
+    }
+  },
+  {
+    "id": "o-pipedrive-14-day-free-trial",
+    "slug": "pipedrive-14-day-free-trial",
+    "productId": "pipedrive",
+    "title": "Pipedrive: 14-day free trial with full access, no credit card required",
+    "summary": "Pipedrive offers a 14-day free trial of its sales CRM with full access and no credit card required.",
+    "description": "Pipedrive, a sales CRM built around a visual deal pipeline, offers a 14-day free trial. Pipedrive's own pages say the trial gives full access and needs no credit card.\n\nPipedrive's help center explains what happens next: if you add billing details during the trial, the account converts to a paid account when the trial ends. If you don't, access to the account is restricted, and the trial account and its data are deleted shortly after the trial expires, so export anything you want to keep.",
+    "type": "free-trial",
+    "categories": [
+      "free-trials",
+      "saas-discounts"
+    ],
+    "audiences": [
+      "businesses",
+      "startups",
+      "freelancers"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "savingsLabel": "14-day free trial"
+    },
+    "claim": {
+      "method": "link",
+      "note": "Start the trial from Pipedrive's free trial page."
+    },
+    "requirements": {
+      "cardRequired": false
+    },
+    "eligibility": [
+      "Anyone signing up for a new Pipedrive account"
+    ],
+    "redemption": [
+      "Go to Pipedrive's free trial page",
+      "Sign up to start the 14-day trial",
+      "Add billing details before the trial ends if you want to keep the account"
+    ],
+    "terms": [
+      "The trial lasts 14 days",
+      "No credit card is required to start",
+      "Without billing details, access is restricted when the trial ends and the trial account and its data are deleted shortly after"
+    ],
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Pipedrive's official page; live page not checked",
+      "note": "Quotes come from search extracts of pipedrive.com and support.pipedrive.com; the live pages were not opened. The trial-expiry quotes are close paraphrases of the help-center article (dated November 2024 in the extract), so re-check its wording. Which plan the trial covers was not stated on Pipedrive's own pages in the results, so it is left out.",
+      "evidence": [
+        {
+          "claim": "Trial length and card (pipedrive.com homepage)",
+          "quote": "14-day free trial, no credit card required"
+        },
+        {
+          "claim": "Access level (pipedrive.com/en/crm-free-trial)",
+          "quote": "Full access"
+        },
+        {
+          "claim": "No card on the trial page (pipedrive.com/en/crm-free-trial)",
+          "quote": "No credit card required"
+        },
+        {
+          "claim": "After the trial without billing details (support.pipedrive.com, near-verbatim)",
+          "quote": "The trial account and its data are deleted shortly after the trial expires."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.pipedrive.com/en/crm-free-trial"
+    }
+  },
+  {
+    "id": "o-monday-com-14-day-pro-trial",
+    "slug": "monday-com-14-day-pro-trial",
+    "productId": "monday-com",
+    "title": "monday.com: 14-day free trial of the Pro plan, no credit card needed",
+    "summary": "New monday.com sign-ups automatically get a free 14-day trial of the Pro plan, with no credit card needed.",
+    "description": "When you sign up for monday.com, your account automatically joins a free 14-day trial of the Pro plan. No credit card is needed to start.\n\nThe Pro plan is the only plan offered as a trial, and trials can't be extended. When the trial ends, you can buy a paid plan or move to the Free plan; if you do neither, the account deactivates without a charge.",
+    "type": "free-trial",
+    "categories": [
+      "free-trials",
+      "saas-discounts"
+    ],
+    "audiences": [
+      "businesses",
+      "office-tools",
+      "startups"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "savingsLabel": "14-day Pro plan trial"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Sign up for monday.com; the Pro trial starts automatically."
+    },
+    "requirements": {
+      "cardRequired": false
+    },
+    "eligibility": [
+      "New monday.com sign-ups"
+    ],
+    "redemption": [
+      "Sign up for a monday.com account",
+      "The 14-day Pro plan trial starts automatically",
+      "Check the remaining trial time in the Billing section under Administration"
+    ],
+    "terms": [
+      "The trial is of the Pro plan only; other plans aren't offered as trials",
+      "The trial lasts 14 days and can't be extended",
+      "No credit card is needed; if you don't upgrade, the account deactivates"
+    ],
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of monday.com's official page; live page not checked",
+      "note": "Quotes come from search extracts of monday.com's support article 'All about the monday.com free trial' and its pricing pages; the live pages were not opened. Some third-party sites say every paid plan has a trial, which conflicts with monday.com's own statement that only Pro is trialed; the official wording is used here. Re-check the article before marking verified.",
+      "evidence": [
+        {
+          "claim": "Trial plan and length (support.monday.com)",
+          "quote": "When signing up for a monday.com trial, you will automatically join our free 14-day Pro plan trial"
+        },
+        {
+          "claim": "Only Pro is trialed (support.monday.com)",
+          "quote": "At this time, we don't offer trials of different plans."
+        },
+        {
+          "claim": "No extensions (support.monday.com)",
+          "quote": "Free trials can't be extended."
+        },
+        {
+          "claim": "No card needed (monday.com pricing pages)",
+          "quote": "Unlimited users and boards. No credit card needed."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://support.monday.com/hc/en-us/articles/360010594079"
+    }
+  },
+  {
+    "id": "o-freshdesk-14-day-free-trial",
+    "slug": "freshdesk-14-day-free-trial",
+    "productId": "freshdesk",
+    "title": "Freshdesk: 14-day free trial of the help desk, no credit card required",
+    "summary": "Freshworks offers a 14-day free trial of Freshdesk with no credit card required, including its core help desk features.",
+    "description": "Freshworks offers a 14-day free trial of Freshdesk, its customer support help desk, with no credit card required. Freshworks says the core features, including workflow automation, team collaboration, self-service, analytics and insights, are all available during the trial.\n\nYou can invite up to 2 team members to join the trial. At the end, Freshdesk's help center says you can buy a paid plan to continue.",
+    "type": "free-trial",
+    "categories": [
+      "free-trials",
+      "saas-discounts"
+    ],
+    "audiences": [
+      "businesses",
+      "startups"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "savingsLabel": "14-day free trial"
+    },
+    "claim": {
+      "method": "link",
+      "note": "Sign up for the trial on Freshworks' Freshdesk pages."
+    },
+    "requirements": {
+      "cardRequired": false
+    },
+    "eligibility": [
+      "Teams creating a new Freshdesk account"
+    ],
+    "redemption": [
+      "Go to Freshworks' Freshdesk free trial page",
+      "Sign up for the 14-day trial",
+      "Invite up to 2 team members to try it with you"
+    ],
+    "terms": [
+      "The trial lasts 14 days",
+      "No credit card is required to start",
+      "Up to 2 team members can be invited to the trial"
+    ],
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Freshworks's official page; live page not checked",
+      "note": "Quotes come from search extracts of freshworks.com and support.freshdesk.com; the live pages were not opened. Freshdesk's help center also says you can move to a 'Free Program' after the trial, but a third-party blog says the free tier is no longer shown on public pages, so that option is left out. Re-check whether a free tier still exists and which signup page (Freshdesk or Freshdesk Omni) the trial link leads to.",
+      "evidence": [
+        {
+          "claim": "Trial length and card (freshworks.com/freshdesk/helpdesk-system)",
+          "quote": "Sign up for a 14-day free trial. No credit card required."
+        },
+        {
+          "claim": "Team members (freshworks.com/freshdesk/pricing/free/)",
+          "quote": "Users can also invite up to 2 team members to join the free trial"
+        },
+        {
+          "claim": "Features in the trial (freshworks.com/freshdesk/pricing/free/)",
+          "quote": "Freshdesk's core features support workflow automation, team collaboration, self-service, analytics and insights. These features are all available in the free trial."
+        },
+        {
+          "claim": "After the trial (support.freshdesk.com, near-verbatim)",
+          "quote": "purchase any paid plan to continue seamlessly or move to the Free Program if you're still evaluating"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.freshworks.com/freshdesk/pricing/free/"
+    }
+  },
+  {
+    "id": "o-apple-creator-studio-college-students-educators",
+    "slug": "apple-creator-studio-college-students-educators",
+    "productId": "apple-creator-studio",
+    "title": "Apple Creator Studio for college students and educators: $2.99/month or $29.99/year",
+    "summary": "Verified college students and educators can subscribe to Apple Creator Studio, with Final Cut Pro, Logic Pro and Pixelmator Pro, for $2.99 a month or $29.99 a year instead of $12.99 or $129.",
+    "description": "Apple Creator Studio is Apple's subscription to its pro creative apps: Final Cut Pro, Logic Pro, Pixelmator Pro, Motion, Compressor and MainStage, plus premium content and AI features in Keynote, Pages, Numbers and Freeform. The regular price is $12.99 a month or $129 a year.\n\nVerified college students enrolled at, and verified educators employed at, a degree-granting college or university can subscribe at $2.99 a month or $29.99 a year. After your status is verified you start a free trial and then the subscription, and Apple asks you to reverify once a year.\n\nStudents and educators who don't qualify can instead buy Apple's Pro Apps Bundle for Education, which has the one-time purchase versions of Final Cut Pro, Motion, Compressor, Logic Pro and MainStage.",
+    "type": "student",
+    "categories": [
+      "student-discounts",
+      "software-deals"
+    ],
+    "audiences": [
+      "students",
+      "creators",
+      "designers"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "regularPrice": 12.99,
+      "regularPeriod": "month",
+      "dealPrice": 2.99,
+      "period": "month",
+      "savingsLabel": "$2.99/month or $29.99/year for college students and educators"
+    },
+    "claim": {
+      "method": "verification",
+      "note": "Verify college student or educator status through Apple, then start the trial and subscription."
+    },
+    "requirements": {
+      "studentVerification": true
+    },
+    "eligibility": [
+      "Verified college students enrolled in a degree-granting college or university",
+      "Verified educators employed at a degree-granting college or university"
+    ],
+    "redemption": [
+      "Go to Apple Creator Studio's student and educator page",
+      "Verify your student or educator status; you may be asked to sign in to your institution's portal, use a code sent to your school email, or upload documents such as a student ID or paystub",
+      "Follow the onscreen steps to start the free trial and subscribe"
+    ],
+    "terms": [
+      "Prices shown are US prices: $2.99/month or $29.99/year, versus $12.99/month or $129/year",
+      "Apple asks you to reverify your status once a year",
+      "You can cancel at any time at least a day before your renewal date"
+    ],
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Apple's official page; live page not checked",
+      "note": "Quotes come from search extracts of creatorstudio.apple.com and Apple Support articles 125029 and 126312; the live pages were not opened. The exact price formatting on creatorstudio.apple.com was not visible in the extract. The length of the student trial wasn't clear from the extracts, so it is left out. Other countries have local prices. Some reports say Apple now uses UNiDAYS for student verification in the US, while Apple's support page names other routes; re-check the verification steps.",
+      "evidence": [
+        {
+          "claim": "Education pricing (creatorstudio.apple.com)",
+          "quote": "$2.99 per month or $29.99 per year"
+        },
+        {
+          "claim": "Price is for students and educators only (creatorstudio.apple.com/info/student)",
+          "quote": "a price only college students and educators can get"
+        },
+        {
+          "claim": "Eligibility (support.apple.com/125029)",
+          "quote": "if you're a verified college student enrolled in or a verified educator employed at a degree-granting college or university, you can subscribe to Apple Creator Studio at a discounted monthly or yearly rate"
+        },
+        {
+          "claim": "Included apps (support.apple.com/125029)",
+          "quote": "a collection of creativity and productivity apps from Apple that includes Final Cut Pro, Logic Pro, Pixelmator Pro, Motion, Compressor, and MainStage"
+        },
+        {
+          "claim": "Extras in iWork and Freeform (support.apple.com/125029)",
+          "quote": "The subscription also includes premium content and AI features in Keynote, Pages, Numbers, and Freeform."
+        },
+        {
+          "claim": "Sign-up after verification (support.apple.com/126312, near-verbatim)",
+          "quote": "after your eligibility is verified, follow the onscreen steps to start a free trial and purchase a college student or educator subscription"
+        },
+        {
+          "claim": "Cancellation (creatorstudio.apple.com)",
+          "quote": "You can cancel your subscription at any time at least a day before your renewal date."
+        },
+        {
+          "claim": "Annual reverification (support.apple.com/126312)",
+          "quote": "Once a year, Apple will ask you to reverify your status."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://creatorstudio.apple.com/info/student",
+      "redeemUrl": "https://support.apple.com/126312"
+    }
+  },
+  {
+    "id": "o-adobe-creative-cloud-pro-students-teachers",
+    "slug": "adobe-creative-cloud-pro-students-teachers",
+    "productId": "adobe-creative-cloud",
+    "title": "Adobe Creative Cloud Pro for students and teachers: US$19.99/month for the first year",
+    "summary": "Eligible students 13 and older and teachers can get Creative Cloud Pro on an annual plan for US$19.99/month for the first year, then US$39.99/month, against a regular US$69.99/month.",
+    "description": "Adobe sells Creative Cloud Pro, its plan with 20+ creative apps and Adobe Firefly generative AI, to eligible students 13 and older and to teachers for US$19.99 a month for the first year. After the first year the membership bills at Adobe's standard student and teacher rate, currently US$39.99 a month. The regular Creative Cloud Pro price is US$69.99 a month.\n\nThe offer is on an annual plan with a 12-month commitment. Adobe checks eligibility through the school-issued email address you give at purchase; if it can't be verified, Adobe may ask for proof such as a school ID card, transcript or tuition bill after you buy.",
+    "type": "student",
+    "categories": [
+      "student-discounts",
+      "software-deals"
+    ],
+    "audiences": [
+      "students",
+      "designers",
+      "creators"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "regularPrice": 69.99,
+      "regularPeriod": "month",
+      "dealPrice": 19.99,
+      "period": "month",
+      "durationMonths": 12,
+      "renewalPrice": 39.99,
+      "renewalPeriod": "month",
+      "savingsLabel": "US$19.99/mo for the first year"
+    },
+    "claim": {
+      "method": "verification",
+      "note": "Buy the student and teacher plan with your school-issued email; Adobe may ask for proof of eligibility after purchase."
+    },
+    "requirements": {
+      "studentVerification": true
+    },
+    "eligibility": [
+      "Students aged 13 and older at an accredited institution",
+      "Teachers at an accredited institution"
+    ],
+    "redemption": [
+      "Go to Adobe's Creative Cloud for students and teachers page",
+      "Buy the annual plan using your school-issued email address",
+      "If asked, upload proof of eligibility such as a school ID card, report card, transcript or tuition bill"
+    ],
+    "terms": [
+      "Annual plan with a 12-month commitment",
+      "US$19.99/month applies to the first year; it then bills at the standard rate, currently US$39.99/month",
+      "Prices shown are US prices and exclude applicable taxes"
+    ],
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Adobe's official page; live page not checked",
+      "note": "Quotes come from search extracts of adobe.com's student pricing pages and an Adobe help (helpx) FAQ; the live pages were not opened. The verification quote came from a regional (Malaysia) helpx page, so re-check the US version. Adobe ran a shorter US$15.99/month promotion from August 17 to September 2, 2026, which has ended; the US$19.99 standard student offer is listed here. One extract said the first-year price is for first-time memberships only; re-check that before adding a new-customers flag.",
+      "evidence": [
+        {
+          "claim": "Price, age and renewal (adobe.com/products/pricing-info/ccste-pricing-info.html)",
+          "quote": "Eligible students 13 and older and teachers can purchase an annual membership for a reduced price of US$19.99/mo for the first year. At the end of the offer term, the membership bills at the standard rate, currently US$39.99/mo."
+        },
+        {
+          "claim": "Regular price and first-year price (adobe.com student Creative Cloud page)",
+          "quote": "Regularly at US$69.99/mo Alternatively at US$19.99/mo"
+        },
+        {
+          "claim": "First year then standard rate (adobe.com student Creative Cloud page)",
+          "quote": "Pay US$19.99/mo for the first year and US$39.99/mo after that."
+        },
+        {
+          "claim": "Verification (helpx.adobe.com students and teachers FAQ, near-verbatim)",
+          "quote": "If you don't have a school-issued email address or your email address cannot be verified, additional proof of eligibility may be requested after purchase."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.adobe.com/creativecloud/buy/students",
+      "redeemUrl": "https://www.adobe.com/products/pricing-info/ccste-pricing-info.html"
+    }
+  },
+  {
+    "id": "o-unity-student-plan-free",
+    "slug": "unity-student-plan-free",
+    "productId": "unity",
+    "title": "Unity Student plan: free Unity Pro Editor for students 16 and older",
+    "summary": "Unity's free Student plan gives students 16 and older at an accredited institution the latest Unity Pro Editor for personal use.",
+    "description": "The Unity Student plan is free and meant for individual students to use on their own computers. It includes the latest version of the Unity Pro Editor.\n\nYou must be 16 or older and enrolled at an accredited educational institution, and you apply as either a post-secondary or a secondary student. Unity verifies student status when you apply, and in most cases verification is instant. The plan isn't available in Mainland China, Macau, Iran, Syria, Taiwan or Hong Kong, where Unity suggests Unity Personal instead.",
+    "type": "student",
+    "categories": [
+      "student-discounts",
+      "software-deals"
+    ],
+    "audiences": [
+      "students",
+      "developers",
+      "creators"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "verification",
+      "note": "Apply on Unity's Student plan page and verify that you are an enrolled student."
+    },
+    "requirements": {
+      "studentVerification": true
+    },
+    "regions": {
+      "scope": "limited",
+      "note": "Not available in Mainland China, Macau, Iran, Syria, Taiwan and Hong Kong"
+    },
+    "eligibility": [
+      "Students aged 16 and older",
+      "Enrolled at an accredited educational institution (post-secondary or secondary)",
+      "For individual use on your own computer"
+    ],
+    "redemption": [
+      "Go to Unity's Student plan page",
+      "Choose Post-Secondary or Secondary to match your studies",
+      "Verify your student status and agree to the processing of your personal information"
+    ],
+    "terms": [
+      "For individual students on personal computers; classroom and lab installs need a separate education licence",
+      "Not available in Mainland China, Macau, Iran, Syria, Taiwan and Hong Kong"
+    ],
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Unity's official page; live page not checked",
+      "note": "Quotes come from search extracts of unity.com/products/unity-student and Unity's support article on Student plan eligibility; the live pages were not opened. The extra benefits listed differ between page versions (Odin Inspector licence, Synty asset bundle, Unity Cloud access, Asset Store discount), so only the Pro Editor is listed. A localized Unity page says the plan lasts one year and can be renewed while enrolled; re-check that and the revenue limit some third-party sites mention.",
+      "evidence": [
+        {
+          "claim": "Free, for individual students (unity.com/products/unity-student)",
+          "quote": "The Unity Student plan is free and intended for individual students to use on their personal computers."
+        },
+        {
+          "claim": "Includes Pro Editor (unity.com/products/unity-student)",
+          "quote": "the latest version of the Unity Pro Editor"
+        },
+        {
+          "claim": "Eligibility (support.unity.com)",
+          "quote": "This plan is available for students who are 16 years and older and are enrolled in an accredited educational institution."
+        },
+        {
+          "claim": "Regional limits (unity.com/products/unity-student)",
+          "quote": "The Unity Student Plan is currently not available in Mainland China, Macau, Iran, Syria, Taiwan, and Hong Kong."
+        },
+        {
+          "claim": "Verification speed (Unity student page)",
+          "quote": "in most cases, verification is instantaneous"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://unity.com/products/unity-student"
+    }
+  },
+  {
+    "id": "o-miro-education-plan-free",
+    "slug": "miro-education-plan-free",
+    "productId": "miro",
+    "title": "Miro Education plan: free for students (2 years) and educators (no end date)",
+    "summary": "Miro's free Education plan gives students 2 years of access with teams of up to 10, and educators access with no end date and teams of up to 100.",
+    "description": "Miro gives its Education plan free to students and staff of educational institutions. For educators the plan is valid with no end date and allows up to 100 members in a team; for students it is valid for two years and allows 10 members in a team. It includes unlimited active boards and high-resolution export without a watermark, with limited Miro AI and no Video chat or Rally.\n\nTo apply, you fill in Miro's form with an educational email address ending in .edu or .k12, or on your public institution's domain; without one, you can send proof of your affiliation. Processing can take up to 10 days. Schools, colleges, universities, technical schools, MBA schools and accredited online schools qualify; non-accredited institutions, vocational and retraining programs and research labs don't.",
+    "type": "student",
+    "categories": [
+      "student-discounts",
+      "software-deals"
+    ],
+    "audiences": [
+      "students",
+      "designers",
+      "office-tools"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0
+    },
+    "claim": {
+      "method": "application",
+      "note": "Apply through the Education plan form linked from Miro's Help Center."
+    },
+    "requirements": {
+      "approvalRequired": true,
+      "studentVerification": true
+    },
+    "eligibility": [
+      "Students and educators at middle schools, high schools, junior colleges, colleges, universities, technical schools, MBA schools or accredited online schools",
+      "An educational email ending in .edu or .k12 or on your public institution's domain, or proof of affiliation",
+      "Not for non-accredited institutions, vocational and retraining programs, or research labs"
+    ],
+    "redemption": [
+      "Open Miro's Education plan article in the Help Center",
+      "Complete the application form with your educational email and a document showing your student or staff status",
+      "Wait for Miro to process the application (up to 10 days)"
+    ],
+    "terms": [
+      "Students: valid for two years, up to 10 members in a team",
+      "Educators: valid with no end date, up to 100 members in a team",
+      "Limited Miro AI; no Video chat or Rally"
+    ],
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Miro's official page; live page not checked",
+      "note": "Quotes come from search extracts of Miro's Help Center article 'Education plan'; the live page was not opened. One later extract of the same article didn't show the two-year and team-size terms, though a university guide repeats them; one deal site says one year, which conflicts. Re-check the validity periods and team sizes before marking verified.",
+      "evidence": [
+        {
+          "claim": "Educators (help.miro.com Education plan)",
+          "quote": "valid forever for educators"
+        },
+        {
+          "claim": "Students (help.miro.com Education plan)",
+          "quote": "valid for two years for students"
+        },
+        {
+          "claim": "Email requirement (help.miro.com Education plan)",
+          "quote": "ends in *.edu or *.k12, or belongs to the domain of your public educational institution"
+        },
+        {
+          "claim": "Processing time (help.miro.com Education plan)",
+          "quote": "Processing may take us up to 10 days"
+        },
+        {
+          "claim": "Features (help.miro.com Education plan)",
+          "quote": "Unlimited active boards"
+        },
+        {
+          "claim": "Limits (help.miro.com Education plan)",
+          "quote": "No Video chat / Rally"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://help.miro.com/hc/en-us/articles/360017730473-Education-plan"
+    }
+  },
+  {
+    "id": "o-auth0-for-startups",
+    "slug": "auth0-for-startups",
+    "productId": "auth0",
+    "title": "Auth0 for Startups: one year of the B2B Professional plan free",
+    "summary": "Young, venture-backed startups with under $5M raised and under $1M ARR can get one year of Auth0's B2B Professional plan at no cost, with up to 100,000 monthly active users.",
+    "description": "Auth0's startup program gives eligible early-stage companies one year of its B2B Professional plan for free. The plan includes up to 100,000 monthly active users and enterprise features such as single sign-on and multi-factor authentication.\n\nTo qualify, a company must be venture-backed with less than $5M in funding, have less than $1M in annual recurring revenue and be less than two years from its date of incorporation. Existing paid Auth0/Okta customers and startups that have been in the program before are excluded.\n\nAuth0 suggests starting on its Free plan while building and applying to the program once you need features like Enterprise MFA or more Organizations. Companies that don't qualify can still use the Free plan.",
+    "type": "startup",
+    "categories": [
+      "startup-perks",
+      "saas-discounts"
+    ],
+    "audiences": [
+      "startups",
+      "developers"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "durationMonths": 12,
+      "savingsLabel": "One year of B2B Professional free, up to 100,000 MAU"
+    },
+    "claim": {
+      "method": "application",
+      "note": "Apply on Auth0's startups page; Auth0 suggests applying once you outgrow the Free plan."
+    },
+    "requirements": {
+      "approvalRequired": true
+    },
+    "eligibility": [
+      "Venture-backed with less than $5M in funding",
+      "Less than $1M in annual recurring revenue",
+      "Less than two years from the date of incorporation",
+      "Not an existing paid Auth0/Okta customer (enterprise or paid self-service plans)",
+      "Not a previous member of the Auth0 for Startups program"
+    ],
+    "redemption": [
+      "Use the Auth0 Free plan while you build your product",
+      "When you need more features, such as Enterprise MFA or more Organizations, apply on the Auth0 for Startups page",
+      "If you are not eligible, you can keep using Auth0's Free plan"
+    ],
+    "terms": [
+      "Covers one year of the B2B Professional plan",
+      "Includes up to 100,000 monthly active users",
+      "Includes enterprise features such as SSO and MFA",
+      "A company can only take part in the program once"
+    ],
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Auth0's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of auth0.com/startups and its partner variants (e.g. auth0.com/startups/vip); they may be excerpted. The 100,000 MAU wording came from an Auth0-hosted page in the same results. Re-check what happens at the end of the 12 months on the live FAQ, since the extracts were cut off there.",
+      "evidence": [
+        {
+          "claim": "One year of B2B Professional",
+          "quote": "Get one year of our B2B Professional capabilities so your users and AI agents can more securely access what they need."
+        },
+        {
+          "claim": "100,000 MAU and SSO/MFA included",
+          "quote": "The Auth0 for Startups program offers eligible early-stage companies one year of the B2B Professional plan for free. This includes up to 100,000 monthly active users (MAU) and enterprise features like SSO and MFA."
+        },
+        {
+          "claim": "Eligibility criteria",
+          "quote": "Venture-backed with less than $5M in funding; Less than $1M in annual recurring revenue; Less than two years from the date of incorporation"
+        },
+        {
+          "claim": "Exclusions",
+          "quote": "Offer not valid for existing paid Auth0/Okta customers (including both enterprise and paid self service plans) or startups that have previously been members of the Auth0 for Startups program."
+        },
+        {
+          "claim": "When to apply",
+          "quote": "Use the Auth0 Free Plan as you begin developing your product. Once you need more features, like Enterprise MFA, or additional Organizations, move onto the next step"
+        },
+        {
+          "claim": "Fallback for ineligible companies",
+          "quote": "If you're not eligible for this program, you can still try Auth0 for free at: https://auth0.com/signup"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://auth0.com/startups"
+    }
+  },
+  {
+    "id": "o-webflow-for-startups",
+    "slug": "webflow-for-startups",
+    "productId": "webflow",
+    "title": "Webflow for Startups: 100% off the first full year of a CMS site plan",
+    "summary": "New Webflow customers with fewer than 50 employees, under $15M raised and a Webflow startup partner can get their first full year of a CMS site plan free.",
+    "description": "Webflow's startup program gives eligible startups 100% off their first full year of a CMS site plan.\n\nTo qualify, a startup must have raised less than $15 million, have fewer than 50 employees, be a new Webflow customer and work with one of Webflow's startup partners, such as an accelerator or investor. All of the criteria must be met.\n\nApplications are reviewed by Webflow within 3-4 business days, and applications from personal email addresses are not accepted. Accepted startups receive a promo code, which Webflow's help center says works with monthly billing only.",
+    "type": "startup",
+    "categories": [
+      "startup-perks",
+      "saas-discounts"
+    ],
+    "audiences": [
+      "startups",
+      "designers"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "durationMonths": 12,
+      "savingsLabel": "100% off your first full year of a CMS site plan"
+    },
+    "claim": {
+      "method": "application",
+      "note": "Apply with a company email; accepted startups get a promo code for monthly billing."
+    },
+    "requirements": {
+      "newCustomersOnly": true,
+      "approvalRequired": true
+    },
+    "eligibility": [
+      "Raised less than $15 million in funding",
+      "Fewer than 50 employees",
+      "New Webflow customer",
+      "Working with one of Webflow's startup partners",
+      "Must meet all of the criteria"
+    ],
+    "redemption": [
+      "Submit the Webflow for Startups application using a company email address",
+      "Wait for Webflow to review the application (3-4 business days)",
+      "If accepted, apply the promo code to a site plan on monthly billing"
+    ],
+    "terms": [
+      "Applications from personal email addresses are not accepted",
+      "Promo code applies to monthly billing only, not yearly billing"
+    ],
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Webflow's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of webflow.com/startups, the application page and a Webflow help center article; they may be excerpted. The help center article reportedly names the covered plan as the Premium Site plan (and legacy CMS Site plan), while the application page says CMS site plan; re-check which current site plan the code covers. Partner-specific pages (e.g. webflow.com/solutions/yc) exist with their own wording.",
+      "evidence": [
+        {
+          "claim": "Benefit",
+          "quote": "100% off your first full year of a CMS site plan"
+        },
+        {
+          "claim": "Eligibility criteria",
+          "quote": "raised fewer than 15 million dollars in funding, a new Webflow customer, fewer than 50 employees, and working with one of Webflow's startup partners"
+        },
+        {
+          "claim": "All criteria required",
+          "quote": "Startups must meet all criteria above to qualify."
+        },
+        {
+          "claim": "Company email required",
+          "quote": "Applications with personal email addresses will not be accepted."
+        },
+        {
+          "claim": "Review time",
+          "quote": "our team will review your application within 3-4 business days"
+        },
+        {
+          "claim": "Monthly billing only (help center)",
+          "quote": "the promo code applies only to monthly billing and won't work with yearly billing"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://webflow.com/startups",
+      "redeemUrl": "https://webflow.com/startups/startups-application"
+    }
+  },
+  {
+    "id": "o-retool-for-startups",
+    "slug": "retool-for-startups",
+    "productId": "retool",
+    "title": "Retool for Startups: 100% off Team or Business for a year, worth up to $60K",
+    "summary": "Startups up to Series A with under $10M raised can get a 100% off coupon for one year of a monthly Retool Team or Business plan, worth up to $60K, then 25% off the second year.",
+    "description": "Retool's startup program gives eligible startups a 100% off coupon for one year on a monthly Team or Business plan, with a value of up to $60k. In the second year, the startup gets 25% off its paid plan.\n\nThe program is for bootstrapped, angel-funded, debt-funded, pre-seed, seed and Series A companies that have raised less than $10 million in total and were founded within the last 10 years. Applicants must be new customers on a monthly Team or Business plan; organisations that have been on a paid plan for several billing cycles or were in the program before are excluded.\n\nTo claim it, you upgrade to the monthly plan you want and then apply. Retool confirms acceptance by email and applies the discount to the first invoice at the end of the first billing cycle.",
+    "type": "startup",
+    "categories": [
+      "startup-perks",
+      "saas-discounts"
+    ],
+    "audiences": [
+      "startups",
+      "developers"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "durationMonths": 12,
+      "savingsLabel": "100% off for one year, up to $60k in value"
+    },
+    "claim": {
+      "method": "application",
+      "note": "Upgrade to a monthly Team or Business plan first, then submit the application."
+    },
+    "requirements": {
+      "newCustomersOnly": true,
+      "approvalRequired": true
+    },
+    "eligibility": [
+      "Bootstrapped, angel-funded, debt-funded, pre-seed, seed or Series A",
+      "Raised less than $10 million in total funding",
+      "Founded within the last 10 years",
+      "New Retool customer on the monthly Team or Business plan",
+      "Not already on a paid plan for multiple billing cycles, and not a past member of Retool's startup program"
+    ],
+    "redemption": [
+      "Upgrade to the monthly Team or Business plan you want",
+      "Submit the startup program application",
+      "Wait for a confirmation email on acceptance",
+      "The discount is applied to the first invoice at the end of the first billing cycle"
+    ],
+    "terms": [
+      "Monthly Team or Business plans only; not for annual plans or the Enterprise tier",
+      "Cannot be combined with other sales discounts",
+      "An organisation can only be accepted to one of Retool's discount programs",
+      "25% off the paid plan in the second year"
+    ],
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Retool's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of retool.com/startups and docs.retool.com/support/discount-programs; they may be excerpted. Older Retool blog posts and changelogs cite $1,200 or $25,000 in credits; the current program page and docs cite the 100% coupon worth up to $60k. Some accelerators (e.g. YC, Techstars) reportedly offer partner codes with more; not included.",
+      "evidence": [
+        {
+          "claim": "Benefit and second-year discount",
+          "quote": "Eligible Startups receive a 100% off coupon for one year, with a value up to $60k, to access a monthly subscription to Retool's Team or Business plan. They'll then get 25% off for their second year."
+        },
+        {
+          "claim": "Funding stage",
+          "quote": "bootstrapped, angel-funded, debt-funded, pre-seed, seed, or Series A"
+        },
+        {
+          "claim": "Funding cap and age",
+          "quote": "raised less than $10 million in total funding, and were founded within the last 10 years"
+        },
+        {
+          "claim": "Plan limits",
+          "quote": "Organizations can only be accepted to one of the three discount programs, and the discounts cannot be used for our Enterprise tier or any annual plans."
+        },
+        {
+          "claim": "How the discount is applied",
+          "quote": "Acceptance is confirmed by email, and the discount is applied automatically to the first invoice at the end of the first billing cycle."
+        },
+        {
+          "claim": "No stacking",
+          "quote": "the startup discount can't be combined with other sales discounts"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://retool.com/startups"
+    }
+  },
+  {
+    "id": "o-amplitude-startup-scholarship",
+    "slug": "amplitude-startup-scholarship",
+    "productId": "amplitude",
+    "title": "Amplitude Startup Scholarship: one year of the Growth plan free",
+    "summary": "Startups with under $10M in funding and fewer than 20 employees can get one year of Amplitude's Growth plan at no cost, with 200,000 monthly tracked users.",
+    "description": "Amplitude's Startup Scholarship is a temporary plan that gives qualifying startups one year of the Growth plan at no cost, with an allowance of 200,000 monthly tracked users (MTUs).\n\nTo qualify, a company must have less than $10 million in funding and fewer than 20 employees. Amplitude reviews applications within two business days and contacts applicants by email; accepted startups can use the Growth plan straight away.\n\nThe scholarship cannot be extended past one year. At the end of the year, the startup can upgrade to the paid Growth plan or go back to the Free plan. Amplitude also runs a separate Tech for Black Founders track with higher limits.",
+    "type": "startup",
+    "categories": [
+      "startup-perks",
+      "saas-discounts"
+    ],
+    "audiences": [
+      "startups",
+      "marketing-tools"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "durationMonths": 12,
+      "savingsLabel": "One year of the Growth plan at no cost"
+    },
+    "claim": {
+      "method": "application",
+      "note": "Start from amplitude.com/startups; the application appears after you create or sign in to an Amplitude account."
+    },
+    "requirements": {
+      "approvalRequired": true
+    },
+    "eligibility": [
+      "Less than $10 million in funding",
+      "Fewer than 20 employees",
+      "Both criteria must be met"
+    ],
+    "redemption": [
+      "Go to amplitude.com/startups and choose to join",
+      "New users create an Amplitude account; Free plan users sign in to their existing account",
+      "Monthly Plus subscribers cancel and wait for the downgrade before applying; annual Plus or Growth customers email scholarship@amplitude.com",
+      "Amplitude reviews the application within two business days and replies by email"
+    ],
+    "terms": [
+      "One year of the Growth plan with 200,000 MTUs",
+      "No extensions past one year",
+      "After the year, upgrade to the Growth plan or return to the Free plan"
+    ],
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Amplitude's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of amplitude.com/startups and Amplitude's docs FAQ (amplitude.com/docs/faq/startup-scholarship-plan); they may be excerpted. A 2020-era Amplitude launch post cited under $5M funding; the current docs cite under $10M. Amplitude also hosts an older 'startups-old' page, so re-check the live startups page wording and the application steps for existing paid subscribers.",
+      "evidence": [
+        {
+          "claim": "One year of Growth at no cost",
+          "quote": "The Startup Scholarship is a temporary plan that gives qualifying startups one year of the Growth plan at no cost."
+        },
+        {
+          "claim": "MTU allowance",
+          "quote": "You get 200,000 MTUs, more than enough to reach product-market fit."
+        },
+        {
+          "claim": "Eligibility",
+          "quote": "To qualify, your company must meet both criteria: Less than $10 million in funding, Fewer than 20 employees"
+        },
+        {
+          "claim": "Review and start",
+          "quote": "We'll review your application within two business days, then contact you via email. If you're accepted into a program, you can start using everything in the Growth plan for free immediately."
+        },
+        {
+          "claim": "After one year",
+          "quote": "At the end of one year, you'll have the option to either upgrade to the Growth plan or go back to the Free plan."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://amplitude.com/startups"
+    }
+  },
+  {
+    "id": "o-algolia-startup-program-credits",
+    "slug": "algolia-startup-program-credits",
+    "productId": "algolia",
+    "title": "Algolia Startup Program: up to $10,000 in credits for 12 months",
+    "summary": "Young startups that are new to Algolia can get up to USD 10,000 in credits for Algolia's Grow Plan, usable for 12 months from acceptance.",
+    "description": "Algolia's Startup Program gives accepted startups the right to use up to USD 10,000 worth of Algolia services under the Grow Plan, at list price.\n\nThe credits can be used for 12 months from the date the startup is accepted, and any unused credits expire after that with no extension. The clock starts at acceptance, not at product launch.\n\nAlgolia's program terms require that the company was incorporated no more than three years before applying, has raised less than USD 5,000,000 in equity funding and is not a previous or existing paid Algolia subscriber. Some versions of Algolia's startup page list looser limits, so check the current criteria before applying.",
+    "type": "startup",
+    "categories": [
+      "startup-perks",
+      "free-credits"
+    ],
+    "audiences": [
+      "startups",
+      "developers"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "creditValue": 10000,
+      "durationMonths": 12,
+      "savingsLabel": "Up to USD 10,000 in Algolia credits"
+    },
+    "claim": {
+      "method": "application",
+      "note": "Apply on Algolia's startups page."
+    },
+    "requirements": {
+      "newCustomersOnly": true,
+      "approvalRequired": true
+    },
+    "eligibility": [
+      "Incorporated no more than three years before applying (per the program terms)",
+      "Raised less than USD 5,000,000 in equity funding (per the program terms)",
+      "Not a previous or existing paid Algolia subscriber",
+      "Some Algolia startup pages instead list less than 7 years old and less than $15M raised"
+    ],
+    "redemption": [
+      "Apply on Algolia's startups page",
+      "Once accepted, use the credits on Grow Plan services"
+    ],
+    "terms": [
+      "Credits cover Grow Plan services, valued at Algolia's list price",
+      "Usable for 12 months from acceptance into the program",
+      "Unused credits expire after 12 months, with no extension"
+    ],
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Algolia's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of Algolia's startup program terms (algolia.com/de/policies/startup-program-terms, effective May 27, 2025) and its startups pages; they may be excerpted. Algolia-hosted pages disagree on eligibility: the terms and one industries page say under 3 years and under $5M, while other copies (Spanish page, industries-and-solutions URL) say under 7 years and under $15M. Re-check which criteria are live before marking verified.",
+      "evidence": [
+        {
+          "claim": "Credit amount, plan and validity",
+          "quote": "Participants will be granted a right to use up to USD 10,000 worth of Algolia Services available under the Grow Plan based on Algolia's list price during a period of 12 months from the Participant's acceptance to the Program only."
+        },
+        {
+          "claim": "Unused credits expire",
+          "quote": "After this 12-month period, any unused Credits will expire without the possibility of an extension."
+        },
+        {
+          "claim": "Eligibility in the terms",
+          "quote": "have been incorporated as a legal entity no more than three (3) years prior to their application; have raised less than USD5,000,000 in equity funding; not be a previous or existing paid subscriber of Algolia"
+        },
+        {
+          "claim": "Startup page headline",
+          "quote": "$10,000 in Algolia Credits (See Terms)"
+        },
+        {
+          "claim": "Conflicting criteria on other Algolia pages",
+          "quote": "Less than 7 years old; Less than $15M in total funding raised"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.algolia.com/industries/startups"
+    }
+  },
+  {
+    "id": "o-stripe-atlas-2500-stripe-credits",
+    "slug": "stripe-atlas-2500-stripe-credits",
+    "productId": "stripe-atlas",
+    "title": "Stripe Atlas: $2,500 in Stripe product credits for newly incorporated startups",
+    "summary": "Companies incorporated through Stripe Atlas on or after October 16, 2025 get $2,500 in Stripe credits, valid for one year from the incorporation date.",
+    "description": "Stripe gives every company incorporated through Stripe Atlas on or after October 16, 2025 $2,500 in Stripe product credits. The credits activate automatically on the day the company is incorporated and are valid for one year from that date.\n\nThe credits show up as a deduction of fees when the company pays out its Stripe balance, and they cannot be moved to another Stripe account. Companies incorporated before October 16, 2025 received a different offer: waived Stripe payment fees on their first $100,000 in revenue for a year.\n\nAtlas itself costs a one-time $500 fee, which covers incorporation and the first year of registered agent service, then $100 a year. Atlas companies also get partner discounts, which Stripe says can change and may carry the partners' own eligibility rules.",
+    "type": "startup",
+    "categories": [
+      "startup-perks",
+      "free-credits"
+    ],
+    "audiences": [
+      "startups",
+      "businesses"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "creditValue": 2500,
+      "durationMonths": 12,
+      "savingsLabel": "$2,500 in Stripe product credits"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Credits activate automatically on the day your Atlas company is incorporated."
+    },
+    "eligibility": [
+      "Company incorporated through Stripe Atlas on or after October 16, 2025",
+      "Companies incorporated earlier received waived Stripe payment fees instead"
+    ],
+    "redemption": [
+      "Incorporate your company through Stripe Atlas",
+      "Credits activate automatically on incorporation day",
+      "Credits are applied as a deduction of fees when you pay out your Stripe balance"
+    ],
+    "terms": [
+      "Valid for 1 year from the incorporation date",
+      "Cannot be transferred to another Stripe account",
+      "Atlas costs a one-time $500 fee, then $100 a year after the first year",
+      "Partner perks are subject to change and to each partner's own eligibility rules"
+    ],
+    "publishedAt": "2026-10-23",
+    "updatedAt": "2026-10-23",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "method": "Search extracts of Stripe's official page; live page not checked",
+      "note": "Quotes come from search-engine extracts of stripe.com/atlas and Stripe support articles (Atlas Fee Credits FAQ, Waived payments processing fees for Atlas users); they may be excerpted. Re-check which Stripe fees or products the credits can offset on the live FAQ. Partner perk amounts (e.g. AWS, Mercury, Xero) vary by page and region and were not included.",
+      "evidence": [
+        {
+          "claim": "Eligibility and amount",
+          "quote": "All Stripe Atlas companies incorporated on or after October 16, 2025 will receive $2,500 in credits."
+        },
+        {
+          "claim": "Automatic, 1-year validity, non-transferable",
+          "quote": "These credits are automatically applied to the Atlas account after incorporation, and are valid for 1 year from the incorporation date. Credits cannot be transferred to another Stripe account."
+        },
+        {
+          "claim": "How credits are applied",
+          "quote": "you'll see them applied upon paying out your Stripe balance (as a deduction of fees)"
+        },
+        {
+          "claim": "Atlas page wording",
+          "quote": "$2,500 in Stripe product credits for use in their first year after incorporation"
+        },
+        {
+          "claim": "Earlier companies got a different offer",
+          "quote": "waived fees on Stripe payments for 1 year after incorporation, on your first $100,000 USD in revenue"
+        },
+        {
+          "claim": "Partner offers can change",
+          "quote": "Atlas's partners may require your company to satisfy their own eligibility or compliance requirements before offering these benefits."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://stripe.com/atlas",
+      "redeemUrl": "https://support.stripe.com/questions/atlas-fee-credits-faq"
     }
   }
 ];
