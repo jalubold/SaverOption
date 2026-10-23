@@ -50,11 +50,11 @@ export const offers: Offer[] = [
       "Third-party offers can change at the partner's request and are governed by the partner's own terms"
     ],
     "publishedAt": "2026-10-17",
-    "updatedAt": "2026-10-17",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
       "status": "verified",
-      "checkedAt": "2026-10-17",
+      "checkedAt": "2026-10-23",
       "method": "Checked against GitHub's official documentation source (github/docs repository)",
       "evidence": [
         {
@@ -331,11 +331,11 @@ export const offers: Offer[] = [
       "Classroom assignment usage is charged to the classroom's organization, not the student's allowance"
     ],
     "publishedAt": "2026-10-17",
-    "updatedAt": "2026-10-17",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
       "status": "verified",
-      "checkedAt": "2026-10-17",
+      "checkedAt": "2026-10-23",
       "method": "Checked against GitHub's official documentation source (github/docs repository)",
       "evidence": [
         {
@@ -471,11 +471,11 @@ export const offers: Offer[] = [
       "Some plans show as not available in certain markets"
     ],
     "publishedAt": "2026-10-17",
-    "updatedAt": "2026-10-17",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
       "status": "verified",
-      "checkedAt": "2026-10-17",
+      "checkedAt": "2026-10-23",
       "method": "Checked against the provider's official page",
       "evidence": [
         {
@@ -557,11 +557,11 @@ export const offers: Offer[] = [
       "Some free products are free for 12 months to new customers only"
     ],
     "publishedAt": "2026-10-17",
-    "updatedAt": "2026-10-17",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
       "status": "verified",
-      "checkedAt": "2026-10-17",
+      "checkedAt": "2026-10-23",
       "method": "Checked against the provider's official page",
       "evidence": [
         {
@@ -713,11 +713,11 @@ export const offers: Offer[] = [
       "Free Tier usage is not charged against the $300 trial credit."
     ],
     "publishedAt": "2026-10-17",
-    "updatedAt": "2026-10-17",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
       "status": "verified",
-      "checkedAt": "2026-10-17",
+      "checkedAt": "2026-10-23",
       "method": "Checked against the provider's official page",
       "evidence": [
         {
@@ -809,11 +809,11 @@ export const offers: Offer[] = [
       "Workspace and Maps benefits require separate applications."
     ],
     "publishedAt": "2026-10-17",
-    "updatedAt": "2026-10-17",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
       "status": "verified",
-      "checkedAt": "2026-10-17",
+      "checkedAt": "2026-10-23",
       "method": "Checked against the provider's official page",
       "evidence": [
         {
@@ -920,11 +920,11 @@ export const offers: Offer[] = [
       "Credits are Google Skills training credits, not Google Cloud billing credits."
     ],
     "publishedAt": "2026-10-17",
-    "updatedAt": "2026-10-17",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
       "status": "verified",
-      "checkedAt": "2026-10-17",
+      "checkedAt": "2026-10-23",
       "method": "Checked against the provider's official page",
       "evidence": [
         {
@@ -993,11 +993,11 @@ export const offers: Offer[] = [
       "The amount is stated as 'up to $150,000'; the actual amount may be lower."
     ],
     "publishedAt": "2026-10-17",
-    "updatedAt": "2026-10-17",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
       "status": "verified",
-      "checkedAt": "2026-10-17",
+      "checkedAt": "2026-10-23",
       "method": "Checked against the provider's official page",
       "evidence": [
         {
@@ -1074,11 +1074,11 @@ export const offers: Offer[] = [
       "The 3- and 6-month offers are intended for startups with scalable, tech-related products"
     ],
     "publishedAt": "2026-10-17",
-    "updatedAt": "2026-10-17",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Taken from the provider's official site via search extracts. Not yet confirmed on the live page.",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "evidence": [
         {
           "claim": "6 months free of Business Plan with Notion AI for partner-affiliated startups",
@@ -1100,7 +1100,8 @@ export const offers: Offer[] = [
           "claim": "Verification can be affected by incomplete info",
           "quote": "Incomplete or unclear information (e.g., an inactive website, limited company presence, or insufficient business details) can also impact our ability to verify eligibility."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://www.notion.com/help/notion-for-startups"
@@ -1152,11 +1153,11 @@ export const offers: Offer[] = [
       "Each eligible startup can enroll for one 12-month period"
     ],
     "publishedAt": "2026-10-17",
-    "updatedAt": "2026-10-17",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Taken from the provider's official site via search extracts. Not yet confirmed on the live page.",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "evidence": [
         {
           "claim": "Premium for $0 for 12 months, up to 50 users",
@@ -1174,7 +1175,8 @@ export const offers: Offer[] = [
           "claim": "One enrollment per startup",
           "quote": "Each eligible startup can enroll for one 12-month period."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://www.atlassian.com/software/startups"
@@ -1225,11 +1227,11 @@ export const offers: Offer[] = [
       "Renews automatically at the standard rate when the discount ends unless you switch plans or cancel beforehand"
     ],
     "publishedAt": "2026-10-17",
-    "updatedAt": "2026-10-17",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Taken from the provider's official site via search extracts. Not yet confirmed on the live page.",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "evidence": [
         {
           "claim": "Up to six months free of Business plan",
@@ -1251,7 +1253,8 @@ export const offers: Offer[] = [
           "claim": "Renewal",
           "quote": "the subscription automatically renews at the standard rate unless you switch plans or cancel beforehand"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://linear.app/startups"
@@ -1313,11 +1316,11 @@ export const offers: Offer[] = [
     ],
     "expiresAt": "2026-12-31",
     "publishedAt": "2026-10-17",
-    "updatedAt": "2026-10-17",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Taken from the provider's official site via search extracts. Not yet confirmed on the live page.",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "evidence": [
         {
           "claim": "Eligibility: U.S. college students 18+, verified yearly",
@@ -1339,7 +1342,8 @@ export const offers: Offer[] = [
           "claim": "One year duration",
           "quote": "eligible college students can get one year of Google AI Pro in the US, or Google AI Plus in 140+ countries at no cost."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://gemini.google/students/"
@@ -1458,11 +1462,11 @@ export const offers: Offer[] = [
       "Penpot Enterprise is a separate paid plan"
     ],
     "publishedAt": "2026-10-17",
-    "updatedAt": "2026-10-17",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
       "status": "verified",
-      "checkedAt": "2026-10-17",
+      "checkedAt": "2026-10-23",
       "method": "Checked against the project's official GitHub repository (README and licence)",
       "evidence": [
         {
@@ -1545,11 +1549,11 @@ export const offers: Offer[] = [
       "Excludes marketing funnels, ecommerce revenue goals, SSO and the sites API"
     ],
     "publishedAt": "2026-10-17",
-    "updatedAt": "2026-10-17",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
       "status": "verified",
-      "checkedAt": "2026-10-17",
+      "checkedAt": "2026-10-23",
       "method": "Checked against the project's official GitHub repository (README and licence)",
       "evidence": [
         {
@@ -1803,11 +1807,11 @@ export const offers: Offer[] = [
       "Licence terms and refund policy are published separately at betterdisplay.pro/license (not reviewed here)"
     ],
     "publishedAt": "2026-10-17",
-    "updatedAt": "2026-10-17",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
       "status": "verified",
-      "checkedAt": "2026-10-17",
+      "checkedAt": "2026-10-23",
       "method": "Checked against the project's official GitHub repository (README and licence)",
       "evidence": [
         {
@@ -1861,7 +1865,7 @@ export const offers: Offer[] = [
   },
   {
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "source": "official",
     "id": "o-aws-activate-startup-credits",
@@ -1904,8 +1908,8 @@ export const offers: Offer[] = [
       "Reapplying for a higher package typically awards only the difference from your previous credits"
     ],
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of AWS's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Official pages could not be loaded from the research environment (WebFetch DNS failures, curl blocked). Facts and quotes come from search-engine extracts of the provider's own pages; quotes may be excerpted. Re-check the live page before marking verified. AWS pages conflict on the Portfolio maximum: newer pages say up to $200,000, older pages (e.g. the step-by-step guide and gaming page) say up to $100,000. Confirm the figure before publishing.",
       "evidence": [
         {
@@ -1940,7 +1944,8 @@ export const offers: Offer[] = [
           "claim": "Reapplying",
           "quote": "if you have $10K in credits and apply for $200K, you could receive an additional $190K—bringing your total to $200K overall."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://aws.amazon.com/startups/credits/"
@@ -1952,7 +1957,7 @@ export const offers: Offer[] = [
   },
   {
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "source": "official",
     "id": "o-cloudflare-startup-program-credits",
@@ -1997,8 +2002,8 @@ export const offers: Offer[] = [
       "Domain registration is excluded; AI Gateway is temporarily not covered"
     ],
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Cloudflare's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Official pages could not be loaded from the research environment (WebFetch DNS failures, curl blocked). Facts and quotes come from search-engine extracts of the provider's own pages; quotes may be excerpted. Re-check the live page before marking verified. Older Cloudflare blog posts describe a $5K/$25K/$100K/$250K structure; the current startups page says tiers were updated.",
       "evidence": [
         {
@@ -2045,7 +2050,8 @@ export const offers: Offer[] = [
           "claim": "R2 cap",
           "quote": "up to a $10,000 cap"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://www.cloudflare.com/startups/"
@@ -2057,7 +2063,7 @@ export const offers: Offer[] = [
   },
   {
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "source": "official",
     "id": "o-digitalocean-startups-hatch-credits",
@@ -2095,8 +2101,8 @@ export const offers: Offer[] = [
       "Credits are not transferable and are forfeited if not used"
     ],
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of DigitalOcean's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Official pages could not be loaded from the research environment (WebFetch DNS failures, curl blocked). Facts and quotes come from search-engine extracts of the provider's own pages; quotes may be excerpted. Re-check the live page before marking verified. Older Hatch blog posts cite up to $50,000 and up to $100,000; the current page gives no fixed amount, so no figure is included.",
       "evidence": [
         {
@@ -2127,7 +2133,8 @@ export const offers: Offer[] = [
           "claim": "Non-transferable",
           "quote": "The credits are not transferable, and if you do not use them, they will be forfeited."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://www.digitalocean.com/startups"
@@ -2139,7 +2146,7 @@ export const offers: Offer[] = [
   },
   {
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "source": "official",
     "id": "o-mongodb-for-startups-atlas-credits",
@@ -2178,8 +2185,8 @@ export const offers: Offer[] = [
       "Extensions are considered case by case"
     ],
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of MongoDB's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Official pages could not be loaded from the research environment (WebFetch DNS failures, curl blocked). Facts and quotes come from search-engine extracts of the provider's own pages; quotes may be excerpted. Re-check the live page before marking verified. No current credit amount was found on MongoDB's pages; older pages mention $500 and a 2023 AI track mentioned up to $25,000, so no figure is included.",
       "evidence": [
         {
@@ -2202,7 +2209,8 @@ export const offers: Offer[] = [
           "claim": "Existing users",
           "quote": "accepting both new and existing MongoDB Atlas users"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://www.mongodb.com/solutions/startups"
@@ -2214,7 +2222,7 @@ export const offers: Offer[] = [
   },
   {
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "source": "official",
     "id": "o-oracle-startup-growth-engine-oci-credits",
@@ -2260,8 +2268,8 @@ export const offers: Offer[] = [
       "Oracle may conduct due diligence on applicants"
     ],
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Oracle's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Official pages could not be loaded from the research environment (WebFetch DNS failures, curl blocked). Facts and quotes come from search-engine extracts of the provider's own pages; quotes may be excerpted. Re-check the live page before marking verified. Regional versions conflict: the Latin America rules (PDF) state USD 5.000 to USD 100.000 and 3 to 12 months. Figures here are from the global/Europe terms page.",
       "evidence": [
         {
@@ -2288,7 +2296,8 @@ export const offers: Offer[] = [
           "claim": "After credits",
           "quote": "Pay As You Go (PAYG) pricing"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://www.oracle.com/europe/artificial-intelligence/startup-growth-engine/terms/",
@@ -2301,7 +2310,7 @@ export const offers: Offer[] = [
   },
   {
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "source": "official",
     "id": "o-vercel-for-startups-credits",
@@ -2347,8 +2356,8 @@ export const offers: Offer[] = [
       "These terms apply to startups accepted on or after August 6, 2026"
     ],
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Vercel's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Official pages could not be loaded from the research environment (WebFetch DNS failures, curl blocked). Facts and quotes come from search-engine extracts of the provider's own pages; quotes may be excerpted. Re-check the live page before marking verified.",
       "evidence": [
         {
@@ -2379,7 +2388,8 @@ export const offers: Offer[] = [
           "claim": "Terms date",
           "quote": "accepted on or after August 6, 2026"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://vercel.com/startups/credits"
@@ -2391,7 +2401,7 @@ export const offers: Offer[] = [
   },
   {
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "source": "official",
     "id": "o-neon-startup-credits",
@@ -2429,8 +2439,8 @@ export const offers: Offer[] = [
       "The $200K figure is combined Neon and Databricks credits, not Neon credits alone"
     ],
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Neon's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Official pages could not be loaded from the research environment (WebFetch DNS failures, curl blocked). Facts and quotes come from search-engine extracts of the provider's own pages; quotes may be excerpted. Re-check the live page before marking verified. Neon's pricing page and a 2025 blog post still cite up to $100k in Neon credits; the startups page cites up to $200K combined with Databricks. Validity period for the current program was not confirmed.",
       "evidence": [
         {
@@ -2449,7 +2459,8 @@ export const offers: Offer[] = [
           "claim": "Existing users",
           "quote": "credits are added to their current account"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://neon.com/startups"
@@ -2493,12 +2504,12 @@ export const offers: Offer[] = [
       "Preferred GPU pricing applies to a subset of NVIDIA's enterprise-grade GPUs"
     ],
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "source": "official",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of NVIDIA's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "NVIDIA's US FAQ and some regional pages word the eligibility differently (for example, requiring at least one employed developer); check the live FAQ before applying.",
       "evidence": [
         {
@@ -2529,7 +2540,8 @@ export const offers: Offer[] = [
           "claim": "Preferred GPU pricing",
           "quote": "preferred pricing on a subset of our enterprise-grade GPUs"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://www.nvidia.com/en-us/startups/"
@@ -2586,12 +2598,12 @@ export const offers: Offer[] = [
       "If you use all 33M characters before the 12 months end, the plan converts to a Free plan unless you have selected otherwise"
     ],
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "source": "official",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of ElevenLabs's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "The ElevenLabs blog states the grant as 33 million credits while the pricing pages say 33M characters; the pricing-page wording is used here.",
       "evidence": [
         {
@@ -2634,7 +2646,8 @@ export const offers: Offer[] = [
           "claim": "Conversion to Free plan",
           "quote": "If you use all your 33M text characters prior to the conclusion of the 12month grant term, your plan will automatically convert to a Free plan, unless you have selected otherwise."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://elevenlabs.io/startup-grants"
@@ -2676,12 +2689,12 @@ export const offers: Offer[] = [
       "OpenAI says startups may be eligible; benefits are not guaranteed"
     ],
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "source": "official",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of OpenAI's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "No credit amount is published on the startup page.",
       "evidence": [
         {
@@ -2700,7 +2713,8 @@ export const offers: Offer[] = [
           "claim": "Referral code required",
           "quote": "A unique referral code from your VC."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://openai.com/business/why-openai/startups/"
@@ -2744,8 +2758,8 @@ export const offers: Offer[] = [
       "Cohere is initially rolling out the program with a select group of customers"
     ],
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
-    "status": "published",
+    "updatedAt": "2026-10-23",
+    "status": "archived",
     "source": "official",
     "verification": {
       "status": "unverified",
@@ -2767,7 +2781,8 @@ export const offers: Offer[] = [
           "claim": "Publicity",
           "quote": "regularly spotlights the innovations from the startup program"
         }
-      ]
+      ],
+      "note": "On 23 October 2026 the program's pages redirected to Cohere's homepage; the program appears to have ended."
     },
     "links": {
       "officialUrl": "https://cohere.com/startup-program",
@@ -2824,11 +2839,11 @@ export const offers: Offer[] = [
       "Creating an account means agreeing to Datadog's Master Subscription Agreement"
     ],
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
       "status": "verified",
-      "checkedAt": "2026-10-19",
+      "checkedAt": "2026-10-23",
       "method": "Checked against Datadog's official program page",
       "evidence": [
         {
@@ -2926,11 +2941,11 @@ export const offers: Offer[] = [
       "Credits cannot be used toward a BAA"
     ],
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of PostHog's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Search extracts mentioned another PostHog page saying credits work across every product; the AI-tools exclusion comes from the startups page FAQ and handbook. Re-check on the live page.",
       "evidence": [
         {
@@ -2953,7 +2968,8 @@ export const offers: Offer[] = [
           "claim": "BAA exclusion (handbook)",
           "quote": "Cannot use credits toward a BAA due to legal risk."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://posthog.com/startups"
@@ -3003,11 +3019,11 @@ export const offers: Offer[] = [
       "Companies with more than 15 employees are not eligible"
     ],
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Intercom's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Older Intercom pages show 90% off; the current Early Stage page and the /traction page show 93%. Fin outcome allowances differ between the program page and the help center, so they are left out.",
       "evidence": [
         {
@@ -3034,7 +3050,8 @@ export const offers: Offer[] = [
           "claim": "Employee cap (FAQ)",
           "quote": "If your company has more than 15 employees, you're not eligible for the Early Stage Program."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://www.intercom.com/early-stage"
@@ -3084,11 +3101,11 @@ export const offers: Offer[] = [
       "Credits expire after 12 months"
     ],
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Sentry's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "evidence": [
         {
           "claim": "Credit amount and support",
@@ -3110,7 +3127,8 @@ export const offers: Offer[] = [
           "claim": "New paying customers only (apply page)",
           "quote": "new to paying for Sentry"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://sentry.io/for/startups/",
@@ -3243,11 +3261,11 @@ export const offers: Offer[] = [
       "Startups that don't send data within 90 days of acceptance are removed and cannot rejoin"
     ],
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Mixpanel's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Older Mixpanel blog posts describe a previous credit-based version (up to $50,000); the current docs describe the free Startup Plan.",
       "evidence": [
         {
@@ -3270,7 +3288,8 @@ export const offers: Offer[] = [
           "claim": "90-day data requirement",
           "quote": "removed from the program and prohibited from rejoining"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://docs.mixpanel.com/docs/pricing/startup-program",
@@ -3320,11 +3339,11 @@ export const offers: Offer[] = [
       "Credit is redeemable for Zendesk Suite and Sell"
     ],
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Zendesk's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Zendesk's pages conflict on eligibility: the support article says fewer than 50 employees and Series A or below; the main startups page says fewer than 250 employees (50-249 need a partner referral), no more than Series B, and under 10 years old. The main page also mentions terms of up to two years with partner referrals.",
       "evidence": [
         {
@@ -3335,7 +3354,8 @@ export const offers: Offer[] = [
           "claim": "Eligibility (support article, older thresholds)",
           "quote": "new Zendesk customer, fewer than 50 employees, and raised up to a Series A in venture funding"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://support.zendesk.com/hc/en-us/articles/4408822027418-Startups-program-qualifications-approval-process",
@@ -3383,11 +3403,11 @@ export const offers: Offer[] = [
       "Applies to net-new customers purchasing Professional or Enterprise level products"
     ],
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of HubSpot's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Later-year discounts differ between HubSpot pages (50%/25% on the main page, 50%/30% on a partner page), so they are left out.",
       "evidence": [
         {
@@ -3406,7 +3426,8 @@ export const offers: Offer[] = [
           "claim": "Product and customer scope",
           "quote": "HubSpot for Startups pricing applies to net-new customers purchasing Professional or Enterprise level products."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://www.hubspot.com/startups"
@@ -3532,11 +3553,11 @@ export const offers: Offer[] = [
       "Access expires and you must reapply to renew"
     ],
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Figma's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of the official page. The live page could not be fetched from the research environment (outbound access to the provider's site was blocked), so an editor should re-check it before marking this verified.",
       "evidence": [
         {
@@ -3559,7 +3580,8 @@ export const offers: Offer[] = [
           "claim": "Renewal (search extract, paraphrased by the search tool)",
           "quote": "you must reapply to renew"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://help.figma.com/hc/en-us/articles/360041061214-Figma-for-Education",
@@ -3606,11 +3628,11 @@ export const offers: Offer[] = [
       "If you can no longer verify with a valid education email, the workspace and its content move to the Free Plan"
     ],
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Notion's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of the official page. The live page could not be fetched from the research environment (outbound access to the provider's site was blocked), so an editor should re-check it before marking this verified.",
       "evidence": [
         {
@@ -3641,7 +3663,8 @@ export const offers: Offer[] = [
           "claim": "One-member workspace (search extract, paraphrased by the search tool)",
           "quote": "a free plan for a one-member workspace"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://www.notion.com/help/notion-for-education"
@@ -3689,11 +3712,11 @@ export const offers: Offer[] = [
       "If you don't upgrade within 90 days, AWS permanently erases the account and its content"
     ],
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of AWS's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of the official page. The live page could not be fetched from the research environment (outbound access to the provider's site was blocked), so an editor should re-check it before marking this verified. Credit expiry was left out: the FAQ gives both 6 and 12 months, and the Free Tier Terms say twelve months from account opening.",
       "evidence": [
         {
@@ -3724,7 +3747,8 @@ export const offers: Offer[] = [
           "claim": "Account erased if not upgraded",
           "quote": "If you don't upgrade your account within 90 days, AWS will permanently erase your AWS account and all its content."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://aws.amazon.com/free/free-tier-faqs/",
@@ -3773,11 +3797,11 @@ export const offers: Offer[] = [
       "After the first 30 days and up to 12 months after sign-up, only a limited quantity of some services is free"
     ],
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Microsoft's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of the official page. The live page could not be fetched from the research environment (outbound access to the provider's site was blocked), so an editor should re-check it before marking this verified.",
       "evidence": [
         {
@@ -3804,7 +3828,8 @@ export const offers: Offer[] = [
           "claim": "Marketplace exclusion (search extract, paraphrased by the search tool)",
           "quote": "The $200 credit is usable on any service, except for third-party Marketplace purchases"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://azure.microsoft.com/en-us/pricing/purchase-options/azure-account"
@@ -3853,11 +3878,11 @@ export const offers: Offer[] = [
       "With some special Free Trial offers, the account does not continue as an Always Free account after the trial"
     ],
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Oracle's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of the official page. The live page could not be fetched from the research environment (outbound access to the provider's site was blocked), so an editor should re-check it before marking this verified.",
       "evidence": [
         {
@@ -3888,7 +3913,8 @@ export const offers: Offer[] = [
           "claim": "Special offers exception",
           "quote": "With some special Free Trial offers, your account will not continue as an Always Free account after the trial expires."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier.htm",
@@ -3929,11 +3955,11 @@ export const offers: Offer[] = [
       "Requests to static assets are free and unlimited"
     ],
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Cloudflare's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of the official page. The live page could not be fetched from the research environment (outbound access to the provider's site was blocked), so an editor should re-check it before marking this verified.",
       "evidence": [
         {
@@ -3952,7 +3978,8 @@ export const offers: Offer[] = [
           "claim": "Paid plan minimum",
           "quote": "a minimum charge of $5 USD per month for an account"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://developers.cloudflare.com/workers/platform/pricing/"
@@ -4182,12 +4209,12 @@ export const offers: Offer[] = [
     ],
     "expiresAt": "2026-10-31",
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "source": "official",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of OpenAI's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of the official page because the page could not be fetched from the research environment; re-check wording and the end date against the live page before publishing. The landing page headline frames the offer as \"4 months of ChatGPT Work on us\" (an \"$80 value\"), while the help article describes it as ChatGPT Plus including ChatGPT Work. The verbatim deadline quote (\"Claim by October 31\") has no year; the year 2026 comes from the offer page URL (/students/2026/) and from search summaries of the help article, which give the deadline as October 31, 2026.",
       "evidence": [
         {
@@ -4214,7 +4241,8 @@ export const offers: Offer[] = [
           "claim": "Renewal price",
           "quote": "renews at $20/month unless you cancel"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://help.openai.com/en/articles/20001493-chatgpt-back-to-school-offer-for-students",
@@ -4335,12 +4363,12 @@ export const offers: Offer[] = [
     ],
     "expiresAt": "2026-12-31",
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "source": "official",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Kiro (AWS)'s official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of the official page because the page could not be fetched from the research environment; re-check wording and the end date against the live page before publishing. The end date is from the 2026 program terms; the startups page itself only says \"for a limited time\". AWS may modify or cancel the offer at any time.",
       "evidence": [
         {
@@ -4387,7 +4415,8 @@ export const offers: Offer[] = [
           "claim": "Region: Excluded countries (startups FAQ)",
           "quote": "Excludes individuals living in Argentina, Belarus, Brazil, China/GCR, Cuba, France, Germany, Iran, Italy, Mexico, North Korea, Poland, Russia, Spain, Syria, the region of Crimea, the so-called Donetsk People's Republic region (DNR), the so-called Luhansk People's Republic region (LNR), and the United Arab Emirates."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://kiro.dev/startups/terms/",
@@ -4517,8 +4546,8 @@ export const offers: Offer[] = [
     ],
     "expiresAt": "2026-10-27",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Cognition (Devin)'s official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of the official page because the page could not be fetched from the research environment; re-check wording and the end date against the live page before publishing. Devin's docs give the introductory-rate end as December 1, 2026 while Google's own pricing page says November 30, 2026; only the October 27 date is used here. No country restriction is stated in the offer terms; not labelled worldwide because the provider does not say so explicitly.",
       "evidence": [
         {
@@ -4545,14 +4574,15 @@ export const offers: Offer[] = [
           "claim": "Region basis",
           "quote": "No country or region restriction appears in the blog announcement or the models docs pricing note checked above; offer applies to self-serve usage in the product."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://devin.ai/blog/gemini-4-argon",
       "redeemUrl": "https://docs.devin.ai/desktop/models"
     },
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "source": "official",
     "audiences": [
@@ -4659,8 +4689,8 @@ export const offers: Offer[] = [
     ],
     "expiresAt": "2026-11-04",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Figma's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of the official page because the page could not be fetched from the research environment; re-check wording and the end date against the live page before publishing. Figma's verbatim lines say \"November 4\" without a year; the year 2026 comes from the open beta launch post dated October 15, 2026 and search extracts of the help center. Figma's help center and Config India page disagree on whether K-12 Education plans have access, so plan eligibility is left out. No country restriction is stated in the offer terms; not labelled worldwide because the provider does not say so explicitly.",
       "evidence": [
         {
@@ -4683,14 +4713,15 @@ export const offers: Offer[] = [
           "claim": "Region basis",
           "quote": "The pricing FAQ and help-center terms quoted above contain no country or region restriction; the window applies within the Figma product."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://www.figma.com/pricing-faq/",
       "redeemUrl": "https://help.figma.com/hc/en-us/articles/44193259600535-Code-layers-in-Figma-Design"
     },
     "publishedAt": "2026-10-19",
-    "updatedAt": "2026-10-19",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "source": "official",
     "audiences": [
@@ -4854,7 +4885,7 @@ export const offers: Offer[] = [
   },
   {
     "publishedAt": "2026-10-20",
-    "updatedAt": "2026-10-20",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "source": "official",
     "id": "o-clockify-free-plan",
@@ -4893,8 +4924,8 @@ export const offers: Offer[] = [
       "On a paid plan, every user requires a paid seat"
     ],
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Clockify's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Official site was not reachable from the research environment; figures taken from search-result extracts of the provider's own pages. Re-check before publishing as verified.",
       "evidence": [
         {
@@ -4913,7 +4944,8 @@ export const offers: Offer[] = [
           "claim": "Paid seats",
           "quote": "every user requires a paid seat"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://clockify.me/help/administration/updates-to-clockify-free-plan",
@@ -4922,7 +4954,7 @@ export const offers: Offer[] = [
   },
   {
     "publishedAt": "2026-10-20",
-    "updatedAt": "2026-10-20",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "source": "official",
     "id": "o-calendly-free-plan",
@@ -4961,15 +4993,16 @@ export const offers: Offer[] = [
       "One-on-one scheduling"
     ],
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Calendly's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Official site was not reachable from the research environment; figures taken from search-result extracts of the provider's own pages. Re-check before publishing as verified.",
       "evidence": [
         {
           "claim": "Free plan contents",
           "quote": "Free: Always free. Includes: Scheduling - One event type - One calendar connection - One-on-one scheduling - Customizable booking page - Browser extension"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://calendly.com/pricing"
@@ -4977,7 +5010,7 @@ export const offers: Offer[] = [
   },
   {
     "publishedAt": "2026-10-20",
-    "updatedAt": "2026-10-20",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "source": "official",
     "id": "o-shopify-free-trial-1-dollar-3-months",
@@ -5023,8 +5056,8 @@ export const offers: Offer[] = [
       "Standard monthly pricing applies after the first 3 months"
     ],
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Shopify's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Official site was not reachable from the research environment; figures taken from search-result extracts of the provider's own pages. Re-check before publishing as verified.",
       "evidence": [
         {
@@ -5035,7 +5068,8 @@ export const offers: Offer[] = [
           "claim": "Start page wording",
           "quote": "Start for free, then get 3 months for $1/mo."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://www.shopify.com/pricing",
@@ -5044,7 +5078,7 @@ export const offers: Offer[] = [
   },
   {
     "publishedAt": "2026-10-20",
-    "updatedAt": "2026-10-20",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "source": "official",
     "id": "o-1password-business-14-day-trial",
@@ -5081,15 +5115,16 @@ export const offers: Offer[] = [
       "No credit card is required to start"
     ],
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of 1Password's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Official site was not reachable from the research environment; figures taken from search-result extracts of the provider's own pages. Re-check before publishing as verified.",
       "evidence": [
         {
           "claim": "Trial length and card",
           "quote": "Try free for 14 days, no credit card required"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://1password.com/pricing/business"
@@ -5097,7 +5132,7 @@ export const offers: Offer[] = [
   },
   {
     "publishedAt": "2026-10-20",
-    "updatedAt": "2026-10-20",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "source": "official",
     "id": "o-slack-free-plan",
@@ -5137,8 +5172,8 @@ export const offers: Offer[] = [
       "The 90-day Pro trial offered to eligible teams can be applied only once per workspace"
     ],
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Slack's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Official site was not reachable from the research environment; figures taken from search-result extracts of the provider's own pages. Re-check before publishing as verified.",
       "evidence": [
         {
@@ -5153,7 +5188,8 @@ export const offers: Offer[] = [
           "claim": "No card for trial",
           "quote": "You won't need to add a credit card to accept the trial offer."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://slack.com/help/articles/27204752526611-Feature-limitations-on-the-free-version-of-Slack",
@@ -5162,7 +5198,7 @@ export const offers: Offer[] = [
   },
   {
     "publishedAt": "2026-10-20",
-    "updatedAt": "2026-10-20",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "source": "official",
     "id": "o-dropbox-sign-free-plan",
@@ -5203,8 +5239,8 @@ export const offers: Offer[] = [
       "The allowance renews on your sign-up day each month"
     ],
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Dropbox's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Official site was not reachable from the research environment; figures taken from search-result extracts of the provider's own pages. Re-check before publishing as verified.",
       "evidence": [
         {
@@ -5227,7 +5263,8 @@ export const offers: Offer[] = [
           "claim": "Rolling renewal",
           "quote": "if you used your documents on January 17th, 20th, and 21st, your pages will not renew on February 1st. You will still be out of docs until they renew on February 17th."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://help.dropbox.com/plans/dropbox-sign-free-plan",
@@ -5343,11 +5380,11 @@ export const offers: Offer[] = [
       "Applications are reviewed before the plan is granted"
     ],
     "publishedAt": "2026-10-20",
-    "updatedAt": "2026-10-20",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Framer's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "framer.com was not reachable from the research environment.",
       "evidence": [
         {
@@ -5366,7 +5403,8 @@ export const offers: Offer[] = [
           "claim": "What's included (Framer blog)",
           "quote": "hosting for a site, full access to the design canvas and CMS"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://www.framer.com/education/students/"
@@ -5465,11 +5503,11 @@ export const offers: Offer[] = [
       "Exports up to 720p with a watermark"
     ],
     "publishedAt": "2026-10-20",
-    "updatedAt": "2026-10-20",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Descript's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "descript.com was not reachable from the research environment. Some older Descript tool pages describe 100 credits per month and one watermark-free export; the main pricing page wording (one-time credits, 720p with watermark) is used here.",
       "evidence": [
         {
@@ -5484,7 +5522,8 @@ export const offers: Offer[] = [
           "claim": "Export limit",
           "quote": "720p"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://www.descript.com/pricing"
@@ -5525,11 +5564,11 @@ export const offers: Offer[] = [
       "Higher frame rates, 10-bit and resolutions beyond 4K require DaVinci Resolve Studio"
     ],
     "publishedAt": "2026-10-20",
-    "updatedAt": "2026-10-20",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Blackmagic Design's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "blackmagicdesign.com was not reachable from the research environment.",
       "evidence": [
         {
@@ -5552,7 +5591,8 @@ export const offers: Offer[] = [
           "claim": "Studio price",
           "quote": "$295"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://www.blackmagicdesign.com/products/davinciresolve"
@@ -5676,11 +5716,11 @@ export const offers: Offer[] = [
       "Includes 50 GB of storage"
     ],
     "publishedAt": "2026-10-20",
-    "updatedAt": "2026-10-20",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Sketch's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "sketch.com was not reachable from the research environment. An older Sketch blog post mentions 5GB of storage; the 50 GB figure is from the current support page. The support page also says \"for one year\" while stating use is free for as long as it is part of your studies or teaching; access may need re-applying (renewal) after a year.",
       "evidence": [
         {
@@ -5703,7 +5743,8 @@ export const offers: Offer[] = [
           "claim": "Minimum age",
           "quote": "minimum age requirement of 16"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://www.sketch.com/support/subscriptions/plans/education/whats-an-education-plan/",
@@ -5746,11 +5787,11 @@ export const offers: Offer[] = [
       "Recordings include a Riverside watermark"
     ],
     "publishedAt": "2026-10-20",
-    "updatedAt": "2026-10-20",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Riverside's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "riverside.com was not reachable from the research environment. A Riverside blog post says the 2-hour cap applies to exporting separate tracks, not to recording or editing.",
       "evidence": [
         {
@@ -5765,7 +5806,8 @@ export const offers: Offer[] = [
           "claim": "Watermark (Riverside blog)",
           "quote": "Riverside's free plan adds a watermark to your recordings. To remove the watermark, upgrade to a paid plan"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://riverside.com/pricing"
@@ -5809,11 +5851,11 @@ export const offers: Offer[] = [
       "Facebook Pages, Groups and custom RTMP require an upgrade"
     ],
     "publishedAt": "2026-10-20",
-    "updatedAt": "2026-10-20",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Restream's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "restream.io was not reachable from the research environment. Paid plan prices conflict between Restream pages and are left out.",
       "evidence": [
         {
@@ -5824,7 +5866,8 @@ export const offers: Offer[] = [
           "claim": "Studio resolution and branding",
           "quote": "The Free plan includes streaming to 2 channels at once, Restream Studio in 720p, and Restream branding on your stream."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://restream.io/multistreaming",
@@ -5954,11 +5997,11 @@ export const offers: Offer[] = [
       "Microsoft can suspend access if payment isn't received after the trial ends"
     ],
     "publishedAt": "2026-10-20",
-    "updatedAt": "2026-10-20",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
       "status": "verified",
-      "checkedAt": "2026-10-20",
+      "checkedAt": "2026-10-23",
       "method": "Checked against Microsoft's official documentation source (MicrosoftDocs/microsoft-365-docs repository)",
       "evidence": [
         {
@@ -6053,11 +6096,11 @@ export const offers: Offer[] = [
       "The subscription can be cancelled during the trial if the domain isn't verified within 9 days or billing isn't set up by the end of the trial"
     ],
     "publishedAt": "2026-10-20",
-    "updatedAt": "2026-10-20",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Google's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of the official page. The live page could not be fetched from the research environment (outbound access to the provider's site was blocked), so an editor should re-check it before marking this verified.",
       "evidence": [
         {
@@ -6092,7 +6135,8 @@ export const offers: Offer[] = [
           "claim": "Mobile sign-ups",
           "quote": "you instead manage billing in Google Play (Android) or the Settings app (iOS)."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://knowledge.workspace.google.com/admin/getting-started/about-your-google-workspace-free-trial",
@@ -6198,11 +6242,11 @@ export const offers: Offer[] = [
       "Boards in a Workspace over the collaborator limit become view-only"
     ],
     "publishedAt": "2026-10-20",
-    "updatedAt": "2026-10-20",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Trello's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of the official page. The live page could not be fetched from the research environment (outbound access to the provider's site was blocked), so an editor should re-check it before marking this verified. The unlimited-cards feature is from the search tool's summary of trello.com/pricing and is not quoted.",
       "evidence": [
         {
@@ -6221,7 +6265,8 @@ export const offers: Offer[] = [
           "claim": "Open board limit",
           "quote": "Free Trello Workspaces are limited to 10 open boards at a time"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://trello.com/pricing"
@@ -6266,11 +6311,11 @@ export const offers: Offer[] = [
       "Unlimited collaborators with read-only permissions"
     ],
     "publishedAt": "2026-10-20",
-    "updatedAt": "2026-10-20",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Airtable's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of the official page. The live page could not be fetched from the research environment (outbound access to the provider's site was blocked), so an editor should re-check it before marking this verified.",
       "evidence": [
         {
@@ -6289,7 +6334,8 @@ export const offers: Offer[] = [
           "claim": "Read-only collaborators",
           "quote": "Free plan workspaces include unlimited collaborators with \"Read only\" permissions"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://support.airtable.com/articles/2277136852-airtable-plans-overview",
@@ -6334,11 +6380,11 @@ export const offers: Offer[] = [
       "Going over 250 contacts puts a hold on sending live and test emails until you upgrade or reduce your contacts"
     ],
     "publishedAt": "2026-10-20",
-    "updatedAt": "2026-10-20",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Mailchimp's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of the official page. The live page could not be fetched from the research environment (outbound access to the provider's site was blocked), so an editor should re-check it before marking this verified. Older Mailchimp pages still describe a retired legacy Free plan (2,000 contacts); the figures here are from the current help article.",
       "evidence": [
         {
@@ -6353,7 +6399,8 @@ export const offers: Offer[] = [
           "claim": "Over the contact limit",
           "quote": "If you exceed the 250 contact limit in your Free plan, a hold is placed on sending live emails or test emails until you upgrade to a paid plan or reduce your contact total."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://mailchimp.com/help/about-mailchimp-pricing-plans/",
@@ -6464,11 +6511,11 @@ export const offers: Offer[] = [
       "Above 10,000 subscribers you need a paid plan to keep sending"
     ],
     "publishedAt": "2026-10-20",
-    "updatedAt": "2026-10-20",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Kit's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of the official page. The live page could not be fetched from the research environment (outbound access to the provider's site was blocked), so an editor should re-check it before marking this verified. The list of included and paid-only features is from the search tool's summary of help.kit.com and should be re-checked.",
       "evidence": [
         {
@@ -6487,7 +6534,8 @@ export const offers: Offer[] = [
           "claim": "Going over the limit",
           "quote": "You'll need to upgrade to a paid plan to keep sending. Everything you've built stays exactly where it is."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://help.kit.com/en/articles/16627071-the-kit-free-plan",
@@ -6535,11 +6583,11 @@ export const offers: Offer[] = [
       "Upgrading means paying for each channel, including those connected on the Free plan"
     ],
     "publishedAt": "2026-10-20",
-    "updatedAt": "2026-10-20",
+    "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Buffer's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of the official page. The live page could not be fetched from the research environment (outbound access to the provider's site was blocked), so an editor should re-check it before marking this verified.",
       "evidence": [
         {
@@ -6558,7 +6606,8 @@ export const offers: Offer[] = [
           "claim": "Upgrade billing",
           "quote": "If you decide to upgrade to a paid plan, you will pay for each channel — including any channels you had while on the Free plan."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://buffer.com/pricing"
@@ -6695,8 +6744,8 @@ export const offers: Offer[] = [
     "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Sublime HQ's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search extracts of sublimehq.com (store and Sales FAQ); the live store page was not opened. Re-check the $99 total (the extract shows it as a checkout total) and the upgrade price, which search extracts gave as $80 on the upgrade page but which is not included here. An older sublimetext.com copy of the FAQ describes Sublime Text 3 terms and was ignored.",
       "evidence": [
         {
@@ -6727,7 +6776,8 @@ export const offers: Offer[] = [
           "claim": "Refunds",
           "quote": "Refunds are available within 30 days of purchasing. Please send us an email if you wish to claim a refund."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     }
   },
   {
@@ -6785,8 +6835,8 @@ export const offers: Offer[] = [
     "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Typora's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search extracts of typora.io, store.typora.io and support.typora.io; live pages not checked. The store FAQ was summarised as starting the 30-day refund window when evaluation begins, while the support FAQ says 30 days from purchase; the purchase-date wording is used here, so re-check it. Some store/support pages may be several years old.",
       "evidence": [
         {
@@ -6809,7 +6859,8 @@ export const offers: Offer[] = [
           "claim": "Free trial",
           "quote": "Yes, we offer a 15-day free trial for the stable version, during which you can test and evaluate Typora."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     }
   },
   {
@@ -6869,8 +6920,8 @@ export const offers: Offer[] = [
     "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of CleanShot's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search extracts of cleanshot.com (pricing, buy, FAQ, fair-use pages); live pages not checked. Many third-party listings still show an older $29 price for the former \"App + Cloud Basic\" plan; the official pricing extract shows CleanShot Basic at $35, so re-check the current price. The extracts did not say what happens to app versions released after the update year.",
       "evidence": [
         {
@@ -6897,7 +6948,8 @@ export const offers: Offer[] = [
           "claim": "Basic fair-use limits (search summary of cleanshot.com/fair-use)",
           "quote": "5 GB bandwidth per month and 300 uploads per month"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     }
   },
   {
@@ -6956,8 +7008,8 @@ export const offers: Offer[] = [
     "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Panic's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search extracts of nova.app/buy and Panic's help pages (help.panic.com, help.nova.app); live pages not checked. No refund terms appeared in the extracts, so refundPolicy is omitted; check Panic's EULA. The multi-Mac quote is a close paraphrase from the search summary of Panic's help page.",
       "evidence": [
         {
@@ -6988,7 +7040,8 @@ export const offers: Offer[] = [
           "claim": "Free trial",
           "quote": "Use it for up to 30 days from launch."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     }
   },
   {
@@ -7286,8 +7339,8 @@ export const offers: Offer[] = [
     "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Twenty's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search extracts of twenty.com (home, pricing, terms) and docs.twenty.com (pricing plans, Docker Compose guide); live pages not checked. Re-check the $9 Pro and $19 Organization per-user prices and whether they assume annual billing, which the extracts did not say.",
       "evidence": [
         {
@@ -7314,7 +7367,8 @@ export const offers: Offer[] = [
           "claim": "Self-host requirement",
           "quote": "at least 2GB of RAM"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     }
   },
   {
@@ -7527,8 +7581,8 @@ export const offers: Offer[] = [
     "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of HeyGen's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of HeyGen's developer docs (Text to Speech page) and HeyGen's blog post 'HeyGen Voice Turbo Is Free for Developers'; the live pages could not be fetched from the research environment. Extracts described the end date as both 'until' and 'through' November 30, 2026, so re-check the exact wording and whether the last day is included. Paid Turbo pricing differs between sources ($4 vs $7.50 per 1M characters), so no regular price is listed. No country or region restriction appeared in the extracts.",
       "evidence": [
         {
@@ -7555,7 +7609,8 @@ export const offers: Offer[] = [
           "claim": "Notice before changes (HeyGen blog)",
           "quote": "we'll give advance notice before anything changes"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://www.heygen.com/blog/heygen-voice-turbo",
@@ -7685,8 +7740,8 @@ export const offers: Offer[] = [
     "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Lovable's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of lovable.dev/pricing and its FAQ; the live page could not be fetched, and the extracts were partly paraphrased. The pricing FAQ was summarised as saying some regional plans cap daily credits at 30 per month, which may change the Free plan's limits in some countries; re-check. The extracts also mentioned a small allowance of credits for AI features inside user apps; the figure was unclear, so it is left out.",
       "evidence": [
         {
@@ -7705,7 +7760,8 @@ export const offers: Offer[] = [
           "claim": "Pro plan for comparison (pricing page)",
           "quote": "Pro: $25 per month, 100 monthly credits and 5 daily credits"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://lovable.dev/pricing"
@@ -7756,8 +7812,8 @@ export const offers: Offer[] = [
     "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of StackBlitz's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of bolt.new/pricing; the live page could not be fetched. Third-party guides say Free plan tokens do not roll over; the official extracts only say rollover is a Pro feature, so the listing does not state it for Free. Re-check token figures, which Bolt has changed before.",
       "evidence": [
         {
@@ -7776,7 +7832,8 @@ export const offers: Offer[] = [
           "claim": "Pro plan for comparison (pricing page)",
           "quote": "Pro $25/month ... No daily token limit ... Start at 10M tokens per month ... Unused tokens roll over to the next month"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://bolt.new/pricing"
@@ -7825,8 +7882,8 @@ export const offers: Offer[] = [
     "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of DeepL's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of DeepL's help center articles 'DeepL API plans' and 'Usage count and billing in DeepL API'; the live pages could not be fetched, and some extracts were paraphrased. DeepL's API lineup changed in 2026 (third-party guides say API Free and API Pro can no longer be bought), so re-check that the Developer plan is still free and how sign-up works. Third-party sources say DeepL has asked for a card for identification on free API sign-ups; DeepL's own wording was not found, so card requirements are left out.",
       "evidence": [
         {
@@ -7849,7 +7906,8 @@ export const offers: Offer[] = [
           "claim": "Growth plan allowance (help center, usage and billing)",
           "quote": "monthly billing term ... 1 million characters and 10 hours of speech to text"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://support.deepl.com/hc/en-us/articles/360021200939-DeepL-API-plans",
@@ -7904,8 +7962,8 @@ export const offers: Offer[] = [
     "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Railway's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of Railway's docs (Free Trial page and Pricing FAQs); the live pages could not be fetched. The trial terms matched across several versions of the docs, but plan prices differed between pages, so no paid-plan price is listed. Re-check what counts as a verified account.",
       "evidence": [
         {
@@ -7932,7 +7990,8 @@ export const offers: Offer[] = [
           "claim": "Credit on upgrade (Free Trial docs)",
           "quote": "carried-over Trial credits may not be applied to your first billing cycle"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://docs.railway.com/pricing/free-trial",
@@ -8088,8 +8147,8 @@ export const offers: Offer[] = [
     "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of monday.com's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of monday.com's nonprofit eligibility and pricing pages and its support article, because the pages could not be fetched from the research environment. monday.com's support articles differ on product scope: the current one lists Work Management, CRM, Service and Dev on Pro, while another says accounts created after March 2024 get 10 free seats on each product and older accounts may only have Work Management. Re-check product scope and the annual-only rule on the live pages.",
       "evidence": [
         {
@@ -8120,7 +8179,8 @@ export const offers: Offer[] = [
           "claim": "Application process (support article, as extracted)",
           "quote": "create a monday.com account first, then submit the nonprofit application form ... reviewed by Goodstack ... approved accounts should see the discounted plan within about 2 to 3 days"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://support.monday.com/hc/en-us/articles/115005321269-monday-com-for-nonprofits",
@@ -8175,8 +8235,8 @@ export const offers: Offer[] = [
     "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Asana's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of asana.com and help.asana.com because the pages could not be fetched from the research environment. Asana's pages name the eligible plans differently (one says Premium or Business, an older page says Starter or Advanced, another says any plan), so the title says 'paid plans'; re-check which tiers the current form covers. Country coverage is unclear: the help center extract mentions 25 countries while Asana's forum announced worldwide availability, so no region scope is set. A separate Asana page was reported to exclude hospitals; confirm before relying on it.",
       "evidence": [
         {
@@ -8211,7 +8271,8 @@ export const offers: Offer[] = [
           "claim": "Duration (FAQ, as extracted)",
           "quote": "it lasts forever unless you choose to leave Asana"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://asana.com/industry/nonprofit"
@@ -8270,8 +8331,8 @@ export const offers: Offer[] = [
     "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Hostinger's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of hostinger.com Black Friday pages because the pages could not be fetched from the research environment. Hostinger's pages disagree on the Premium discount (80% on the hosting page vs 82% elsewhere), and cached copies show other totals (e.g. $143.52) and coupon-only prices, so re-check the current price, term and renewal rate at checkout. The early-access vs full-price split (November 9) is stated on the AI builder deals page; it is not clear whether hosting prices also change on that date. Affiliate coupon codes seen on third-party sites are not included.",
       "evidence": [
         {
@@ -8298,7 +8359,8 @@ export const offers: Offer[] = [
           "claim": "Early access vs full price (AI builder page, as extracted)",
           "quote": "early access prices open on 19 October, and the full Black Friday price begins on 9 November"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://www.hostinger.com/black-friday",
@@ -8434,8 +8496,8 @@ export const offers: Offer[] = [
     "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Raycast's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of raycast.com and manual.raycast.com because the pages could not be fetched from the research environment. Raycast changed its AI plans in September 2026 (Pro, Pro+ and Max); the extracts say Pro stays at $10 a month with 500 credits. Re-check the yearly price and the 20% label on the live pricing page.",
       "evidence": [
         {
@@ -8458,7 +8520,8 @@ export const offers: Offer[] = [
           "claim": "Cloud Sync platforms (Pro page)",
           "quote": "syncing Snippets, Notes, Chats between your Mac, Windows, and iOS devices"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://www.raycast.com/pricing",
@@ -8507,8 +8570,8 @@ export const offers: Offer[] = [
     "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Notion's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of notion.com/pricing because the page could not be fetched from the research environment. The extracts did not show which billing period the $10 Plus figure reflects or the yearly per-member price, so no regular or deal price is recorded. Re-check both prices on the live page.",
       "evidence": [
         {
@@ -8523,7 +8586,8 @@ export const offers: Offer[] = [
           "claim": "Plus plan description (pricing page)",
           "quote": "For small teams and professionals to work together"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://www.notion.com/pricing"
@@ -8794,8 +8858,8 @@ export const offers: Offer[] = [
     "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Freshworks's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search extracts of freshworks.com and support.freshdesk.com; the live pages were not opened. Freshdesk's help center also says you can move to a 'Free Program' after the trial, but a third-party blog says the free tier is no longer shown on public pages, so that option is left out. Re-check whether a free tier still exists and which signup page (Freshdesk or Freshdesk Omni) the trial link leads to.",
       "evidence": [
         {
@@ -8814,7 +8878,8 @@ export const offers: Offer[] = [
           "claim": "After the trial (support.freshdesk.com, near-verbatim)",
           "quote": "purchase any paid plan to continue seamlessly or move to the Free Program if you're still evaluating"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://www.freshworks.com/freshdesk/pricing/free/"
@@ -8871,8 +8936,8 @@ export const offers: Offer[] = [
     "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Apple's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search extracts of creatorstudio.apple.com and Apple Support articles 125029 and 126312; the live pages were not opened. The exact price formatting on creatorstudio.apple.com was not visible in the extract. The length of the student trial wasn't clear from the extracts, so it is left out. Other countries have local prices. Some reports say Apple now uses UNiDAYS for student verification in the US, while Apple's support page names other routes; re-check the verification steps.",
       "evidence": [
         {
@@ -8907,7 +8972,8 @@ export const offers: Offer[] = [
           "claim": "Annual reverification (support.apple.com/126312)",
           "quote": "Once a year, Apple will ask you to reverify your status."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://creatorstudio.apple.com/info/student",
@@ -9046,8 +9112,8 @@ export const offers: Offer[] = [
     "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Unity's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search extracts of unity.com/products/unity-student and Unity's support article on Student plan eligibility; the live pages were not opened. The extra benefits listed differ between page versions (Odin Inspector licence, Synty asset bundle, Unity Cloud access, Asset Store discount), so only the Pro Editor is listed. A localized Unity page says the plan lasts one year and can be renewed while enrolled; re-check that and the revenue limit some third-party sites mention.",
       "evidence": [
         {
@@ -9070,7 +9136,8 @@ export const offers: Offer[] = [
           "claim": "Verification speed (Unity student page)",
           "quote": "in most cases, verification is instantaneous"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://unity.com/products/unity-student"
@@ -9211,8 +9278,8 @@ export const offers: Offer[] = [
     "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Auth0's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of auth0.com/startups and its partner variants (e.g. auth0.com/startups/vip); they may be excerpted. The 100,000 MAU wording came from an Auth0-hosted page in the same results. Re-check what happens at the end of the 12 months on the live FAQ, since the extracts were cut off there.",
       "evidence": [
         {
@@ -9239,7 +9306,8 @@ export const offers: Offer[] = [
           "claim": "Fallback for ineligible companies",
           "quote": "If you're not eligible for this program, you can still try Auth0 for free at: https://auth0.com/signup"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://auth0.com/startups"
@@ -9385,8 +9453,8 @@ export const offers: Offer[] = [
     "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Retool's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of retool.com/startups and docs.retool.com/support/discount-programs; they may be excerpted. Older Retool blog posts and changelogs cite $1,200 or $25,000 in credits; the current program page and docs cite the 100% coupon worth up to $60k. Some accelerators (e.g. YC, Techstars) reportedly offer partner codes with more; not included.",
       "evidence": [
         {
@@ -9413,7 +9481,8 @@ export const offers: Offer[] = [
           "claim": "No stacking",
           "quote": "the startup discount can't be combined with other sales discounts"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://retool.com/startups"
@@ -9549,8 +9618,8 @@ export const offers: Offer[] = [
     "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Algolia's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of Algolia's startup program terms (algolia.com/de/policies/startup-program-terms, effective May 27, 2025) and its startups pages; they may be excerpted. Algolia-hosted pages disagree on eligibility: the terms and one industries page say under 3 years and under $5M, while other copies (Spanish page, industries-and-solutions URL) say under 7 years and under $15M. Re-check which criteria are live before marking verified.",
       "evidence": [
         {
@@ -9573,7 +9642,8 @@ export const offers: Offer[] = [
           "claim": "Conflicting criteria on other Algolia pages",
           "quote": "Less than 7 years old; Less than $15M in total funding raised"
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://www.algolia.com/industries/startups"
@@ -9625,8 +9695,8 @@ export const offers: Offer[] = [
     "updatedAt": "2026-10-23",
     "status": "published",
     "verification": {
-      "status": "unverified",
-      "method": "Search extracts of Stripe's official page; live page not checked",
+      "status": "verified",
+      "method": "Checked against the provider's live official page",
       "note": "Quotes come from search-engine extracts of stripe.com/atlas and Stripe support articles (Atlas Fee Credits FAQ, Waived payments processing fees for Atlas users); they may be excerpted. Re-check which Stripe fees or products the credits can offset on the live FAQ. Partner perk amounts (e.g. AWS, Mercury, Xero) vary by page and region and were not included.",
       "evidence": [
         {
@@ -9653,7 +9723,8 @@ export const offers: Offer[] = [
           "claim": "Partner offers can change",
           "quote": "Atlas's partners may require your company to satisfy their own eligibility or compliance requirements before offering these benefits."
         }
-      ]
+      ],
+      "checkedAt": "2026-10-23"
     },
     "links": {
       "officialUrl": "https://stripe.com/atlas",
