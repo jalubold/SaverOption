@@ -1,5 +1,6 @@
 import { cache } from "react";
 import type { SubscriptionCalc } from "@/lib/business/calc";
+import type { OriginalMoney } from "@/lib/business/fx";
 import type {
   BillingInterval,
   IntervalUnit,
@@ -99,6 +100,8 @@ export interface Subscription extends SubscriptionCalc {
   contractNotes: string | null;
   notes: string | null;
   annualPriceOptionMinor: number | null;
+  /** Set when shown converted into the workspace currency (display only): the currency and amounts as recorded. */
+  original?: OriginalMoney;
   reminderDays: number[] | null;
   renewalDecision: RenewalDecision;
   renewalOwnerPersonId: string | null;
@@ -302,6 +305,8 @@ export const getSeatAssignments = cache(async (workspaceId: string): Promise<Sea
 });
 
 export interface CostHistoryEntry {
+  /** Set when shown converted into the workspace currency (display only): the currency and amounts as recorded. */
+  original?: OriginalMoney;
   id: string;
   subscriptionId: string;
   priceMinor: number | null;
@@ -335,6 +340,8 @@ export const getCostHistory = cache(async (workspaceId: string): Promise<CostHis
 });
 
 export interface Payment {
+  /** Set when shown converted into the workspace currency (display only): the currency and amounts as recorded. */
+  original?: OriginalMoney;
   id: string;
   subscriptionId: string;
   softwareName: string;
@@ -368,6 +375,8 @@ export const getPayments = cache(async (workspaceId: string): Promise<Payment[]>
 });
 
 export interface RenewalEvent {
+  /** Set when shown converted into the workspace currency (display only): the currency and amounts as recorded. */
+  original?: OriginalMoney;
   id: string;
   subscriptionId: string;
   softwareName: string;
@@ -427,6 +436,8 @@ export async function getActivity(workspaceId: string, opts: { entityIds?: strin
 }
 
 export interface Opportunity {
+  /** Set when shown converted into the workspace currency (display only): the currency and amounts as recorded. */
+  original?: OriginalMoney;
   id: string;
   ruleKey: string;
   type: OpportunityType;
@@ -478,6 +489,8 @@ export async function getOpportunities(workspaceId: string): Promise<Opportunity
 }
 
 export interface RealizedSavingRow {
+  /** Set when shown converted into the workspace currency (display only): the currency and amounts as recorded. */
+  original?: OriginalMoney;
   id: string;
   opportunityId: string | null;
   subscriptionId: string | null;

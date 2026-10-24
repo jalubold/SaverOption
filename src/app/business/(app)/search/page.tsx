@@ -6,6 +6,7 @@ import { Icon, type IconProps } from "@/components/ui/icon";
 import { formatMoney, intervalLabel } from "@/lib/business/calc";
 import { categoryLabels, softwareStatusLabels, subscriptionStatusLabels } from "@/lib/business/constants";
 import { requireBizContext } from "@/lib/server/business/context";
+import { SUB_MONEY, workspaceDisplay } from "@/lib/server/business/display-currency";
 import { getDepartments, getPeople, getSoftwareList, getSubscriptions, getVendors } from "@/lib/server/business/data";
 import { logoFor } from "@/lib/server/business/logos";
 
@@ -62,7 +63,8 @@ export default async function SearchPage(props: { searchParams: Promise<Record<s
   }
 
   const ws = ctx.workspace.id;
-  const [software, subs, vendors, people, departments] = await Promise.all([getSoftwareList(ws), getSubscriptions(ws), getVendors(ws), getPeople(ws), getDepartments(ws)]);
+  const [software, billedSubs, vendors, people, departments, display] = await Promise.all([getSoftwareList(ws), getSubscriptions(ws), getVendors(ws), getPeople(ws), getDepartments(ws), workspaceDisplay(ctx)]);
+  const subs = display.rows(billedSubs, SUB_MONEY);
   const has = (...values: (string | null | undefined)[]) => values.some((v) => v?.toLowerCase().includes(term));
 
   const softwareHits = software.filter((s) => has(s.name, s.vendorName, categoryLabels[s.category], s.businessPurpose));

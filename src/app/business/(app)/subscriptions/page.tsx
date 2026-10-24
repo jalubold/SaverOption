@@ -4,13 +4,12 @@ import { SummaryStrip, StripStat } from "@/components/business/summary-strip";
 import { SubscriptionTable, type SubscriptionRowView } from "@/components/business/subscription-table";
 import { Card, EmptyState, LinkButton, Money, PageHeader, Pagination, Tabs } from "@/components/business/ui";
 import { buttonClass } from "@/components/ui/primitives";
-import { daysBetween, formatIsoDate, formatMoney, isRecurring, monthlyEquivalent, periodSuffix, seatSummary, summarizeSpend } from "@/lib/business/calc";
+import { daysBetween, formatIsoDate, formatMoney, isRecurring, monthlyEquivalent, periodSuffix, seatSummary, summarizeSpend, totalsList } from "@/lib/business/calc";
 import { billingIntervalLabels, BILLING_INTERVALS, categoryLabels, SOFTWARE_CATEGORIES, SUBSCRIPTION_STATUSES, subscriptionStatusLabels } from "@/lib/business/constants";
-import { convertedParts, convertTotals } from "@/lib/business/fx";
 import { can } from "@/lib/business/permissions";
 import { requireBizContext } from "@/lib/server/business/context";
 import { getDepartments, getPeople, getSubscriptions, getVendors } from "@/lib/server/business/data";
-import { getFxRates } from "@/lib/server/business/fx";
+import { asBilled, SUB_MONEY, workspaceDisplay } from "@/lib/server/business/display-currency";
 import { applySubscriptionFilters, filtersQuery, hasActiveFilters, parseSubscriptionFilters, type SubscriptionFilters } from "@/lib/server/business/subscription-filters";
 
 export const metadata = { title: "Subscriptions" };
@@ -21,7 +20,9 @@ export default async function SubscriptionsPage(props: { searchParams: Promise<R
   const ctx = await requireBizContext("/business/subscriptions");
   const f = parseSubscriptionFilters(await props.searchParams);
   const ws = ctx.workspace.id;
-  const [all, vendors, departments, people] = await Promise.all([getSubscriptions(ws), getVendors(ws), getDepartments(ws), getPeople(ws)]);
+  const [billedAll, vendors, departments, people, display] = await Promise.all([getSubscriptions(ws), getVendors(ws), getDepartments(ws), getPeople(ws), workspaceDisplay(ctx)]);
+  // Shown in the workspace currency (ECB rate); filters and the currency list use the currency each is billed in.
+  const all = display.rows(billedAll, SUB_MONEY);
   const fmt = ctx.workspace.dateFormat;
   const canManage = can(ctx.role, "records.manage");
 
@@ -30,7 +31,7 @@ export default async function SubscriptionsPage(props: { searchParams: Promise<R
   const page = Math.min(f.page, pageCount);
   const shown = rows.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   const summary = summarizeSpend(rows, ctx.today);
-  const currencies = [...new Set(all.map((s) => s.currency))].sort();
+  const currencies = [...new Set(billedAll.map((s) => s.currency))].sort();
   const payments = [...new Set(all.map((s) => s.paymentMethod).filter((p): p is string => Boolean(p)))].sort();
 
   const views: SubscriptionRowView[] = shown.map((s) => {
@@ -48,6 +49,7 @@ export default async function SubscriptionsPage(props: { searchParams: Promise<R
       statusLabel: subscriptionStatusLabels[s.status],
       archived: s.archived,
       price: s.priceMinor !== null ? `${formatMoney(s.priceMinor, s.currency)}${periodSuffix(s)}` : null,
+      billed: s.original && s.original.values.priceMinor != null ? `${formatMoney(s.original.values.priceMinor, s.original.currency)}${periodSuffix(s)}` : null,
       monthly: m !== null ? formatMoney(Math.round(m), s.currency) : null,
       renewal: s.nextRenewalDate ? formatIsoDate(s.nextRenewalDate, fmt) : null,
       renewalDays: s.nextRenewalDate && !s.archived && (s.status === "active" || s.status === "trial") ? daysBetween(ctx.today, s.nextRenewalDate) : null,
@@ -68,10 +70,10 @@ export default async function SubscriptionsPage(props: { searchParams: Promise<R
 
   // The tools in this view, highest monthly cost first (default currency first, as currencies aren't compared).
   const pref = ctx.workspace.defaultCurrency;
-  // Other currencies in the totals are converted at the ECB reference rate (with the amounts shown); none fetched otherwise.
-  const fx = Object.entries(summary.monthly).some(([c, v]) => c !== pref && v !== 0) ? await getFxRates() : null;
-  const convMonthly = convertTotals(summary.monthly, pref, fx);
-  const convAnnual = convertTotals(summary.annualized, pref, fx);
+  // What the converted part of the totals is billed as, for the note under them.
+  const billedPart = summarizeSpend(rows.filter((s) => s.original).map(asBilled), ctx.today);
+  const partOf = (t: Record<string, number>) => totalsList(t).filter((x) => x.amount !== 0).map((x) => formatMoney(x.amount, x.currency)).join(" + ");
+  const fxNote = display.note();
   const tools = new Map<string, { name: string; src: string | null; rank: [number, number] }>();
   for (const s of rows) {
     const m = isRecurring(s) ? (monthlyEquivalent(s) ?? 0) : 0;
@@ -170,7 +172,7 @@ export default async function SubscriptionsPage(props: { searchParams: Promise<R
                 { value: "none", label: "No renewal date" },
               ]}
             />
-            {currencies.length > 1 && <FilterSelect label="Currency" name="currency" value={f.currency} options={currencies.map((c) => ({ value: c, label: c }))} />}
+            {currencies.length > 1 && <FilterSelect label="Billed in" name="currency" value={f.currency} options={currencies.map((c) => ({ value: c, label: c }))} />}
             {payments.length > 0 && <FilterSelect label="Payment method" name="payment" value={f.payment} options={[...payments.map((p) => ({ value: p, label: p })), { value: "none", label: "Not recorded" }]} />}
             <label className="text-[12px] text-muted">
               <span className="block">Sort</span>
@@ -208,13 +210,13 @@ export default async function SubscriptionsPage(props: { searchParams: Promise<R
               <StripStat label="Active" value={summary.activeCount} sub={summary.trialCount ? `+ ${summary.trialCount} in trial` : undefined} />
               <StripStat
                 label="Monthly equivalent"
-                value={convMonthly ? formatMoney(convMonthly.amount, pref) : <Money totals={summary.monthly} preferred={pref} />}
-                sub={convMonthly ? `Incl. ${convertedParts(convMonthly)} at the ECB rate of ${formatIsoDate(convMonthly.date, ctx.workspace.dateFormat)}` : "Active, priced plans"}
+                value={<Money totals={summary.monthly} preferred={pref} />}
+                sub={partOf(billedPart.monthly) && fxNote ? `Incl. ${partOf(billedPart.monthly)} at the ECB rate of ${formatIsoDate(fxNote.date, fmt)}` : "Active, priced plans"}
               />
               <StripStat
                 label="Annualized"
-                value={convAnnual ? formatMoney(convAnnual.amount, pref) : <Money totals={summary.annualized} preferred={pref} />}
-                sub={convAnnual ? `Incl. ${convertedParts(convAnnual)} converted` : "Run-rate × 12"}
+                value={<Money totals={summary.annualized} preferred={pref} />}
+                sub={partOf(billedPart.annualized) ? `Incl. ${partOf(billedPart.annualized)} converted` : "Run-rate × 12"}
               />
               <StripStat label="Renewing in 30 days" value={summary.upcomingRenewals} tone={summary.upcomingRenewals > 0 ? "accent" : undefined} />
             </SummaryStrip>

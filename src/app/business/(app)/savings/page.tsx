@@ -3,7 +3,7 @@ import { deleteRealizedSavingAction, recordRealizedSavingAction, setOpportunityS
 import { BarList, type BarRow } from "@/components/business/charts";
 import { ActionForm, ConfirmSubmit, SelectField, Submit, TextAreaField, TextField } from "@/components/business/forms";
 import { SoftwareLogo } from "@/components/business/software-logo";
-import { Card, EmptyState, Kpi, LinkButton, Money, PageHeader, Pagination, Pill, StatusPill, TableWrap, Tabs } from "@/components/business/ui";
+import { BilledAs, Card, EmptyState, FxNoteLine, Kpi, LinkButton, Money, PageHeader, Pagination, Pill, StatusPill, TableWrap, Tabs } from "@/components/business/ui";
 import { Icon } from "@/components/ui/icon";
 import { firstYearValue, formatIsoDate, formatMoney, minorToInput, potentialSavings, realizedTotals, totalsList } from "@/lib/business/calc";
 import {
@@ -26,6 +26,7 @@ import {
   UNDERUTILIZED_BELOW,
 } from "@/lib/business/savings";
 import { requireBizContext } from "@/lib/server/business/context";
+import { workspaceDisplay } from "@/lib/server/business/display-currency";
 import { getRealizedSavings, getSoftwareList, getSubscriptions, type Opportunity } from "@/lib/server/business/data";
 import { refreshSavings } from "@/lib/server/business/savings-sync";
 
@@ -52,8 +53,11 @@ export default async function SavingsPage(props: { searchParams: Promise<Raw> })
   const canManage = can(ctx.role, "spend.manage");
 
   // Re-run the rules against current data first, so the list is never stale.
-  const opps = await refreshSavings(ctx);
-  const [subs, software, realized] = await Promise.all([getSubscriptions(ws), getSoftwareList(ws), getRealizedSavings(ws)]);
+  const billedOpps = await refreshSavings(ctx);
+  const [subs, software, billedRealized, display] = await Promise.all([getSubscriptions(ws), getSoftwareList(ws), getRealizedSavings(ws), workspaceDisplay(ctx)]);
+  // Estimates and realized savings in the workspace currency (ECB rate); forms keep the currency it's billed in.
+  const opps = display.rows(billedOpps, ["estMonthlyMinor"]);
+  const realized = display.rows(billedRealized, ["amountMinor"]);
   const subById = new Map(subs.map((s) => [s.id, s]));
   const softwareById = new Map(software.map((s) => [s.id, s]));
 
@@ -149,8 +153,9 @@ export default async function SavingsPage(props: { searchParams: Promise<Raw> })
       </div>
       <p className="mt-2 text-[12px] text-faint">
         Potential savings count each subscription once — when several findings concern the same subscription (say, unused seats and a possible overlap that would
-        cancel it), only the largest estimate is added, so they aren&apos;t double-counted. Totals stay per currency.
+        cancel it), only the largest estimate is added, so they aren&apos;t double-counted.
       </p>
+      <FxNoteLine note={display.note()} dateFormat={fmt} className="mt-1" />
 
       {active.length > 0 && (
         <div className="mt-5 grid gap-5 lg:grid-cols-2">
@@ -273,6 +278,7 @@ export default async function SavingsPage(props: { searchParams: Promise<Raw> })
                       </td>
                       <td className="num">
                         {formatMoney(r.amountMinor, r.currency)} <span className="text-faint">{recurrenceLabels[r.recurrence].toLowerCase()}</span>
+                        <BilledAs original={r.original} field="amountMinor" />
                       </td>
                       <td className="num">{formatMoney(firstYearValue(r), r.currency)}</td>
                       <td className="min-w-40 text-[12.5px] text-muted">{r.evidence ?? "—"}</td>
@@ -372,7 +378,10 @@ function OpportunityCard({
       </Submit>
     </ActionForm>
   );
-  const defaultCurrency = o.currency ?? subscription?.currency ?? ctx.pref;
+  // A realized saving is recorded in the currency the estimate was made in (as billed), not the display currency.
+  const billedEst = o.original ? (o.original.values.estMonthlyMinor ?? null) : o.estMonthlyMinor;
+  const billedCurrency = o.original?.currency ?? o.currency;
+  const defaultCurrency = billedCurrency ?? subscription?.currency ?? ctx.pref;
   return (
     <li id={o.id} className="biz-card scroll-mt-24 px-4 py-4 sm:px-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -497,7 +506,7 @@ function OpportunityCard({
                 name="amount"
                 inputMode="decimal"
                 required
-                defaultValue={o.estMonthlyMinor !== null && o.currency ? minorToInput(o.estMonthlyMinor, o.currency) : ""}
+                defaultValue={billedEst !== null && billedCurrency ? minorToInput(billedEst, billedCurrency) : ""}
                 hint={o.estMonthlyMinor !== null ? "Prefilled with the monthly estimate — enter what actually changed." : "Enter the amount from the new invoice or quote."}
               />
               <SelectField label="Currency" name="currency" defaultValue={defaultCurrency} options={currencyOptions} />

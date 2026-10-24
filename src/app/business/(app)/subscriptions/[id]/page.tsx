@@ -4,7 +4,7 @@ import { RadialGauge } from "@/components/business/charts";
 import { ArchiveSubscriptionButton, DeletePaymentButton, PaymentForm, RecordRenewalForm, RenewalDecisionForm } from "@/components/business/record-forms";
 import { LogoTitle } from "@/components/business/logo-title";
 import { SoftwareLogo } from "@/components/business/software-logo";
-import { Card, DefinitionList, InlineNote, Kpi, LinkButton, Money, PageHeader, Pill, StatusPill, TableWrap } from "@/components/business/ui";
+import { Card, DefinitionList, FxNoteLine, InlineNote, Kpi, LinkButton, Money, PageHeader, Pill, StatusPill, TableWrap } from "@/components/business/ui";
 import { Icon } from "@/components/ui/icon";
 import {
   addTo,
@@ -31,6 +31,7 @@ import { isUuid } from "@/lib/business/form";
 import { can, canEditRecord } from "@/lib/business/permissions";
 import { liveOffersFor, verificationLabel } from "@/lib/server/business/catalog-match";
 import { requireBizContext } from "@/lib/server/business/context";
+import { displayCurrency, SUB_MONEY } from "@/lib/server/business/display-currency";
 import { getImportJob } from "@/lib/server/business/import";
 import {
   getActivity,
@@ -82,8 +83,13 @@ export default async function SubscriptionPage(props: { params: Promise<{ id: st
   const canEdit = canEditRecord(ctx.role, { ownerPersonId: sub.ownerPersonId }, ctx.personId);
   const canSpend = can(ctx.role, "spend.manage");
   const live = !sub.archived && (sub.status === "active" || sub.status === "trial");
-  const monthly = monthlyEquivalent(sub);
-  const year = annualized(sub);
+  // The summary figures in the workspace currency (ECB rate); billing details, history and payments stay as recorded.
+  const display = await displayCurrency(ctx, [sub.currency]);
+  const shown = display.row(sub, SUB_MONEY);
+  const fxNote = display.note();
+  const billed = shown.original && sub.priceMinor !== null ? `billed ${formatMoney(sub.priceMinor, sub.currency)}` : null;
+  const monthly = monthlyEquivalent(shown);
+  const year = annualized(shown);
   const seatInfo = seatSummary(sub);
   const named = seats.filter((a) => a.subscriptionId === id && !a.releasedAt);
   const myEvents = events.filter((e) => e.subscriptionId === id);
@@ -156,15 +162,21 @@ export default async function SubscriptionPage(props: { params: Promise<{ id: st
       </div>
 
       <div className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <Kpi label="Price per period" value={sub.priceMinor !== null ? `${formatMoney(sub.priceMinor, sub.currency)}` : "Not entered"} sub={sub.priceMinor !== null ? `${intervalLabel(sub)} · ${pricingModelLabels[sub.pricingModel]}` : "Left out of spending totals"} />
-        <Kpi label="Monthly equivalent" value={monthly !== null ? formatMoney(Math.round(monthly), sub.currency) : "—"} sub={sub.billingInterval === "monthly" ? "Billed monthly" : "Price ÷ months in the period"} />
-        <Kpi label="Annualized recurring cost" value={year !== null ? formatMoney(Math.round(year), sub.currency) : "—"} sub="Monthly equivalent × 12, not cash spent" />
+        <Kpi
+          label="Price per period"
+          value={shown.priceMinor !== null ? `${formatMoney(shown.priceMinor, shown.currency)}` : "Not entered"}
+          sub={sub.priceMinor !== null ? [billed, intervalLabel(sub), pricingModelLabels[sub.pricingModel]].filter(Boolean).join(" · ") : "Left out of spending totals"}
+        />
+        <Kpi label="Monthly equivalent" value={monthly !== null ? formatMoney(Math.round(monthly), shown.currency) : "—"} sub={sub.billingInterval === "monthly" ? "Billed monthly" : "Price ÷ months in the period"} />
+        <Kpi label="Annualized recurring cost" value={year !== null ? formatMoney(Math.round(year), shown.currency) : "—"} sub="Monthly equivalent × 12, not cash spent" />
         <Kpi
           label={sub.status === "trial" ? "Trial ends" : "Next renewal"}
           value={sub.nextRenewalDate ? d(sub.nextRenewalDate) : "Not set"}
           sub={renewalIn === null ? (live ? "Add a date to get reminders" : undefined) : !live ? "Not renewing" : renewalIn < 0 ? `${Math.abs(renewalIn)} days ago — record the outcome` : renewalIn === 0 ? "Today" : `In ${renewalIn} day${renewalIn === 1 ? "" : "s"}`}
         />
       </div>
+
+      <FxNoteLine note={fxNote} dateFormat={ctx.workspace.dateFormat} className="mt-2" />
 
       <div className="mt-5 grid gap-5 lg:grid-cols-3">
         <div className="min-w-0 space-y-5 lg:col-span-2">

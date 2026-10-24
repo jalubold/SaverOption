@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { LogoStack, SoftwareLogo } from "@/components/business/software-logo";
 import { SummaryStrip, StripStat } from "@/components/business/summary-strip";
-import { Card, EmptyState, InlineNote, LinkButton, Money, PageHeader, StatusPill, Tabs } from "@/components/business/ui";
+import { Card, EmptyState, FxNoteLine, InlineNote, LinkButton, Money, PageHeader, StatusPill, Tabs } from "@/components/business/ui";
 import { buttonClass, cn } from "@/components/ui/primitives";
 import { addTo, groupMonthly, isLive, type CurrencyTotals } from "@/lib/business/calc";
 import { categoryLabels, SOFTWARE_CATEGORIES, SOFTWARE_STATUSES, softwareStatusLabels, type SoftwareCategory, type SoftwareStatus } from "@/lib/business/constants";
@@ -9,6 +9,7 @@ import { findPotentialDuplicates } from "@/lib/business/duplicates";
 import { isUuid } from "@/lib/business/form";
 import { can } from "@/lib/business/permissions";
 import { requireBizContext } from "@/lib/server/business/context";
+import { SUB_MONEY, workspaceDisplay } from "@/lib/server/business/display-currency";
 import { getDepartments, getPeople, getSoftwareList, getSubscriptions, getVendors, type Software } from "@/lib/server/business/data";
 
 export const metadata = { title: "Software inventory" };
@@ -46,7 +47,9 @@ export default async function SoftwareInventoryPage(props: { searchParams: Promi
   const ctx = await requireBizContext("/business/software");
   const f = parse(await props.searchParams);
   const ws = ctx.workspace.id;
-  const [software, subs, vendors, departments, people] = await Promise.all([getSoftwareList(ws), getSubscriptions(ws), getVendors(ws), getDepartments(ws), getPeople(ws)]);
+  const [software, billedSubs, vendors, departments, people, display] = await Promise.all([getSoftwareList(ws), getSubscriptions(ws), getVendors(ws), getDepartments(ws), getPeople(ws), workspaceDisplay(ctx)]);
+  // Spend in the workspace currency (ECB rate).
+  const subs = display.rows(billedSubs, SUB_MONEY);
   const pref = ctx.workspace.defaultCurrency;
   const current = subs.filter((s) => !s.archived);
   const monthly = groupMonthly(current, (s) => s.softwareId);
@@ -106,7 +109,12 @@ export default async function SoftwareInventoryPage(props: { searchParams: Promi
     <>
       <PageHeader
         title="Software inventory"
-        description="Every tool your company uses — paid or not — with its owner, department and linked subscriptions."
+        description={
+          <>
+            Every tool your company uses — paid or not — with its owner, department and linked subscriptions.
+            <FxNoteLine note={display.note()} dateFormat={ctx.workspace.dateFormat} className="mt-1.5" />
+          </>
+        }
         crumbs={[{ label: "Overview", href: "/business/dashboard" }, { label: "Software Inventory" }]}
         actions={
           canAdd ? (

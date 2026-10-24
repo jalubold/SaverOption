@@ -5,6 +5,7 @@ import { csvAmount, toCsv, type Cell } from "@/lib/business/csv";
 import { can } from "@/lib/business/permissions";
 import type { Group } from "@/lib/server/business/analytics";
 import { getBizSession } from "@/lib/server/business/context";
+import { workspaceDisplay } from "@/lib/server/business/display-currency";
 import { buildReport, REPORT_KEYS, type Report, type ReportKey } from "@/lib/server/business/reports";
 
 /**
@@ -153,7 +154,8 @@ export async function GET(request: NextRequest) {
 
   const raw: Record<string, string> = {};
   for (const [k, v] of request.nextUrl.searchParams) if (k !== "report") raw[k] = v;
-  const report = await buildReport(ctx, raw);
+  // The same figures as the Reports page: amounts in the workspace currency.
+  const report = await buildReport(ctx, raw, { display: await workspaceDisplay(ctx) });
   const { header, rows } = build(report, key as ReportKey);
   return new NextResponse(toCsv(header, rows), {
     headers: {

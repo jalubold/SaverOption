@@ -3,7 +3,8 @@ import type { ReactNode } from "react";
 import { BarList, DonutChart, RadialGauge, StackedBar, TrendChart, type BarRow } from "@/components/business/charts";
 import { SoftwareLogo } from "@/components/business/software-logo";
 import { GenerateReportForm } from "@/components/business/report-forms";
-import { Card, EmptyState, InlineNote, Kpi, Meter, Money, PageHeader, Pill, StatusPill, TableWrap } from "@/components/business/ui";
+import { Card, EmptyState, FxNoteLine, InlineNote, Kpi, Meter, Money, PageHeader, Pill, StatusPill, TableWrap } from "@/components/business/ui";
+import { workspaceDisplay } from "@/lib/server/business/display-currency";
 import { listSavedReports } from "@/lib/server/business/savings-report";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass } from "@/components/ui/primitives";
@@ -22,7 +23,8 @@ const whole = (minor: number, currency: string) => formatMoney(Math.round(minor)
 
 export default async function ReportsPage(props: { searchParams: Promise<Raw> }) {
   const ctx = await requireBizContext("/business/reports");
-  const [report, savedReports] = await Promise.all([buildReport(ctx, await props.searchParams), listSavedReports(ctx, 10)]);
+  const display = await workspaceDisplay(ctx);
+  const [report, savedReports] = await Promise.all([buildReport(ctx, await props.searchParams, { display }), listSavedReports(ctx, 10)]);
   const { params, model, options } = report;
   const fmt = ctx.workspace.dateFormat;
   const pref = ctx.workspace.defaultCurrency;
@@ -38,7 +40,8 @@ export default async function ReportsPage(props: { searchParams: Promise<Raw> })
   const s = model.summary;
   const filtered = hasFilters(params);
   const period = `${formatIsoDate(params.from, fmt)} – ${formatIsoDate(params.to, fmt)}`;
-  const currencyNote = params.currency ? params.currency : model.currencies.length > 1 ? "all currencies, shown separately" : (model.currencies[0] ?? pref);
+  // Amounts are in the workspace currency (converted at the ECB rate); the currency filter picks what's billed in one.
+  const currencyNote = `${model.currencies.length > 1 ? "per currency" : (model.currencies[0] ?? pref)}${params.currency ? `, billed in ${params.currency}` : ""}`;
   const multiCurrency = !params.currency && model.currencies.length > 1;
 
   const groupRows = (groups: Group[], logoOf?: (g: Group) => string | null): BarRow[] =>
@@ -80,9 +83,9 @@ export default async function ReportsPage(props: { searchParams: Promise<Raw> })
       <Control label="To (custom)">
         <input type="date" name="to" defaultValue={params.to} className="biz-select pr-2" />
       </Control>
-      <Control label="Currency">
+      <Control label="Billed in">
         <select name="currency" defaultValue={params.currency ?? ""} className="biz-select">
-          <option value="">All currencies</option>
+          <option value="">Any currency</option>
           {options.currencies.map((c) => (
             <option key={c} value={c}>
               {c}
@@ -140,6 +143,7 @@ export default async function ReportsPage(props: { searchParams: Promise<Raw> })
         <>
           Reporting period <strong className="font-medium text-fg">{period}</strong> · Currency <strong className="font-medium text-fg">{currencyNote}</strong>. Current-state figures (run-rate, seats, savings) are as of{" "}
           {formatIsoDate(ctx.today, fmt)}.
+          <FxNoteLine note={model.fx} dateFormat={fmt} className="mt-1.5" />
         </>
       }
       actions={exportLink("summary")}

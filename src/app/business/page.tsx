@@ -46,7 +46,7 @@ const faq = [
   },
   {
     q: "Can we track subscriptions in different currencies?",
-    a: "Yes. Each subscription keeps the currency it's billed in. Headline totals are shown in your default currency, converting the others at the European Central Bank's daily reference rate — with the original amounts, the rate and its date shown alongside.",
+    a: "Yes. Each subscription keeps the currency it's billed in. Amounts across the app are shown in your default currency, converting the others at the European Central Bank's daily reference rate — with the billed amounts, the rate and its date shown alongside.",
   },
   {
     q: "Can my colleagues use the same workspace?",

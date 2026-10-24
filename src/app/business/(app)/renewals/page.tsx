@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { RenewalTimeline, type TimelineItem } from "@/components/business/charts";
 import { RecordRenewalForm, RenewalDecisionForm } from "@/components/business/record-forms";
 import { SoftwareLogo } from "@/components/business/software-logo";
-import { Card, EmptyState, InlineNote, LinkButton, Money, PageHeader, Pill, StatusPill, TableWrap, Tabs } from "@/components/business/ui";
+import { BilledAs, Card, EmptyState, FxNoteLine, InlineNote, LinkButton, Money, PageHeader, Pill, StatusPill, TableWrap, Tabs } from "@/components/business/ui";
 import { Icon } from "@/components/ui/icon";
 import { cn } from "@/components/ui/primitives";
 import {
@@ -24,6 +24,7 @@ import {
 import { renewalDecisionLabels, subscriptionStatusLabels } from "@/lib/business/constants";
 import { can, canEditRecord } from "@/lib/business/permissions";
 import { requireBizContext, type BizContext } from "@/lib/server/business/context";
+import { SUB_MONEY, workspaceDisplay } from "@/lib/server/business/display-currency";
 import { getPeople, getRenewalEvents, getSubscriptions, type Subscription } from "@/lib/server/business/data";
 
 export const metadata = { title: "Renewals" };
@@ -39,7 +40,10 @@ export default async function RenewalsPage(props: { searchParams: Promise<Search
   const q = await props.searchParams;
   const ctx = await requireBizContext("/business/renewals");
   const ws = ctx.workspace.id;
-  const [subs, people, events] = await Promise.all([getSubscriptions(ws), getPeople(ws), getRenewalEvents(ws)]);
+  const [billedSubs, people, billedEvents, display] = await Promise.all([getSubscriptions(ws), getPeople(ws), getRenewalEvents(ws), workspaceDisplay(ctx)]);
+  // Amounts in the workspace currency (ECB rate); recording a renewal still uses the currency it's billed in.
+  const subs = display.rows(billedSubs, SUB_MONEY);
+  const events = display.rows(billedEvents, ["amountMinor"]);
   const view: View = (VIEWS as readonly string[]).includes(one(q.view) ?? "") ? (one(q.view) as View) : "upcoming";
   const live = subs.filter((s) => isLive(s));
   const attention = attentionGroups(ctx, live);
@@ -51,7 +55,12 @@ export default async function RenewalsPage(props: { searchParams: Promise<Search
       <PageHeader
         title="Renewals"
         crumbs={[{ label: "Overview", href: "/business/dashboard" }, { label: "Renewals" }]}
-        description="Upcoming renewals, cancellation deadlines and what was decided at past renewals."
+        description={
+          <>
+            Upcoming renewals, cancellation deadlines and what was decided at past renewals.
+            <FxNoteLine note={display.note()} dateFormat={ctx.workspace.dateFormat} className="mt-1.5" />
+          </>
+        }
       />
       <Tabs
         items={[
@@ -224,7 +233,10 @@ function Upcoming({ ctx, live, windowParam }: { ctx: BizContext; live: Subscript
                           {formatIsoDate(s.nextRenewalDate, fmt)}
                           <span className={cn("block text-[12px]", days <= 7 ? "text-warn" : "text-faint")}>{days === 0 ? "Today" : `${days} day${days === 1 ? "" : "s"}`}</span>
                         </td>
-                        <td className="num">{s.priceMinor !== null ? formatMoney(s.priceMinor, s.currency) : <span className="text-faint">—</span>}</td>
+                        <td className="num">
+                          {s.priceMinor !== null ? formatMoney(s.priceMinor, s.currency) : <span className="text-faint">—</span>}
+                          <BilledAs original={s.original} />
+                        </td>
                         <td className="whitespace-nowrap">{intervalLabel(s)}</td>
                         <td>{s.autoRenew ? "Yes" : <Pill>Manual</Pill>}</td>
                         <td className="whitespace-nowrap">
@@ -434,8 +446,8 @@ function Attention({ ctx, groups, people }: { ctx: BizContext; groups: Groups; p
                       subscriptionId={s.id}
                       renewalDate={s.nextRenewalDate!}
                       suggestedNext={nextPeriodDate(s.nextRenewalDate!, s)}
-                      priceMinor={s.priceMinor}
-                      currency={s.currency}
+                      priceMinor={s.original ? (s.original.values.priceMinor ?? null) : s.priceMinor}
+                      currency={s.original?.currency ?? s.currency}
                       today={ctx.today}
                     />
                   </Expand>
@@ -563,7 +575,10 @@ function History({ ctx, events, logos }: { ctx: BizContext; events: Awaited<Retu
                   <td>
                     <Pill tone={e.outcome === "cancelled" ? "outline" : e.outcome === "renegotiated" ? "accent" : "success"}>{outcomeLabels[e.outcome]}</Pill>
                   </td>
-                  <td className="num">{e.amountMinor !== null ? formatMoney(e.amountMinor, e.currency) : <span className="text-faint">—</span>}</td>
+                  <td className="num">
+                    {e.amountMinor !== null ? formatMoney(e.amountMinor, e.currency) : <span className="text-faint">—</span>}
+                    <BilledAs original={e.original} field="amountMinor" />
+                  </td>
                   <td className="whitespace-nowrap">{e.newRenewalDate ? formatIsoDate(e.newRenewalDate, fmt) : <span className="text-faint">—</span>}</td>
                   <td className="max-w-64 text-[12.5px] text-muted">{e.notes ?? "—"}</td>
                 </tr>

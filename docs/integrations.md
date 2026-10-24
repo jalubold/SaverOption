@@ -31,11 +31,12 @@ What connects to Saver Option Business today, and what doesn't yet. The in-app p
 
 ## Exchange rates (European Central Bank)
 
-Headline totals (the dashboard hero and the subscriptions summary) are shown in the workspace's default currency. Amounts in other currencies are converted with the ECB's daily euro reference rates (`https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml`, free, no key, published on working days around 16:00 CET), and the converted amounts, the rate and its date are shown underneath.
+Amounts across the app (dashboard, analytics, reports and their CSVs, savings, subscriptions, renewals, licenses, software, departments, search) are shown in the workspace's default currency. Amounts in other currencies are converted with the ECB's daily euro reference rates (`https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml`, free, no key, published on working days around 16:00 CET); tables show the billed amount underneath ("billed €99.00/mo") and each page notes the rate and its date.
 
 - Fetched server-side in `src/lib/server/business/fx.ts`, cached six hours (Next data cache plus an in-memory last good copy). Nothing about the workspace is sent.
 - Parsing and conversion are pure functions in `src/lib/business/fx.ts` (unit-tested), using each currency's minor units.
-- If the file can't be fetched, or a currency has no ECB rate, the totals fall back to per-currency figures. Lists, charts, reports, exports and MCP tool results stay per currency.
+- Display only: `src/lib/server/business/display-currency.ts` converts copies of subscriptions, cost history, payments, renewal events, savings estimates and realized savings (keeping the originals in `original`). Records, forms (payments, renewals, realized savings), the subscription and workspace exports, and MCP tool results keep each record's own currency.
+- If the file can't be fetched, or a currency has no ECB rate, those amounts stay in their own currency and totals show them separately.
 - `FX_RATES_URL` overrides the source (the E2E suite points it at a local mock).
 
 ## Adding an integration

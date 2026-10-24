@@ -9,6 +9,7 @@ import { subscriptionStatusLabels } from "@/lib/business/constants";
 import { isUuid } from "@/lib/business/form";
 import { canEditRecord } from "@/lib/business/permissions";
 import { requireBizContext } from "@/lib/server/business/context";
+import { displayCurrency, SUB_MONEY } from "@/lib/server/business/display-currency";
 import { getPeople, getSeatAssignments, getSubscription } from "@/lib/server/business/data";
 
 export const metadata = { title: "Seat allocation" };
@@ -19,8 +20,11 @@ export default async function SeatAllocationPage(props: { params: Promise<{ id: 
   const { id } = await props.params;
   const ctx = await requireBizContext(`/business/licenses/${id}`);
   if (!isUuid(id)) notFound();
-  const sub = await getSubscription(ctx, id.toLowerCase());
-  if (!sub) notFound();
+  const billedSub = await getSubscription(ctx, id.toLowerCase());
+  if (!billedSub) notFound();
+  // Seat costs in the workspace currency (ECB rate).
+  const display = await displayCurrency(ctx, [billedSub.currency]);
+  const sub = display.row(billedSub, SUB_MONEY);
   const ws = ctx.workspace.id;
   const [assignments, people] = await Promise.all([getSeatAssignments(ws), getPeople(ws)]);
   const fmt = ctx.workspace.dateFormat;

@@ -5,6 +5,7 @@ import { Card, EmptyState, Money, PageHeader, Pill, TableWrap } from "@/componen
 import { can } from "@/lib/business/permissions";
 import { groupsFrom } from "@/lib/server/business/analytics";
 import { requireBizContext } from "@/lib/server/business/context";
+import { SUB_MONEY, workspaceDisplay } from "@/lib/server/business/display-currency";
 import { getDepartments, getPeople, getSoftwareList, getSubscriptions } from "@/lib/server/business/data";
 
 export const metadata = { title: "Departments" };
@@ -15,7 +16,9 @@ export default async function DepartmentsPage(props: { searchParams: Promise<Rec
   const q = await props.searchParams;
   const ctx = await requireBizContext("/business/settings/departments");
   const ws = ctx.workspace.id;
-  const [departments, people, software, subscriptions] = await Promise.all([getDepartments(ws), getPeople(ws), getSoftwareList(ws), getSubscriptions(ws)]);
+  const [departments, people, software, billedSubs, display] = await Promise.all([getDepartments(ws), getPeople(ws), getSoftwareList(ws), getSubscriptions(ws), workspaceDisplay(ctx)]);
+  // Spend in the workspace currency (ECB rate).
+  const subscriptions = display.rows(billedSubs, SUB_MONEY);
   const manage = can(ctx.role, "directory.manage");
   const subs = subscriptions.filter((s) => !s.archived);
   const spend = new Map(groupsFrom(subs, (s) => s.departmentId ?? NONE, (k) => k).map((g) => [g.key, g.totals]));
@@ -116,7 +119,7 @@ export default async function DepartmentsPage(props: { searchParams: Promise<Rec
         </Card>
       )}
 
-      <Card title="Active departments" description={`Monthly spend is the monthly equivalent of active subscriptions, per currency.`}>
+      <Card title="Active departments" description={`Monthly spend is the monthly equivalent of active subscriptions, in ${pref}.`}>
         {active.length === 0 ? (
           <EmptyState icon="building" title="No departments yet">
             {manage ? "Create departments to see spending by team and to assign people and software." : "An owner or admin can create departments."}

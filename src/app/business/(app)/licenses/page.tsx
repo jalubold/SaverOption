@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { RadialGauge } from "@/components/business/charts";
 import { SoftwareLogo } from "@/components/business/software-logo";
-import { Card, DefinitionList, EmptyState, InlineNote, Kpi, LinkButton, Meter, Money, PageHeader, Pill, TableWrap, Tabs } from "@/components/business/ui";
+import { Card, DefinitionList, EmptyState, FxNoteLine, InlineNote, Kpi, LinkButton, Meter, Money, PageHeader, Pill, TableWrap, Tabs } from "@/components/business/ui";
 import { formatMoney, formatMonth, isLive, lastMonths, licenseTotals, percent, seatSummary, totalsList } from "@/lib/business/calc";
 import { hasAssignmentHistory, utilizationByMonth } from "@/lib/business/utilization";
 import { requireBizContext } from "@/lib/server/business/context";
+import { SUB_MONEY, workspaceDisplay } from "@/lib/server/business/display-currency";
 import { getCostHistory, getDepartments, getSeatAssignments, getSubscriptions, getVendors } from "@/lib/server/business/data";
 
 export const metadata = { title: "Licenses & Seats" };
@@ -16,7 +17,17 @@ export default async function LicensesPage(props: { searchParams: Promise<Search
   const q = await props.searchParams;
   const ctx = await requireBizContext("/business/licenses");
   const ws = ctx.workspace.id;
-  const [subs, assignments, history, departments, vendors] = await Promise.all([getSubscriptions(ws), getSeatAssignments(ws), getCostHistory(ws), getDepartments(ws), getVendors(ws)]);
+  const [billedSubs, assignments, billedHistory, departments, vendors, display] = await Promise.all([
+    getSubscriptions(ws),
+    getSeatAssignments(ws),
+    getCostHistory(ws),
+    getDepartments(ws),
+    getVendors(ws),
+    workspaceDisplay(ctx),
+  ]);
+  // Seat costs in the workspace currency (ECB rate).
+  const subs = display.rows(billedSubs, SUB_MONEY);
+  const history = display.rows(billedHistory, ["priceMinor"]);
   const pref = ctx.workspace.defaultCurrency;
 
   // Filters are only honoured when they name something in this workspace.
@@ -70,7 +81,12 @@ export default async function LicensesPage(props: { searchParams: Promise<Search
       <PageHeader
         title="Licenses & Seats"
         crumbs={[{ label: "Overview", href: "/business/dashboard" }, { label: "Licenses & Seats" }]}
-        description="Purchased seats against the seats your team has assigned or reported in use, for active and trial subscriptions."
+        description={
+          <>
+            Purchased seats against the seats your team has assigned or reported in use, for active and trial subscriptions.
+            <FxNoteLine note={display.note()} dateFormat={ctx.workspace.dateFormat} className="mt-1.5" />
+          </>
+        }
       />
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">

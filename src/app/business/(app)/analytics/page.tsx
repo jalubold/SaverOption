@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { BasisBadge, basisInfo } from "@/components/business/analytics/basis-badge";
 import { BarList, Sparkline, TrendChart, type BarRow } from "@/components/business/charts";
 import { SoftwareLogo, SoftwareName } from "@/components/business/software-logo";
-import { Card, EmptyState, Kpi, LinkButton, Meter, Money, PageHeader, Pill, TableWrap } from "@/components/business/ui";
+import { Card, EmptyState, FxNoteLine, Kpi, LinkButton, Meter, Money, PageHeader, Pill, TableWrap } from "@/components/business/ui";
 import { buttonClass } from "@/components/ui/primitives";
 import { addMonths, addTo, annualized, formatIsoDate, formatMonth, formatMoney, intervalLabel, isRecurring, monthlyEquivalent, seatSummary, totalsList, type CurrencyTotals } from "@/lib/business/calc";
 import type { InsightBasis } from "@/lib/business/insights-calc";
@@ -12,6 +12,7 @@ import type { Group } from "@/lib/server/business/analytics";
 import { requireBizContext } from "@/lib/server/business/context";
 import { buildInsights } from "@/lib/server/business/insights";
 import { logoFor } from "@/lib/server/business/logos";
+import { workspaceDisplay } from "@/lib/server/business/display-currency";
 import { buildReport } from "@/lib/server/business/reports";
 
 export const metadata = { title: "Analytics" };
@@ -39,10 +40,11 @@ export default async function AnalyticsPage(props: { searchParams: Promise<Raw> 
     department: one(sp.department),
     vendor: one(sp.vendor),
   };
-  const report = await buildReport(ctx, raw);
+  const display = await workspaceDisplay(ctx);
+  const report = await buildReport(ctx, raw, { display });
   const { model, params, options } = report;
   const cur = report.chartCurrency;
-  const { insights, changes } = await buildInsights(ctx, { model });
+  const { insights, changes } = await buildInsights(ctx, { model, display });
   const s = model.summary;
 
   const reportsHref = `/business/reports?${new URLSearchParams({
@@ -136,8 +138,9 @@ export default async function AnalyticsPage(props: { searchParams: Promise<Raw> 
         crumbs={[{ label: "Overview", href: "/business/dashboard" }, { label: "Analytics" }]}
         description={
           <>
-            How spending changes over time, where it&apos;s concentrated and what&apos;s committed next — {formatIsoDate(params.from, fmt)} to {formatIsoDate(params.to, fmt)}. Totals stay per
-            currency; charts use <strong className="font-medium text-fg">{cur}</strong>.
+            How spending changes over time, where it&apos;s concentrated and what&apos;s committed next — {formatIsoDate(params.from, fmt)} to {formatIsoDate(params.to, fmt)}, in{" "}
+            <strong className="font-medium text-fg">{cur}</strong>.
+            <FxNoteLine note={model.fx} dateFormat={fmt} className="mt-1.5" />
           </>
         }
         actions={
@@ -157,9 +160,9 @@ export default async function AnalyticsPage(props: { searchParams: Promise<Raw> 
             ))}
           </select>
         </Control>
-        <Control label="Currency">
+        <Control label="Billed in">
           <select name="currency" defaultValue={params.currency ?? ""} className="biz-select">
-            <option value="">All currencies</option>
+            <option value="">Any currency</option>
             {options.currencies.map((c) => (
               <option key={c} value={c}>
                 {c}

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
-import { formatMoney, totalsList, type CurrencyTotals } from "@/lib/business/calc";
+import { formatIsoDate, formatMoney, totalsList, type CurrencyTotals } from "@/lib/business/calc";
+import { formatRate, type FxNote, type OriginalMoney } from "@/lib/business/fx";
 import { Icon, type IconProps } from "@/components/ui/icon";
 import { buttonClass, cn } from "@/components/ui/primitives";
 
@@ -162,6 +163,27 @@ export function Money({ totals, preferred, compact, empty = "—", className }: 
       )}
     </span>
   );
+}
+
+/** "Amounts billed in EUR are shown in USD at the ECB reference rate of Oct 23, 2026 (€1 = $1.08)." */
+export function FxNoteLine({ note, dateFormat, className }: { note: FxNote | null; dateFormat?: string; className?: string }) {
+  if (!note) return null;
+  return (
+    <p className={cn("flex items-start gap-1.5 text-[12px] leading-relaxed text-faint", className)}>
+      <Icon name="info" size={13} className="mt-[3px] shrink-0" />
+      <span>
+        Amounts billed in {note.rates.map((r) => r.currency).join(", ")} are shown in {note.to} at the European Central Bank reference rate of{" "}
+        {formatIsoDate(note.date, dateFormat ?? "MMM d, yyyy")} ({note.rates.map((r) => formatRate(r.currency, note.to, r.rate)).join(", ")}).
+      </span>
+    </p>
+  );
+}
+
+/** Under a converted amount: what it's actually billed in ("billed €99.00/mo"). */
+export function BilledAs({ original, field = "priceMinor", suffix = "", className }: { original?: OriginalMoney; field?: string; suffix?: string; className?: string }) {
+  const v = original?.values[field];
+  if (!original || v === null || v === undefined) return null;
+  return <span className={cn("block whitespace-nowrap text-[11.5px] font-normal text-faint", className)}>billed {formatMoney(v, original.currency)}{suffix}</span>;
 }
 
 export function EmptyState({ icon = "box", title, children, action }: { icon?: IconProps["name"]; title: string; children?: ReactNode; action?: ReactNode }) {

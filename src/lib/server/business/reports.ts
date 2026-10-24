@@ -20,6 +20,7 @@ import {
 import { OPPORTUNITY_TYPES, SOFTWARE_CATEGORIES, type OpportunityType, type SoftwareCategory } from "@/lib/business/constants";
 import { buildSpendModel, type SpendModel } from "@/lib/server/business/analytics";
 import type { BizContext } from "@/lib/server/business/context";
+import type { DisplayCurrency } from "@/lib/server/business/display-currency";
 import {
   getActivity,
   getCostHistory,
@@ -227,7 +228,9 @@ const monthsBetween = (from: string, to: string): string[] => {
   return out;
 };
 
-export async function buildReport(ctx: BizContext, raw: Raw): Promise<Report> {
+/** With `display`, every amount is shown in the workspace currency (the page and its CSV both pass it, so they match). */
+export async function buildReport(ctx: BizContext, raw: Raw, opts: { display?: DisplayCurrency } = {}): Promise<Report> {
+  const d = opts.display;
   const ws = ctx.workspace.id;
   const [allSubs, departments, vendors] = await Promise.all([getSubscriptions(ws), getDepartments(ws), getVendors(ws)]);
   const pref = ctx.workspace.defaultCurrency;
@@ -244,14 +247,17 @@ export async function buildReport(ctx: BizContext, raw: Raw): Promise<Report> {
     vendorId: params.vendor,
     currency: params.currency,
   };
-  const [model, history, allPayments, activity] = await Promise.all([
-    buildSpendModel(ctx, filters),
+  const [model, rawHistory, rawPayments, activity] = await Promise.all([
+    buildSpendModel(ctx, filters, { display: d }),
     getCostHistory(ws),
     getPayments(ws),
     getActivity(ws, { limit: 200 }),
   ]);
+  const history = d ? d.rows(rawHistory, ["priceMinor"]) : rawHistory;
+  const allPayments = d ? d.rows(rawPayments, ["amountMinor"]) : rawPayments;
   const inSlice = new Set(model.subs.map((s) => s.id));
-  const chartCurrency = params.currency ?? (model.currencies.includes(pref) || model.currencies.length === 0 ? pref : model.currencies[0]);
+  // Converted, the currency filter only chooses what's included ("billed in"); amounts are all in the workspace currency.
+  const chartCurrency = (d ? null : params.currency) ?? (model.currencies.includes(pref) || model.currencies.length === 0 ? pref : model.currencies[0]);
 
   // Run-rate trend: the shared runRateByMonth over the range's months (never past this month).
   const currentMonth = ctx.today.slice(0, 7);
@@ -326,6 +332,7 @@ export async function buildReport(ctx: BizContext, raw: Raw): Promise<Report> {
     (r) => r.confirmedOn >= params.from && r.confirmedOn <= params.to && (!filtered || (r.subscriptionId !== null && inSlice.has(r.subscriptionId))),
   );
 
+  if (d) model.fx = d.note();
   return {
     params,
     invalid,

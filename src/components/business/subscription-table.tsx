@@ -22,6 +22,8 @@ export interface SubscriptionRowView {
   statusLabel: string;
   archived: boolean;
   price: string | null;
+  /** When the price is shown converted: what it's billed as ("€99.00/mo"). */
+  billed?: string | null;
   monthly: string | null;
   renewal: string | null;
   renewalDays: number | null;
@@ -188,7 +190,10 @@ export function SubscriptionTable({
                 <td className="whitespace-nowrap">
                   {r.archived ? <Pill tone="outline">Archived</Pill> : <StatusPill status={r.status} label={r.statusLabel} />}
                 </td>
-                <td className="num">{r.price ?? <span className="text-faint">No price</span>}</td>
+                <td className="num">
+                  {r.price ?? <span className="text-faint">No price</span>}
+                  {r.billed && <span className="block text-[11.5px] font-normal text-faint">billed {r.billed}</span>}
+                </td>
                 <td className="num">{r.monthly ?? <span className="text-faint">—</span>}</td>
                 <td className="whitespace-nowrap">
                   {r.renewal ? (

@@ -572,7 +572,7 @@ export const guides: DocPage[] = [
         blocks: [
           {
             type: "p",
-            text: "Each subscription keeps the currency it's billed in. The headline totals on the dashboard and the subscriptions list are shown in the workspace's default currency: other currencies are converted at the European Central Bank's daily euro reference rate, and the converted amounts, the rate and its date are shown underneath. Lists, charts, reports and exports stay per currency. If the rates can't be fetched, or a currency has no ECB rate, the totals are shown per currency instead.",
+            text: "Each subscription keeps the currency it's billed in. Across the app — totals, charts, tables, reports and savings — amounts are shown in the workspace's default currency (Settings → Workspace): other currencies are converted at the European Central Bank's daily euro reference rate, with the billed amount underneath (\"billed €99.00/mo\") and the rate and its date noted on the page. A subscription's billing details, cost history and payments, the subscription and workspace exports, and MCP tool results keep each record's own currency. If the rates can't be fetched, or a currency has no ECB rate, those amounts stay in their own currency.",
           },
         ],
       },

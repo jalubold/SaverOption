@@ -4,7 +4,7 @@ import { RadialGauge } from "@/components/business/charts";
 import { LogoTitle } from "@/components/business/logo-title";
 import { ArchiveSoftwareButton } from "@/components/business/record-forms";
 import { SoftwareLogo } from "@/components/business/software-logo";
-import { Card, DefinitionList, EmptyState, InlineNote, Kpi, LinkButton, Money, PageHeader, Pill, StatusPill, TableWrap } from "@/components/business/ui";
+import { BilledAs, Card, DefinitionList, EmptyState, FxNoteLine, InlineNote, Kpi, LinkButton, Money, PageHeader, Pill, StatusPill, TableWrap } from "@/components/business/ui";
 import { Icon } from "@/components/ui/icon";
 import { daysBetween, formatIsoDate, formatMoney, isLive, licenseTotals, monthlyEquivalent, periodSuffix, seatSummary, summarizeSpend, totalsList } from "@/lib/business/calc";
 import { categoryLabels, OVERLAP_PRONE_CATEGORIES, softwareStatusLabels, subscriptionStatusLabels } from "@/lib/business/constants";
@@ -12,6 +12,7 @@ import { isUuid } from "@/lib/business/form";
 import { can, canEditRecord } from "@/lib/business/permissions";
 import { alternativesFor, liveOffersFor, matchCatalogProduct, verificationLabel } from "@/lib/server/business/catalog-match";
 import { requireBizContext } from "@/lib/server/business/context";
+import { SUB_MONEY, workspaceDisplay } from "@/lib/server/business/display-currency";
 import { getActivity, getSoftware, getSoftwareList, getSubscriptions } from "@/lib/server/business/data";
 import { offerTypeLabels } from "@/lib/labels";
 
@@ -26,8 +27,12 @@ export default async function SoftwarePage(props: { params: Promise<{ id: string
   const sw = await getSoftware(ctx, id);
   if (!sw) notFound();
   const ws = ctx.workspace.id;
-  const [all, inventory] = await Promise.all([getSubscriptions(ws), getSoftwareList(ws)]);
-  const subs = all.filter((s) => s.softwareId === id);
+  const [billedAll, inventory, display] = await Promise.all([getSubscriptions(ws), getSoftwareList(ws), workspaceDisplay(ctx)]);
+  // Costs in the workspace currency (ECB rate), with what each plan is billed in.
+  const subs = display.rows(
+    billedAll.filter((s) => s.softwareId === id),
+    SUB_MONEY,
+  );
   const current = subs.filter((s) => !s.archived);
   const [activity, deals] = await Promise.all([getActivity(ws, { entityIds: [id, ...subs.map((s) => s.id)], limit: 30 }), liveOffersFor(sw.catalogProductId)]);
   const alternatives = alternativesFor(sw);
@@ -67,10 +72,13 @@ export default async function SoftwarePage(props: { params: Promise<{ id: string
           </LogoTitle>
         }
         description={
-          <span className="flex flex-wrap items-center gap-2">
-            <StatusPill status={sw.status} label={softwareStatusLabels[sw.status]} />
-            <span>{[sw.vendorName, categoryLabels[sw.category]].filter(Boolean).join(" · ")}</span>
-          </span>
+          <>
+            <span className="flex flex-wrap items-center gap-2">
+              <StatusPill status={sw.status} label={softwareStatusLabels[sw.status]} />
+              <span>{[sw.vendorName, categoryLabels[sw.category]].filter(Boolean).join(" · ")}</span>
+            </span>
+            <FxNoteLine note={display.note()} dateFormat={ctx.workspace.dateFormat} className="mt-1.5" />
+          </>
         }
         crumbs={[{ label: "Software Inventory", href: "/business/software" }, { label: sw.name }]}
         actions={
@@ -165,7 +173,10 @@ export default async function SoftwarePage(props: { params: Promise<{ id: string
                             </Link>
                           </td>
                           <td>{s.archived ? <Pill tone="outline">Archived</Pill> : <StatusPill status={s.status} label={subscriptionStatusLabels[s.status]} />}</td>
-                          <td className="num">{s.priceMinor !== null ? `${formatMoney(s.priceMinor, s.currency)}${periodSuffix(s)}` : <span className="text-faint">No price</span>}</td>
+                          <td className="num">
+                            {s.priceMinor !== null ? `${formatMoney(s.priceMinor, s.currency)}${periodSuffix(s)}` : <span className="text-faint">No price</span>}
+                            <BilledAs original={s.original} suffix={periodSuffix(s)} />
+                          </td>
                           <td className="num">{m !== null ? formatMoney(Math.round(m), s.currency) : "—"}</td>
                           <td className="whitespace-nowrap">{d(s.nextRenewalDate)}</td>
                           <td className="num">{st.purchased !== null ? `${st.assigned} / ${st.purchased}` : "—"}</td>

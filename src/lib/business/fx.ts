@@ -8,6 +8,19 @@ import { currencyDigits, formatMoney, totalsList, type CurrencyTotals } from "./
  * unconverted (the caller falls back to per-currency totals).
  */
 
+/** The currency and amounts a record was stored with, kept when it's shown converted. */
+export interface OriginalMoney {
+  currency: string;
+  values: Record<string, number | null>;
+}
+
+/** For a "converted at …" note: the rate date and each converted currency's rate into `to`. */
+export interface FxNote {
+  to: string;
+  date: string;
+  rates: { currency: string; rate: number }[];
+}
+
 export interface FxRates {
   /** The ECB reference date (YYYY-MM-DD). */
   date: string;
@@ -71,13 +84,13 @@ export function convertedParts(c: ConvertedTotal): string {
   return c.converted.map((p) => formatMoney(p.amount, p.currency)).join(" + ");
 }
 
+/** "€1 = $1.0874": one unit of `from` in `to`. */
+export function formatRate(from: string, to: string, rate: number): string {
+  const one = formatMoney(10 ** currencyDigits(from), from, { whole: true });
+  return `${one} = ${new Intl.NumberFormat("en-US", { style: "currency", currency: to, maximumFractionDigits: rate >= 100 ? 2 : 4 }).format(rate)}`;
+}
+
 /** "€1 = $1.0874" for each converted currency. */
 export function rateText(c: ConvertedTotal): string {
-  return c.converted
-    .map((p) => {
-      const one = formatMoney(10 ** currencyDigits(p.currency), p.currency, { whole: true });
-      const rate = new Intl.NumberFormat("en-US", { style: "currency", currency: c.currency, maximumFractionDigits: p.rate >= 100 ? 2 : 4 }).format(p.rate);
-      return `${one} = ${rate}`;
-    })
-    .join(", ");
+  return c.converted.map((p) => formatRate(p.currency, c.currency, p.rate)).join(", ");
 }

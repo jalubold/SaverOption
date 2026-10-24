@@ -66,7 +66,7 @@ export default async function ImportSubscriptionsPage(props: { searchParams: Pro
         <ul className="mt-4 list-disc space-y-1 pl-5 text-[13px] text-muted">
           <li>Duplicates — the same software, plan, billing interval and currency as another row or an existing subscription — are skipped, never overwritten.</li>
           <li>Departments and owners are matched to the ones already in your workspace; unknown names are left blank rather than created.</li>
-          <li>Totals stay per currency. Nothing is converted between currencies.</li>
+          <li>Each subscription keeps the currency in the file; the app shows amounts in your workspace currency at the ECB reference rate.</li>
           <li>Imported records are marked “Imported from CSV” and “Not verified” until someone opens and saves them.</li>
         </ul>
       </Card>

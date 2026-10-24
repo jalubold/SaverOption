@@ -2,6 +2,7 @@ import { lastMonths, runRateByMonth } from "@/lib/business/calc";
 import { computeInsights, periodChanges, type Insight, type InsightsInput, type PeriodChange } from "@/lib/business/insights-calc";
 import { buildSpendModel, type SpendModel } from "@/lib/server/business/analytics";
 import type { BizContext } from "@/lib/server/business/context";
+import type { DisplayCurrency } from "@/lib/server/business/display-currency";
 import { getCostHistory, getPayments } from "@/lib/server/business/data";
 
 export type { Insight, InsightBasis, PeriodChange } from "@/lib/business/insights-calc";
@@ -11,9 +12,13 @@ export type { Insight, InsightBasis, PeriodChange } from "@/lib/business/insight
  * its own records — see src/lib/business/insights-calc.ts). Pass the spend
  * model when the caller already built one, so the totals match its page.
  */
-export async function buildInsights(ctx: BizContext, opts: { model?: SpendModel } = {}): Promise<{ insights: Insight[]; changes: PeriodChange[]; input: InsightsInput }> {
+export async function buildInsights(ctx: BizContext, opts: { model?: SpendModel; display?: DisplayCurrency } = {}): Promise<{ insights: Insight[]; changes: PeriodChange[]; input: InsightsInput }> {
   const ws = ctx.workspace.id;
-  const [model, history, payments] = await Promise.all([opts.model ?? buildSpendModel(ctx, {}, { refreshSavings: false }), getCostHistory(ws), getPayments(ws)]);
+  const d = opts.display;
+  const [model, rawHistory, rawPayments] = await Promise.all([opts.model ?? buildSpendModel(ctx, {}, { refreshSavings: false, display: d }), getCostHistory(ws), getPayments(ws)]);
+  // Same currency as the model's subscriptions (pass the display the model was built with).
+  const history = d ? d.rows(rawHistory, ["priceMinor"]) : rawHistory;
+  const payments = d ? d.rows(rawPayments, ["amountMinor"]) : rawPayments;
   const ids = new Set(model.subs.map((s) => s.id));
   const runRate = runRateByMonth(
     model.subs.map((s) => ({

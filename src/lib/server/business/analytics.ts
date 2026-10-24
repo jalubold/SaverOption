@@ -27,6 +27,7 @@ import {
   type Software,
   type Subscription,
 } from "@/lib/server/business/data";
+import { SUB_MONEY, type DisplayCurrency, type FxNote } from "@/lib/server/business/display-currency";
 import { refreshSavings } from "@/lib/server/business/savings-sync";
 
 /**
@@ -80,6 +81,9 @@ export interface SpendModel {
   realized: CurrencyTotals;
   realizedRows: RealizedSavingRow[];
   attention: AttentionItem[];
+  /** With a display currency: the currencies subscriptions are billed in (before conversion), and the rates used. */
+  billedCurrencies: string[];
+  fx: FxNote | null;
 }
 
 const UNASSIGNED = "__none__";
@@ -93,17 +97,33 @@ export function groupsFrom(subs: Subscription[], keyOf: (s: Subscription) => str
     .sort((a, b) => Math.max(...Object.values(b.totals)) - Math.max(...Object.values(a.totals)));
 }
 
-export async function buildSpendModel(ctx: BizContext, filters: SpendFilters = {}, opts: { refreshSavings?: boolean; months?: number; renewalWindowDays?: number } = {}): Promise<SpendModel> {
+/**
+ * Pass `display` to show every amount in the workspace currency (converted at
+ * the ECB rate, see display-currency.ts); without it — as the MCP tools call
+ * it — amounts stay in each subscription's own currency. Filters, including
+ * the currency filter, always apply to the currency a subscription is billed in.
+ */
+export async function buildSpendModel(
+  ctx: BizContext,
+  filters: SpendFilters = {},
+  opts: { refreshSavings?: boolean; months?: number; renewalWindowDays?: number; display?: DisplayCurrency } = {},
+): Promise<SpendModel> {
   const ws = ctx.workspace.id;
-  const [all, software, history, realizedRows] = await Promise.all([getSubscriptions(ws), getSoftwareList(ws), getCostHistory(ws), getRealizedSavings(ws)]);
-  const opportunities = opts.refreshSavings === false ? [] : await refreshSavings(ctx);
+  const d = opts.display;
+  const [billed, software, rawHistory, rawRealized] = await Promise.all([getSubscriptions(ws), getSoftwareList(ws), getCostHistory(ws), getRealizedSavings(ws)]);
+  const rawOpps = opts.refreshSavings === false ? [] : await refreshSavings(ctx);
+  const history = d ? d.rows(rawHistory, ["priceMinor"]) : rawHistory;
+  const realizedRows = d ? d.rows(rawRealized, ["amountMinor"]) : rawRealized;
+  const opportunities = d ? d.rows(rawOpps, ["estMonthlyMinor"]) : rawOpps;
+  const billedCurrencies = [...new Set(billed.filter((s) => !s.archived).map((s) => s.currency))];
   const match = (s: Subscription) =>
     !s.archived &&
     (!filters.category || s.category === filters.category) &&
     (!filters.departmentId || (filters.departmentId === UNASSIGNED ? !s.departmentId : s.departmentId === filters.departmentId)) &&
     (!filters.vendorId || s.vendorId === filters.vendorId) &&
     (!filters.currency || s.currency === filters.currency);
-  const subs = all.filter(match);
+  const subs = d ? d.rows(billed.filter(match), SUB_MONEY) : billed.filter(match);
+  const all = d ? d.rows(billed, SUB_MONEY) : billed;
   const ids = new Set(subs.map((s) => s.id));
   const window = opts.renewalWindowDays ?? 30;
   const summary = summarizeSpend(subs, ctx.today, window);
@@ -141,7 +161,7 @@ export async function buildSpendModel(ctx: BizContext, filters: SpendFilters = {
     .slice(0, 6);
 
   const scopedOpps = opportunities.filter((o) => !o.subscriptionId || ids.has(o.subscriptionId) || (filters.category || filters.departmentId || filters.vendorId || filters.currency ? false : true));
-  const scopedRealized = realizedRows.filter((r) => !filters.currency || r.currency === filters.currency);
+  const scopedRealized = realizedRows.filter((r) => !filters.currency || (r.original?.currency ?? r.currency) === filters.currency);
 
   return {
     subs,
@@ -163,6 +183,8 @@ export async function buildSpendModel(ctx: BizContext, filters: SpendFilters = {
     realized: realizedTotals(scopedRealized),
     realizedRows: scopedRealized,
     attention: attentionItems(ctx, subs, scopedOpps),
+    billedCurrencies: billedCurrencies.sort((a, b) => (a === pref ? -1 : b === pref ? 1 : a.localeCompare(b))),
+    fx: d?.note() ?? null,
   };
 }
 

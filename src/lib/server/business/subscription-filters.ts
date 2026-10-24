@@ -82,7 +82,8 @@ export function applySubscriptionFilters(subs: Subscription[], f: SubscriptionFi
     if (f.interval && s.billingInterval !== f.interval) return false;
     if (f.department && (f.department === "none" ? s.departmentId !== null : s.departmentId !== f.department)) return false;
     if (f.owner && (f.owner === "none" ? s.ownerPersonId !== null : s.ownerPersonId !== f.owner)) return false;
-    if (f.currency && s.currency !== f.currency) return false;
+    // The currency it's billed in, also when the list is shown converted.
+    if (f.currency && (s.original?.currency ?? s.currency) !== f.currency) return false;
     if (f.payment && (f.payment === "none" ? s.paymentMethod !== null : s.paymentMethod !== f.payment)) return false;
     if (f.renewal) {
       const d = s.nextRenewalDate && isIsoDate(s.nextRenewalDate) ? daysBetween(today, s.nextRenewalDate) : null;

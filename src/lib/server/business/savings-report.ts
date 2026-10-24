@@ -1,6 +1,7 @@
 import { daysBetween, formatIsoDate, formatMoney, isLive, totalsList, type CurrencyTotals } from "@/lib/business/calc";
 import { opportunityTypeLabels } from "@/lib/business/constants";
 import { buildSpendModel } from "@/lib/server/business/analytics";
+import type { DisplayCurrency } from "@/lib/server/business/display-currency";
 import { logActivity, type BizContext } from "@/lib/server/business/context";
 import { db } from "@/lib/server/db";
 
@@ -41,9 +42,10 @@ export interface SavingsReport {
 const money = (amount: number, currency: string): ReportMoney => ({ amount: Math.round(amount), currency, display: formatMoney(Math.round(amount), currency) });
 const list = (t: CurrencyTotals, pref: string) => totalsList(t, pref).map((x) => money(x.amount, x.currency));
 
-export async function buildSavingsReport(ctx: BizContext, opts: { title?: string; renewalDays?: number } = {}): Promise<SavingsReport> {
+/** Reports saved from the app pass `display` (amounts in the workspace currency); MCP keeps each currency. */
+export async function buildSavingsReport(ctx: BizContext, opts: { title?: string; renewalDays?: number; display?: DisplayCurrency } = {}): Promise<SavingsReport> {
   const days = Math.min(365, Math.max(7, opts.renewalDays ?? 90));
-  const model = await buildSpendModel(ctx, {}, { renewalWindowDays: days });
+  const model = await buildSpendModel(ctx, {}, { renewalWindowDays: days, display: opts.display });
   const pref = ctx.workspace.defaultCurrency;
   const open = model.opportunities.filter((o) => o.status === "open" || o.status === "reviewed");
   const byType = new Map<string, number>();
@@ -58,7 +60,11 @@ export async function buildSavingsReport(ctx: BizContext, opts: { title?: string
     model.summary.missingPrice ? `${model.summary.missingPrice} active subscription(s) have no price and are left out of the totals.` : null,
     model.summary.missingRenewalDate ? `${model.summary.missingRenewalDate} live subscription(s) have no renewal date.` : null,
     unverified ? `${unverified} imported subscription(s) haven't been reviewed since the import.` : null,
-    model.currencies.length > 1 ? `Spending is in ${model.currencies.length} currencies (${model.currencies.join(", ")}); totals are shown per currency and never converted.` : null,
+    model.fx
+      ? `Amounts billed in ${model.fx.rates.map((r) => r.currency).join(", ")} are converted to ${model.fx.to} at the European Central Bank reference rate of ${model.fx.date} (${model.fx.rates.map((r) => `1 ${r.currency} = ${r.rate.toFixed(4)} ${model.fx!.to}`).join(", ")}).`
+      : model.currencies.length > 1
+        ? `Spending is in ${model.currencies.length} currencies (${model.currencies.join(", ")}); totals are shown per currency and never converted.`
+        : null,
   ].filter((x): x is string => Boolean(x));
 
   return {
