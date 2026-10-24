@@ -176,7 +176,9 @@ export default async function McpLandingPage() {
             </div>
             <div className="so-rise relative min-w-0" style={{ "--d": "450ms" } as CSSProperties}>
               <div aria-hidden="true" className="pointer-events-none absolute inset-x-[10%] top-[10%] h-[70%] rounded-full bg-accent/30 blur-[90px]" />
-              <McpChatPreview className="relative" />
+              <div className="so-beam relative rounded-[20px]">
+                <McpChatPreview />
+              </div>
             </div>
           </Container>
         </section>

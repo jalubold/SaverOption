@@ -523,7 +523,7 @@
     clip-path: inset(0 100% 0 0);
   }
 }
-@keyframes so-spin {
+@keyframes so-rotate {
   to {
     transform: rotate(360deg);
   }
@@ -647,7 +647,7 @@
   /* MCP page: a "working" spinner that settles into a check when the answer arrives. */
   .so-step-spinner {
     animation:
-      so-spin 1s linear infinite,
+      so-rotate 1s linear infinite,
       so-vanish 0.25s ease 2.35s forwards;
   }
   .so-step-done {
