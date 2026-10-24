@@ -61,7 +61,7 @@ export function LogoStrip() {
               Track every tool you pay for — <span className="text-muted">Slack, Notion, Figma, AWS, and anything else.</span>
             </h2>
           </div>
-          <p className="inline-flex w-fit items-center gap-2.5 rounded-full border border-dashed border-line-strong bg-bg py-1.5 pl-1.5 pr-4 text-[13.5px] text-muted">
+          <p className="inline-flex w-fit items-center gap-2.5 rounded-2xl border border-dashed border-line-strong bg-bg px-2.5 py-2 text-[13.5px] text-muted sm:rounded-full sm:px-3">
             <SoftwareLogo name="Acme Payroll" size={28} />
             <span>
               <Icon name="plus" size={12} className="mr-1 inline align-[-1px] text-accent-ink" />

@@ -98,7 +98,7 @@ export default async function BusinessLandingPage(props: { searchParams: Promise
   const faq = [...baseFaq, ...pricingFaq(offers, contact)];
 
   const cta = user ? (
-    <Link href="/business/dashboard" className={buttonClass("primary", "lg")}>
+    <Link href="/business/dashboard" className={buttonClass("primary", "lg", "w-full")}>
       Open your dashboard <Icon name="arrow-right" size={15} />
     </Link>
   ) : (
@@ -240,8 +240,9 @@ export default async function BusinessLandingPage(props: { searchParams: Promise
             Track subscriptions, manage renewals, optimize licenses, and uncover opportunities to save — all from one workspace.
           </p>
           <div className="so-rise mt-9 flex w-full flex-wrap items-center justify-center gap-3" style={{ "--d": "680ms" } as CSSProperties}>
-            <Magnetic className="w-full max-w-xs sm:w-auto">{cta}</Magnetic>
-            <Link href="#features" className={buttonClass("secondary", "lg")}>
+            {/* Both buttons share one width, side by side or stacked. */}
+            <Magnetic className="w-full max-w-xs">{cta}</Magnetic>
+            <Link href="#features" className={buttonClass("secondary", "lg", "w-full max-w-xs")}>
               Explore features
             </Link>
           </div>
