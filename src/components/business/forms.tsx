@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useId, useRef, useState, type ComponentProps, type ReactNode } from "react";
 import type { FormState } from "@/lib/business/form";
-import { FieldError, FormMessage, inputClass, SubmitButton, useFormAction } from "@/components/ui/form";
+import { FieldError, FormMessage, inputClass, selectClass, SubmitButton, useFormAction } from "@/components/ui/form";
 import { buttonClass, cn } from "@/components/ui/primitives";
 
 /**
@@ -115,7 +115,7 @@ export function SelectField({
       <Label htmlFor={id} optional={optional}>
         {label}
       </Label>
-      <select id={id} name={name} aria-invalid={Boolean(error)} aria-describedby={error || hint ? `${id}-d` : undefined} className={inputClass(error, "h-10 text-[14px]")} {...select}>
+      <select id={id} name={name} aria-invalid={Boolean(error)} aria-describedby={error || hint ? `${id}-d` : undefined} className={selectClass(error, "h-10 text-[14px]")} {...select}>
         {placeholder !== undefined && <option value="">{placeholder}</option>}
         {options.map((o) => (
           <option key={o.value} value={o.value}>

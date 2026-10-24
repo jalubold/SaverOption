@@ -28,6 +28,15 @@ export function inputClass(error?: string | boolean, extra?: string) {
   );
 }
 
+/** Like inputClass, for a native <select>: our own chevron (.field-select) with room between it, the text and the edge. */
+export function selectClass(error?: string | boolean, extra?: string) {
+  return cn(
+    "field-select mt-1.5 h-11 w-full appearance-none rounded-[10px] border bg-bg pl-3 pr-10 text-[15px] text-fg outline-none transition-colors focus:ring-4 disabled:cursor-not-allowed disabled:opacity-60",
+    error ? "border-danger focus:border-danger focus:ring-danger/15" : "border-line-strong focus:border-accent focus:ring-accent/20",
+    extra,
+  );
+}
+
 export function FieldError({ id, children }: { id?: string; children?: ReactNode }) {
   if (!children) return null;
   return (
