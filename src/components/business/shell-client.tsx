@@ -114,10 +114,13 @@ export function SidebarFrame({ sidebar, collapsedSidebar, children }: { sidebar:
       <div className={cn("theme-dark hidden shrink-0 border-r border-line bg-bg transition-[width] duration-150 lg:block", collapsed ? "w-[68px]" : "w-[248px]")}>
         <aside className="sticky top-0 flex h-dvh flex-col">
           <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-3 pb-3 [&>*]:shrink-0">{collapsed ? collapsedSidebar : sidebar}</div>
-          <button type="button" onClick={toggle} className="m-3 mt-0 flex h-8 items-center justify-center gap-2 rounded-lg text-[12.5px] text-faint hover:bg-subtle hover:text-fg" aria-pressed={collapsed}>
-            <Icon name="panel-left" size={15} />
-            <span className={collapsed ? "sr-only" : undefined}>{collapsed ? "Expand sidebar" : "Collapse sidebar"}</span>
-          </button>
+          {/* A footer of its own, so the end of a long, scrolling list never runs into it. */}
+          <div className="shrink-0 border-t border-line px-3 py-2.5">
+            <button type="button" onClick={toggle} className="flex h-8 w-full items-center justify-center gap-2 rounded-lg text-[12.5px] text-faint hover:bg-subtle hover:text-fg" aria-pressed={collapsed}>
+              <Icon name="panel-left" size={15} />
+              <span className={collapsed ? "sr-only" : undefined}>{collapsed ? "Expand sidebar" : "Collapse sidebar"}</span>
+            </button>
+          </div>
         </aside>
       </div>
       {open && (

@@ -4,6 +4,7 @@ import { createDemoAction, switchWorkspaceAction } from "@/app/business/actions/
 import type { BillingNotice, TrialBadge } from "@/lib/business/billing";
 import { roleLabels } from "@/lib/business/constants";
 import { can } from "@/lib/business/permissions";
+import { assistantConfigured } from "@/lib/server/business/assistant";
 import { displayName, type BizContext } from "@/lib/server/business/context";
 import { BrandMark } from "@/components/brand/logo";
 import { Icon } from "@/components/ui/icon";
@@ -12,9 +13,9 @@ import { MobileMenuButton, Popover, QuickJump, SidebarFrame, SidebarNav, type Na
 
 /**
  * The sidebar: a flat list, most-used first, with plain section labels —
- * Overview and the assistant, then the records people manage, what they tell
- * them, and the workspace. Departments and Integrations live under Settings
- * (and in Quick jump), so the list stays short.
+ * the overview, the records people manage, what they tell them, and the
+ * workspace (with AI clients). Departments, Integrations and the in-app assistant
+ * (when it's configured) are in Settings or Quick jump, so the list stays short.
  */
 const groups: NavGroup[] = [
   {
@@ -22,7 +23,6 @@ const groups: NavGroup[] = [
     label: null,
     items: [
       { label: "Overview", href: "/business/dashboard", icon: "home", keywords: "dashboard home" },
-      { label: "AI Assistant", href: "/business/assistant", icon: "sparkles", keywords: "chat claude ask ai" },
     ],
   },
   {
@@ -61,10 +61,11 @@ const morePages: QuickAction[] = [
   { label: "Departments", href: "/business/settings/departments", icon: "building", group: "Workspace", keywords: "teams org" },
   { label: "Integrations", href: "/business/integrations", icon: "link", group: "Workspace", keywords: "csv import connect" },
 ];
+const assistantPage: QuickAction = { label: "AI Assistant", href: "/business/assistant", icon: "sparkles", group: "AI", keywords: "chat claude ask ai" };
 
 /** Pages from the sidebar plus common actions, for Quick jump. */
 function quickActions(ctx: BizContext): QuickAction[] {
-  const pages = [...groups.flatMap((g) => g.items.map((it) => ({ ...it, group: g.label ?? "Overview" }))), ...morePages];
+  const pages = [...groups.flatMap((g) => g.items.map((it) => ({ ...it, group: g.label ?? "Overview" }))), ...morePages, ...(assistantConfigured() ? [assistantPage] : [])];
   const actions: QuickAction[] = [
     ...(can(ctx.role, "records.manage")
       ? [

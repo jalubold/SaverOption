@@ -211,13 +211,14 @@ export function ConfirmSubmit({
       <button ref={btn} type="button" disabled={pending} className={buttonClass(variant, size, className)} onClick={() => ref.current?.showModal()}>
         {children}
       </button>
-      <dialog ref={ref} aria-labelledby={titleId} className="m-auto w-[min(92vw,26rem)] rounded-2xl border border-line bg-surface p-0 text-fg shadow-xl backdrop:bg-black/40">
-        <div className="p-5">
+      {/* Centred on its own; it doesn't inherit the alignment of the table cell or form it sits in. */}
+      <dialog ref={ref} aria-labelledby={titleId} className="m-auto w-[min(92vw,26rem)] rounded-2xl border border-line bg-surface p-0 text-center text-fg shadow-xl backdrop:bg-black/40">
+        <div className="p-6">
           <h2 id={titleId} className="text-[16px] font-semibold">
             {title}
           </h2>
-          <div className="mt-2 text-[13.5px] text-muted">{body}</div>
-          <div className="mt-5 flex justify-end gap-2">
+          <div className="mt-2 text-[13.5px] leading-relaxed text-muted">{body}</div>
+          <div className="mt-5 flex justify-center gap-2">
             <button type="button" className={buttonClass("secondary", "sm")} onClick={() => ref.current?.close()}>
               Cancel
             </button>
