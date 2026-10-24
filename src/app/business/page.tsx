@@ -5,6 +5,7 @@ import { GoogleButton } from "@/components/auth/auth-forms";
 import { byId, pricePerPeriod, trackable, usd } from "@/components/business/landing/example-data";
 import { LicensesVisual, RenewalsVisual, ReportsVisual, SavingsVisual, SpendVisual } from "@/components/business/landing/feature-visuals";
 import { HeroPreview } from "@/components/business/landing/hero-preview";
+import { PricingSwitch } from "@/components/business/pricing-switch";
 import { LogoStrip } from "@/components/business/landing/logo-strip";
 import { FeatureStory, Magnetic, PointerLight, PointerTilt, ScrollScrub, ScrollWords, type StoryItem } from "@/components/business/landing/luxe";
 import { FaqAccordion, IconTile } from "@/components/business/landing/sections";
@@ -18,7 +19,7 @@ import { buttonClass, Container, SectionHeading } from "@/components/ui/primitiv
 import { planLabels, PLANS, TRIAL_DAYS } from "@/lib/business/billing";
 import { formatMoney } from "@/lib/business/calc";
 import { assistantConfigured } from "@/lib/server/business/assistant";
-import { offerViews, type OfferView } from "@/lib/server/business/billing";
+import { offerViews, pricingInfo, type OfferView } from "@/lib/server/business/billing";
 import { businessReady, getBizSession } from "@/lib/server/business/context";
 import { businessContactEmail, planFeatures } from "@/lib/server/business/plans";
 import { googleSignInEnabled } from "@/lib/server/supabase";
@@ -510,10 +511,18 @@ function pricingFaq(offers: OfferView[], contact: string): { q: string; a: strin
   const pro = monthly(offers, "pro");
   const business = monthly(offers, "business");
   const prices = [pro && `Pro (${pro}/month)`, business && `Business (${business}/month)`].filter(Boolean).join(" or ");
+  const info = pricingInfo(offers);
+  const pcts = Object.values(info.savings).flatMap((x) => (x ? [x.pct] : []));
+  const save = pcts.length ? (pcts.every((p) => p === pcts[0]) ? `${pcts[0]}%` : `up to ${Math.max(...pcts)}%`) : null;
+  const yearly = info.yearly ? ` Yearly billing is also available${save ? ` and saves ${save} compared with paying monthly` : ""}.` : "";
   return [
     {
       q: "How much does it cost?",
-      a: `Every new workspace starts with a ${TRIAL_DAYS}-day free trial with everything included — no card needed. After that you choose a paid plan${prices ? `: ${prices}` : ""}. There's no free plan. Payments are handled by Creem.`,
+      a: `Every new workspace starts with a ${TRIAL_DAYS}-day free trial with everything included — no card needed. After that you choose a paid plan${prices ? `: ${prices}` : ""}.${yearly} There's no free plan. Payments are handled by Creem.`,
+    },
+    {
+      q: "Can we upgrade before the trial ends?",
+      a: "Yes. Owners and admins can subscribe at any time from Settings → Plan & billing; the paid plan starts once the payment is confirmed.",
     },
     {
       q: "What happens when the free trial ends?",
@@ -526,7 +535,9 @@ function pricingFaq(offers: OfferView[], contact: string): { q: string; a: strin
 
 /** Pro, Business and the contact-only options; prices come from Creem when it's configured. */
 function Pricing({ offers, contact, assistant, signedIn }: { offers: OfferView[]; contact: string; assistant: boolean; signedIn: boolean }) {
-  const start = signedIn ? "/business/settings/billing" : "/business/login?next=%2Fbusiness%2Fdashboard";
+  const start = signedIn ? "/business/settings/billing#plans" : "/business/login?next=%2Fbusiness%2Fdashboard";
+  const info = pricingInfo(offers);
+  const live = offers.some((o) => o.available);
   return (
     <section id="pricing" aria-labelledby="pricing-heading" className="relative scroll-mt-20 overflow-hidden border-b border-line">
       <Container className="py-20 sm:py-28">
@@ -538,33 +549,44 @@ function Pricing({ offers, contact, assistant, signedIn }: { offers: OfferView[]
                 Simple <em className="accent">pricing</em>
               </>
             }
-            description={`Every new workspace starts with a ${TRIAL_DAYS}-day free trial with everything included — no card needed. Then pick a plan; there's no free tier.`}
+            description={`Every new workspace starts with a ${TRIAL_DAYS}-day free trial with everything included — no card needed. Upgrade whenever you're ready; there's no free tier.`}
           />
         </div>
-        <SpotlightGroup>
-          <ul className="grid gap-4 lg:grid-cols-3">
-            {PLANS.map((plan) => {
-              const m = offers.find((o) => o.plan === plan && o.interval === "month")!;
-              const y = offers.find((o) => o.plan === plan && o.interval === "year")!;
-              return (
-                <li key={plan} className={`so-reveal so-spot lx-glass flex flex-col rounded-2xl p-6 ${plan === "business" ? "ring-1 ring-accent/40" : ""}`} data-pricing-plan={plan}>
+        <PricingSwitch dark savingsBadge={info.yearly ? info.badge : null} className={info.yearly ? "so-reveal" : "so-reveal [&>[data-pricing-switch]]:hidden"}>
+          <SpotlightGroup>
+            <ul className="mt-8 grid gap-4 lg:grid-cols-3">
+              {PLANS.map((plan) => (
+                <li key={plan} className={`so-spot lx-glass flex flex-col rounded-2xl p-6 ${plan === "business" ? "ring-1 ring-accent/40" : ""}`} data-pricing-plan={plan}>
                   <h3 className="text-[18px] font-semibold text-heading">{planLabels[plan]}</h3>
                   <p className="mt-1 text-[13.5px] text-muted">{plan === "pro" ? "For a team getting its software spend in order." : "For larger teams that need more members."}</p>
-                  <p className="mt-5">
-                    {m.priceMinor != null ? (
-                      <>
-                        <span className="display text-[2.6rem] leading-none text-heading">{formatMoney(m.priceMinor, m.currency)}</span>
-                        <span className="text-[14px] text-muted"> / month</span>
-                      </>
-                    ) : (
-                      <span className="text-[15px] text-muted">Contact us for pricing</span>
-                    )}
-                  </p>
-                  {y.priceMinor != null && (
-                    <p className="mt-1 text-[13px] text-faint">
-                      or {formatMoney(y.priceMinor, y.currency)} / year
-                    </p>
-                  )}
+                  {(["month", "year"] as const).map((i) => {
+                    const o = offers.find((x) => x.plan === plan && x.interval === i)!;
+                    const saved = i === "year" ? info.savings[plan] : null;
+                    const show = o.priceMinor !== null && (i === "month" || !live || o.available);
+                    return (
+                      <div key={i} className={i === "month" ? "group-data-[interval=year]/pricing:hidden" : "hidden group-data-[interval=year]/pricing:block"} data-pricing-interval={i}>
+                        <p className="mt-5">
+                          {show ? (
+                            <>
+                              <span className="display text-[2.6rem] leading-none text-heading">{formatMoney(o.priceMinor!, o.currency)}</span>
+                              <span className="text-[14px] text-muted"> / {i}</span>
+                            </>
+                          ) : (
+                            <span className="text-[15px] text-muted">{i === "year" ? "Yearly billing isn't available for this plan yet" : "Contact us for pricing"}</span>
+                          )}
+                        </p>
+                        <p className="mt-1 min-h-5 text-[13px] text-faint">
+                          {saved && show ? (
+                            <span className="text-emerald-300">
+                              ≈ {formatMoney(Math.round(o.priceMinor! / 12), o.currency)} / month · save {formatMoney(saved.perYear, saved.currency)} a year
+                            </span>
+                          ) : i === "month" && show ? (
+                            "Billed monthly"
+                          ) : null}
+                        </p>
+                      </div>
+                    );
+                  })}
                   <ul className="mt-5 grid gap-2 text-[14px] text-muted">
                     {planFeatures(plan, { assistant }).map((f) => (
                       <li key={f} className="flex gap-2">
@@ -579,21 +601,21 @@ function Pricing({ offers, contact, assistant, signedIn }: { offers: OfferView[]
                     </Link>
                   </div>
                 </li>
-              );
-            })}
-            <li className="so-reveal flex flex-col rounded-2xl border border-dashed border-line-strong p-6" data-pricing-plan="contact">
-              <h3 className="text-[18px] font-semibold text-heading">Self-Hosted &amp; White-Label</h3>
-              <p className="mt-1 text-[13.5px] text-muted">Run it on your own infrastructure, or offer it under your own brand.</p>
-              <p className="mt-5 text-[15px] text-muted">Arranged directly with us — no online checkout.</p>
-              <div className="mt-auto pt-6">
-                <a href={`mailto:${contact}?subject=${encodeURIComponent("Saver Option Business — Self-Hosted / White-Label inquiry")}`} className={buttonClass("secondary", "md", "w-full")}>
-                  <Icon name="mail" size={15} /> Contact us
-                </a>
-                <p className="mt-2 text-center text-[12px] text-faint">{contact}</p>
-              </div>
-            </li>
-          </ul>
-        </SpotlightGroup>
+              ))}
+              <li className="flex flex-col rounded-2xl border border-dashed border-line-strong p-6" data-pricing-plan="contact">
+                <h3 className="text-[18px] font-semibold text-heading">Self-Hosted &amp; White-Label</h3>
+                <p className="mt-1 text-[13.5px] text-muted">Run it on your own infrastructure, or offer it under your own brand.</p>
+                <p className="mt-5 text-[15px] text-muted">Arranged directly with us — no online checkout.</p>
+                <div className="mt-auto pt-6">
+                  <a href={`mailto:${contact}?subject=${encodeURIComponent("Saver Option Business — Self-Hosted / White-Label inquiry")}`} className={buttonClass("secondary", "md", "w-full")}>
+                    <Icon name="mail" size={15} /> Contact us
+                  </a>
+                  <p className="mt-2 text-center text-[12px] text-faint">{contact}</p>
+                </div>
+              </li>
+            </ul>
+          </SpotlightGroup>
+        </PricingSwitch>
         <p className="so-reveal mt-6 text-center text-[12.5px] text-faint">
           Payments are handled by Creem. Cancel any time; access continues to the end of the paid period. One free trial per account.
         </p>

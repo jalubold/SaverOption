@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { CancelForm, PortalForm } from "@/components/business/billing-forms";
+import { PricingSwitch } from "@/components/business/pricing-switch";
 import { Card, DefinitionList, InlineNote, LinkButton, PageHeader, Pill } from "@/components/business/ui";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, cn } from "@/components/ui/primitives";
@@ -20,7 +21,7 @@ import {
 import { formatMoney } from "@/lib/business/calc";
 import { can } from "@/lib/business/permissions";
 import { assistantConfigured } from "@/lib/server/business/assistant";
-import { checkoutConfigured, confirmCheckoutReturn, getBillingRecord, memberCapacity, offerViews, type OfferView } from "@/lib/server/business/billing";
+import { checkoutConfigured, confirmCheckoutReturn, getBillingRecord, memberCapacity, offerViews, pricingInfo, type OfferView } from "@/lib/server/business/billing";
 import { requireBizContext } from "@/lib/server/business/context";
 import { businessContactEmail, planFeatures } from "@/lib/server/business/plans";
 
@@ -78,9 +79,9 @@ export default async function BillingPage({ searchParams }: { searchParams: Prom
   const access = resolveAccess(record, { isDemo: ws.isDemo, now });
   const canManage = can(ctx.role, "billing.manage");
   const [offers, capacity] = await Promise.all([offerViews(), memberCapacity(ctx)]);
-  const configured = checkoutConfigured();
-  const hasYearly = offers.some((o) => o.interval === "year" && o.priceMinor !== null);
-  const interval: PlanInterval = sp.interval === "year" && hasYearly ? "year" : "month";
+  const configured = offers.some((o) => o.available) || (await checkoutConfigured());
+  const pricing = pricingInfo(offers);
+  const interval: PlanInterval = sp.interval === "year" && pricing.yearly ? "year" : "month";
   const contact = businessContactEmail();
   const status = statusOf(access, record, ws.timeZone, now);
   const subscribed = access.kind === "subscription";
@@ -181,56 +182,56 @@ export default async function BillingPage({ searchParams }: { searchParams: Prom
         )}
 
         {showPlans && (
-          <section aria-labelledby="plans-heading" id="plans">
-            <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
-              <div>
-                <h2 id="plans-heading" className="text-[16px] font-semibold text-fg">
-                  {access.kind === "trial" ? "Upgrade now" : "Choose a plan"}
-                </h2>
-                <p className="mt-0.5 text-[13px] text-muted">
-                  {access.kind === "trial"
-                    ? "You don't have to wait for the trial to end — subscribe whenever you're ready. The paid plan starts once Creem confirms the payment. "
-                    : ""}
-                  There&apos;s no free plan after the trial. Prices are confirmed with Creem before checkout.
-                </p>
-              </div>
-              {hasYearly && (
-                <div role="group" aria-label="Billing interval" className="inline-flex rounded-lg border border-line bg-surface p-0.5 text-[13px]">
-                  {(["month", "year"] as const).map((i) => (
-                    <Link
-                      key={i}
-                      href={`/business/settings/billing?interval=${i}#plans`}
-                      aria-current={interval === i ? "true" : undefined}
-                      className={cn("rounded-md px-3 py-1.5 font-medium", interval === i ? "bg-accent text-accent-fg" : "text-muted hover:text-fg")}
-                    >
-                      {intervalLabels[i]}
-                    </Link>
-                  ))}
-                </div>
-              )}
+          <section aria-labelledby="plans-heading" id="plans" className="scroll-mt-24">
+            <div className="mb-4">
+              <h2 id="plans-heading" className="text-[16px] font-semibold text-fg">
+                {access.kind === "trial" ? "Upgrade now" : "Choose a plan"}
+              </h2>
+              <p className="mt-0.5 text-[13px] text-muted">
+                {access.kind === "trial"
+                  ? "You don't have to wait for the trial to end — subscribe whenever you're ready. The paid plan starts once Creem confirms the payment. "
+                  : ""}
+                There&apos;s no free plan after the trial. Prices are confirmed with Creem before checkout.
+              </p>
             </div>
-            <div className="grid gap-4 md:grid-cols-2">
-              {PLANS.map((plan) => {
-                const o = offers.find((x) => x.plan === plan && x.interval === interval)!;
-                const price = priceText(o);
-                return (
+            <PricingSwitch initial={interval} savingsBadge={pricing.yearly ? pricing.badge : null} className={pricing.yearly ? undefined : "[&>[data-pricing-switch]]:hidden"}>
+              <div className="mt-4 grid gap-4 md:grid-cols-2">
+                {PLANS.map((plan) => (
                   <div key={plan} className={cn("biz-card flex flex-col p-5", plan === "business" && "ring-1 ring-accent/30")} data-plan={plan}>
                     <div className="flex items-baseline justify-between gap-2">
                       <h3 className="text-[17px] font-semibold text-fg">{planLabels[plan]}</h3>
-                      {o.creemTrialDays && <Pill tone="accent">{o.creemTrialDays}-day trial at checkout</Pill>}
                     </div>
-                    <p className="mt-3 text-fg">
-                      {price ? (
-                        <>
-                          <span className="text-[28px] font-semibold tracking-tight" data-price={o.priceSource ?? ""}>
-                            {price}
-                          </span>
-                          <span className="text-[13px] text-muted"> / {per[interval]}</span>
-                        </>
-                      ) : (
-                        <span className="text-[14px] text-muted">{intervalLabels[interval]} billing isn&apos;t offered for this plan yet.</span>
-                      )}
-                    </p>
+                    {(["month", "year"] as const).map((i) => {
+                      const o = offers.find((x) => x.plan === plan && x.interval === i)!;
+                      const price = priceText(o);
+                      const saved = i === "year" ? pricing.savings[plan] : null;
+                      return (
+                        <div key={i} className={i === "month" ? "group-data-[interval=year]/pricing:hidden" : "hidden group-data-[interval=year]/pricing:block"} data-card-interval={i}>
+                          {o.creemTrialDays && (
+                            <p className="mt-2">
+                              <Pill tone="accent">{o.creemTrialDays}-day trial at checkout</Pill>
+                            </p>
+                          )}
+                          <p className="mt-3 text-fg">
+                            {price && (i === "month" || !pricing.yearly || o.available || !configured) ? (
+                              <>
+                                <span className="text-[28px] font-semibold tracking-tight" data-price={o.priceSource ?? ""}>
+                                  {price}
+                                </span>
+                                <span className="text-[13px] text-muted"> / {per[i]}</span>
+                              </>
+                            ) : (
+                              <span className="text-[14px] text-muted">{intervalLabels[i]} billing isn&apos;t available for this plan yet.</span>
+                            )}
+                          </p>
+                          {saved && o.priceMinor !== null && (
+                            <p className="mt-1 text-[12.5px] text-success" data-yearly-saving>
+                              ≈ {formatMoney(Math.round(o.priceMinor / 12), o.currency)} / month · save {formatMoney(saved.perYear, saved.currency)} a year
+                            </p>
+                          )}
+                        </div>
+                      );
+                    })}
                     <ul className="mt-4 grid gap-1.5 text-[13px] text-muted">
                       {planFeatures(plan, { assistant }).map((f) => (
                         <li key={f} className="flex gap-2">
@@ -239,26 +240,31 @@ export default async function BillingPage({ searchParams }: { searchParams: Prom
                         </li>
                       ))}
                     </ul>
-                    <div className="mt-auto pt-5">
-                      {!canManage ? (
-                        <p className="text-[12.5px] text-faint">An owner or admin can subscribe.</p>
-                      ) : o.available ? (
-                        <Link href={`/business/settings/billing/checkout?plan=${plan}&interval=${interval}`} className={buttonClass(plan === "business" ? "primary" : "secondary", "md", "w-full")}>
-                          Continue with {planLabels[plan]}
-                        </Link>
-                      ) : (
-                        <p className="text-[12.5px] text-faint" data-unavailable>
-                          {configured && o.productId ? "This plan can't be bought online right now. Try again later or contact us." : "Online checkout isn't available yet."}{" "}
-                          <a href={mail(`Saver Option ${planLabels[plan]} plan`)} className="font-medium text-accent-ink underline underline-offset-2">
-                            Contact us
-                          </a>
-                        </p>
-                      )}
-                    </div>
+                    {(["month", "year"] as const).map((i) => {
+                      const o = offers.find((x) => x.plan === plan && x.interval === i)!;
+                      return (
+                        <div key={i} className={cn("mt-auto pt-5", i === "month" ? "group-data-[interval=year]/pricing:hidden" : "hidden group-data-[interval=year]/pricing:block")}>
+                          {!canManage ? (
+                            <p className="text-[12.5px] text-faint">An owner or admin can subscribe.</p>
+                          ) : o.available ? (
+                            <Link href={`/business/settings/billing/checkout?plan=${plan}&interval=${i}`} className={buttonClass(plan === "business" ? "primary" : "secondary", "md", "w-full")}>
+                              Continue with {planLabels[plan]} {i === "year" ? "yearly" : "monthly"}
+                            </Link>
+                          ) : (
+                            <p className="text-[12.5px] text-faint" data-unavailable>
+                              {configured ? "This plan can't be bought online right now. Try again later or contact us." : "Online checkout isn't available yet."}{" "}
+                              <a href={mail(`Saver Option ${planLabels[plan]} plan`)} className="font-medium text-accent-ink underline underline-offset-2">
+                                Contact us
+                              </a>
+                            </p>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
-                );
-              })}
-            </div>
+                ))}
+              </div>
+            </PricingSwitch>
           </section>
         )}
 

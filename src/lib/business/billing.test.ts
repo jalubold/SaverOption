@@ -2,7 +2,7 @@
 import assert from "node:assert/strict";
 import { createHmac } from "node:crypto";
 import { test } from "node:test";
-import { billingNotice, trialBadge, canStartCheckout, daysLeft, effectivePlan, hasPremium, memberLimitReached, remainingText, resolveAccess, TRIAL_DAYS, type BillingRecord } from "./billing.ts";
+import { billingNotice, classifyProduct, yearlySavings, trialBadge, canStartCheckout, daysLeft, effectivePlan, hasPremium, memberLimitReached, remainingText, resolveAccess, TRIAL_DAYS, type BillingRecord } from "./billing.ts";
 import { parseCheckout, parseCreemEvent, parseProduct, parseSubscription, verifyCreemSignature } from "../server/business/creem.ts";
 
 const now = new Date("2026-10-24T12:00:00Z");
@@ -122,6 +122,27 @@ test("banner text: trial countdown, payment problems, ended plans", () => {
   assert.equal(billingNotice(resolveAccess(record(sub("active", 20)), { isDemo: false, now }), { timeZone: "UTC", canManage: true, now }), null);
   assert.equal(billingNotice({ kind: "demo" }, { timeZone: "UTC", canManage: true, now }), null);
   assert.equal(billingNotice(resolveAccess(record(trial(-1)), { isDemo: false, now }), { timeZone: "UTC", canManage: true, now })!.tone, "danger");
+});
+
+test("Creem products are matched to plans by name and billing period", () => {
+  const r = (name: string, billingPeriod: string, billingType = "recurring") => classifyProduct({ name, billingPeriod, billingType });
+  assert.deepEqual(r("Saver Option Pro", "every-month"), { plan: "pro", interval: "month" });
+  assert.deepEqual(r("Pro (yearly)", "every-year"), { plan: "pro", interval: "year" });
+  assert.deepEqual(r("BUSINESS annual", "every-year"), { plan: "business", interval: "year" });
+  assert.equal(r("Pro", "every-three-months"), null);
+  assert.equal(r("Pro", "every-month", "onetime"), null);
+  assert.equal(r("Pro and Business bundle", "every-month"), null);
+  assert.equal(r("Professional", "every-month"), null);
+  assert.equal(r("Starter", "every-month"), null);
+  assert.equal(classifyProduct({ name: null, billingPeriod: "every-month" }), null);
+});
+
+test("yearly savings against twelve monthly payments", () => {
+  assert.deepEqual(yearlySavings({ priceMinor: 2900, currency: "USD" }, { priceMinor: 29000, currency: "USD" }), { pct: 17, perYear: 5800 });
+  assert.deepEqual(yearlySavings({ priceMinor: 4900, currency: "USD" }, { priceMinor: 49000, currency: "USD" }), { pct: 17, perYear: 9800 });
+  assert.equal(yearlySavings({ priceMinor: 2900, currency: "USD" }, { priceMinor: 34800, currency: "USD" }), null);
+  assert.equal(yearlySavings({ priceMinor: 2900, currency: "USD" }, { priceMinor: 29000, currency: "EUR" }), null);
+  assert.equal(yearlySavings({ priceMinor: null, currency: "USD" }, { priceMinor: 29000, currency: "USD" }), null);
 });
 
 // ─── Creem ───────────────────────────────────────────────────────────────────

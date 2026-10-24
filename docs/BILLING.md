@@ -7,11 +7,11 @@ How the business model is implemented, how to set up Creem, and how to test it.
 | | What you get | Price |
 | --- | --- | --- |
 | **Free trial** | Everything (Business limits) for 7 days. No card. One per account. | Free |
-| **Pro** | All Saver Option Business features: inventory, subscriptions, licenses and seats, renewals and reminders, analytics, reports and exports, savings opportunities and deals, CSV import, AI clients over MCP, the AI Savings Assistant (when configured). Up to 5 members by default. | $29/month by default; yearly configurable |
-| **Business** | Everything in Pro, unlimited members by default. | $49/month by default (set the final price in Creem); yearly configurable |
+| **Pro** | All Saver Option Business features: inventory, subscriptions, licenses and seats, renewals and reminders, analytics, reports and exports, savings opportunities and deals, CSV import, AI clients over MCP, the AI Savings Assistant (when configured). Up to 5 members by default. | $29/month or $290/year by default |
+| **Business** | Everything in Pro, unlimited members by default. | $49/month or $490/year by default (set the final prices in Creem) |
 | **Self-Hosted / White-Label** | Arranged directly — contact button to `BUSINESS_CONTACT_EMAIL`, no checkout. | — |
 
-There is no free plan after the trial. Plans differ only in the member limit (people who can sign in, counting open invitations) — no features are invented for a tier. Limits are set with `BILLING_PRO_MEMBER_LIMIT` / `BILLING_BUSINESS_MEMBER_LIMIT`.
+There is no free plan after the trial. Owners and admins can upgrade at any time during the trial (header button, trial banner, sidebar card, Plan & billing). The pricing on the landing page and in Plan & billing has a Monthly / Yearly switch; the saving badge ("-17%") is computed from the prices shown — twelve monthly payments against the yearly price. Plans differ only in the member limit (people who can sign in, counting open invitations) — no features are invented for a tier. Limits are set with `BILLING_PRO_MEMBER_LIMIT` / `BILLING_BUSINESS_MEMBER_LIMIT`.
 
 The **demo workspace** (fictional sample data, one per account) isn't billed, so anyone can try the product.
 
@@ -22,6 +22,7 @@ Checked against Creem's official TypeScript SDK (npm `creem` 1.13, `@creem_io/ne
 | Need | Creem capability used |
 | --- | --- |
 | Checkout (monthly and yearly) | `POST /v1/checkouts` with `product_id`, `request_id`, `success_url`, `customer.email`, `metadata`. One recurring product per plan × interval. |
+| Finding the plan products | `GET /v1/products/search?status=active`: a recurring product billed `every-month` / `every-year` whose name contains "Pro" or "Business" (not both). Several matches for the same plan and interval pick none. `CREEM_PRODUCT_*` pins one. A subscription's plan is read from its product the same way, so subscribers on an older product keep their plan. |
 | Prices shown before checkout | `GET /v1/products/{id}`: `price` (cents), `currency`, `billing_period` (`every-month` / `every-year`), `tax_mode`, `trial_period_days`, `trial_price`. |
 | Confirming a return from checkout | `GET /v1/checkouts?checkout_id=…` (server key) — the redirect's query string is never trusted. |
 | Subscription state | `GET /v1/subscriptions?subscription_id=…`; statuses `active`, `trialing`, `past_due`, `unpaid`, `paused`, `scheduled_cancel`, `canceled`. |
@@ -59,14 +60,19 @@ Safety checks on every event: signature first; each event id applied once (`biz_
 
 ## Setting up Creem
 
-1. In Creem (start in **test mode**), create recurring products **without a trial**: Pro monthly (`every month`, $29), Business monthly (`every month`, e.g. $49–99), and yearly ones if you want them (`every year`).
+1. In Creem (start in **test mode**), create recurring products **without a trial**, named with "Pro" or "Business":
+   - "Saver Option Pro" — every month, $29
+   - "Saver Option Pro yearly" — every year, e.g. $290
+   - "Saver Option Business" — every month, e.g. $49–99
+   - "Saver Option Business yearly" — every year, e.g. $490
+   Any you skip simply isn't offered (e.g. no yearly product → no yearly checkout for that plan).
 2. Developers → API keys: copy the (test) API key.
 3. Developers → Webhooks: add `https://<your-domain>/api/webhooks/creem` and copy the signing secret.
-4. In Vercel → Project → Settings → Environment Variables (server-only, never `NEXT_PUBLIC_`): `CREEM_API_KEY`, `CREEM_WEBHOOK_SECRET`, `CREEM_TEST_MODE=true` for test mode, and `CREEM_PRODUCT_PRO_MONTHLY`, `CREEM_PRODUCT_BUSINESS_MONTHLY` (plus `_YEARLY` ones if created). Optional: `BUSINESS_CONTACT_EMAIL`, member limits, list prices (see `.env.example`).
-5. Redeploy. Plan & billing now shows Creem's prices and a checkout button for each configured product.
-6. For live payments: switch Creem to live mode, create the same products there, and replace the key, webhook secret and product IDs; set `CREEM_TEST_MODE=false` (or remove it).
+4. In Vercel → Project → Settings → Environment Variables (server-only, never `NEXT_PUBLIC_`): `CREEM_API_KEY`, `CREEM_WEBHOOK_SECRET`, and `CREEM_TEST_MODE=true` for test mode. Product IDs aren't needed (set `CREEM_PRODUCT_*` only to pin one). Optional: `BUSINESS_CONTACT_EMAIL`, member limits, list prices (see `.env.example`).
+5. Redeploy, then open `/admin/setup` → "Saver Option Business plans (Creem)": each plan shows the product it uses, its Creem price and "Ready". New or changed products in Creem are picked up within 10 minutes.
+6. For live payments: switch Creem to live mode, create the same products there, replace the key and webhook secret, and set `CREEM_TEST_MODE=false` (or remove it).
 
-Until steps 1–5 are done, the plan cards show the list prices with "Online checkout isn't available yet" and a contact link — nothing pretends to take payment. Trials still run and end.
+Until steps 1–5 are done, the plan cards show the list prices (monthly and yearly) with "Online checkout isn't available yet" and a contact link — nothing pretends to take payment. Once checkout is live, the switch and the prices follow the Creem products: a plan without a usable yearly product says yearly isn't available. Trials still run and end.
 
 ## Testing
 

@@ -3,9 +3,9 @@ import { Card, DefinitionList, InlineNote, LinkButton, PageHeader } from "@/comp
 import { canStartCheckout, formatInstant, intervalLabels, isPlan, isPlanInterval, planLabels, resolveAccess, type PlanInterval } from "@/lib/business/billing";
 import { formatMoney } from "@/lib/business/calc";
 import { can } from "@/lib/business/permissions";
-import { checkoutConfigured, getBillingRecord, readProduct } from "@/lib/server/business/billing";
+import { checkoutConfigured, getBillingRecord, readProduct, resolvedOffer } from "@/lib/server/business/billing";
 import { requireBizContext } from "@/lib/server/business/context";
-import { businessContactEmail, planOffer } from "@/lib/server/business/plans";
+import { businessContactEmail } from "@/lib/server/business/plans";
 
 export const metadata = { title: "Confirm your plan" };
 
@@ -45,7 +45,7 @@ export default async function ConfirmCheckoutPage({ searchParams }: { searchPara
   if (!isPlan(sp.plan) || !isPlanInterval(sp.interval)) return stop("Choose a plan first", "Pick a plan and billing interval on the Plan & billing page.");
   if (!can(ctx.role, "billing.manage")) return stop("Only owners and admins can subscribe", "Ask an owner or admin of this workspace to choose the plan.");
   if (ws.isDemo) return stop("The demo workspace isn't billed", "Create your company's own workspace to subscribe.");
-  if (!checkoutConfigured()) return stop("Online checkout isn't available yet", "Contact us and we'll set up your plan.");
+  if (!(await checkoutConfigured())) return stop("Online checkout isn't available yet", "Contact us and we'll set up your plan.");
 
   const now = new Date();
   const record = await getBillingRecord(ws.id);
@@ -54,10 +54,12 @@ export default async function ConfirmCheckoutPage({ searchParams }: { searchPara
 
   const plan = sp.plan;
   const interval = sp.interval;
-  const { product, problem } = await readProduct(planOffer(plan, interval), { fresh: true });
+  const offer = await resolvedOffer(plan, interval);
+  const { product, problem } = await readProduct(offer, { fresh: true });
   if (!product || problem) return stop(`${planLabels[plan]} ${intervalLabels[interval].toLowerCase()} can't be bought right now`, problem ?? "The price couldn't be confirmed with Creem. Try again in a moment.");
 
   const price = formatMoney(product.price, product.currency);
+  const perMonth = interval === "year" ? `About ${formatMoney(Math.round(product.price / 12), product.currency)} a month, billed once a year.` : null;
   const tax = product.taxMode === "inclusive" ? "Tax included." : product.taxMode === "exclusive" ? "Tax, where it applies, is added on top of this price." : null;
   const creemTrial = product.trialPeriodDays && product.trialPeriodDays > 0 ? product.trialPeriodDays : null;
   const trialPrice = creemTrial && product.trialPrice ? formatMoney(product.trialPrice, product.currency) : null;
@@ -84,7 +86,7 @@ export default async function ConfirmCheckoutPage({ searchParams }: { searchPara
             items={[
               { label: "Plan", value: planLabels[plan] },
               { label: "Billing interval", value: `${intervalLabels[interval]} — billed ${every[interval]}` },
-              { label: "Price", value: <span data-confirm-price>{`${price} / ${interval}`}</span>, hint: tax ?? undefined },
+              { label: "Price", value: <span data-confirm-price>{`${price} / ${interval}`}</span>, hint: [perMonth, tax].filter(Boolean).join(" ") || undefined },
               { label: "Trial", value: trialTerms },
               { label: "First charge", value: firstCharge },
               { label: "After that", value: `${price} ${every[interval]} until you cancel. Cancel any time in Settings → Plan & billing; access continues to the end of the paid period.` },

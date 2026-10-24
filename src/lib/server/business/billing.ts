@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { cache } from "react";
 import {
   canStartCheckout,
+  classifyProduct,
   CREEM_PERIOD,
   effectivePlan,
   hasPremium,
@@ -9,6 +10,8 @@ import {
   isPlanInterval,
   memberLimitReached,
   planLabels,
+  PLANS,
+  yearlySavings,
   resolveAccess,
   subscriptionAccess,
   TRIAL_DAYS,
@@ -17,6 +20,7 @@ import {
   type PlanId,
   type PlanInterval,
 } from "@/lib/business/billing";
+import { formatMoney } from "@/lib/business/calc";
 import { isUuid } from "@/lib/business/form";
 import { can } from "@/lib/business/permissions";
 import { db } from "@/lib/server/db";
@@ -32,6 +36,7 @@ import {
   getCheckout,
   getProduct,
   getSubscription,
+  searchProducts,
   parseCheckout,
   parseRefund,
   parseSubscription,
@@ -41,7 +46,7 @@ import {
   type CreemRefund,
   type CreemSubscription,
 } from "@/lib/server/business/creem";
-import { memberLimit, offerForProduct, planOffer, planOffers, type PlanOffer } from "@/lib/server/business/plans";
+import { memberLimit, offerForProduct, planOffers, type PlanOffer } from "@/lib/server/business/plans";
 import type { SessionUser } from "@/lib/server/supabase";
 
 /**
@@ -162,7 +167,7 @@ export async function assertMemberCapacity(ctx: BizContext, sql: Db): Promise<vo
 
 // ─── Offers and prices ───────────────────────────────────────────────────────
 
-export interface OfferView extends PlanOffer {
+export interface OfferView extends ResolvedOffer {
   /** Price and currency to show, from Creem when the product could be read, otherwise the list price. */
   priceMinor: number | null;
   currency: string;
@@ -172,12 +177,70 @@ export interface OfferView extends PlanOffer {
   /** A Creem-side trial configured on the product. */
   creemTrialDays: number | null;
   creemTrialPrice: number | null;
+}
+
+/** An offer with the Creem product it sells: set in CREEM_PRODUCT_*, or found in Creem by name and billing period. */
+export interface ResolvedOffer extends PlanOffer {
+  source: "env" | "creem" | null;
+  /** Why there's no usable product (shown to admins), or null. */
   problem: string | null;
+  /** Products that matched when there were several (none is picked then). */
+  candidates: string[];
+}
+
+const catalogCache: { at: number; products: CreemProduct[] | null; error: string | null } = { at: 0, products: null, error: null };
+const CATALOG_TTL = 10 * 60_000;
+const CATALOG_ERROR_TTL = 60_000;
+
+/** The account's active Creem products (cached for ten minutes; a failure is retried after a minute). */
+async function creemCatalog(opts: { fresh?: boolean } = {}): Promise<{ products: CreemProduct[]; error: string | null }> {
+  if (!creemApiKey()) return { products: [], error: "Creem isn't configured." };
+  const age = Date.now() - catalogCache.at;
+  if (!opts.fresh && catalogCache.at && age < (catalogCache.products ? CATALOG_TTL : CATALOG_ERROR_TTL)) return { products: catalogCache.products ?? [], error: catalogCache.error };
+  try {
+    const products = await searchProducts();
+    Object.assign(catalogCache, { at: Date.now(), products, error: null });
+    for (const p of products) productCache.set(p.id, { at: Date.now(), product: p, error: null });
+  } catch (err) {
+    console.error(`[billing] couldn't list Creem products: ${err instanceof Error ? err.message : err}`);
+    Object.assign(catalogCache, { at: Date.now(), products: null, error: "Creem's product list couldn't be read." });
+  }
+  return { products: catalogCache.products ?? [], error: catalogCache.error };
+}
+
+/**
+ * Each plan × interval with its Creem product. A product ID in CREEM_PRODUCT_*
+ * wins; otherwise the one active, recurring Creem product whose name says
+ * "Pro" or "Business" and that bills every month or every year (see
+ * classifyProduct). Several matches pick none, so a price is never guessed.
+ */
+export async function resolvedOffers(opts: { fresh?: boolean } = {}): Promise<ResolvedOffer[]> {
+  const offers = planOffers();
+  const needsLookup = offers.some((o) => !o.productId);
+  const catalog = needsLookup && creemApiKey() ? await creemCatalog(opts) : { products: [], error: null };
+  const pinned = new Set(offers.map((o) => o.productId).filter(Boolean));
+  return offers.map((o) => {
+    if (o.productId) return { ...o, source: "env" as const, problem: null, candidates: [] };
+    if (!creemApiKey()) return { ...o, source: null, problem: null, candidates: [] };
+    const matches = catalog.products.filter((p) => !pinned.has(p.id) && modeMatches(p.mode) && (!p.status || p.status === "active") && sameOffer(classifyProduct(p), o));
+    if (matches.length === 1) return { ...o, productId: matches[0].id, source: "creem" as const, problem: null, candidates: [] };
+    if (matches.length > 1) return { ...o, source: null, problem: `${matches.length} Creem products match; archive the extras or set CREEM_PRODUCT_${o.plan.toUpperCase()}_${o.interval === "month" ? "MONTHLY" : "YEARLY"}.`, candidates: matches.map((p) => p.id) };
+    return { ...o, source: null, problem: catalog.error ?? null, candidates: [] };
+  });
+}
+
+function sameOffer(c: { plan: PlanId; interval: PlanInterval } | null, o: PlanOffer): boolean {
+  return Boolean(c && c.plan === o.plan && c.interval === o.interval);
+}
+
+export async function resolvedOffer(plan: PlanId, interval: PlanInterval, opts: { fresh?: boolean } = {}): Promise<ResolvedOffer> {
+  return (await resolvedOffers(opts)).find((o) => o.plan === plan && o.interval === interval)!;
 }
 
 /** Whether online checkout is set up at all (API key, webhook secret and at least one product). */
-export function checkoutConfigured(): boolean {
-  return Boolean(creemApiKey() && creemWebhookSecret() && planOffers().some((o) => o.productId));
+export async function checkoutConfigured(): Promise<boolean> {
+  if (!creemApiKey() || !creemWebhookSecret()) return false;
+  return (await resolvedOffers()).some((o) => o.productId);
 }
 
 const productCache = new Map<string, { at: number; product: CreemProduct | null; error: string | null }>();
@@ -186,7 +249,7 @@ const PRODUCT_ERROR_TTL = 60_000;
 
 /** A product as Creem reports it, or why it can't be sold (wrong period, not recurring, unreadable). */
 export async function readProduct(offer: PlanOffer, opts: { fresh?: boolean } = {}): Promise<{ product: CreemProduct | null; problem: string | null }> {
-  if (!offer.productId) return { product: null, problem: "No Creem product is configured for this plan." };
+  if (!offer.productId) return { product: null, problem: "No Creem product is set up for this plan." };
   if (!creemApiKey()) return { product: null, problem: "Creem isn't configured." };
   const hit = productCache.get(offer.productId);
   if (!opts.fresh && hit && Date.now() - hit.at < (hit.product ? PRODUCT_TTL : PRODUCT_ERROR_TTL)) return check(offer, hit.product, hit.error);
@@ -207,14 +270,16 @@ function check(offer: PlanOffer, product: CreemProduct | null, error: string | n
   if (product.billingType && product.billingType !== "recurring") return { product, problem: "The Creem product isn't a subscription." };
   if (product.billingPeriod !== CREEM_PERIOD[offer.interval]) return { product, problem: `The Creem product bills ${product.billingPeriod ?? "on an unknown schedule"}, not ${CREEM_PERIOD[offer.interval]}.` };
   if (product.mode && !modeMatches(product.mode)) return { product, problem: `The Creem product is in ${product.mode} mode.` };
+  if (product.status && product.status !== "active") return { product, problem: "The Creem product is archived." };
   return { product, problem: null };
 }
 
 export async function offerViews(opts: { fresh?: boolean } = {}): Promise<OfferView[]> {
-  const configured = checkoutConfigured();
+  const offers = await resolvedOffers(opts);
+  const configured = Boolean(creemApiKey() && creemWebhookSecret() && offers.some((o) => o.productId));
   return Promise.all(
-    planOffers().map(async (o) => {
-      const { product, problem } = o.productId && creemApiKey() ? await readProduct(o, opts) : { product: null, problem: o.productId ? "Creem isn't configured." : null };
+    offers.map(async (o) => {
+      const { product, problem } = o.productId && creemApiKey() ? await readProduct(o, opts) : { product: null, problem: o.problem };
       const fromCreem = product && !problem;
       return {
         ...o,
@@ -224,10 +289,83 @@ export async function offerViews(opts: { fresh?: boolean } = {}): Promise<OfferV
         available: Boolean(configured && fromCreem),
         creemTrialDays: fromCreem && product.trialPeriodDays && product.trialPeriodDays > 0 ? product.trialPeriodDays : null,
         creemTrialPrice: fromCreem ? product.trialPrice : null,
-        problem: o.productId ? problem : null,
+        problem: problem ?? o.problem,
       } satisfies OfferView;
     }),
   );
+}
+
+/** Whether the pricing should offer the yearly switch: in live checkout, only when a yearly plan can be bought. */
+export function showYearly(offers: OfferView[]): boolean {
+  const live = offers.some((o) => o.available);
+  return offers.some((o) => o.interval === "year" && (live ? o.available : o.priceMinor !== null));
+}
+
+export interface PricingInfo {
+  /** Offer the Monthly / Yearly switch. */
+  yearly: boolean;
+  /** "-17%" (or "Up to -20%" when plans differ), from the prices shown. */
+  badge: string | null;
+  savings: Record<PlanId, { pct: number; perYear: number; currency: string } | null>;
+}
+
+/** The yearly switch and what yearly billing saves, computed from the prices actually shown. */
+export function pricingInfo(offers: OfferView[]): PricingInfo {
+  const yearly = showYearly(offers);
+  const live = offers.some((o) => o.available);
+  const savings = {} as PricingInfo["savings"];
+  for (const plan of PLANS) {
+    const m = offers.find((o) => o.plan === plan && o.interval === "month")!;
+    const y = offers.find((o) => o.plan === plan && o.interval === "year")!;
+    const s = yearly && (!live || y.available) ? yearlySavings(m, y) : null;
+    savings[plan] = s ? { ...s, currency: y.currency } : null;
+  }
+  const pcts = Object.values(savings).filter((x): x is NonNullable<typeof x> => x !== null).map((x) => x.pct);
+  const badge = pcts.length ? (pcts.every((p) => p === pcts[0]) ? `-${pcts[0]}%` : `Up to -${Math.max(...pcts)}%`) : null;
+  return { yearly, badge, savings };
+}
+
+/**
+ * Which plan a subscription's product is: a product set in CREEM_PRODUCT_*,
+ * else what its name and billing period say (from the payload, or read from
+ * Creem). Works for products created later or no longer used for new
+ * checkouts, so existing subscribers keep their plan.
+ */
+async function planForProduct(sub: CreemSubscription): Promise<{ plan: PlanId; interval: PlanInterval } | null> {
+  const pinned = offerForProduct(sub.productId);
+  if (pinned) return { plan: pinned.plan, interval: pinned.interval };
+  if (!sub.productId) return null;
+  if (sub.productName) return classifyProduct({ name: sub.productName, billingType: sub.productBillingType, billingPeriod: sub.productBillingPeriod });
+  const { product } = await readProduct({ plan: "pro", interval: "month", productId: sub.productId, listPriceMinor: null }).catch(() => ({ product: null }));
+  return product ? classifyProduct(product) : null;
+}
+
+export interface BillingSetupStatus {
+  apiKey: boolean;
+  webhookSecret: boolean;
+  mode: "test" | "prod";
+  checkout: boolean;
+  offers: OfferView[];
+  catalogError: string | null;
+  products: { id: string; name: string; price: string; period: string | null; matches: string | null }[];
+}
+
+/** For /admin/setup: what's configured and which Creem products were matched to which plan. Secrets aren't included. */
+export async function billingSetupStatus(): Promise<BillingSetupStatus> {
+  const offers = await offerViews({ fresh: true });
+  const catalog = creemApiKey() ? await creemCatalog() : { products: [], error: null };
+  return {
+    apiKey: Boolean(creemApiKey()),
+    webhookSecret: Boolean(creemWebhookSecret()),
+    mode: creemMode(),
+    checkout: offers.some((o) => o.available),
+    offers,
+    catalogError: catalog.error,
+    products: catalog.products.map((p) => {
+      const c = classifyProduct(p);
+      return { id: p.id, name: p.name, price: formatMoney(p.price, p.currency), period: p.billingPeriod, matches: c ? `${planLabels[c.plan]} ${c.interval === "month" ? "monthly" : "yearly"}` : null };
+    }),
+  };
 }
 
 function modeMatches(mode: string | null): boolean {
@@ -245,10 +383,10 @@ function modeMatches(mode: string | null): boolean {
 export async function startCheckout(ctx: BizContext, plan: PlanId, interval: PlanInterval, origin: string): Promise<string> {
   assertCan(ctx, "billing.manage", "Only owners and admins can change the plan.");
   if (ctx.workspace.isDemo) throw new BizError("invalid", "The demo workspace isn't billed. Create your company's workspace to subscribe.");
-  if (!checkoutConfigured()) throw new BizError("unavailable", "Online checkout isn't set up yet. Contact us and we'll set up your plan.");
+  if (!(await checkoutConfigured())) throw new BizError("unavailable", "Online checkout isn't set up yet. Contact us and we'll set up your plan.");
   const access = await accessFor(ctx.workspace);
   if (!canStartCheckout(access)) throw new BizError("conflict", "This workspace already has an active subscription. Use Manage billing to change it.");
-  const offer = planOffer(plan, interval);
+  const offer = await resolvedOffer(plan, interval);
   const { product, problem } = await readProduct(offer, { fresh: true });
   if (!product || problem) throw new BizError("unavailable", `${planLabels[plan]} ${interval === "month" ? "monthly" : "yearly"} can't be bought right now. ${problem ?? ""}`.trim());
 
@@ -386,7 +524,7 @@ async function applySubscription(sql: Db, sub: CreemSubscription, opts: { hintWo
     return { result: "stale", note: `older than the state saved at ${new Date(cur.synced_at).toISOString()}`, workspaceId: wsId };
   }
 
-  const offer = offerForProduct(sub.productId);
+  const offer = await planForProduct(sub);
   const expired = opts.eventType === "subscription.expired";
   const status = expired ? "expired" : sub.status;
   const next: BillingRecord = {

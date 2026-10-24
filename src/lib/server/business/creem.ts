@@ -107,6 +107,10 @@ export interface CreemSubscription {
   status: string;
   mode: string | null;
   productId: string | null;
+  /** From the expanded product, when the payload includes it (used to tell which plan it is). */
+  productName: string | null;
+  productBillingType: string | null;
+  productBillingPeriod: string | null;
   price: number | null;
   currency: string | null;
   customerId: string | null;
@@ -199,6 +203,9 @@ export function parseSubscription(raw: unknown): CreemSubscription | null {
     status,
     mode: str(o.mode),
     productId: idOf(o.product),
+    productName: product ? str(product.name) : null,
+    productBillingType: product ? str(field(product, "billing_type")) : null,
+    productBillingPeriod: product ? str(field(product, "billing_period")) : null,
     price: num(product?.price),
     currency: str(product?.currency)?.toUpperCase() ?? null,
     customerId: idOf(o.customer),
@@ -251,6 +258,22 @@ export async function getProduct(id: string): Promise<CreemProduct> {
   const p = parseProduct(await creemFetch(`/v1/products/${encodeURIComponent(id)}`));
   if (!p) throw new CreemError(200, "Creem returned a product without a price or currency.");
   return p;
+}
+
+/** Active products in the Creem account (up to 500), for matching plans by name and billing period. */
+export async function searchProducts(): Promise<CreemProduct[]> {
+  const out: CreemProduct[] = [];
+  for (let page = 1; page <= 5; page++) {
+    const body = await creemFetch(`/v1/products/search?page_number=${page}&page_size=100&status=active`);
+    const items: unknown[] = Array.isArray(body?.items) ? body.items : [];
+    for (const it of items) {
+      const p = parseProduct(it);
+      if (p) out.push(p);
+    }
+    const next = body?.pagination?.next_page ?? body?.pagination?.nextPage ?? null;
+    if (!next || items.length === 0) break;
+  }
+  return out;
 }
 
 export async function createCheckout(input: {

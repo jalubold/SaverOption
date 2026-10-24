@@ -4,6 +4,9 @@ import { DashboardShell, fmtDate, Panel } from "@/components/advertiser/dashboar
 import { ConnectLemonSqueezy } from "@/components/advertiser/setup-forms";
 import { Icon } from "@/components/ui/icon";
 import { cn } from "@/components/ui/primitives";
+import { siteConfig } from "@/config/site";
+import { formatMoney } from "@/lib/business/calc";
+import { billingSetupStatus } from "@/lib/server/business/billing";
 import { db, dbConfigured } from "@/lib/server/db";
 import { checkoutMode, liveCheckoutEnabled, lsApiKey, lsCatalog, webhookSecret } from "@/lib/server/lemonsqueezy";
 import { getSettings } from "@/lib/server/settings";
@@ -33,13 +36,14 @@ export default async function AdminSetupPage() {
       migrations = null;
     }
   }
-  const [catalog, secret, saved, visitorMode, adminMode, google] = await Promise.all([
+  const [catalog, secret, saved, visitorMode, adminMode, google, creem] = await Promise.all([
     lsCatalog(),
     webhookSecret(),
     getSettings(),
     checkoutMode({ admin: false }),
     checkoutMode({ admin: true }),
     googleSignInEnabled(),
+    billingSetupStatus(),
   ]);
   const hasKey = Boolean(lsApiKey());
   const variantsOk = listingPlans.every((p) => catalog.variants[p.id]);
@@ -105,6 +109,72 @@ export default async function AdminSetupPage() {
             <ConnectLemonSqueezy connected={lsReady} disabled={!hasKey || !dbConfigured()} />
             {setupAt && <p className="mt-2 text-xs text-faint">Last connected {fmtDate(new Date(setupAt))}.</p>}
           </div>
+        </Panel>
+
+        <Panel title="Saver Option Business plans (Creem)" className="min-w-0 lg:col-span-2">
+          <ul className="grid gap-3 sm:grid-cols-2">
+            <Check ok={creem.apiKey} label="API key" detail={creem.apiKey ? `${creem.mode === "test" ? "Test mode (test-api.creem.io)" : "Live mode (api.creem.io)"}` : undefined} hint="Creem → Developers → API keys. Add CREEM_API_KEY in Vercel (and CREEM_TEST_MODE=true for a test-mode key), then redeploy." />
+            <Check
+              ok={creem.webhookSecret}
+              label="Webhook"
+              detail={`${siteConfig.url}/api/webhooks/creem`}
+              hint={`Creem → Developers → Webhooks: add ${siteConfig.url}/api/webhooks/creem, copy its signing secret into CREEM_WEBHOOK_SECRET in Vercel, then redeploy.`}
+            />
+          </ul>
+          <div className="mt-5 overflow-x-auto">
+            <table className="w-full min-w-[560px] text-left text-[13px]">
+              <thead className="text-[11px] uppercase tracking-[0.08em] text-faint">
+                <tr>
+                  <th className="py-2 pr-3 font-medium">Plan</th>
+                  <th className="py-2 pr-3 font-medium">Creem product</th>
+                  <th className="py-2 pr-3 font-medium">Price</th>
+                  <th className="py-2 font-medium">Checkout</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-line">
+                {creem.offers.map((o) => (
+                  <tr key={`${o.plan}-${o.interval}`} data-setup-offer={`${o.plan}-${o.interval}`}>
+                    <td className="py-2.5 pr-3 font-medium text-fg">
+                      {o.plan === "pro" ? "Pro" : "Business"} {o.interval === "month" ? "monthly" : "yearly"}
+                    </td>
+                    <td className="py-2.5 pr-3 text-muted [overflow-wrap:anywhere]">
+                      {o.productId ? (
+                        <>
+                          {o.productId} <span className="text-faint">({o.source === "env" ? "set in env" : "found in Creem by name"})</span>
+                        </>
+                      ) : o.candidates.length ? (
+                        o.candidates.join(", ")
+                      ) : (
+                        "—"
+                      )}
+                    </td>
+                    <td className="py-2.5 pr-3 text-muted">{o.priceMinor !== null ? `${formatMoney(o.priceMinor, o.currency)}${o.priceSource === "list" ? " (list price)" : ""}` : "—"}</td>
+                    <td className="py-2.5">
+                      {o.available ? <span className="text-success">Ready</span> : <span className="text-warn">{o.problem ?? (o.productId ? "Not ready" : "No product yet")}</span>}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="mt-4 text-[13px] leading-snug text-faint">
+            To add a plan, create a product in Creem: recurring, billed every month or every year, with <strong>Pro</strong> or <strong>Business</strong> in its name
+            (e.g. &ldquo;Saver Option Pro yearly&rdquo;), and no Creem trial (the 7-day trial runs in the app). It&apos;s picked up within 10 minutes; set
+            CREEM_PRODUCT_* in Vercel only to pin a specific product.
+          </p>
+          {creem.products.length > 0 && (
+            <details className="mt-4 text-[13px]">
+              <summary className="cursor-pointer font-medium text-muted hover:text-fg">Active products in Creem ({creem.products.length})</summary>
+              <ul className="mt-2 grid gap-1 text-muted">
+                {creem.products.map((p) => (
+                  <li key={p.id} className="[overflow-wrap:anywhere]">
+                    {p.name} · {p.price} · {p.period ?? "one-time"} · <span className="text-faint">{p.id}</span> → {p.matches ?? <span className="text-faint">not a plan</span>}
+                  </li>
+                ))}
+              </ul>
+            </details>
+          )}
+          {creem.catalogError && <p className="mt-3 text-[13px] text-warn">{creem.catalogError}</p>}
         </Panel>
 
         <Panel title="Checkout status" className="lg:col-span-2">

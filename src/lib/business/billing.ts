@@ -226,3 +226,28 @@ export function trialBadge(a: Access, now: Date): TrialBadge | null {
   const used = Math.min(1, Math.max(0, 1 - (a.endsAt.getTime() - now.getTime()) / total));
   return { left: remainingText(a.endsAt, now), daysLeft: daysLeft(a.endsAt, now), used };
 }
+
+/**
+ * Which plan and interval a Creem product is for, from how it's set up in
+ * Creem: a recurring product whose name contains "Pro" or "Business" (not
+ * both), billed every month or every year. Anything else isn't one of ours.
+ */
+export function classifyProduct(p: { name: string | null; billingType?: string | null; billingPeriod?: string | null; status?: string | null }): { plan: PlanId; interval: PlanInterval } | null {
+  if (!p.name) return null;
+  if (p.billingType && p.billingType !== "recurring") return null;
+  const interval: PlanInterval | null = p.billingPeriod === CREEM_PERIOD.month ? "month" : p.billingPeriod === CREEM_PERIOD.year ? "year" : null;
+  if (!interval) return null;
+  const pro = /\bpro\b/i.test(p.name);
+  const business = /\bbusiness\b/i.test(p.name);
+  if (pro === business) return null;
+  return { plan: pro ? "pro" : "business", interval };
+}
+
+/** What yearly billing saves against twelve monthly payments (same currency), or null when it doesn't. */
+export function yearlySavings(monthly: { priceMinor: number | null; currency: string }, yearly: { priceMinor: number | null; currency: string }): { pct: number; perYear: number } | null {
+  if (monthly.priceMinor === null || yearly.priceMinor === null || monthly.currency !== yearly.currency) return null;
+  const full = monthly.priceMinor * 12;
+  const perYear = full - yearly.priceMinor;
+  if (perYear <= 0 || full === 0) return null;
+  return { pct: Math.round((perYear / full) * 100), perYear };
+}

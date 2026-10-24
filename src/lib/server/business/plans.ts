@@ -14,16 +14,20 @@ import { PLAN_INTERVALS, PLANS, type PlanId, type PlanInterval } from "@/lib/bus
 export interface PlanOffer {
   plan: PlanId;
   interval: PlanInterval;
-  /** Creem product ID (prod_…), or null when not configured. */
+  /** Creem product ID (prod_…) from CREEM_PRODUCT_*, or null (then it's looked up in Creem by name). */
   productId: string | null;
   /** List price in cents (USD) shown when there's no Creem product to read. */
   listPriceMinor: number | null;
 }
 
-/** Defaults from the business model: Pro $29/month; Business from $49/month; yearly prices are set per deployment. */
+/**
+ * Defaults from the business model: Pro $29/month, Business $49/month, and
+ * yearly at ten months' price (two months free). Only shown while a plan has no
+ * Creem product to read; set BILLING_PRICE_* to change them.
+ */
 const DEFAULT_LIST_PRICE: Record<PlanId, Record<PlanInterval, number | null>> = {
-  pro: { month: 29_00, year: null },
-  business: { month: 49_00, year: null },
+  pro: { month: 29_00, year: 290_00 },
+  business: { month: 49_00, year: 490_00 },
 };
 
 const DEFAULT_MEMBER_LIMIT: Record<PlanId, number | null> = { pro: 5, business: null };
@@ -72,7 +76,7 @@ export function planOffer(plan: PlanId, interval: PlanInterval): PlanOffer {
   return planOffers().find((o) => o.plan === plan && o.interval === interval)!;
 }
 
-/** Which plan and interval a Creem product belongs to, or null for a product this deployment doesn't sell. */
+/** The plan and interval a product ID set in CREEM_PRODUCT_* is for, or null. */
 export function offerForProduct(productId: string | null | undefined): PlanOffer | null {
   if (!productId) return null;
   return planOffers().find((o) => o.productId === productId) ?? null;
