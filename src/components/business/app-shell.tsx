@@ -8,31 +8,72 @@ import { displayName, type BizContext } from "@/lib/server/business/context";
 import { BrandMark } from "@/components/brand/logo";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, cn } from "@/components/ui/primitives";
-import { MobileMenuButton, Popover, SidebarFrame, SidebarNav, type NavItem } from "@/components/business/shell-client";
+import { MobileMenuButton, Popover, QuickJump, SidebarFrame, SidebarNav, type NavGroup, type QuickAction } from "@/components/business/shell-client";
 
-const main: NavItem[] = [
-  { label: "Overview", href: "/business/dashboard", icon: "home" },
-  { label: "AI Assistant", href: "/business/assistant", icon: "sparkles" },
-  { label: "AI clients (MCP)", href: "/business/settings/mcp", icon: "code" },
-  { label: "Subscriptions", href: "/business/subscriptions", icon: "layers" },
-  { label: "Software Inventory", href: "/business/software", icon: "box" },
-  { label: "Licenses & Seats", href: "/business/licenses", icon: "key" },
-  { label: "Renewals", href: "/business/renewals", icon: "calendar" },
-  { label: "Analytics", href: "/business/analytics", icon: "trending-up" },
-  { label: "Savings Opportunities", href: "/business/savings", icon: "piggy" },
-  { label: "Deals for your stack", href: "/business/deals", icon: "tag" },
-  { label: "Reports", href: "/business/reports", icon: "chart" },
+/**
+ * The sidebar, in the order people use it: the overview, AI, what they track,
+ * what it tells them, and the workspace itself (folded by default — it's
+ * visited least). Short labels; Quick jump (⌘K) reaches everything by typing.
+ */
+const groups: NavGroup[] = [
+  { id: "home", label: null, items: [{ label: "Overview", href: "/business/dashboard", icon: "home", keywords: "dashboard home" }] },
+  {
+    id: "ai",
+    label: "AI",
+    items: [
+      { label: "AI Assistant", href: "/business/assistant", icon: "sparkles", keywords: "chat claude ask" },
+      { label: "AI clients (MCP)", href: "/business/settings/mcp", icon: "code", keywords: "mcp claude chatgpt gemini grok connect" },
+    ],
+  },
+  {
+    id: "track",
+    label: "Track",
+    items: [
+      { label: "Subscriptions", href: "/business/subscriptions", icon: "layers", keywords: "plans billing" },
+      { label: "Software", href: "/business/software", icon: "box", keywords: "inventory tools apps" },
+      { label: "Licenses & seats", href: "/business/licenses", icon: "key", keywords: "seats utilization users" },
+      { label: "Renewals", href: "/business/renewals", icon: "calendar", keywords: "upcoming deadlines calendar" },
+    ],
+  },
+  {
+    id: "insights",
+    label: "Insights & savings",
+    items: [
+      { label: "Analytics", href: "/business/analytics", icon: "trending-up", keywords: "spend charts vendors categories" },
+      { label: "Reports", href: "/business/reports", icon: "chart", keywords: "export csv" },
+      { label: "Savings", href: "/business/savings", icon: "piggy", keywords: "opportunities save money" },
+      { label: "Deals", href: "/business/deals", icon: "tag", keywords: "discounts offers stack" },
+    ],
+  },
+  {
+    id: "workspace",
+    label: "Workspace",
+    defaultClosed: true,
+    items: [
+      { label: "Team", href: "/business/team", icon: "users", keywords: "members invite people roles" },
+      { label: "Departments", href: "/business/settings/departments", icon: "building", keywords: "teams org" },
+      { label: "Integrations", href: "/business/integrations", icon: "link", keywords: "csv import connect" },
+      { label: "Settings", href: "/business/settings", icon: "gear", keywords: "company preferences notifications security" },
+    ],
+  },
 ];
-const workspaceNav: NavItem[] = [
-  { label: "Team Members", href: "/business/team", icon: "users" },
-  { label: "Departments", href: "/business/settings/departments", icon: "building" },
-  { label: "Integrations", href: "/business/integrations", icon: "link" },
-  { label: "Settings", href: "/business/settings", icon: "gear" },
-];
-const groups = [
-  { label: "Spend", items: main },
-  { label: "Workspace", items: workspaceNav },
-];
+
+/** Pages from the sidebar plus common actions, for Quick jump. */
+function quickActions(ctx: BizContext): QuickAction[] {
+  const pages = groups.flatMap((g) => g.items.map((it) => ({ ...it, group: g.label ?? "Overview" })));
+  const actions: QuickAction[] = [
+    ...(can(ctx.role, "records.manage")
+      ? [
+          { label: "Add software", href: "/business/subscriptions/new", icon: "plus" as const, group: "Action", keywords: "new subscription create" },
+          { label: "Import subscriptions from CSV", href: "/business/subscriptions/import", icon: "download" as const, group: "Action", keywords: "upload spreadsheet" },
+        ]
+      : []),
+    { label: "Plan & billing", href: "/business/settings/billing", icon: "credit-card", group: "Settings", keywords: "upgrade subscribe trial pro business invoice" },
+    { label: "Notifications", href: "/business/notifications", icon: "bell", group: "Account", keywords: "reminders alerts" },
+    { label: "Help & docs", href: "/business/docs", icon: "info", group: "Help", keywords: "documentation guide support" },
+  ];
+  return [...pages, ...actions];
+}
 
 function Avatar({ name, src, size = 28 }: { name: string; src: string | null; size?: number }) {
   const initials = name
@@ -135,7 +176,7 @@ function TrialCard({ trial, upgrade, collapsed }: { trial: TrialBadge; upgrade: 
   );
 }
 
-function Sidebar({ ctx, plan, collapsed }: { ctx: BizContext; plan: ShellPlan; collapsed?: boolean }) {
+function Sidebar({ ctx, plan, navOpen, collapsed }: { ctx: BizContext; plan: ShellPlan; navOpen: Record<string, boolean>; collapsed?: boolean }) {
   return (
     <>
       <Link href="/business/dashboard" className={cn("flex h-14 shrink-0 items-center gap-2 px-1.5", collapsed && "justify-center px-0")} aria-label="Saver Option Business overview">
@@ -155,13 +196,9 @@ function Sidebar({ ctx, plan, collapsed }: { ctx: BizContext; plan: ShellPlan; c
           <span className={collapsed ? "sr-only" : undefined}>Add software</span>
         </Link>
       )}
-      <SidebarNav groups={groups} collapsed={collapsed} />
+      <SidebarNav groups={groups} collapsed={collapsed} savedOpen={navOpen} />
       <div className="mt-auto pt-4">
         {plan.trial && <TrialCard trial={plan.trial} upgrade={plan.upgrade} collapsed={collapsed} />}
-        <Link href="/deals" className={cn("flex h-9 items-center gap-2.5 rounded-lg px-2.5 text-[13px] text-faint hover:bg-subtle hover:text-fg", collapsed && "justify-center px-0")} title={collapsed ? "Saver Option deals" : undefined}>
-          <Icon name="tag" size={16} />
-          <span className={collapsed ? "sr-only" : undefined}>Browse software deals</span>
-        </Link>
       </div>
     </>
   );
@@ -189,10 +226,20 @@ function BillingStrip({ notice }: { notice: BillingNotice }) {
   );
 }
 
-export function AppShell({ ctx, unread, notice, plan, children }: { ctx: BizContext; unread: number; notice: BillingNotice | null; plan: ShellPlan; children: ReactNode }) {
+/** Parses the sidebar-groups cookie ("track:0.workspace:1"). */
+export function parseNavCookie(value: string | undefined): Record<string, boolean> {
+  const out: Record<string, boolean> = {};
+  for (const part of (value ?? "").split(".").slice(0, 20)) {
+    const m = /^([a-z]{1,20}):([01])$/.exec(part);
+    if (m) out[m[1]] = m[2] === "1";
+  }
+  return out;
+}
+
+export function AppShell({ ctx, unread, notice, plan, navOpen, children }: { ctx: BizContext; unread: number; notice: BillingNotice | null; plan: ShellPlan; navOpen: Record<string, boolean>; children: ReactNode }) {
   const name = displayName(ctx.user);
   return (
-    <SidebarFrame sidebar={<Sidebar ctx={ctx} plan={plan} />} collapsedSidebar={<Sidebar ctx={ctx} plan={plan} collapsed />}>
+    <SidebarFrame sidebar={<Sidebar ctx={ctx} plan={plan} navOpen={navOpen} />} collapsedSidebar={<Sidebar ctx={ctx} plan={plan} navOpen={navOpen} collapsed />}>
       <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b border-line bg-bg/95 px-3 backdrop-blur sm:px-5">
         <MobileMenuButton />
         <form action="/business/search" method="get" role="search" className="relative min-w-0 max-w-md flex-1">
@@ -208,6 +255,7 @@ export function AppShell({ ctx, unread, notice, plan, children }: { ctx: BizCont
             className="h-9 w-full rounded-lg border border-line bg-surface pl-9 pr-3 text-[13.5px] outline-none placeholder:text-faint focus:border-accent focus:ring-4 focus:ring-accent/15"
           />
         </form>
+        <QuickJump items={quickActions(ctx)} />
         <div className="ml-auto flex items-center gap-1">
           {plan.upgrade && (
             <Link href="/business/settings/billing#plans" className={buttonClass("primary", "sm", "mr-1 hidden sm:inline-flex")} data-upgrade-button>

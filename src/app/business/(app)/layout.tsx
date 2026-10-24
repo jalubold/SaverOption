@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
-import { AppShell } from "@/components/business/app-shell";
+import { cookies, headers } from "next/headers";
+import { AppShell, parseNavCookie } from "@/components/business/app-shell";
+import { NAV_COOKIE } from "@/lib/business/constants";
 import { billingNotice, trialBadge } from "@/lib/business/billing";
 import { can } from "@/lib/business/permissions";
 import { accessFor } from "@/lib/server/business/billing";
@@ -34,7 +35,7 @@ export default async function BusinessAppLayout({ children }: { children: React.
   const plan = { upgrade: canManage && access.kind === "trial" ? "Upgrade" : canManage && access.kind === "locked" ? "Choose a plan" : null, trial: trialBadge(access, now) };
   return (
     <div className="bg-bg text-fg">
-      <AppShell ctx={ctx} unread={unread} notice={notice} plan={plan}>
+      <AppShell ctx={ctx} unread={unread} notice={notice} plan={plan} navOpen={parseNavCookie((await cookies()).get(NAV_COOKIE)?.value)}>
         {children}
       </AppShell>
     </div>
