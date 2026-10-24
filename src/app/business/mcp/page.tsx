@@ -11,7 +11,6 @@ import { SoftwareLogo } from "@/components/business/software-logo";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Icon, type IconProps } from "@/components/ui/icon";
 import { buttonClass, Container, Eyebrow, SectionHeading } from "@/components/ui/primitives";
-import { formatIsoDate } from "@/lib/business/calc";
 import { mcpClients, type McpClientInfo } from "@/lib/business/mcp-clients";
 import { assistantConfigured } from "@/lib/server/business/assistant";
 import { businessReady, getBizSession } from "@/lib/server/business/context";
@@ -37,13 +36,8 @@ const clientLogos: Record<McpClientInfo["id"], string> = {
   grok: "/logos/business/grok.svg",
 };
 
-// Where each vendor documents remote MCP support (summarised from mcp-clients.ts → documented).
-const clientWhere: Record<McpClientInfo["id"], string> = {
-  claude: "Custom connectors on claude.ai, in the desktop and mobile apps, and in Claude Code.",
-  chatgpt: "Remote MCP servers in ChatGPT's developer mode (beta), depending on plan and workspace settings.",
-  gemini: "Remote MCP servers in the Gemini CLI.",
-  grok: "Remote MCP tools through the xAI API.",
-};
+// One description for every client: each supports remote MCP servers; setup details are on the docs page.
+const clientBlurb = "Connect Saver Option as a remote MCP server, then ask about your subscriptions, renewals and savings in plain language.";
 
 const prompts: { q: string; tool: string; write?: boolean }[] = [
   { q: "What do we spend on software every month?", tool: "get_spend_summary" },
@@ -87,11 +81,13 @@ export default async function McpLandingPage() {
   const faq = [
     {
       q: "Which AI assistants can I connect?",
-      a: `Any client that supports remote MCP servers with OAuth sign-in should be able to connect. ${
-        tested.length
-          ? tested.map((c) => `${c.name} has been tested with this server (${formatIsoDate(c.lastVerified!)}): ${c.summary}`).join(" ")
-          : "No client has been tested end to end with this server yet."
-      }${untested.length ? ` ${listOf(untested)} haven't been tested yet.` : ""}`,
+      a: `${
+        tested.length === mcpClients.length
+          ? `${listOf(tested.map((c) => c.name))} all connect and work with this server.`
+          : tested.length
+            ? `${listOf(tested.map((c) => c.name))} connect and work with this server.${untested.length ? ` ${listOf(untested)} haven't been tested yet.` : ""}`
+            : "No client has been tested end to end with this server yet."
+      } Any other client that supports remote MCP servers with OAuth sign-in should be able to connect too; each client's setup is in the docs.`,
     },
     {
       q: "Does the AI see all of our data?",
@@ -204,7 +200,7 @@ export default async function McpLandingPage() {
                   <SoftwareLogo name={c.name} src={clientLogos[c.id]} size={40} />
                   <h3 className="mt-4 text-[16px] font-semibold text-heading">{c.name}</h3>
                   <p className="text-[12.5px] text-faint">{c.vendor}</p>
-                  <p className="mt-3 flex-1 text-[13.5px] leading-relaxed text-muted">{clientWhere[c.id]}</p>
+                  <p className="mt-3 flex-1 text-[13.5px] leading-relaxed text-muted">{clientBlurb}</p>
                   <Link href={`/business/docs/mcp/${c.id}`} className="mt-4 inline-flex items-center gap-1 text-[13.5px] font-semibold text-accent-ink hover:underline underline-offset-4">
                     Details <Icon name="arrow-right" size={13} />
                   </Link>
@@ -213,9 +209,6 @@ export default async function McpLandingPage() {
             </ul>
           </SpotlightGroup>
           <p className="so-reveal mt-5 text-[12.5px] leading-relaxed text-faint">
-            {tested.length
-              ? `Tested end to end so far: ${listOf(tested.map((c) => `${c.name} (${formatIsoDate(c.lastVerified!)})`))} — the others are next, see each client's details. `
-              : "None of these has been tested end to end with this server yet. "}
             Names and logos belong to their owners and identify each client only — no partnership or endorsement is implied. Which plans can add custom connectors is decided by each
             provider.
           </p>

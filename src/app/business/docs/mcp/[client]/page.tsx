@@ -39,6 +39,13 @@ export default async function McpClientPage(props: { params: Promise<{ client: s
             Adding the connector follows {c.vendor}&apos;s own steps in the documentation linked below; use the server URL from Connection details.
           </Note>
         )}
+        {verified && (
+          <Note>
+            <strong className="font-semibold text-fg">Verified with this server{c.lastVerified ? ` (${formatIsoDate(c.lastVerified)})` : ""}.</strong> In {c.name}, add Saver Option as a remote MCP
+            server (custom connector) with the server URL from Connection details, sign in with Google when asked, and approve one workspace and an access level on
+            Saver Option&apos;s consent screen. Where exactly the setting lives is described in {c.vendor}&apos;s documentation linked below.
+          </Note>
+        )}
         {!verified && c.status !== "partial" && (
           <Note tone="warn">
             <strong className="font-semibold text-fg">Not yet verified with this server.</strong> We&apos;ll publish step-by-step instructions here once the connection has been tested.

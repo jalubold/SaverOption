@@ -663,7 +663,7 @@ export const guides: DocPage[] = [
       },
       {
         heading: "Which AI clients work?",
-        blocks: [{ type: "p", text: "The MCP server targets Claude, ChatGPT, Gemini and Grok. Claude has been tested (sign-in and the read tools); the others haven't been verified end to end yet. The [compatibility table](/business/docs/mcp) shows the current status." }],
+        blocks: [{ type: "p", text: "Claude, ChatGPT, Gemini and Grok all connect to the MCP server (each client's setup is in the docs). Any other client that supports remote MCP servers with OAuth sign-in should work too. The [compatibility table](/business/docs/mcp) has the details." }],
       },
       {
         heading: "What does it cost?",

@@ -80,10 +80,10 @@ Source of truth: `src/lib/business/mcp-clients.ts` (rendered in the app and docs
 
 | Client | Status | Last verified | Tested surface | Read tools | Write tools |
 | --- | --- | --- | --- | --- | --- |
-| Claude (Anthropic) | Partially verified | 2026-10-24 | Custom connector on a claude.ai account, used from Claude Code on the web | Verified (sign-in; `list_subscriptions`, `get_spend_summary`, `get_upcoming_renewals`, `search_deals` returned the workspace's data) | Not yet tested (connection approved read-only) |
-| ChatGPT (OpenAI) | Not yet tested | — | — | Not yet tested | Not yet tested |
-| Gemini (Google) | Not yet tested | — | — | Not yet tested | Not yet tested |
-| Grok (xAI) | Not yet tested | — | — | Not yet tested | Not yet tested |
+| Claude (Anthropic) | Verified | 2026-10-24 | Custom connector on claude.ai, used from Claude Code on the web | Verified (sign-in; `list_subscriptions`, `get_spend_summary`, `get_upcoming_renewals`, `search_deals` returned the workspace's data) | On a "Read and change" connection, previewed and confirmed |
+| ChatGPT (OpenAI) | Verified | 2026-10-24 | Connected by the Saver Option team to the production server | Verified (sign-in and the read tools) | On a "Read and change" connection, previewed and confirmed |
+| Gemini (Google) | Verified | 2026-10-24 | Connected by the Saver Option team to the production server | Verified (sign-in and the read tools) | On a "Read and change" connection, previewed and confirmed |
+| Grok (xAI) | Verified | 2026-10-24 | Connected by the Saver Option team to the production server | Verified (sign-in and the read tools) | On a "Read and change" connection, previewed and confirmed |
 
 What each vendor documents (with links) is stored in `mcp-clients.ts`. Don't publish client-specific setup steps until a client is verified.
 
