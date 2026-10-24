@@ -107,12 +107,13 @@ export function BarList({ rows, caption, valueHead = "Monthly", max: maxRows = 8
               </div>
               <div className={cn("mt-1.5 h-2 rounded-r-[4px] bg-subtle/70", r.logo !== undefined ? "ml-[30px] w-[calc(100%-30px)]" : "w-full")} aria-hidden="true">
                 <div
-                  className="h-full rounded-r-[4px] transition-[filter]"
+                  className="viz-grow-x h-full rounded-r-[4px] transition-[filter]"
                   style={{
+                    "--i": i,
                     width: r.value > 0 ? `${Math.max(1.5, (r.value / max) * 100)}%` : 0,
                     backgroundImage: "linear-gradient(90deg, color-mix(in oklab, var(--accent) 70%, white), var(--accent))",
                     filter: hover === i ? "brightness(1.12)" : undefined,
-                  }}
+                  } as CSSProperties}
                 />
               </div>
               {hover === i && (
@@ -144,7 +145,7 @@ export function StackedBar({ segments, caption }: { segments: Segment[]; caption
   if (total <= 0) return <p className="text-[13px] text-faint">No priced active subscriptions yet.</p>;
   return (
     <div style={vizVars}>
-      <div className="relative flex h-6 w-full gap-[2px]" role="img" aria-label={`${caption}: ${parts.map((p) => `${p.label} ${p.display}`).join(", ")}`}>
+      <div className="viz-grow-x relative flex h-6 w-full gap-[2px]" role="img" aria-label={`${caption}: ${parts.map((p) => `${p.label} ${p.display}`).join(", ")}`}>
         {parts.map((p, i) => (
           <div
             key={p.label}
@@ -259,10 +260,10 @@ export function TrendChart({ points, caption, currency, height = 200 }: { points
             </text>
           ) : null,
         )}
-        <path d={area} fill={`url(#${gradientId})`} />
-        <path d={line} fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
+        <path d={area} fill={`url(#${gradientId})`} className="viz-fade" />
+        <path d={line} pathLength={1} fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" className="viz-draw" />
         {hover !== null && <line x1={x(hover)} x2={x(hover)} y1={pad.t} y2={y(0)} stroke="var(--viz-axis)" strokeWidth="1" />}
-        <circle cx={x(hover ?? last)} cy={y(points[hover ?? last].value)} r="4.5" fill="var(--accent)" stroke="#ffffff" strokeWidth="2" />
+        <circle cx={x(hover ?? last)} cy={y(points[hover ?? last].value)} r="4.5" fill="var(--accent)" stroke="#ffffff" strokeWidth="2" className="viz-fade" style={{ "--d": "1300ms" } as CSSProperties} />
       </svg>
       {hover !== null && (
         <div
@@ -365,7 +366,7 @@ export function DonutChart({ segments, caption, centerLabel, centerValue, otherL
     <div style={vizVars} className="@container">
       <div className="flex flex-col items-center gap-4 @md:flex-row">
         <div className="relative shrink-0">
-          <svg viewBox="0 0 180 180" width="180" height="180" role="img" aria-label={`${caption}: ${parts.map((p) => `${p.label} ${Math.round((p.value / total) * 100)}%`).join(", ")}`}>
+          <svg viewBox="0 0 180 180" width="180" height="180" className="viz-sweep" role="img" aria-label={`${caption}: ${parts.map((p) => `${p.label} ${Math.round((p.value / total) * 100)}%`).join(", ")}`}>
             {arcs.map((a) => (
               <path
                 key={a.label}
@@ -425,8 +426,8 @@ export function Sparkline({ values, label, tone = "accent", height = 36 }: { val
           <stop offset="1" stopColor={color} stopOpacity="0" />
         </linearGradient>
       </defs>
-      <path d={`${line} L${W},${H} L0,${H} Z`} fill={`url(#${id})`} />
-      <path d={line} fill="none" stroke={color} strokeWidth="2" vectorEffect="non-scaling-stroke" strokeLinecap="round" strokeLinejoin="round" />
+      <path d={`${line} L${W},${H} L0,${H} Z`} fill={`url(#${id})`} className="viz-fade" />
+      <path d={line} pathLength={1} fill="none" stroke={color} strokeWidth="2" vectorEffect="non-scaling-stroke" strokeLinecap="round" strokeLinejoin="round" className="viz-draw" />
     </svg>
   );
 }
@@ -445,7 +446,18 @@ export function RadialGauge({ value, label, sub, size = 132 }: { value: number |
     <div style={vizVars} className="relative inline-flex" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(v)} aria-label={label}>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-[225deg]">
         <circle cx={size / 2} cy={size / 2} r={rad} fill="none" stroke="color-mix(in oklab, var(--accent) 12%, white)" strokeWidth={stroke} strokeDasharray={`${arc} ${circ}`} strokeLinecap="round" />
-        <circle cx={size / 2} cy={size / 2} r={rad} fill="none" stroke={tone} strokeWidth={stroke} strokeDasharray={`${(arc * v) / 100} ${circ}`} strokeLinecap="round" />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={rad}
+          fill="none"
+          stroke={tone}
+          strokeWidth={stroke}
+          strokeDasharray={`${(arc * v) / 100} ${circ}`}
+          strokeLinecap="round"
+          className="viz-gauge"
+          style={{ "--so-circ": circ } as CSSProperties}
+        />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
         <span className="text-[1.6rem] font-semibold leading-none text-heading">{value === null ? "—" : `${Math.round(v)}%`}</span>
@@ -508,7 +520,7 @@ export function RenewalTimeline({ items, days, startLabel }: { items: TimelineIt
       <div className="-mx-1 overflow-x-auto px-1 pb-1">
         <div className="relative min-w-[600px]" style={{ height: 34 + laneCount * 40 }}>
           {/* the window, with the first week shaded */}
-          <div className="absolute bottom-[22px] left-0 h-[3px] rounded-full bg-accent/25" style={{ width: `${(7 / days) * 100}%` }} />
+          <div className="viz-grow-x absolute bottom-[22px] left-0 h-[3px] rounded-full bg-accent/25" style={{ width: `${(7 / days) * 100}%` }} />
           <div className="absolute inset-x-0 bottom-[22px] h-px bg-[var(--viz-axis)]" />
           {Array.from({ length: weeks + 1 }, (_, w) => {
             const pct = ((w * 7) / days) * 100;
@@ -519,7 +531,7 @@ export function RenewalTimeline({ items, days, startLabel }: { items: TimelineIt
               </div>
             );
           })}
-          {placed.map((it) => (
+          {placed.map((it, i) => (
             <Link
               key={it.key}
               href={it.href}
@@ -532,8 +544,9 @@ export function RenewalTimeline({ items, days, startLabel }: { items: TimelineIt
               aria-label={`${it.name}: ${it.kind === "deadline" ? "cancellation deadline" : "renews"} ${it.dateLabel}${it.amount ? `, ${it.amount}` : ""}`}
             >
               <span
+                style={{ "--i": i } as CSSProperties}
                 className={cn(
-                  "block rounded-[10px] ring-2 transition-transform group-hover:-translate-y-0.5 motion-reduce:transition-none",
+                  "viz-pop block rounded-[10px] ring-2 transition-transform group-hover:-translate-y-0.5 motion-reduce:transition-none",
                   it.kind === "deadline" ? "ring-[#eda100]" : it.daysLeft <= 7 ? "ring-accent" : "ring-surface",
                   hover !== null && hover !== it.key && "opacity-50",
                 )}

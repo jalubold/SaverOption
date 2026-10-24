@@ -54,7 +54,7 @@ export function FeatureRow({
 }) {
   return (
     <div id={id} className="grid scroll-mt-24 items-center gap-10 lg:grid-cols-2 lg:gap-16">
-      <div className={cn("min-w-0", flip && "lg:order-2")}>
+      <div className={cn("so-reveal min-w-0", flip && "lg:order-2")}>
         <p className="flex items-center gap-3 text-[13px] font-semibold uppercase tracking-[0.07em] text-accent-ink">
           <IconTile icon={icon} tone={tone} size={38} />
           {eyebrow}
@@ -72,7 +72,7 @@ export function FeatureRow({
           ))}
         </ul>
       </div>
-      <div className={cn("relative isolate min-w-0", flip && "lg:order-1")}>
+      <div className={cn("so-reveal so-scroll-viz relative isolate min-w-0", flip && "lg:order-1")}>
         <div aria-hidden="true" className="pointer-events-none absolute inset-x-6 inset-y-10 -z-10 rounded-full blur-3xl" style={{ background: glows[tone] }} />
         {visual}
       </div>
@@ -85,7 +85,7 @@ export function FaqAccordion({ items }: { items: { q: string; a: string }[] }) {
   return (
     <div className="space-y-3">
       {items.map((f, i) => (
-        <details key={f.q} open={i === 0} className="group rounded-2xl border border-line bg-surface shadow-[var(--shadow-card)] transition-colors open:border-accent/35">
+        <details key={f.q} open={i === 0} className="so-reveal group rounded-2xl border border-line bg-surface shadow-[var(--shadow-card)] transition-[border-color,box-shadow] open:border-accent/35 open:shadow-[0_18px_40px_-28px_rgb(124_58_236/0.5)]">
           <summary className="flex cursor-pointer list-none items-center justify-between gap-4 rounded-2xl px-5 py-4 text-[15.5px] font-medium text-heading [&::-webkit-details-marker]:hidden">
             {f.q}
             <span aria-hidden="true" className="flex size-7 shrink-0 items-center justify-center rounded-full border border-line text-muted transition-transform group-open:rotate-45 group-open:border-transparent group-open:bg-accent group-open:text-white">

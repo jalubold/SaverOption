@@ -396,6 +396,402 @@
   }
 }
 
+/* ── Saver Option Business: motion ─────────────────────────────────────────
+ * Entrances play once, charts draw in when they mount, and the landing page
+ * reveals sections as they scroll in (scroll-driven where supported; elsewhere
+ * everything simply shows). Everything stops under prefers-reduced-motion.
+ */
+@property --so-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+@property --so-sweep {
+  syntax: "<angle>";
+  initial-value: 360deg;
+  inherits: false;
+}
+
+@keyframes so-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+@keyframes so-rise-blur {
+  from {
+    opacity: 0;
+    transform: translateY(0.35em);
+    filter: blur(10px);
+  }
+}
+@keyframes so-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes so-grow-x {
+  from {
+    transform: scaleX(0);
+  }
+}
+@keyframes so-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes so-sweep {
+  from {
+    --so-sweep: 0deg;
+  }
+}
+@keyframes so-gauge {
+  from {
+    stroke-dasharray: 0 var(--so-circ, 1000);
+  }
+}
+@keyframes so-pop {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.6);
+  }
+}
+@keyframes so-spin {
+  to {
+    --so-angle: 360deg;
+  }
+}
+@keyframes so-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+@keyframes so-drift-a {
+  0% {
+    transform: translate3d(-6%, -4%, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(8%, 6%, 0) scale(1.15);
+  }
+}
+@keyframes so-drift-b {
+  0% {
+    transform: translate3d(6%, 4%, 0) scale(1.1);
+  }
+  100% {
+    transform: translate3d(-8%, -6%, 0) scale(0.95);
+  }
+}
+@keyframes so-drift-c {
+  0% {
+    transform: translate3d(0, 6%, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate3d(-4%, -8%, 0) rotate(25deg);
+  }
+}
+@keyframes so-shine {
+  from {
+    transform: translateX(-130%) skewX(-20deg);
+  }
+  to {
+    transform: translateX(330%) skewX(-20deg);
+  }
+}
+@keyframes so-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(48px) scale(0.98);
+  }
+}
+@keyframes so-tilt {
+  from {
+    transform: perspective(1600px) rotateX(18deg) scale(0.92) translateY(-12px);
+  }
+}
+@keyframes so-shimmer {
+  from {
+    background-position: 150% 0;
+  }
+  to {
+    background-position: -50% 0;
+  }
+}
+@keyframes so-pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 45%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 10px transparent;
+  }
+}
+
+@layer components {
+  :root {
+    --so-ease: cubic-bezier(0.22, 0.8, 0.24, 1);
+  }
+
+  /* Entrances. Stagger with style="--d: 120ms". */
+  .so-rise {
+    animation: so-rise 0.7s var(--so-ease) backwards;
+    animation-delay: var(--d, 0ms);
+  }
+  .so-rise-blur {
+    display: inline-block;
+    animation: so-rise-blur 0.9s var(--so-ease) backwards;
+    animation-delay: var(--d, 0ms);
+  }
+  .so-page {
+    animation: so-rise 0.45s var(--so-ease) backwards;
+  }
+
+  /* Charts draw in when they mount. */
+  .viz-grow-x {
+    transform-origin: left center;
+    animation: so-grow-x 1s var(--so-ease) backwards;
+    animation-delay: calc(var(--i, 0) * 70ms + 120ms);
+  }
+  .viz-draw {
+    stroke-dasharray: 1;
+    animation: so-draw 1.5s var(--so-ease) backwards;
+    animation-delay: var(--d, 0ms);
+  }
+  .viz-fade {
+    animation: so-fade 1.2s ease-out backwards;
+    animation-delay: var(--d, 300ms);
+  }
+  .viz-sweep {
+    -webkit-mask-image: conic-gradient(#000 var(--so-sweep), transparent 0);
+    mask-image: conic-gradient(#000 var(--so-sweep), transparent 0);
+    animation: so-sweep 1.2s var(--so-ease) backwards;
+    animation-delay: 120ms;
+  }
+  .viz-gauge {
+    animation: so-gauge 1.4s var(--so-ease) backwards;
+    animation-delay: 150ms;
+  }
+  .viz-pop {
+    animation: so-pop 0.55s var(--so-ease) backwards;
+    animation-delay: calc(var(--i, 0) * 45ms + 200ms);
+  }
+  .viz-live {
+    animation: so-pulse-ring 1.8s ease-out infinite;
+  }
+
+  /* Landing: reveal on scroll, and a 3D preview that straightens as it scrolls in. */
+  @supports (animation-timeline: view()) {
+    .so-reveal {
+      animation: so-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 75%;
+    }
+    .so-tilt {
+      transform-origin: 50% 0%;
+      animation: so-tilt linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 42%;
+    }
+    /* Charts inside a revealed section draw as they come into view instead of on load. */
+    .so-scroll-viz .viz-grow-x,
+    .so-scroll-viz .viz-draw,
+    .so-scroll-viz .viz-sweep,
+    .so-scroll-viz .viz-gauge,
+    .so-scroll-viz .viz-pop {
+      animation-timeline: view();
+      animation-range: entry 10% cover 40%;
+      animation-delay: 0ms;
+      animation-duration: auto;
+      animation-timing-function: var(--so-ease);
+    }
+  }
+
+  .so-float {
+    animation: so-float 7s ease-in-out infinite;
+    animation-delay: var(--d, 0ms);
+  }
+
+  /* Slowly drifting colour blooms behind dark heroes. */
+  .so-aurora {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .so-aurora > span {
+    position: absolute;
+    width: 70%;
+    aspect-ratio: 1;
+    border-radius: 9999px;
+    will-change: transform;
+  }
+  .so-aurora > span:nth-child(1) {
+    right: -18%;
+    top: -45%;
+    background: radial-gradient(closest-side, color-mix(in oklab, var(--accent) 55%, transparent), transparent);
+    animation: so-drift-a 18s ease-in-out infinite alternate;
+  }
+  .so-aurora > span:nth-child(2) {
+    left: -22%;
+    bottom: -55%;
+    background: radial-gradient(closest-side, rgb(42 120 214 / 0.35), transparent);
+    animation: so-drift-b 22s ease-in-out infinite alternate;
+  }
+  .so-aurora > span:nth-child(3) {
+    left: 30%;
+    top: -30%;
+    width: 45%;
+    background: radial-gradient(closest-side, rgb(232 123 164 / 0.22), transparent);
+    animation: so-drift-c 26s ease-in-out infinite alternate;
+  }
+
+  /* Fine film grain on dark surfaces. */
+  .so-grain::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.09;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* A light beam that travels around an element's border. */
+  .so-beam {
+    position: relative;
+    isolation: isolate;
+  }
+  .so-beam::after {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    z-index: 2;
+    border-radius: inherit;
+    padding: 1.5px;
+    pointer-events: none;
+    background: conic-gradient(
+      from var(--so-angle),
+      transparent 0deg 250deg,
+      color-mix(in oklab, var(--accent) 70%, transparent) 290deg,
+      #fff 320deg,
+      color-mix(in oklab, var(--accent) 70%, transparent) 340deg,
+      transparent 360deg
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+    animation: so-spin 7s linear infinite;
+  }
+
+  /* One sweep of light across a surface (on load), and on hover for buttons. */
+  .so-shine {
+    position: relative;
+    overflow: hidden;
+  }
+  .so-shine::after {
+    content: "";
+    position: absolute;
+    inset: -20% auto -20% 0;
+    width: 35%;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.16), transparent);
+    transform: translateX(-130%) skewX(-20deg);
+    animation: so-shine 1.6s var(--so-ease) 0.5s backwards;
+  }
+  .so-shine-hover {
+    position: relative;
+    overflow: hidden;
+    border-radius: 14px;
+  }
+  .so-shine-hover::after {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 40%;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgb(124 58 236 / 0.14), transparent);
+    transform: translateX(-130%) skewX(-20deg);
+  }
+  .so-shine-hover:hover::after {
+    animation: so-shine 0.9s var(--so-ease) both;
+  }
+
+  /* Cursor spotlight on cards inside a <SpotlightGroup>. */
+  .so-spot {
+    position: relative;
+  }
+  .so-spot::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 200ms;
+    background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%), color-mix(in oklab, var(--accent) 10%, transparent), transparent 65%);
+  }
+  .so-spot:hover::before {
+    opacity: 1;
+  }
+  .so-spot > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Loading placeholders with a travelling sheen. */
+  .so-skeleton {
+    background-color: var(--subtle);
+    background-image: linear-gradient(100deg, transparent 30%, rgb(255 255 255 / 0.55) 50%, transparent 70%);
+    background-size: 200% 100%;
+    animation: so-shimmer 1.5s linear infinite;
+  }
+
+  /* Text with a soft top-lit gradient (white → lavender) on dark surfaces. */
+  .so-ink {
+    background-image: linear-gradient(180deg, #ffffff 30%, color-mix(in oklab, var(--accent) 35%, #ffffff));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .so-rise,
+    .so-rise-blur,
+    .so-page,
+    .viz-grow-x,
+    .viz-draw,
+    .viz-fade,
+    .viz-sweep,
+    .viz-gauge,
+    .viz-pop,
+    .viz-live,
+    .so-skeleton,
+    .so-reveal,
+    .so-tilt,
+    .so-float,
+    .so-aurora > span,
+    .so-beam::after,
+    .so-shine::after,
+    .so-shine-hover:hover::after {
+      animation: none !important;
+    }
+    .so-shine::after {
+      display: none;
+    }
+  }
+}
+
 @utility tabular {
   font-variant-numeric: tabular-nums;
 }

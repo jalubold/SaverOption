@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import type { CSSProperties } from "react";
 import { GoogleButton } from "@/components/auth/auth-forms";
 import { SignInAside } from "@/components/business/landing/sign-in-aside";
+import { Aurora } from "@/components/business/motion";
 import { BusinessPublicHeader } from "@/components/business/public-header";
 import { FormMessage } from "@/components/ui/form";
 import { Icon } from "@/components/ui/icon";
@@ -29,14 +31,15 @@ export async function BusinessSignIn({ searchParams, mode }: { searchParams: Rec
     <>
       <BusinessPublicHeader signedIn={false} />
       <div className="theme-dark bg-bg text-fg">
-        <section className="hero-glow relative min-h-[72vh] overflow-hidden border-b border-line">
+        <section className="hero-glow so-grain relative min-h-[72vh] overflow-hidden border-b border-line">
+          <Aurora />
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 [background-image:radial-gradient(rgb(255_255_255/0.07)_1px,transparent_1px)] [background-size:22px_22px] [mask-image:radial-gradient(60%_60%_at_80%_10%,#000_20%,transparent_100%)]"
           />
           <Container className="relative grid items-center gap-12 py-12 sm:py-20 lg:grid-cols-[minmax(0,440px)_minmax(0,1fr)] lg:gap-16">
-            <div className="mx-auto w-full max-w-md lg:mx-0">
-              <div className="rounded-[22px] border border-line-strong bg-surface p-6 shadow-[0_30px_70px_-40px_rgb(0_0_0/0.8)] sm:p-8">
+            <div className="so-rise mx-auto w-full max-w-md lg:mx-0">
+              <div className="so-beam rounded-[22px] border border-line-strong bg-surface/90 p-6 shadow-[0_30px_70px_-40px_rgb(0_0_0/0.8)] backdrop-blur-md sm:p-8">
                 <span aria-hidden="true" className="icon-tile mb-5 size-11">
                   <Icon name="building" size={21} />
                 </span>
@@ -51,7 +54,9 @@ export async function BusinessSignIn({ searchParams, mode }: { searchParams: Rec
                   ) : !google ? (
                     <FormMessage tone="error">Google sign-in isn&apos;t switched on yet. Please try again a little later.</FormMessage>
                   ) : null}
-                  <GoogleButton next={next} disabled={!google} />
+                  <div className="so-shine-hover">
+                    <GoogleButton next={next} disabled={!google} />
+                  </div>
                   <p className="flex gap-2 text-[12.5px] leading-relaxed text-faint">
                     <Icon name="lock" size={14} className="mt-0.5 text-accent-ink" />
                     <span>
@@ -68,7 +73,9 @@ export async function BusinessSignIn({ searchParams, mode }: { searchParams: Rec
                 </Link>
               </p>
             </div>
-            <SignInAside />
+            <div className="so-rise min-w-0" style={{ "--d": "180ms" } as CSSProperties}>
+              <SignInAside />
+            </div>
           </Container>
         </section>
       </div>

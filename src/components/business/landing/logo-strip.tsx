@@ -54,7 +54,7 @@ export function LogoStrip() {
         {css}
       </style>
       <Container className="pb-8 pt-14 sm:pt-16">
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <div className="so-reveal flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
             <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-accent-ink">Works with any software</p>
             <h2 id="track-heading" className="mt-2 text-[1.45rem] font-semibold leading-snug tracking-tight text-heading sm:text-[1.75rem]">

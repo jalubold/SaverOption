@@ -53,6 +53,7 @@ export function Card({
   className,
   bodyClassName,
   id,
+  style,
 }: {
   title?: ReactNode;
   description?: ReactNode;
@@ -61,9 +62,10 @@ export function Card({
   className?: string;
   bodyClassName?: string;
   id?: string;
+  style?: CSSProperties;
 }) {
   return (
-    <section id={id} className={cn("biz-card", className)}>
+    <section id={id} className={cn("biz-card", className)} style={style}>
       {(title || action) && (
         <div className="flex flex-wrap items-start justify-between gap-2 border-b border-line px-4 py-3 sm:px-5">
           <div className="min-w-0">
@@ -98,7 +100,27 @@ export function IconTile({ icon, tone = "violet", size = 32, className }: { icon
   );
 }
 
-export function Kpi({ label, value, sub, href, icon, tone, chart }: { label: string; value: ReactNode; sub?: ReactNode; href?: string; icon?: IconProps["name"]; tone?: KpiTone; chart?: ReactNode }) {
+export function Kpi({
+  label,
+  value,
+  sub,
+  href,
+  icon,
+  tone,
+  chart,
+  className,
+  style,
+}: {
+  label: string;
+  value: ReactNode;
+  sub?: ReactNode;
+  href?: string;
+  icon?: IconProps["name"];
+  tone?: KpiTone;
+  chart?: ReactNode;
+  className?: string;
+  style?: CSSProperties;
+}) {
   const body = (
     <>
       <div className="flex items-center justify-between gap-2">
@@ -111,11 +133,13 @@ export function Kpi({ label, value, sub, href, icon, tone, chart }: { label: str
     </>
   );
   return href ? (
-    <Link href={href} className="biz-card biz-card-lift block px-4 py-3.5">
+    <Link href={href} className={cn("biz-card biz-card-lift so-spot block px-4 py-3.5", className)} style={style}>
       {body}
     </Link>
   ) : (
-    <div className="biz-card px-4 py-3.5">{body}</div>
+    <div className={cn("biz-card px-4 py-3.5", className)} style={style}>
+      {body}
+    </div>
   );
 }
 
@@ -271,7 +295,7 @@ export function Meter({ value, label, tone = "accent" }: { value: number | null;
   return (
     <span className="flex min-w-24 items-center gap-2">
       <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-subtle" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(v)} aria-label={label}>
-        <span className={cn("block h-full rounded-full", tone === "warn" ? "bg-warn" : "bg-accent")} style={{ width: `${v}%` }} />
+        <span className={cn("viz-grow-x block h-full rounded-full", tone === "warn" ? "bg-warn" : "bg-accent")} style={{ width: `${v}%` }} />
       </span>
       <span className="tabular w-10 text-right text-[12px] text-muted">{value === null ? "—" : `${Math.round(v)}%`}</span>
     </span>

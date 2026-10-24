@@ -1,6 +1,8 @@
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { createDemoAction } from "@/app/business/actions/workspace";
 import { BarList, DonutChart, RadialGauge, RenewalTimeline, Sparkline, StackedBar, TrendChart, type TimelineItem } from "@/components/business/charts";
+import { Aurora, SpotlightGroup } from "@/components/business/motion";
 import { LogoStack, SoftwareLogo, SoftwareName } from "@/components/business/software-logo";
 import { Card, EmptyState, IconTile, Kpi, LinkButton, Meter, Money, Pill, StatusPill, TableWrap, type KpiTone } from "@/components/business/ui";
 import { Icon, type IconProps } from "@/components/ui/icon";
@@ -105,7 +107,8 @@ export default async function DashboardPage() {
   if (model.subs.length === 0 && model.software.length === 0) {
     return (
       <>
-        <section className="biz-card biz-hero theme-dark mb-5 px-5 py-6 text-fg sm:px-7">
+        <section className="biz-card biz-hero so-grain theme-dark mb-5 px-5 py-6 text-fg sm:px-7">
+          <Aurora />
           <div className="relative z-10">
             <p className="text-[12.5px] font-medium text-faint">{ctx.workspace.name}</p>
             <h1 className="mt-1 text-[26px] font-semibold leading-tight tracking-tight text-heading">Overview</h1>
@@ -212,7 +215,9 @@ export default async function DashboardPage() {
   return (
     <>
       {/* ── Hero: this month's run-rate at a glance ─────────────────────────── */}
-      <section className="biz-card biz-hero theme-dark px-5 py-6 text-fg sm:px-7 sm:py-7">
+      <section className="biz-card biz-hero so-grain theme-dark so-rise px-5 py-6 text-fg sm:px-7 sm:py-7">
+        <Aurora />
+        <span aria-hidden="true" className="so-shine pointer-events-none absolute inset-0 rounded-[inherit]" />
         <div className="relative z-10 grid gap-7 lg:grid-cols-[minmax(0,1fr)_minmax(0,380px)] lg:items-end">
           <div className="min-w-0">
             <p className="text-[12.5px] font-medium text-faint">
@@ -220,7 +225,7 @@ export default async function DashboardPage() {
             </p>
             <h1 className="mt-1 text-[26px] font-semibold leading-tight tracking-tight text-heading">Overview</h1>
             <p className="mt-6 text-[12.5px] font-medium text-muted">Monthly software spend</p>
-            <div className="tabular mt-1 text-[2.35rem] font-semibold leading-[1.1] tracking-tight text-heading sm:text-[2.75rem]">
+            <div className="so-ink tabular mt-1 w-fit text-[2.35rem] font-semibold leading-[1.1] tracking-tight sm:text-[2.75rem]">
               <Money totals={s.monthly} preferred={pref} />
             </div>
             <div className="mt-3 flex flex-wrap items-center gap-2 text-[12.5px]">
@@ -257,7 +262,7 @@ export default async function DashboardPage() {
               </div>
             </dl>
           </div>
-          <div className="min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur-sm">
+          <div className="so-rise min-w-0 rounded-2xl border border-white/10 bg-white/[0.05] p-4 shadow-[inset_0_1px_0_rgb(255_255_255/0.08)] backdrop-blur-md" style={{ "--d": "250ms" } as CSSProperties}>
             <div className="flex items-baseline justify-between gap-2 text-[12px]">
               <span className="font-medium text-muted">12-month run-rate · {chartCurrency}</span>
               <span className="tabular text-faint">{whole(cur, chartCurrency)}/mo now</span>
@@ -297,8 +302,10 @@ export default async function DashboardPage() {
       </section>
 
       {/* ── KPI tiles ───────────────────────────────────────────────────────── */}
-      <div className="mt-5 grid grid-cols-1 gap-3 min-[460px]:grid-cols-2 xl:grid-cols-4">
+      <SpotlightGroup className="mt-5 grid grid-cols-1 gap-3 min-[460px]:grid-cols-2 xl:grid-cols-4">
         <Kpi
+          className="so-rise"
+          style={{ "--d": "120ms" } as CSSProperties}
           label="Active subscriptions"
           icon="layers"
           tone="violet"
@@ -308,6 +315,8 @@ export default async function DashboardPage() {
           chart={tools.length > 0 ? <LogoStack items={tools} max={7} size={22} /> : undefined}
         />
         <Kpi
+          className="so-rise"
+          style={{ "--d": "180ms" } as CSSProperties}
           label="Upcoming renewals"
           icon="calendar"
           tone="blue"
@@ -317,6 +326,8 @@ export default async function DashboardPage() {
           chart={model.upcoming.length > 0 ? <LogoStack items={model.upcoming.map((r) => ({ name: r.softwareName, src: r.logoSrc }))} max={7} size={22} /> : undefined}
         />
         <Kpi
+          className="so-rise"
+          style={{ "--d": "240ms" } as CSSProperties}
           label="Est. potential savings"
           icon="piggy"
           tone="green"
@@ -325,6 +336,8 @@ export default async function DashboardPage() {
           href="/business/savings"
         />
         <Kpi
+          className="so-rise"
+          style={{ "--d": "300ms" } as CSSProperties}
           label="Unused licenses"
           icon="key"
           tone="orange"
@@ -333,10 +346,10 @@ export default async function DashboardPage() {
           href="/business/licenses"
           chart={model.licenses.tracked ? <Meter value={model.licenses.utilization} label="License utilization" tone={(model.licenses.utilization ?? 100) < 60 ? "warn" : "accent"} /> : undefined}
         />
-      </div>
+      </SpotlightGroup>
 
       {/* ── Trend + category mix ────────────────────────────────────────────── */}
-      <div className="mt-5 grid gap-5 lg:grid-cols-3">
+      <div className="so-rise mt-5 grid gap-5 lg:grid-cols-3" style={{ "--d": "360ms" } as CSSProperties}>
         <Card title="Monthly spending trend" description={`Recurring run-rate at each month's end, in ${chartCurrency} — from start dates and recorded price changes.`} className="lg:col-span-2">
           <TrendChart points={trend} caption={`Monthly recurring run-rate, ${chartCurrency}, last 12 months`} currency={chartCurrency} height={230} />
           {otherMonthly.length > 0 && (
@@ -359,7 +372,8 @@ export default async function DashboardPage() {
 
       {/* ── Renewal timeline ────────────────────────────────────────────────── */}
       <Card
-        className="mt-5"
+        className="so-rise mt-5"
+        style={{ "--d": "440ms" } as CSSProperties}
         title="Renewals and deadlines — next 9 weeks"
         description="Each logo sits on its date. Hover or focus one for the details; open it to record a decision."
         action={<LinkButton href="/business/renewals?view=calendar" icon="calendar">Calendar</LinkButton>}
@@ -368,7 +382,7 @@ export default async function DashboardPage() {
       </Card>
 
       {/* ── Vendors, seats, savings ─────────────────────────────────────────── */}
-      <div className="mt-5 grid gap-5 lg:grid-cols-3">
+      <div className="so-rise mt-5 grid gap-5 lg:grid-cols-3" style={{ "--d": "520ms" } as CSSProperties}>
         <Card title="Spending by vendor" description={`Monthly equivalent, ${chartCurrency}`}>
           {vendorRows.length ? <BarList caption="Spending by vendor" rows={vendorRows} max={6} /> : <p className="text-[13px] text-faint">No priced subscriptions in {chartCurrency}.</p>}
         </Card>
@@ -476,7 +490,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* ── Attention + departments ─────────────────────────────────────────── */}
-      <div className="mt-5 grid gap-5 lg:grid-cols-3">
+      <div className="so-rise mt-5 grid gap-5 lg:grid-cols-3" style={{ "--d": "580ms" } as CSSProperties}>
         <Card title="Needs attention" description="Upcoming high-cost renewals, missing details, unused seats and potential overlap." className="lg:col-span-2">
           {model.attention.length === 0 ? (
             <div className="flex items-center gap-3 py-2">
@@ -484,26 +498,28 @@ export default async function DashboardPage() {
               <p className="text-[13.5px] text-muted">Nothing needs attention right now.</p>
             </div>
           ) : (
-            <ul className="grid gap-2 sm:grid-cols-2">
-              {model.attention.slice(0, 8).map((a, i) => (
-                <li key={i}>
-                  <Link href={a.href} className="flex h-full items-start gap-3 rounded-xl border border-line px-3 py-2.5 transition-colors hover:border-line-strong hover:bg-subtle/60">
-                    <span className="relative shrink-0">
-                      {a.software ? <SoftwareLogo name={a.software.name} src={a.software.logo} size={32} /> : <IconTile icon={attentionIcon[a.kind]} tone={attentionTone[a.kind]} size={32} />}
-                      {a.software && (
-                        <span className="absolute -bottom-1 -right-1">
-                          <IconTile icon={attentionIcon[a.kind]} tone={attentionTone[a.kind]} size={17} />
-                        </span>
-                      )}
-                    </span>
-                    <span className="min-w-0">
-                      <span className="block text-[13px] font-medium leading-snug text-fg">{a.title}</span>
-                      <span className="mt-0.5 block text-[12px] leading-snug text-muted">{a.detail}</span>
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <SpotlightGroup>
+              <ul className="grid gap-2 sm:grid-cols-2">
+                {model.attention.slice(0, 8).map((a, i) => (
+                  <li key={i}>
+                    <Link href={a.href} className="so-spot biz-card-lift flex h-full items-start gap-3 rounded-xl border border-line px-3 py-2.5">
+                      <span className="relative shrink-0">
+                        {a.software ? <SoftwareLogo name={a.software.name} src={a.software.logo} size={32} /> : <IconTile icon={attentionIcon[a.kind]} tone={attentionTone[a.kind]} size={32} />}
+                        {a.software && (
+                          <span className="absolute -bottom-1 -right-1">
+                            <IconTile icon={attentionIcon[a.kind]} tone={attentionTone[a.kind]} size={17} />
+                          </span>
+                        )}
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block text-[13px] font-medium leading-snug text-fg">{a.title}</span>
+                        <span className="mt-0.5 block text-[12px] leading-snug text-muted">{a.detail}</span>
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </SpotlightGroup>
           )}
           {model.attention.length > 8 && <p className="mt-2 text-[12px] text-faint">+ {model.attention.length - 8} more.</p>}
         </Card>

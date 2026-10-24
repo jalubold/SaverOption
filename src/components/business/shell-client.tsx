@@ -39,11 +39,14 @@ export function SidebarNav({ groups, collapsed }: { groups: { label: string; ite
                     aria-current={on ? "page" : undefined}
                     title={collapsed ? it.label : undefined}
                     className={cn(
-                      "flex h-9 items-center gap-2.5 rounded-lg px-2.5 text-[13.5px] font-medium transition-colors",
-                      on ? "bg-subtle text-fg" : "text-muted hover:bg-subtle hover:text-fg",
+                      "relative flex h-9 items-center gap-2.5 rounded-lg px-2.5 text-[13.5px] font-medium transition-colors",
+                      on
+                        ? "bg-[linear-gradient(90deg,color-mix(in_oklab,var(--accent)_26%,transparent),color-mix(in_oklab,var(--accent)_6%,transparent))] text-fg shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--accent)_22%,transparent)]"
+                        : "text-muted hover:bg-subtle hover:text-fg",
                       collapsed && "lg:justify-center lg:px-0",
                     )}
                   >
+                    {on && <span aria-hidden="true" className="absolute -left-3 top-2 bottom-2 w-[3px] rounded-r-full bg-accent shadow-[0_0_12px_2px_color-mix(in_oklab,var(--accent)_70%,transparent)]" />}
                     <Icon name={it.icon} size={17} className={on ? "text-accent-ink" : undefined} />
                     <span className={cn("truncate", collapsed && "lg:sr-only")}>{it.label}</span>
                   </Link>

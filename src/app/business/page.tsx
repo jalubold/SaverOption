@@ -1,19 +1,22 @@
 import type { Metadata } from "next";
+import type { CSSProperties } from "react";
 import Link from "next/link";
 import { GoogleButton } from "@/components/auth/auth-forms";
-import { trackable } from "@/components/business/landing/example-data";
+import { byId, pricePerPeriod, trackable, usd } from "@/components/business/landing/example-data";
 import { LicensesVisual, RenewalsVisual, ReportsVisual, SavingsVisual, SpendVisual } from "@/components/business/landing/feature-visuals";
 import { HeroPreview } from "@/components/business/landing/hero-preview";
 import { LogoStrip } from "@/components/business/landing/logo-strip";
 import { FaqAccordion, FeatureRow, IconTile } from "@/components/business/landing/sections";
+import { Aurora, SpotlightGroup } from "@/components/business/motion";
 import { BusinessPublicHeader } from "@/components/business/public-header";
-import { LogoStack } from "@/components/business/software-logo";
+import { LogoStack, SoftwareLogo } from "@/components/business/software-logo";
 import { JsonLd } from "@/components/seo/json-ld";
 import { FormMessage } from "@/components/ui/form";
 import { Icon, type IconProps } from "@/components/ui/icon";
 import { buttonClass, Container, Eyebrow, SectionHeading } from "@/components/ui/primitives";
 import { businessReady, getBizSession } from "@/lib/server/business/context";
 import { googleSignInEnabled } from "@/lib/server/supabase";
+import { seatSummary } from "@/lib/business/calc";
 import { faqJsonLd, pageMetadata } from "@/lib/seo";
 
 const description =
@@ -89,7 +92,7 @@ export default async function BusinessLandingPage(props: { searchParams: Promise
       Open your dashboard <Icon name="arrow-right" size={15} />
     </Link>
   ) : (
-    <div className="w-full max-w-xs">
+    <div className="so-shine-hover w-full max-w-xs shadow-[0_10px_30px_-12px_rgb(124_58_236/0.55)]">
       <GoogleButton next="/business/dashboard" disabled={!google} />
     </div>
   );
@@ -104,7 +107,8 @@ export default async function BusinessLandingPage(props: { searchParams: Promise
 
       {/* ── Hero ─────────────────────────────────────────────────── */}
       <div className="theme-dark">
-        <section className="hero-glow relative overflow-hidden border-b border-line">
+        <section className="hero-glow so-grain relative overflow-hidden border-b border-line">
+          <Aurora />
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 [background-image:radial-gradient(rgb(255_255_255/0.08)_1px,transparent_1px)] [background-size:22px_22px] [mask-image:radial-gradient(70%_60%_at_50%_0%,#000_30%,transparent_100%)]"
@@ -116,25 +120,38 @@ export default async function BusinessLandingPage(props: { searchParams: Promise
               </div>
             )}
             <div className="max-w-3xl">
-              <Eyebrow>
-                <strong>Saver Option Business</strong>
-                <span aria-hidden="true">•</span>
-                Software spend management
-              </Eyebrow>
+              <div className="so-rise">
+                <Eyebrow>
+                  <strong>Saver Option Business</strong>
+                  <span aria-hidden="true">•</span>
+                  Software spend management
+                </Eyebrow>
+              </div>
               <h1 className="display mt-6 text-[3.1rem] leading-[0.98] sm:text-[4.6rem] lg:text-[5.4rem]">
-                Spend smarter on <em className="accent [text-shadow:0_0_48px_color-mix(in_oklab,var(--accent)_65%,transparent)]">software.</em>
+                <span className="so-rise-blur" style={{ "--d": "80ms" } as CSSProperties}>
+                  Spend
+                </span>{" "}
+                <span className="so-rise-blur" style={{ "--d": "160ms" } as CSSProperties}>
+                  smarter
+                </span>{" "}
+                <span className="so-rise-blur" style={{ "--d": "240ms" } as CSSProperties}>
+                  on
+                </span>{" "}
+                <em className="accent so-rise-blur [text-shadow:0_0_48px_color-mix(in_oklab,var(--accent)_65%,transparent)]" style={{ "--d": "360ms" } as CSSProperties}>
+                  software.
+                </em>
               </h1>
-              <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-muted sm:text-[18px]">
+              <p className="so-rise mt-6 max-w-xl text-[17px] leading-relaxed text-muted sm:text-[18px]" style={{ "--d": "520ms" } as CSSProperties}>
                 Track subscriptions, manage renewals, optimize licenses, and uncover opportunities to save — all from one workspace.
               </p>
-              <div className="mt-8 flex flex-wrap items-center gap-3">
+              <div className="so-rise mt-8 flex flex-wrap items-center gap-3" style={{ "--d": "640ms" } as CSSProperties}>
                 {cta}
                 <Link href="#features" className={buttonClass("secondary", "lg")}>
                   Explore features
                 </Link>
               </div>
               {unavailable && <div className="mt-3">{unavailable}</div>}
-              <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-[13px] text-faint">
+              <ul className="so-rise mt-6 flex flex-wrap gap-x-5 gap-y-2 text-[13px] text-faint" style={{ "--d": "760ms" } as CSSProperties}>
                 {["Google sign-in only — name, email and picture", "No bank or card connections", "Export or delete any time"].map((t) => (
                   <li key={t} className="flex items-center gap-1.5">
                     <Icon name="check" size={13} className="text-accent-ink" />
@@ -147,8 +164,13 @@ export default async function BusinessLandingPage(props: { searchParams: Promise
 
           <Container className="relative mt-12 pb-14 sm:mt-16 sm:pb-20">
             <div aria-hidden="true" className="pointer-events-none absolute inset-x-[8%] top-[6%] h-[55%] rounded-full bg-accent/30 blur-[90px]" />
-            <div className="relative">
-              <HeroPreview />
+            <div className="so-rise relative" style={{ "--d": "700ms" } as CSSProperties}>
+              <div className="so-tilt">
+                <div className="so-beam rounded-[18px]">
+                  <HeroPreview />
+                </div>
+              </div>
+              <HeroFloaters />
             </div>
           </Container>
         </section>
@@ -159,15 +181,17 @@ export default async function BusinessLandingPage(props: { searchParams: Promise
       {/* ── Features ─────────────────────────────────────────────── */}
       <section id="features" className="scroll-mt-20 border-b border-line">
         <Container className="py-16 sm:py-24">
-          <SectionHeading
-            title={
-              <>
-                Everything about your software, <em>in one place</em>
-              </>
-            }
-            description="Built on what your team records — nothing is estimated until there's data to base it on."
-          />
-          <div className="mt-12 space-y-20 sm:space-y-28">
+          <div className="so-reveal">
+            <SectionHeading
+              title={
+                <>
+                  Everything about your software, <em>in one place</em>
+                </>
+              }
+              description="Built on what your team records — nothing is estimated until there's data to base it on."
+            />
+          </div>
+          <SpotlightGroup className="mt-12 space-y-20 sm:space-y-28">
             <FeatureRow
               icon="calendar"
               tone="violet"
@@ -247,36 +271,41 @@ export default async function BusinessLandingPage(props: { searchParams: Promise
               bullets={["CSV export for subscriptions and every report", "Full workspace export as JSON", "An audit log of significant changes"]}
               visual={<ReportsVisual />}
             />
-          </div>
+          </SpotlightGroup>
         </Container>
       </section>
 
       {/* ── How it works ─────────────────────────────────────────── */}
       <section id="how-it-works" className="scroll-mt-20 border-b border-line bg-surface">
         <Container className="py-16 sm:py-24">
-          <SectionHeading
-            title={
-              <>
-                How it <em>works</em>
-              </>
-            }
-            description="From sign-in to your first overview in four steps."
-          />
-          <ol className="relative grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {steps.map((s, i) => (
-              <li key={s.title} className="relative rounded-2xl border border-line bg-bg p-5">
-                <div className="flex items-center justify-between">
-                  <IconTile icon={s.icon} size={44} />
-                  <span aria-hidden="true" className="display text-[2.2rem] text-line-strong">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                </div>
-                <h3 className="mt-4 text-[16px] font-semibold text-heading">{s.title}</h3>
-                <p className="mt-1.5 text-[14px] leading-relaxed text-muted">{s.body}</p>
-              </li>
-            ))}
-          </ol>
-          <div className="mt-8 grid gap-4 md:grid-cols-2">
+          <div className="so-reveal">
+            <SectionHeading
+              title={
+                <>
+                  How it <em>works</em>
+                </>
+              }
+              description="From sign-in to your first overview in four steps."
+            />
+          </div>
+          <SpotlightGroup>
+            <ol className="relative grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <span aria-hidden="true" className="pointer-events-none absolute left-[12%] right-[12%] top-[42px] hidden h-px bg-linear-to-r from-transparent via-accent/40 to-transparent lg:block" />
+              {steps.map((s, i) => (
+                <li key={s.title} className="so-reveal so-spot biz-card-lift relative rounded-2xl border border-line bg-bg p-5">
+                  <div className="flex items-center justify-between">
+                    <IconTile icon={s.icon} size={44} />
+                    <span aria-hidden="true" className="display text-[2.2rem] text-line-strong">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                  </div>
+                  <h3 className="mt-4 text-[16px] font-semibold text-heading">{s.title}</h3>
+                  <p className="mt-1.5 text-[14px] leading-relaxed text-muted">{s.body}</p>
+                </li>
+              ))}
+            </ol>
+          </SpotlightGroup>
+          <div className="so-reveal mt-8 grid gap-4 md:grid-cols-2">
             <div className="flex items-start gap-3 rounded-2xl border border-dashed border-line-strong p-5">
               <Icon name="eye" size={18} className="mt-0.5 text-accent-ink" />
               <p className="min-w-0 flex-1 text-[14px] leading-relaxed text-muted">
@@ -299,33 +328,37 @@ export default async function BusinessLandingPage(props: { searchParams: Promise
 
       {/* ── Privacy & security ───────────────────────────────────── */}
       <div className="theme-dark">
-        <section aria-labelledby="privacy-heading" className="relative overflow-hidden border-b border-line">
-          <div aria-hidden="true" className="pointer-events-none absolute -left-40 top-0 size-[480px] rounded-full bg-accent/20 blur-[120px]" />
+        <section aria-labelledby="privacy-heading" className="so-grain relative overflow-hidden border-b border-line">
+          <Aurora className="opacity-70" />
           <Container className="relative py-16 sm:py-24">
-            <SectionHeading
-              id="privacy-heading"
-              title={
-                <>
-                  Privacy and security <em className="accent">principles</em>
-                </>
-              }
-              description="How Saver Option Business handles your company's data."
-            />
-            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {principles.map((p) => (
-                <li key={p.title} className="rounded-2xl border border-line bg-surface/70 p-5">
-                  <IconTile icon={p.icon} size={42} />
-                  <h3 className="mt-4 text-[15.5px] font-semibold text-heading">{p.title}</h3>
-                  <p className="mt-1.5 text-[14px] leading-relaxed text-muted">{p.body}</p>
+            <div className="so-reveal">
+              <SectionHeading
+                id="privacy-heading"
+                title={
+                  <>
+                    Privacy and security <em className="accent">principles</em>
+                  </>
+                }
+                description="How Saver Option Business handles your company's data."
+              />
+            </div>
+            <SpotlightGroup>
+              <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {principles.map((p) => (
+                  <li key={p.title} className="so-reveal so-spot rounded-2xl border border-line bg-surface/70 p-5 backdrop-blur-sm">
+                    <IconTile icon={p.icon} size={42} />
+                    <h3 className="mt-4 text-[15.5px] font-semibold text-heading">{p.title}</h3>
+                    <p className="mt-1.5 text-[14px] leading-relaxed text-muted">{p.body}</p>
+                  </li>
+                ))}
+                <li className="so-reveal flex flex-col justify-between rounded-2xl border border-dashed border-line-strong p-5">
+                  <p className="text-[14px] leading-relaxed text-muted">How Saver Option handles personal data across the site, including Google sign-in, is described in the privacy policy.</p>
+                  <Link href="/privacy" className="mt-4 inline-flex items-center gap-1.5 text-[14px] font-semibold text-accent-ink hover:underline underline-offset-4">
+                    Read the privacy policy <Icon name="arrow-right" size={14} />
+                  </Link>
                 </li>
-              ))}
-              <li className="flex flex-col justify-between rounded-2xl border border-dashed border-line-strong p-5">
-                <p className="text-[14px] leading-relaxed text-muted">How Saver Option handles personal data across the site, including Google sign-in, is described in the privacy policy.</p>
-                <Link href="/privacy" className="mt-4 inline-flex items-center gap-1.5 text-[14px] font-semibold text-accent-ink hover:underline underline-offset-4">
-                  Read the privacy policy <Icon name="arrow-right" size={14} />
-                </Link>
-              </li>
-            </ul>
+              </ul>
+            </SpotlightGroup>
           </Container>
         </section>
       </div>
@@ -333,7 +366,7 @@ export default async function BusinessLandingPage(props: { searchParams: Promise
       {/* ── FAQ ──────────────────────────────────────────────────── */}
       <section id="faq" className="scroll-mt-20 border-b border-line">
         <Container className="grid gap-10 py-16 sm:py-24 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.4fr)] lg:gap-16">
-          <div className="lg:sticky lg:top-24 lg:self-start">
+          <div className="so-reveal lg:sticky lg:top-24 lg:self-start">
             <h2 className="display text-[2.25rem] sm:text-[3rem]">
               Frequently asked <em>questions</em>
             </h2>
@@ -345,9 +378,12 @@ export default async function BusinessLandingPage(props: { searchParams: Promise
 
       {/* ── Final call to action ─────────────────────────────────── */}
       <div className="theme-dark">
-        <section className="hero-glow relative overflow-hidden">
-          <Container className="flex flex-col items-center py-16 text-center sm:py-24">
-            <LogoStack items={trackable.slice(0, 8)} max={8} size={36} />
+        <section className="hero-glow so-grain relative overflow-hidden">
+          <Aurora />
+          <Container className="so-reveal relative flex flex-col items-center py-16 text-center sm:py-24">
+            <span className="so-float">
+              <LogoStack items={trackable.slice(0, 8)} max={8} size={36} />
+            </span>
             <p className="mt-3 text-[12.5px] text-faint">Slack, Figma, AWS — and anything else you pay for</p>
             <h2 className="display mt-6 max-w-3xl text-[2.5rem] sm:text-[3.6rem]">
               See where your software budget <em className="accent">goes.</em>
@@ -362,5 +398,43 @@ export default async function BusinessLandingPage(props: { searchParams: Promise
       </div>
       <JsonLd data={faqJsonLd(faq)} />
     </>
+  );
+}
+
+/** Two example notifications floating beside the hero preview (large screens only). */
+function HeroFloaters() {
+  const slack = byId("slack");
+  const notion = byId("notion");
+  const notionSeats = seatSummary(notion);
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden xl:block">
+      <div className="so-rise absolute -right-8 -top-9" style={{ "--d": "1300ms" } as CSSProperties}>
+        <div className="so-float flex w-64 items-center gap-3 rounded-2xl border border-white/15 bg-[#16131f]/80 p-3 text-left shadow-[0_24px_50px_-20px_rgb(0_0_0/0.8)] backdrop-blur-md" style={{ "--d": "0ms" } as CSSProperties}>
+          <span className="relative">
+            <SoftwareLogo name={slack.name} src={slack.logo} size={36} />
+            <span className="viz-live absolute -right-1 -top-1 size-2.5 rounded-full bg-accent" />
+          </span>
+          <span className="min-w-0">
+            <span className="block text-[13px] font-semibold text-white">
+              {slack.name} renews in {slack.renewsIn} days
+            </span>
+            <span className="block text-[11.5px] text-white/60">{pricePerPeriod(slack)} · Example reminder</span>
+          </span>
+        </div>
+      </div>
+      <div className="so-rise absolute -left-12 bottom-28" style={{ "--d": "1550ms" } as CSSProperties}>
+        <div className="so-float flex w-72 items-center gap-3 rounded-2xl border border-white/15 bg-[#16131f]/80 p-3 text-left shadow-[0_24px_50px_-20px_rgb(0_0_0/0.8)] backdrop-blur-md" style={{ "--d": "-3s" } as CSSProperties}>
+          <span className="icon-tile size-9 shrink-0 rounded-[11px]" style={{ "--tile-from": "#22b07d", "--tile-to": "#047857" } as CSSProperties}>
+            <Icon name="piggy" size={17} />
+          </span>
+          <span className="min-w-0">
+            <span className="block text-[13px] font-semibold text-white">
+              {notionSeats.available} unused {notion.name} seats
+            </span>
+            <span className="block text-[11.5px] text-white/60">≈ {usd((notionSeats.unusedMonthly ?? 0) * 12)}/yr potential · Example</span>
+          </span>
+        </div>
+      </div>
+    </div>
   );
 }

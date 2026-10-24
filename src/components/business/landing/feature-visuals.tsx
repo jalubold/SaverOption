@@ -24,7 +24,7 @@ import { ExampleLabel, FakeControl, MiniTimeline, PreviewCard, SubRow } from "./
 
 function Frame({ children }: { children: React.ReactNode }) {
   return (
-    <div className="theme-light relative rounded-[20px] border border-line bg-subtle/80 p-3 text-fg shadow-[0_30px_60px_-36px_rgb(10_10_10/0.35)] sm:p-4">
+    <div className="theme-light so-spot relative rounded-[20px] border border-line bg-subtle/80 p-3 text-fg shadow-[0_30px_60px_-36px_rgb(10_10_10/0.35)] transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_40px_70px_-36px_rgb(60_20_140/0.45)] motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:p-4">
       <ExampleLabel className="mb-3 px-1" />
       <div className="space-y-3">{children}</div>
     </div>
