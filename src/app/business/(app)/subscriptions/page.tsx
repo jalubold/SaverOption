@@ -6,9 +6,11 @@ import { Card, EmptyState, LinkButton, Money, PageHeader, Pagination, Tabs } fro
 import { buttonClass } from "@/components/ui/primitives";
 import { daysBetween, formatIsoDate, formatMoney, isRecurring, monthlyEquivalent, periodSuffix, seatSummary, summarizeSpend } from "@/lib/business/calc";
 import { billingIntervalLabels, BILLING_INTERVALS, categoryLabels, SOFTWARE_CATEGORIES, SUBSCRIPTION_STATUSES, subscriptionStatusLabels } from "@/lib/business/constants";
+import { convertedParts, convertTotals } from "@/lib/business/fx";
 import { can } from "@/lib/business/permissions";
 import { requireBizContext } from "@/lib/server/business/context";
 import { getDepartments, getPeople, getSubscriptions, getVendors } from "@/lib/server/business/data";
+import { getFxRates } from "@/lib/server/business/fx";
 import { applySubscriptionFilters, filtersQuery, hasActiveFilters, parseSubscriptionFilters, type SubscriptionFilters } from "@/lib/server/business/subscription-filters";
 
 export const metadata = { title: "Subscriptions" };
@@ -66,6 +68,10 @@ export default async function SubscriptionsPage(props: { searchParams: Promise<R
 
   // The tools in this view, highest monthly cost first (default currency first, as currencies aren't compared).
   const pref = ctx.workspace.defaultCurrency;
+  // Other currencies in the totals are converted at the ECB reference rate (with the amounts shown); none fetched otherwise.
+  const fx = Object.entries(summary.monthly).some(([c, v]) => c !== pref && v !== 0) ? await getFxRates() : null;
+  const convMonthly = convertTotals(summary.monthly, pref, fx);
+  const convAnnual = convertTotals(summary.annualized, pref, fx);
   const tools = new Map<string, { name: string; src: string | null; rank: [number, number] }>();
   for (const s of rows) {
     const m = isRecurring(s) ? (monthlyEquivalent(s) ?? 0) : 0;
@@ -200,8 +206,16 @@ export default async function SubscriptionsPage(props: { searchParams: Promise<R
               }
             >
               <StripStat label="Active" value={summary.activeCount} sub={summary.trialCount ? `+ ${summary.trialCount} in trial` : undefined} />
-              <StripStat label="Monthly equivalent" value={<Money totals={summary.monthly} preferred={pref} />} sub="Active, priced plans" />
-              <StripStat label="Annualized" value={<Money totals={summary.annualized} preferred={pref} />} sub="Run-rate × 12" />
+              <StripStat
+                label="Monthly equivalent"
+                value={convMonthly ? formatMoney(convMonthly.amount, pref) : <Money totals={summary.monthly} preferred={pref} />}
+                sub={convMonthly ? `Incl. ${convertedParts(convMonthly)} at the ECB rate of ${formatIsoDate(convMonthly.date, ctx.workspace.dateFormat)}` : "Active, priced plans"}
+              />
+              <StripStat
+                label="Annualized"
+                value={convAnnual ? formatMoney(convAnnual.amount, pref) : <Money totals={summary.annualized} preferred={pref} />}
+                sub={convAnnual ? `Incl. ${convertedParts(convAnnual)} converted` : "Run-rate × 12"}
+              />
               <StripStat label="Renewing in 30 days" value={summary.upcomingRenewals} tone={summary.upcomingRenewals > 0 ? "accent" : undefined} />
             </SummaryStrip>
           )}

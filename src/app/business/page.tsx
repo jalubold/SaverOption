@@ -46,7 +46,7 @@ const faq = [
   },
   {
     q: "Can we track subscriptions in different currencies?",
-    a: "Yes. Each subscription keeps its own currency, and totals are shown per currency. Amounts are never converted or added across currencies.",
+    a: "Yes. Each subscription keeps the currency it's billed in. Headline totals are shown in your default currency, converting the others at the European Central Bank's daily reference rate — with the original amounts, the rate and its date shown alongside.",
   },
   {
     q: "Can my colleagues use the same workspace?",
@@ -221,7 +221,7 @@ export default async function BusinessLandingPage(props: { searchParams: Promise
                 </>
               }
               body="Monthly and annualized run-rate, broken down by vendor, category and department — calculated only from what your team records."
-              bullets={["Totals per currency — amounts are never converted or mixed", "Spend by vendor, category and department", "Monthly versus yearly billing at a glance"]}
+              bullets={["Totals in your default currency, converted at the ECB's daily rate", "Spend by vendor, category and department", "Monthly versus yearly billing at a glance"]}
               visual={<SpendVisual />}
             />
             <FeatureRow

@@ -569,7 +569,12 @@ export const guides: DocPage[] = [
       },
       {
         heading: "Totals in several currencies",
-        blocks: [{ type: "p", text: "Saver Option never converts or adds currencies; each total is per currency. Exchange rates are not available yet." }],
+        blocks: [
+          {
+            type: "p",
+            text: "Each subscription keeps the currency it's billed in. The headline totals on the dashboard and the subscriptions list are shown in the workspace's default currency: other currencies are converted at the European Central Bank's daily euro reference rate, and the converted amounts, the rate and its date are shown underneath. Lists, charts, reports and exports stay per currency. If the rates can't be fetched, or a currency has no ECB rate, the totals are shown per currency instead.",
+          },
+        ],
       },
     ],
   },

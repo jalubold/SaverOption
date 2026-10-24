@@ -69,7 +69,7 @@ const safety: { icon: IconProps["name"]; tone: TileTone; title: string; body: st
   { icon: "credit-card", tone: "orange", title: "Nothing moves money", body: "No tool cancels, renews or buys anything at a vendor, and none can make a payment." },
   { icon: "shield", tone: "blue", title: "One workspace, your role", body: "A connection reaches only the workspace you approved, with your role's permissions, checked on every call." },
   { icon: "clock", tone: "indigo", title: "Short-lived, revocable access", body: "Access tokens last an hour and are stored only as hashes. Disconnect in Settings and access ends straight away." },
-  { icon: "chart", tone: "violet", title: "Numbers that say what they are", body: "Each figure is labeled actual, normalized estimate or projection, and currencies are never converted or added together." },
+  { icon: "chart", tone: "violet", title: "Numbers that say what they are", body: "Each figure is labeled actual, normalized estimate or projection, and tool answers keep each currency separate." },
 ];
 
 const listOf = (xs: string[]) => (xs.length < 2 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs.at(-1)}`);

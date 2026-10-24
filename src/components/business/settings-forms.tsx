@@ -73,7 +73,7 @@ export function PreferencesForm({
         name="defaultCurrency"
         defaultValue={values.defaultCurrency}
         options={[...new Set([values.defaultCurrency, ...COMMON_CURRENCIES])].map((c) => ({ value: c, label: c }))}
-        hint="Pre-selected for new subscriptions and shown first in totals. Amounts are never converted between currencies."
+        hint="Pre-selected for new subscriptions. Headline totals are shown in it, converting other currencies at the ECB's daily reference rate."
       />
       <SelectField label="Time zone" name="timeZone" defaultValue={values.timeZone} options={zones.map((z) => ({ value: z, label: z.replace(/_/g, " ") }))} hint="Decides what “today” is for renewals and reminders." />
       <SelectField

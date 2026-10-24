@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { createDemoAction } from "@/app/business/actions/workspace";
 import { BarList, DonutChart, RadialGauge, RenewalTimeline, Sparkline, StackedBar, TrendChart, type TimelineItem } from "@/components/business/charts";
 import { Aurora, SpotlightGroup } from "@/components/business/motion";
@@ -22,9 +22,11 @@ import {
   type CurrencyTotals,
 } from "@/lib/business/calc";
 import { categoryLabels, opportunityTypeLabels, subscriptionStatusLabels } from "@/lib/business/constants";
+import { convertedParts, convertTotals, rateText, type ConvertedTotal } from "@/lib/business/fx";
 import { can } from "@/lib/business/permissions";
 import { buildSpendModel, type AttentionItem, type Group } from "@/lib/server/business/analytics";
 import { displayName, requireBizContext } from "@/lib/server/business/context";
+import { getFxRates } from "@/lib/server/business/fx";
 import { getActivity, type Subscription } from "@/lib/server/business/data";
 import { logoFor } from "@/lib/server/business/logos";
 
@@ -212,8 +214,12 @@ export default async function DashboardPage() {
 
   const activityLogo = (entityType: string | null, entityId: string | null) => (entityType === "subscription" && entityId ? logoById.get(entityId) : entityType === "software" && entityId ? softwareById.get(entityId) : null) ?? null;
 
-  // One headline figure in the main currency; other currencies are listed beside it, never converted.
+  // One headline figure: other currencies are converted into the default one at the ECB reference rate
+  // (shown with the rate and date); without rates they're listed beside it instead.
   const [heroMain, ...heroRest] = totalsList(s.monthly, pref);
+  const foreign = [s.monthly, s.annualized, renewalTotals].some((t) => Object.entries(t).some(([c, v]) => c !== pref && v !== 0));
+  const fx = foreign ? await getFxRates() : null;
+  const conv = { monthly: convertTotals(s.monthly, pref, fx), annualized: convertTotals(s.annualized, pref, fx), renewing: convertTotals(renewalTotals, pref, fx) };
   return (
     <>
       {/* ── Hero: this month's run-rate at a glance ─────────────────────────── */}
@@ -228,13 +234,20 @@ export default async function DashboardPage() {
             <h1 className="mt-1 text-[26px] font-semibold leading-tight tracking-tight text-heading">Overview</h1>
             <p className="mt-6 text-[12.5px] font-medium text-muted">Monthly software spend</p>
             <div className="so-ink tabular mt-1 w-fit text-[2.35rem] font-semibold leading-[1.1] tracking-tight sm:text-[2.75rem]">
-              {heroMain ? formatMoney(heroMain.amount, heroMain.currency) : "—"}
+              {conv.monthly ? formatMoney(conv.monthly.amount, pref) : heroMain ? formatMoney(heroMain.amount, heroMain.currency) : "—"}
             </div>
-            {heroRest.length > 0 && (
+            {conv.monthly ? (
               <p className="mt-1.5 text-[12.5px] text-muted">
-                Plus <span className="tabular font-medium text-fg">{heroRest.map((t) => formatMoney(t.amount, t.currency)).join(" + ")}</span>/mo billed in{" "}
-                {heroRest.map((t) => t.currency).join(" and ")} — kept separate, not converted
+                Includes <span className="tabular font-medium text-fg">{convertedParts(conv.monthly)}</span>/mo converted at the ECB reference rate of{" "}
+                {formatIsoDate(conv.monthly.date, fmt)} ({rateText(conv.monthly)})
               </p>
+            ) : (
+              heroRest.length > 0 && (
+                <p className="mt-1.5 text-[12.5px] text-muted">
+                  Plus <span className="tabular font-medium text-fg">{heroRest.map((t) => formatMoney(t.amount, t.currency)).join(" + ")}</span>/mo billed in{" "}
+                  {heroRest.map((t) => t.currency).join(" and ")} — exchange rates unavailable right now, so not converted
+                </p>
+              )
             )}
             <div className="mt-3 flex flex-wrap items-center gap-2 text-[12.5px]">
               {showDelta && (
@@ -255,14 +268,14 @@ export default async function DashboardPage() {
               <div>
                 <dt className="text-faint">Annualized software spend</dt>
                 <dd className="tabular mt-0.5 text-[15px] font-semibold text-heading">
-                  <Money totals={s.annualized} preferred={pref} />
+                  <ConvertedMoney c={conv.annualized} fallback={<Money totals={s.annualized} preferred={pref} />} />
                 </dd>
                 <dd className="text-[11.5px] text-faint">Run-rate × 12, not cash spent</dd>
               </div>
               <div>
                 <dt className="text-faint">Renewing in 9 weeks</dt>
                 <dd className="tabular mt-0.5 text-[15px] font-semibold text-heading">
-                  <Money totals={renewalTotals} preferred={pref} empty="Nothing" />
+                  <ConvertedMoney c={conv.renewing} fallback={<Money totals={renewalTotals} preferred={pref} empty="Nothing" />} />
                 </dd>
                 <dd className="text-[11.5px] text-faint">
                   {renewalsInWindow.length} renewal{renewalsInWindow.length === 1 ? "" : "s"}, list prices
@@ -674,5 +687,16 @@ export default async function DashboardPage() {
         )}
       </Card>
     </>
+  );
+}
+
+/** A converted total with what it includes underneath ("incl. €1,188.00"), or the per-currency fallback. */
+function ConvertedMoney({ c, fallback }: { c: ConvertedTotal | null; fallback: ReactNode }) {
+  if (!c) return <>{fallback}</>;
+  return (
+    <span className="inline-flex flex-col">
+      <span className="whitespace-nowrap">{formatMoney(c.amount, c.currency)}</span>
+      <span className="whitespace-nowrap text-[0.8em] font-normal opacity-65">incl. {convertedParts(c)} converted</span>
+    </span>
   );
 }
