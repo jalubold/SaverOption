@@ -192,7 +192,12 @@ export function billingNotice(a: Access, opts: { timeZone: string; canManage: bo
     case "trial": {
       const left = remainingText(a.endsAt, opts.now);
       const soon = a.endsAt.getTime() - opts.now.getTime() < 2 * 86_400_000;
-      return { tone: soon ? "warn" : "accent", title: `Free trial · ${left} left`, body: `Ends ${formatInstant(a.endsAt, opts.timeZone, { time: true })}. No card needed for the trial.${askOwner}`, cta };
+      return {
+        tone: soon ? "warn" : "accent",
+        title: `Free trial · ${left} left`,
+        body: `Ends ${formatInstant(a.endsAt, opts.timeZone, { time: true })}. No card needed for the trial.${opts.canManage ? " You can upgrade any time." : " An owner or admin can upgrade any time."}`,
+        cta: opts.canManage ? "Upgrade now" : null,
+      };
     }
     case "subscription":
       if (a.state === "past_due")
@@ -206,4 +211,18 @@ export function billingNotice(a: Access, opts: { timeZone: string; canManage: bo
       return { tone: "danger", title, body: `Your data is kept. Settings, members and billing stay available.${askOwner}`, cta };
     }
   }
+}
+
+/** The trial card in the sidebar: time left and how much of the trial is used (0–1). */
+export interface TrialBadge {
+  left: string;
+  daysLeft: number;
+  used: number;
+}
+
+export function trialBadge(a: Access, now: Date): TrialBadge | null {
+  if (a.kind !== "trial") return null;
+  const total = TRIAL_DAYS * 86_400_000;
+  const used = Math.min(1, Math.max(0, 1 - (a.endsAt.getTime() - now.getTime()) / total));
+  return { left: remainingText(a.endsAt, now), daysLeft: daysLeft(a.endsAt, now), used };
 }

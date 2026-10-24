@@ -145,6 +145,15 @@ export default async function BillingPage({ searchParams }: { searchParams: Prom
               },
             ]}
           />
+          {canManage && access.kind === "trial" && showPlans && (
+            <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-line pt-4">
+              <a href="#plans" className={buttonClass("primary", "sm")} data-upgrade-now>
+                <Icon name="sparkles" size={14} />
+                Upgrade now
+              </a>
+              <p className="max-w-md text-[12.5px] text-faint">Pay for a plan now instead of waiting for the trial to end.</p>
+            </div>
+          )}
           {canManage && record?.creemSubscriptionId && (
             <div className="mt-5 flex flex-wrap items-start gap-3 border-t border-line pt-4">
               {record.creemCustomerId && <PortalForm workspaceId={ws.id} label={access.kind === "subscription" && access.state === "past_due" ? "Update payment method" : "Manage billing"} />}
@@ -176,9 +185,14 @@ export default async function BillingPage({ searchParams }: { searchParams: Prom
             <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
               <div>
                 <h2 id="plans-heading" className="text-[16px] font-semibold text-fg">
-                  {access.kind === "trial" ? "Choose a plan for after the trial" : "Choose a plan"}
+                  {access.kind === "trial" ? "Upgrade now" : "Choose a plan"}
                 </h2>
-                <p className="mt-0.5 text-[13px] text-muted">There&apos;s no free plan after the trial. Prices are confirmed with Creem before checkout.</p>
+                <p className="mt-0.5 text-[13px] text-muted">
+                  {access.kind === "trial"
+                    ? "You don't have to wait for the trial to end — subscribe whenever you're ready. The paid plan starts once Creem confirms the payment. "
+                    : ""}
+                  There&apos;s no free plan after the trial. Prices are confirmed with Creem before checkout.
+                </p>
               </div>
               {hasYearly && (
                 <div role="group" aria-label="Billing interval" className="inline-flex rounded-lg border border-line bg-surface p-0.5 text-[13px]">

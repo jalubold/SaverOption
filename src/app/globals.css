@@ -531,6 +531,12 @@
     filter: blur(10px);
   }
 }
+@keyframes so-reveal-soft {
+  from {
+    opacity: 0;
+    transform: translateY(36px) scale(0.985);
+  }
+}
 @keyframes so-wipe {
   from {
     clip-path: inset(0 100% 0 0);
@@ -593,6 +599,12 @@
     animation: so-rise-blur 0.9s var(--so-ease) backwards;
     animation-delay: var(--d, 0ms);
   }
+  /* The same entrance without the blur, for gradient text (Safari can't clip text inside a filtered element). */
+  .so-rise-soft {
+    display: inline-block;
+    animation: so-rise 0.9s var(--so-ease) backwards;
+    animation-delay: var(--d, 0ms);
+  }
   .so-page {
     animation: so-rise 0.45s var(--so-ease) backwards;
   }
@@ -643,6 +655,9 @@
   }
   .so-reveal.is-in {
     animation: so-reveal 1s var(--so-ease) backwards;
+  }
+  .so-reveal.is-in:has(.lx-sheen) {
+    animation-name: so-reveal-soft;
   }
   /* Charts in a pending section wait, then draw when it comes into view. */
   .so-scroll-viz.is-pending :is(.viz-grow-x, .viz-draw, .viz-fade, .viz-sweep, .viz-gauge, .viz-pop, .viz-wipe) {
@@ -824,6 +839,7 @@
   @media (prefers-reduced-motion: reduce) {
     .so-rise,
     .so-rise-blur,
+    .so-rise-soft,
     .so-page,
     .viz-grow-x,
     .viz-draw,

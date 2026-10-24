@@ -99,7 +99,7 @@ export function SidebarFrame({ sidebar, collapsedSidebar, children }: { sidebar:
     <div className="flex min-h-dvh">
       <div className={cn("theme-dark hidden shrink-0 border-r border-line bg-bg transition-[width] duration-150 lg:block", collapsed ? "w-[68px]" : "w-[248px]")}>
         <aside className="sticky top-0 flex h-dvh flex-col">
-          <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-3 pb-3">{collapsed ? collapsedSidebar : sidebar}</div>
+          <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-3 pb-3 [&>*]:shrink-0">{collapsed ? collapsedSidebar : sidebar}</div>
           <button type="button" onClick={toggle} className="m-3 mt-0 flex h-8 items-center justify-center gap-2 rounded-lg text-[12.5px] text-faint hover:bg-subtle hover:text-fg" aria-pressed={collapsed}>
             <Icon name="panel-left" size={15} />
             <span className={collapsed ? "sr-only" : undefined}>{collapsed ? "Expand sidebar" : "Collapse sidebar"}</span>
@@ -109,7 +109,7 @@ export function SidebarFrame({ sidebar, collapsedSidebar, children }: { sidebar:
       {open && (
         <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="Navigation">
           <button type="button" aria-label="Close navigation" className="absolute inset-0 bg-black/50" onClick={() => setOpen(false)} />
-          <aside className="theme-dark absolute inset-y-0 left-0 flex w-[min(86vw,300px)] flex-col overflow-y-auto border-r border-line bg-bg px-3 pb-6">{sidebar}</aside>
+          <aside className="theme-dark absolute inset-y-0 left-0 flex w-[min(86vw,300px)] flex-col overflow-y-auto border-r border-line bg-bg px-3 pb-6 [&>*]:shrink-0">{sidebar}</aside>
         </div>
       )}
       <div className="flex min-w-0 flex-1 flex-col">

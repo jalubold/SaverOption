@@ -227,8 +227,11 @@ export default async function BusinessLandingPage(props: { searchParams: Promise
             <span className="so-rise-blur" style={{ "--d": "280ms" } as CSSProperties}>
               on
             </span>{" "}
-            {/* The entrance and the sheen are separate animations, so they sit on separate elements. */}
-            <span className="so-rise-blur inline-block [filter:drop-shadow(0_0_38px_color-mix(in_oklab,var(--accent)_55%,transparent))]" style={{ "--d": "400ms" } as CSSProperties}>
+            {/* The entrance and the sheen are separate animations, so they sit on separate elements. No filter on
+                either: Safari can't clip text to its gradient (background-clip: text) inside a filtered element, so
+                the glow is a blurred shape behind the word and the entrance only fades and rises. */}
+            <span className="so-rise-soft relative isolate inline-block" style={{ "--d": "400ms" } as CSSProperties}>
+              <span aria-hidden="true" className="pointer-events-none absolute -inset-x-[4%] inset-y-[20%] -z-10 rounded-full bg-accent/30 blur-2xl" />
               <em className="accent lx-sheen">software.</em>
             </span>
           </h1>

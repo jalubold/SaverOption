@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { AppShell } from "@/components/business/app-shell";
-import { billingNotice } from "@/lib/business/billing";
+import { billingNotice, trialBadge } from "@/lib/business/billing";
 import { can } from "@/lib/business/permissions";
 import { accessFor } from "@/lib/server/business/billing";
 import { opensWhenLocked, requireBizContext } from "@/lib/server/business/context";
@@ -26,10 +26,15 @@ export default async function BusinessAppLayout({ children }: { children: React.
     console.error("[business] reminder sync failed:", err instanceof Error ? err.message : err);
   }
   const unread = await getUnreadCount(ctx.workspace.id, ctx.user.id);
-  const notice = billingNotice(await accessFor(ctx.workspace), { timeZone: ctx.workspace.timeZone, canManage: can(ctx.role, "billing.manage"), now: new Date() });
+  const access = await accessFor(ctx.workspace);
+  const now = new Date();
+  const canManage = can(ctx.role, "billing.manage");
+  const notice = billingNotice(access, { timeZone: ctx.workspace.timeZone, canManage, now });
+  // Upgrading is offered during the trial too, not only once it has ended.
+  const plan = { upgrade: canManage && access.kind === "trial" ? "Upgrade" : canManage && access.kind === "locked" ? "Choose a plan" : null, trial: trialBadge(access, now) };
   return (
     <div className="bg-bg text-fg">
-      <AppShell ctx={ctx} unread={unread} notice={notice}>
+      <AppShell ctx={ctx} unread={unread} notice={notice} plan={plan}>
         {children}
       </AppShell>
     </div>

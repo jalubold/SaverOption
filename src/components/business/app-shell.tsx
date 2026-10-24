@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { createDemoAction, switchWorkspaceAction } from "@/app/business/actions/workspace";
-import type { BillingNotice } from "@/lib/business/billing";
+import type { BillingNotice, TrialBadge } from "@/lib/business/billing";
 import { roleLabels } from "@/lib/business/constants";
 import { can } from "@/lib/business/permissions";
 import { displayName, type BizContext } from "@/lib/server/business/context";
@@ -99,7 +99,43 @@ function WorkspaceSwitcher({ ctx, collapsed }: { ctx: BizContext; collapsed?: bo
   );
 }
 
-function Sidebar({ ctx, collapsed }: { ctx: BizContext; collapsed?: boolean }) {
+/** What the shell shows about the plan: an Upgrade button (owners and admins) and the trial card. */
+export interface ShellPlan {
+  /** Label of the header button, or null when there's nothing to buy (or the person can't). */
+  upgrade: string | null;
+  trial: TrialBadge | null;
+}
+
+function TrialCard({ trial, upgrade, collapsed }: { trial: TrialBadge; upgrade: string | null; collapsed?: boolean }) {
+  if (collapsed) {
+    return (
+      <Link href="/business/settings/billing#plans" className="mb-2 flex h-9 items-center justify-center rounded-lg text-accent-ink hover:bg-subtle" title={`Free trial · ${trial.left} left`}>
+        <Icon name="calendar" size={16} />
+        <span className="sr-only">Free trial, {trial.left} left</span>
+      </Link>
+    );
+  }
+  return (
+    <div className="mb-2 rounded-xl border border-line bg-subtle/60 px-3 py-2.5" data-trial-card>
+      <div className="flex items-baseline justify-between gap-2">
+        <p className="text-[12.5px] font-semibold text-fg">Free trial</p>
+        <p className="text-[11.5px] text-faint">{trial.left} left</p>
+      </div>
+      <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-line" role="progressbar" aria-label="Free trial used" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(trial.used * 100)}>
+        <div className="h-full rounded-full bg-accent" style={{ width: `${Math.max(4, Math.round(trial.used * 100))}%` }} />
+      </div>
+      {upgrade ? (
+        <Link href="/business/settings/billing#plans" className="mt-2 inline-flex items-center gap-1 text-[12.5px] font-semibold text-accent-ink hover:underline underline-offset-2">
+          {upgrade} now <Icon name="arrow-right" size={12} />
+        </Link>
+      ) : (
+        <p className="mt-1.5 text-[11.5px] text-faint">An owner or admin can upgrade any time.</p>
+      )}
+    </div>
+  );
+}
+
+function Sidebar({ ctx, plan, collapsed }: { ctx: BizContext; plan: ShellPlan; collapsed?: boolean }) {
   return (
     <>
       <Link href="/business/dashboard" className={cn("flex h-14 shrink-0 items-center gap-2 px-1.5", collapsed && "justify-center px-0")} aria-label="Saver Option Business overview">
@@ -120,7 +156,8 @@ function Sidebar({ ctx, collapsed }: { ctx: BizContext; collapsed?: boolean }) {
         </Link>
       )}
       <SidebarNav groups={groups} collapsed={collapsed} />
-      <div className="mt-auto pt-6">
+      <div className="mt-auto pt-4">
+        {plan.trial && <TrialCard trial={plan.trial} upgrade={plan.upgrade} collapsed={collapsed} />}
         <Link href="/deals" className={cn("flex h-9 items-center gap-2.5 rounded-lg px-2.5 text-[13px] text-faint hover:bg-subtle hover:text-fg", collapsed && "justify-center px-0")} title={collapsed ? "Saver Option deals" : undefined}>
           <Icon name="tag" size={16} />
           <span className={collapsed ? "sr-only" : undefined}>Browse software deals</span>
@@ -152,10 +189,10 @@ function BillingStrip({ notice }: { notice: BillingNotice }) {
   );
 }
 
-export function AppShell({ ctx, unread, notice, children }: { ctx: BizContext; unread: number; notice: BillingNotice | null; children: ReactNode }) {
+export function AppShell({ ctx, unread, notice, plan, children }: { ctx: BizContext; unread: number; notice: BillingNotice | null; plan: ShellPlan; children: ReactNode }) {
   const name = displayName(ctx.user);
   return (
-    <SidebarFrame sidebar={<Sidebar ctx={ctx} />} collapsedSidebar={<Sidebar ctx={ctx} collapsed />}>
+    <SidebarFrame sidebar={<Sidebar ctx={ctx} plan={plan} />} collapsedSidebar={<Sidebar ctx={ctx} plan={plan} collapsed />}>
       <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b border-line bg-bg/95 px-3 backdrop-blur sm:px-5">
         <MobileMenuButton />
         <form action="/business/search" method="get" role="search" className="relative min-w-0 max-w-md flex-1">
@@ -172,6 +209,12 @@ export function AppShell({ ctx, unread, notice, children }: { ctx: BizContext; u
           />
         </form>
         <div className="ml-auto flex items-center gap-1">
+          {plan.upgrade && (
+            <Link href="/business/settings/billing#plans" className={buttonClass("primary", "sm", "mr-1 hidden sm:inline-flex")} data-upgrade-button>
+              <Icon name="sparkles" size={14} />
+              {plan.upgrade}
+            </Link>
+          )}
           <Link href="/business/notifications" className="relative inline-flex size-9 items-center justify-center rounded-lg text-muted hover:bg-subtle hover:text-fg" aria-label={unread ? `Notifications, ${unread} unread` : "Notifications"}>
             <Icon name="bell" size={18} />
             {unread > 0 && (

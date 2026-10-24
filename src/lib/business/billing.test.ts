@@ -2,7 +2,7 @@
 import assert from "node:assert/strict";
 import { createHmac } from "node:crypto";
 import { test } from "node:test";
-import { billingNotice, canStartCheckout, daysLeft, effectivePlan, hasPremium, memberLimitReached, remainingText, resolveAccess, TRIAL_DAYS, type BillingRecord } from "./billing.ts";
+import { billingNotice, trialBadge, canStartCheckout, daysLeft, effectivePlan, hasPremium, memberLimitReached, remainingText, resolveAccess, TRIAL_DAYS, type BillingRecord } from "./billing.ts";
 import { parseCheckout, parseCreemEvent, parseProduct, parseSubscription, verifyCreemSignature } from "../server/business/creem.ts";
 
 const now = new Date("2026-10-24T12:00:00Z");
@@ -89,6 +89,14 @@ test("checkout is offered unless a subscription is running and renewing", () => 
   assert.equal(canStartCheckout(resolveAccess(record(sub("active", 3)), { isDemo: false, now })), false);
 });
 
+test("sidebar trial card: time left and share used", () => {
+  const b = trialBadge(resolveAccess(record(trial(5)), { isDemo: false, now }), now)!;
+  assert.equal(b.left, "5 days");
+  assert.equal(b.daysLeft, 5);
+  assert.ok(Math.abs(b.used - 2 / 7) < 1e-9);
+  assert.equal(trialBadge(resolveAccess(record(sub("active", 20)), { isDemo: false, now }), now), null);
+});
+
 test("remaining time and member limits", () => {
   assert.equal(remainingText(at(6.4), now), "6 days");
   assert.equal(remainingText(new Date(at(7).getTime() - 5000), now), "7 days");
@@ -106,7 +114,8 @@ test("banner text: trial countdown, payment problems, ended plans", () => {
   const t = billingNotice(resolveAccess(record(trial(5)), { isDemo: false, now }), { timeZone: "UTC", canManage: true, now })!;
   assert.match(t.title, /Free trial · 5 days left/);
   assert.match(t.body, /Ends Oct 29, 2026, 12:00 UTC/);
-  assert.equal(t.cta, "Choose a plan");
+  assert.equal(t.cta, "Upgrade now");
+  assert.match(t.body, /upgrade any time/);
   const member = billingNotice(resolveAccess(record(trial(5)), { isDemo: false, now }), { timeZone: "UTC", canManage: false, now })!;
   assert.equal(member.cta, null);
   assert.equal(billingNotice(resolveAccess(record(sub("past_due", 2)), { isDemo: false, now }), { timeZone: "UTC", canManage: true, now })!.title, "Payment failed");
