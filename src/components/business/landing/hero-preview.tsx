@@ -3,6 +3,7 @@ import { DonutChart, Sparkline } from "@/components/business/charts";
 import { SoftwareLogo } from "@/components/business/software-logo";
 import { Icon, type IconProps } from "@/components/ui/icon";
 import { cn } from "@/components/ui/primitives";
+import { CountUp } from "./luxe";
 import { annualTotal, byCategory, byId, monthlyTotal, potentialAnnual, renewalsIn30, runRateTrend, summary, timeline, usd } from "./example-data";
 import { AppWindow, FakeControl, MiniTimeline, PreviewCard, SubRow } from "./preview-parts";
 
@@ -16,7 +17,7 @@ const nav: { icon: IconProps["name"]; label: string }[] = [
   { icon: "users", label: "Team" },
 ];
 
-function Tile({ label, value, icon, children }: { label: string; value: string; icon: IconProps["name"]; children: React.ReactNode }) {
+function Tile({ label, value, icon, children }: { label: string; value: React.ReactNode; icon: IconProps["name"]; children: React.ReactNode }) {
   return (
     <div className="biz-card px-3.5 py-3">
       <p className="flex items-center justify-between gap-2 text-[11.5px] font-medium text-muted">
@@ -65,16 +66,16 @@ export function HeroPreview() {
           </div>
 
           <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-            <Tile label="Monthly software spend" value={usd(monthlyTotal)} icon="trending-up">
+            <Tile label="Monthly software spend" value={<CountUp value={Math.round(monthlyTotal / 100)} prefix="$" delay={900} />} icon="trending-up">
               <Sparkline values={runRateTrend} label="Example: monthly run-rate over the last 12 months, rising" />
             </Tile>
-            <Tile label="Annualized spend" value={usd(annualTotal)} icon="chart">
+            <Tile label="Annualized spend" value={<CountUp value={Math.round(annualTotal / 100)} prefix="$" delay={1000} />} icon="chart">
               Run-rate × 12 · {summary.activeCount} active
             </Tile>
-            <Tile label="Renewals · 30 days" value={String(renewalsIn30)} icon="calendar">
+            <Tile label="Renewals · 30 days" value={<CountUp value={renewalsIn30} delay={1100} duration={1000} />} icon="calendar">
               <span className="text-warn">{deadlines} cancellation deadline{deadlines === 1 ? "" : "s"}</span>
             </Tile>
-            <Tile label="Potential savings" value={`${usd(potentialAnnual)}/yr`} icon="piggy">
+            <Tile label="Potential savings" value={<CountUp value={Math.round(potentialAnnual / 100)} prefix="$" suffix="/yr" delay={1200} />} icon="piggy">
               Estimate · not guaranteed
             </Tile>
           </div>

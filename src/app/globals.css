@@ -527,7 +527,8 @@
 @keyframes so-reveal {
   from {
     opacity: 0;
-    transform: translateY(32px);
+    transform: translateY(36px) scale(0.985);
+    filter: blur(10px);
   }
 }
 @keyframes so-wipe {
@@ -641,7 +642,7 @@
     transform: translateY(32px);
   }
   .so-reveal.is-in {
-    animation: so-reveal 0.8s var(--so-ease) backwards;
+    animation: so-reveal 1s var(--so-ease) backwards;
   }
   /* Charts in a pending section wait, then draw when it comes into view. */
   .so-scroll-viz.is-pending :is(.viz-grow-x, .viz-draw, .viz-fade, .viz-sweep, .viz-gauge, .viz-pop, .viz-wipe) {
@@ -890,5 +891,251 @@
   }
   & li + li {
     margin-top: 0.35rem;
+  }
+}
+
+/* ── Saver Option Business landing: the "luxe" layer ───────────────────────
+ * A dark, cinematic page: a cursor light over the hero's dot grid, a sheen on
+ * the headline, a pointer-tilted preview, words that light up on scroll, a
+ * sticky feature story and an orb behind the last call to action. Driven by
+ * src/components/business/landing/luxe.tsx; all of it stops under
+ * prefers-reduced-motion.
+ */
+@layer components {
+  .lx-page {
+    --bg: #08070c;
+    --surface: #121119;
+    --line: rgb(255 255 255 / 0.08);
+    background: var(--bg);
+  }
+  .lx-hairline {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.14) 30%, rgb(185 156 255 / 0.35) 50%, rgb(255 255 255 / 0.14) 70%, transparent);
+  }
+
+  /* Hero: a faint dot grid everywhere, a brighter one revealed around the cursor. */
+  .lx-dots,
+  .lx-dots-lit {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: radial-gradient(rgb(255 255 255 / 0.09) 1px, transparent 1px);
+    background-size: 24px 24px;
+    mask-image: radial-gradient(75% 65% at 50% 0%, #000 25%, transparent 100%);
+  }
+  .lx-dots-lit {
+    background-image: radial-gradient(rgb(205 185 255 / 0.55) 1.2px, transparent 1.4px);
+    mask-image: radial-gradient(260px circle at var(--px, 50%) var(--py, -20%), #000 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 600ms ease;
+  }
+  .lx-light {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 600ms ease;
+    background: radial-gradient(700px circle at var(--px, 50%) var(--py, 0%), rgb(160 120 255 / 0.12), transparent 60%);
+  }
+  [data-lit] > .lx-dots-lit,
+  [data-lit] > .lx-light {
+    opacity: 1;
+  }
+
+  /* A slow light sweep across gradient text. */
+  .lx-sheen {
+    background-image: linear-gradient(100deg, var(--accent-ink) 0%, var(--accent-ink) 38%, #ffffff 50%, var(--accent-ink) 62%, var(--accent-ink) 100%);
+    background-size: 260% 100%;
+    background-position: 100% 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: lx-sheen 7s var(--so-ease) 1.4s infinite;
+  }
+
+  /* A thin horizon of light under the hero preview. */
+  .lx-horizon {
+    position: absolute;
+    left: 50%;
+    width: min(1100px, 92%);
+    height: 1px;
+    translate: -50% 0;
+    background: linear-gradient(90deg, transparent, rgb(205 185 255 / 0.95), transparent);
+    box-shadow:
+      0 0 24px 2px rgb(124 58 236 / 0.6),
+      0 0 120px 30px rgb(124 58 236 / 0.25);
+  }
+
+  /* Pointer tilt (PointerTilt sets --tx/--ty from -1 to 1). */
+  .lx-tilt {
+    transform: perspective(1800px) rotateX(calc(var(--ty, 0) * var(--max, 6deg) * -1)) rotateY(calc(var(--tx, 0) * var(--max, 6deg)));
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+  .lx-tilt [data-depth] {
+    transform: translate3d(calc(var(--tx, 0) * var(--depth, 18px)), calc(var(--ty, 0) * var(--depth, 18px) * 0.7), 0);
+    will-change: transform;
+  }
+
+  /* Words that light up as the paragraph scrolls in (ScrollWords sets --p; --n words, --i each). */
+  .lx-word {
+    opacity: calc(0.14 + 0.86 * clamp(0, var(--p, 1) * (var(--n) + 6) - var(--i), 1));
+    transition: opacity 180ms linear;
+  }
+  .lx-word-accent {
+    color: var(--accent-ink);
+  }
+
+  /* Feature story: dim steps, the active one lit; visuals crossfade in a sticky panel. */
+  .lx-step-dot {
+    color: var(--faint);
+    transition:
+      background-color 500ms var(--so-ease),
+      color 500ms var(--so-ease),
+      box-shadow 500ms var(--so-ease),
+      border-color 500ms var(--so-ease);
+  }
+  @media (min-width: 1024px) {
+    .lx-step {
+      opacity: 0.26;
+      transition: opacity 700ms var(--so-ease);
+    }
+    .lx-step[data-active] {
+      opacity: 1;
+    }
+    .lx-step[data-active] .lx-step-dot {
+      background: var(--accent);
+      border-color: transparent;
+      color: #fff;
+      box-shadow:
+        0 0 0 6px rgb(124 58 236 / 0.16),
+        0 12px 32px -6px rgb(124 58 236 / 0.75);
+    }
+  }
+  .lx-story-panel {
+    opacity: 0;
+    transform: translateY(28px) scale(0.965);
+    filter: blur(8px);
+    pointer-events: none;
+    transition:
+      opacity 700ms var(--so-ease),
+      transform 1s var(--so-ease),
+      filter 700ms var(--so-ease);
+  }
+  .lx-story-panel[data-active] {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    pointer-events: auto;
+  }
+  .lx-story-glow {
+    background: radial-gradient(closest-side, rgb(124 58 236 / 0.38), rgb(42 120 214 / 0.12) 60%, transparent);
+  }
+
+  /* How it works: a line that draws with scroll, cards that light up in turn (ScrollScrub sets --p). */
+  .lx-draw-x {
+    transform-origin: left center;
+    transform: scaleX(var(--p, 1));
+  }
+  .lx-stagger {
+    --k: clamp(0, var(--p, 1) * (var(--n) + 1.2) - var(--i), 1);
+    opacity: calc(0.25 + 0.75 * var(--k));
+    transform: translateY(calc((1 - var(--k)) * 22px));
+  }
+
+  .lx-magnetic {
+    display: inline-block;
+    transition: transform 350ms var(--so-ease);
+    will-change: transform;
+  }
+
+  /* The last call to action: a slowly turning colour orb and rings that ripple out. */
+  .lx-orb {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: min(80vw, 820px);
+    aspect-ratio: 1;
+    translate: -50% -50%;
+    border-radius: 9999px;
+    background: conic-gradient(from 0deg, #7c3aec, #2a78d6, #e87ba4, #7c3aec);
+    filter: blur(90px);
+    opacity: 0.42;
+    animation: lx-turn 26s linear infinite;
+  }
+  .lx-ring {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: min(70vw, 640px);
+    aspect-ratio: 1;
+    translate: -50% -50%;
+    border-radius: 9999px;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    animation: lx-ripple 7s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+    animation-delay: var(--d, 0s);
+  }
+
+  /* Glass panels on the dark page. */
+  .lx-glass {
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.055), rgb(255 255 255 / 0.02));
+    border: 1px solid rgb(255 255 255 / 0.08);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.06),
+      0 30px 60px -40px rgb(0 0 0 / 0.8);
+    backdrop-filter: blur(12px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lx-sheen,
+    .lx-orb,
+    .lx-ring {
+      animation: none !important;
+    }
+    .lx-word,
+    .lx-stagger {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    .lx-draw-x {
+      transform: none !important;
+    }
+    .lx-story-panel {
+      transition: none !important;
+      filter: none !important;
+    }
+    .lx-tilt,
+    .lx-tilt [data-depth],
+    .lx-magnetic {
+      transform: none !important;
+    }
+  }
+}
+
+@keyframes lx-sheen {
+  0% {
+    background-position: 100% 0;
+  }
+  45%,
+  100% {
+    background-position: 0% 0;
+  }
+}
+@keyframes lx-turn {
+  to {
+    rotate: 360deg;
+  }
+}
+@keyframes lx-ripple {
+  0% {
+    scale: 0.55;
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.9;
+  }
+  100% {
+    scale: 1.35;
+    opacity: 0;
   }
 }

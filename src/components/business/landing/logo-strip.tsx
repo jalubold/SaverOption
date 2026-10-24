@@ -49,7 +49,7 @@ function Row({ items, reverse }: { items: typeof trackable; reverse?: boolean })
 export function LogoStrip() {
   const half = Math.ceil(trackable.length / 2);
   return (
-    <section aria-labelledby="track-heading" className="overflow-hidden border-b border-line bg-surface">
+    <section aria-labelledby="track-heading" className="overflow-hidden border-b border-line">
       <style href="bizl-marquee" precedence="default">
         {css}
       </style>

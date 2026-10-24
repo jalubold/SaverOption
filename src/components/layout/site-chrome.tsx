@@ -20,7 +20,8 @@ export function SiteChrome({ header, footer, children }: { header: ReactNode; fo
       <main id="main" className="flex-1">
         {children}
       </main>
-      {footer}
+      {/* The Business landing and MCP pages are dark from top to bottom, footer included. */}
+      {path === "/business" || path === "/business/mcp" ? <div className="theme-dark">{footer}</div> : footer}
     </>
   );
 }
