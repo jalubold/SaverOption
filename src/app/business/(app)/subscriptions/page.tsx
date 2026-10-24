@@ -1,8 +1,10 @@
 import Link from "next/link";
+import { LogoStack } from "@/components/business/software-logo";
+import { SummaryStrip, StripStat } from "@/components/business/summary-strip";
 import { SubscriptionTable, type SubscriptionRowView } from "@/components/business/subscription-table";
-import { Card, EmptyState, LinkButton, PageHeader, Pagination, Tabs } from "@/components/business/ui";
+import { Card, EmptyState, LinkButton, Money, PageHeader, Pagination, Tabs } from "@/components/business/ui";
 import { buttonClass } from "@/components/ui/primitives";
-import { daysBetween, formatIsoDate, formatMoney, formatTotals, monthlyEquivalent, periodSuffix, seatSummary, summarizeSpend } from "@/lib/business/calc";
+import { daysBetween, formatIsoDate, formatMoney, isRecurring, monthlyEquivalent, periodSuffix, seatSummary, summarizeSpend } from "@/lib/business/calc";
 import { billingIntervalLabels, BILLING_INTERVALS, categoryLabels, SOFTWARE_CATEGORIES, SUBSCRIPTION_STATUSES, subscriptionStatusLabels } from "@/lib/business/constants";
 import { can } from "@/lib/business/permissions";
 import { requireBizContext } from "@/lib/server/business/context";
@@ -36,6 +38,7 @@ export default async function SubscriptionsPage(props: { searchParams: Promise<R
       id: s.id,
       softwareId: s.softwareId,
       softwareName: s.softwareName,
+      logoSrc: s.logoSrc,
       planName: s.planName,
       vendorName: s.vendorName,
       categoryLabel: categoryLabels[s.category],
@@ -60,6 +63,17 @@ export default async function SubscriptionsPage(props: { searchParams: Promise<R
     active: f.status === status,
     count: count(status),
   });
+
+  // The tools in this view, highest monthly cost first (default currency first, as currencies aren't compared).
+  const pref = ctx.workspace.defaultCurrency;
+  const tools = new Map<string, { name: string; src: string | null; rank: [number, number] }>();
+  for (const s of rows) {
+    const m = isRecurring(s) ? (monthlyEquivalent(s) ?? 0) : 0;
+    const rank: [number, number] = [s.currency === pref ? 0 : 1, -m];
+    const prev = tools.get(s.softwareId);
+    if (!prev || rank[0] < prev.rank[0] || (rank[0] === prev.rank[0] && rank[1] < prev.rank[1])) tools.set(s.softwareId, { name: s.softwareName, src: s.logoSrc, rank });
+  }
+  const topTools = [...tools.values()].sort((a, b) => a.rank[0] - b.rank[0] || a.rank[1] - b.rank[1] || a.name.localeCompare(b.name));
 
   const filtered = hasActiveFilters(f);
   const withoutStatus = hasActiveFilters({ ...f, status: null });
@@ -161,17 +175,33 @@ export default async function SubscriptionsPage(props: { searchParams: Promise<R
             )}
           </form>
 
+          {rows.length > 0 && f.status !== "archived" && (
+            <SummaryStrip
+              label="Summary of this view"
+              aside={
+                topTools.length > 0 && (
+                  <>
+                    <LogoStack items={topTools} max={6} size={28} />
+                    <span className="text-[12px] text-faint">
+                      {topTools.length} tool{topTools.length === 1 ? "" : "s"}
+                    </span>
+                  </>
+                )
+              }
+            >
+              <StripStat label="Active" value={summary.activeCount} sub={summary.trialCount ? `+ ${summary.trialCount} in trial` : undefined} />
+              <StripStat label="Monthly equivalent" value={<Money totals={summary.monthly} preferred={pref} />} sub="Active, priced plans" />
+              <StripStat label="Annualized" value={<Money totals={summary.annualized} preferred={pref} />} sub="Run-rate × 12" />
+              <StripStat label="Renewing in 30 days" value={summary.upcomingRenewals} tone={summary.upcomingRenewals > 0 ? "accent" : undefined} />
+            </SummaryStrip>
+          )}
+
           <Card bodyClassName="px-4 pb-3 pt-0 sm:px-5">
             <div className="flex flex-wrap items-baseline justify-between gap-2 py-3 text-[13px] text-muted">
               <span>
                 {rows.length} subscription{rows.length === 1 ? "" : "s"}
-                {f.status !== "archived" && summary.activeCount > 0 && (
-                  <>
-                    {" · "}active monthly equivalent <span className="tabular font-medium text-fg">{formatTotals(summary.monthly, ctx.workspace.defaultCurrency)}</span>
-                  </>
-                )}
               </span>
-              {summary.missingPrice > 0 && f.status !== "archived" && <span className="text-[12px] text-faint">{summary.missingPrice} active without a price aren&apos;t in the total</span>}
+              {summary.missingPrice > 0 && f.status !== "archived" && <span className="text-[12px] text-faint">{summary.missingPrice} active without a price aren&apos;t in the totals</span>}
             </div>
             {rows.length === 0 ? (
               <EmptyState icon="search" title={filtered ? "No subscriptions match" : "Nothing here"}>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LogoStack } from "@/components/business/software-logo";
 import { AddPersonForm, CopyLinkButton, EditPersonForm, InviteForm, RemoveMemberButton, RevokeInvitationButton, RoleSelectForm } from "@/components/business/team-forms";
 import { Card, EmptyState, InlineNote, PageHeader, Pill, TableWrap } from "@/components/business/ui";
 import { FormMessage } from "@/components/ui/form";
@@ -7,7 +8,7 @@ import { formatIsoDate } from "@/lib/business/calc";
 import { roleDescriptions, roleLabels, ROLES, type Role } from "@/lib/business/constants";
 import { assignableRoles, can, canManageMember } from "@/lib/business/permissions";
 import { requireBizContext } from "@/lib/server/business/context";
-import { getDepartments, getMembers, getOpenInvitations, getPeople, getSeatAssignments } from "@/lib/server/business/data";
+import { getDepartments, getMembers, getOpenInvitations, getPeople, getSeatAssignments, getSubscriptions } from "@/lib/server/business/data";
 
 export const metadata = { title: "Team Members" };
 
@@ -17,14 +18,22 @@ export default async function TeamPage(props: { searchParams: Promise<Record<str
   const q = await props.searchParams;
   const ctx = await requireBizContext("/business/team");
   const ws = ctx.workspace.id;
-  const [members, invitations, people, departments, seats] = await Promise.all([getMembers(ws), getOpenInvitations(ws), getPeople(ws), getDepartments(ws), getSeatAssignments(ws)]);
+  const [members, invitations, people, departments, seats, subs] = await Promise.all([getMembers(ws), getOpenInvitations(ws), getPeople(ws), getDepartments(ws), getSeatAssignments(ws), getSubscriptions(ws)]);
   const fmt = ctx.workspace.dateFormat;
   const manageMembers = can(ctx.role, "members.manage");
   const manageDirectory = can(ctx.role, "directory.manage");
   const addPeople = can(ctx.role, "records.manage");
   const grantable = assignableRoles(ctx.role).map((r) => ({ value: r, label: roleLabels[r] }));
   const seatCount = new Map<string, number>();
-  for (const a of seats) if (!a.releasedAt) seatCount.set(a.personId, (seatCount.get(a.personId) ?? 0) + 1);
+  // The tools each person holds a seat on, for a logo row in the directory.
+  const subById = new Map(subs.map((x) => [x.id, x]));
+  const seatTools = new Map<string, { name: string; src: string | null }[]>();
+  for (const a of seats) {
+    if (a.releasedAt) continue;
+    seatCount.set(a.personId, (seatCount.get(a.personId) ?? 0) + 1);
+    const sub = subById.get(a.subscriptionId);
+    if (sub) seatTools.set(a.personId, [...(seatTools.get(a.personId) ?? []), { name: sub.softwareName, src: sub.logoSrc }]);
+  }
   const deptOptions = departments.filter((d) => !d.archivedAt).map((d) => ({ value: d.id, label: d.name }));
   const editing = typeof q.edit === "string" && manageDirectory ? people.find((p) => p.id === q.edit) : undefined;
   const signInUrl = `${siteConfig.url}/business/login`;
@@ -187,7 +196,12 @@ export default async function TeamPage(props: { searchParams: Promise<Record<str
                     </td>
                     <td>{p.title ?? <span className="text-faint">—</span>}</td>
                     <td>{p.departmentName ?? <span className="text-faint">—</span>}</td>
-                    <td className="num">{seatCount.get(p.id) ?? 0}</td>
+                    <td className="num">
+                      <span className="inline-flex items-center justify-end gap-2">
+                        {(seatTools.get(p.id)?.length ?? 0) > 0 && <LogoStack items={seatTools.get(p.id)!} max={4} size={22} />}
+                        <span className="tabular">{seatCount.get(p.id) ?? 0}</span>
+                      </span>
+                    </td>
                     <td>{p.status === "active" ? <Pill tone="success">Active</Pill> : <Pill tone="outline">Inactive</Pill>}</td>
                     <td className="num">
                       {manageDirectory && (

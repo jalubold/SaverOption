@@ -2,6 +2,7 @@ import Link from "next/link";
 import { acceptInvitationAction, completeOnboardingAction, createDemoAction } from "@/app/business/actions/workspace";
 import { AddSoftwareWizard } from "@/components/business/add-software-wizard";
 import { CreateWorkspaceForm } from "@/components/business/onboarding-forms";
+import { LogoStack } from "@/components/business/software-logo";
 import { Money } from "@/components/business/ui";
 import { BrandMark } from "@/components/brand/logo";
 import { FormMessage } from "@/components/ui/form";
@@ -127,7 +128,7 @@ async function FirstSubscription({ ctx }: { ctx: NonNullable<Awaited<ReturnType<
       </p>
       <AddSoftwareWizard
         workspaceId={ws}
-        software={software.filter((s) => s.status !== "archived").map((s) => ({ id: s.id, name: s.name, vendorName: s.vendorName, category: s.category }))}
+        software={software.filter((s) => s.status !== "archived").map((s) => ({ id: s.id, name: s.name, vendorName: s.vendorName, category: s.category, logoSrc: s.logoSrc }))}
         people={people.filter((p) => p.status === "active").map((p) => ({ id: p.id, name: p.name, departmentName: p.departmentName }))}
         departments={departments.filter((d) => !d.archivedAt).map((d) => ({ id: d.id, name: d.name }))}
         defaultCurrency={ctx.workspace.defaultCurrency}
@@ -146,10 +147,19 @@ async function FirstSubscription({ ctx }: { ctx: NonNullable<Awaited<ReturnType<
 }
 
 async function Done({ ctx }: { ctx: NonNullable<Awaited<ReturnType<typeof getBizSession>>["ctx"]> }) {
-  const subs = await getSubscriptions(ctx.workspace.id);
+  const [subs, software] = await Promise.all([getSubscriptions(ctx.workspace.id), getSoftwareList(ctx.workspace.id)]);
   const s = summarizeSpend(subs, ctx.today);
+  const added = software.filter((sw) => sw.status !== "archived");
   return (
     <section className="biz-card p-5 sm:p-7">
+      {added.length > 0 && (
+        <div className="mb-4 flex flex-wrap items-center gap-3">
+          <LogoStack items={added.map((sw) => ({ name: sw.name, src: sw.logoSrc }))} max={8} size={36} />
+          <p className="text-[13px] text-muted">
+            {added.length === 1 ? `${added[0].name} is in your inventory` : `${added.length} tools in your inventory`}
+          </p>
+        </div>
+      )}
       <h1 className="text-[22px] font-semibold tracking-tight">{ctx.workspace.name} is ready</h1>
       {s.activeCount > 0 ? (
         <div className="mt-4 grid gap-3 sm:grid-cols-3">

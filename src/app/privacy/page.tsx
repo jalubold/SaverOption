@@ -9,7 +9,7 @@ export const metadata = pageMetadata({
   path: "/privacy",
 });
 
-const LAST_UPDATED = "October 22, 2026";
+const LAST_UPDATED = "October 24, 2026";
 
 export default function PrivacyPage() {
   const name = siteConfig.name;
@@ -24,7 +24,9 @@ export default function PrivacyPage() {
           <p>
             {name} is a website for discovering software offers. You can browse it without an account, and we collect as
             little personal data as possible. Software makers who buy a sponsored listing sign in with Google; the
-            sections on advertisers below apply to them.
+            sections on advertisers below apply to them. Companies that use{" "}
+            <Link href="/business">Saver Option Business</Link> to manage their software spending also sign in with
+            Google; the sections on Business workspaces apply to them.
           </p>
 
           <h2>What we collect</h2>
@@ -65,9 +67,25 @@ export default function PrivacyPage() {
               listing and the date.
             </li>
             <li>
+              <strong>Business accounts.</strong> When you sign in to Saver Option Business with Google, we receive your
+              email address, name and profile picture. We don&apos;t request access to Gmail, Drive, Calendar or any other
+              Google data, and we don&apos;t store Google access tokens.
+            </li>
+            <li>
+              <strong>Business workspace data.</strong> What your team enters in a workspace: company details,
+              departments, a directory of people (name, and optionally work email, job title and department), software,
+              subscriptions, prices, renewal dates and decisions, payments you record, seat assignments, savings
+              decisions, in-app notifications, and an audit log of changes with the name of the member who made them.
+              Payment methods are stored only as short labels; anything that looks like a card number is rejected. We
+              don&apos;t connect to bank accounts, cards or vendors. Each workspace&apos;s data is visible only to its
+              members, according to their role.
+            </li>
+            <li>
               <strong>Functional cookies.</strong> Only on the listing purchase flow and advertiser pages: a sign-in
               session cookie, a cookie that links your checkout to your account (kept up to 7 days), and a random ID that
-              counts the steps of the purchase flow without identifying you (kept up to 30 days).
+              counts the steps of the purchase flow without identifying you (kept up to 30 days). In Saver Option Business:
+              the sign-in session cookie and a cookie that remembers which workspace you last opened (kept up to a
+              year); whether the sidebar is collapsed is remembered in your browser only.
             </li>
             <li>
               <strong>Server logs.</strong> Our hosting provider keeps standard technical logs (such as IP address,
@@ -84,6 +102,11 @@ export default function PrivacyPage() {
               statistics (to perform our contract with you), and to keep order records (to meet our legal obligations).
             </li>
             <li>
+              To provide Saver Option Business workspaces: sign-in, the records your team keeps, reminders, reports and
+              exports (to perform our contract with the company using the workspace). The company decides what it
+              records about its own people; we process that data on its behalf.
+            </li>
+            <li>
               To keep the site working, secure and useful, and to measure how many people use it (based on our legitimate
               interest in running the service).
             </li>
@@ -92,7 +115,7 @@ export default function PrivacyPage() {
           <h2>Who else processes it</h2>
           <p>
             We use a hosting provider (Vercel) to serve the site and measure page visits, a database provider (Upstash)
-            to store the aggregate counts, Supabase to store advertiser accounts, listings and orders, Google to sign you
+            to store the aggregate counts, Supabase to store advertiser accounts, listings, orders and Business workspaces, Google to sign you
             in, and an email provider to send the newsletter. They process data only on our behalf. Lemon Squeezy
             processes payments as the merchant of record, under its own privacy policy. When you follow a link to a software provider, their own privacy policy applies on their site.
           </p>
@@ -101,7 +124,9 @@ export default function PrivacyPage() {
           <p>
             We keep your email address until you unsubscribe. Daily visitor and click counts are deleted after 40 days.
             Advertiser accounts, listings and their statistics are kept while the account exists; order records are kept
-            as long as tax and accounting rules require.
+            as long as tax and accounting rules require. Business workspace data is kept while the workspace exists; an
+            owner can export it (JSON and CSV) and delete the workspace, which deletes all of its data. A member who
+            leaves a workspace loses access to it; their name stays in its audit log.
             Server logs are kept for a limited period by our hosting provider.
           </p>
 

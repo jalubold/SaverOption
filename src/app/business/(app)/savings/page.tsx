@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { deleteRealizedSavingAction, recordRealizedSavingAction, setOpportunityStatusAction } from "@/app/business/actions/savings";
+import { BarList, type BarRow } from "@/components/business/charts";
 import { ActionForm, ConfirmSubmit, SelectField, Submit, TextAreaField, TextField } from "@/components/business/forms";
+import { SoftwareLogo } from "@/components/business/software-logo";
 import { Card, EmptyState, Kpi, LinkButton, Money, PageHeader, Pagination, Pill, StatusPill, TableWrap, Tabs } from "@/components/business/ui";
 import { Icon } from "@/components/ui/icon";
 import { firstYearValue, formatIsoDate, formatMoney, minorToInput, potentialSavings, realizedTotals, totalsList } from "@/lib/business/calc";
@@ -77,6 +79,35 @@ export default async function SavingsPage(props: { searchParams: Promise<Raw> })
   const page = focusIndex >= 0 ? Math.floor(focusIndex / PER_PAGE) + 1 : Number.isInteger(pageRaw) && pageRaw >= 1 && pageRaw <= pageCount ? pageRaw : 1;
   const shown = list.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
+  // Visual summary of the open findings: the largest estimates (one per subscription) and how many of each type.
+  const estCount = new Map<string, number>();
+  for (const o of active) if (o.estMonthlyMinor !== null && o.currency) estCount.set(o.currency, (estCount.get(o.currency) ?? 0) + 1);
+  const vizCurrency = estCount.has(pref) ? pref : ([...estCount.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? pref);
+  const largest = new Map<string, BarRow>();
+  for (const o of active) {
+    if (o.estMonthlyMinor === null || o.currency !== vizCurrency) continue;
+    const key = o.subscriptionId ?? o.softwareId ?? o.id;
+    const annual = o.estMonthlyMinor * 12;
+    if ((largest.get(key)?.value ?? -1) >= annual) continue;
+    const sub = o.subscriptionId ? subById.get(o.subscriptionId) : undefined;
+    const sw = o.softwareId ? softwareById.get(o.softwareId) : undefined;
+    largest.set(key, {
+      label: sub?.softwareName ?? sw?.name ?? o.title,
+      sub: opportunityTypeLabels[o.type],
+      value: annual,
+      display: `${formatMoney(annual, vizCurrency, { whole: true })}/yr`,
+      href: `/business/savings?focus=${o.id}#${o.id}`,
+      logo: sub?.logoSrc ?? sw?.logoSrc ?? null,
+    });
+  }
+  const largestRows = [...largest.values()].sort((a, b) => b.value - a.value);
+  const typeRows: BarRow[] = OPPORTUNITY_TYPES.map((t) => {
+    const n = active.filter((o) => o.type === t).length;
+    return { label: opportunityTypeLabels[t], value: n, display: String(n), href: `/business/savings?type=${t}` };
+  })
+    .filter((r) => r.value > 0)
+    .sort((a, b) => b.value - a.value);
+
   const query = (patch: Record<string, string | null>) => {
     const q = new URLSearchParams();
     const merged = { status: view, type, confidence, ...patch };
@@ -115,6 +146,21 @@ export default async function SavingsPage(props: { searchParams: Promise<Raw> })
         Potential savings count each subscription once — when several findings concern the same subscription (say, unused seats and a possible overlap that would
         cancel it), only the largest estimate is added, so they aren&apos;t double-counted. Totals stay per currency.
       </p>
+
+      {active.length > 0 && (
+        <div className="mt-5 grid gap-5 lg:grid-cols-2">
+          <Card className="min-w-0" title="Largest estimates" description={`Open findings with an amount, one per subscription (${vizCurrency}, per year).`}>
+            {largestRows.length === 0 ? (
+              <p className="text-[13.5px] text-muted">No open finding has an estimate yet — the ones listed need a manual comparison.</p>
+            ) : (
+              <BarList rows={largestRows} caption="Largest estimated savings by subscription" valueHead="Estimate /yr" max={6} />
+            )}
+          </Card>
+          <Card className="min-w-0" title="Open findings by type" description="How many open or reviewed findings each rule produced.">
+            <BarList rows={typeRows} caption="Open findings by type" valueHead="Open" max={8} />
+          </Card>
+        </div>
+      )}
 
       <div className="mt-6">
         <Tabs items={STATUS_VIEWS.map((v) => ({ label: viewLabels[v], href: query({ status: v }), active: v === view, count: opps.filter((o) => inView(o, v)).length }))} />
@@ -166,16 +212,21 @@ export default async function SavingsPage(props: { searchParams: Promise<Raw> })
         ) : (
           <>
           <ul className="space-y-3">
-            {shown.map((o) => (
-              <OpportunityCard
-                key={o.id}
-                o={o}
-                ctx={{ workspaceId: ws, today: ctx.today, fmt, pref, canManage }}
-                subscription={o.subscriptionId ? subById.get(o.subscriptionId) : undefined}
-                softwareName={o.softwareId ? softwareById.get(o.softwareId)?.name : undefined}
-                currencyOptions={currencyOptions}
-              />
-            ))}
+            {shown.map((o) => {
+              const sub = o.subscriptionId ? subById.get(o.subscriptionId) : undefined;
+              const sw = o.softwareId ? softwareById.get(o.softwareId) : undefined;
+              return (
+                <OpportunityCard
+                  key={o.id}
+                  o={o}
+                  ctx={{ workspaceId: ws, today: ctx.today, fmt, pref, canManage }}
+                  subscription={sub}
+                  softwareName={sw?.name}
+                  logo={sub ? { name: sub.softwareName, src: sub.logoSrc } : sw ? { name: sw.name, src: sw.logoSrc } : undefined}
+                  currencyOptions={currencyOptions}
+                />
+              );
+            })}
           </ul>
           <Pagination page={page} pageCount={pageCount} href={(p) => query({ page: p > 1 ? String(p) : null })} />
           </>
@@ -292,12 +343,14 @@ function OpportunityCard({
   ctx,
   subscription,
   softwareName,
+  logo,
   currencyOptions,
 }: {
   o: Opportunity;
   ctx: { workspaceId: string; today: string; fmt: string; pref: string; canManage: boolean };
   subscription?: { id: string; softwareName: string; planName: string | null; currency: string };
   softwareName?: string;
+  logo?: { name: string; src: string | null };
   currencyOptions: { value: string; label: string }[];
 }) {
   const estimate = o.estMonthlyMinor !== null && o.currency ? potentialSavings([{ ...o, status: "open" }]) : null;
@@ -314,30 +367,39 @@ function OpportunityCard({
   return (
     <li id={o.id} className="biz-card scroll-mt-24 px-4 py-4 sm:px-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="min-w-0">
-          <div className="mb-1.5 flex flex-wrap items-center gap-1.5">
-            <Pill tone="outline">{opportunityTypeLabels[o.type]}</Pill>
-            <Pill tone={confidenceTone[o.confidence]}>{confidenceLabels[o.confidence]}</Pill>
-            <StatusPill status={o.status} label={opportunityStatusLabels[o.status]} />
-          </div>
-          <h2 className="text-[15px] font-semibold text-fg">{o.title}</h2>
-          <p className="mt-1 text-[12.5px] text-faint">
-            {softwareName && o.softwareId && (
-              <>
-                <Link href={`/business/software/${o.softwareId}`} className="hover:underline">
-                  {softwareName}
+        <div className="flex min-w-0 flex-1 items-start gap-3.5">
+          {logo ? (
+            <SoftwareLogo name={logo.name} src={logo.src} size={44} className="mt-0.5" />
+          ) : (
+            <span aria-hidden="true" className="mt-0.5 flex size-11 shrink-0 items-center justify-center rounded-[12px] bg-accent-soft text-accent-ink">
+              <Icon name="piggy" size={20} />
+            </span>
+          )}
+          <div className="min-w-0">
+            <div className="mb-1.5 flex flex-wrap items-center gap-1.5">
+              <Pill tone="outline">{opportunityTypeLabels[o.type]}</Pill>
+              <Pill tone={confidenceTone[o.confidence]}>{confidenceLabels[o.confidence]}</Pill>
+              <StatusPill status={o.status} label={opportunityStatusLabels[o.status]} />
+            </div>
+            <h2 className="text-[15px] font-semibold text-fg">{o.title}</h2>
+            <p className="mt-1 text-[12.5px] text-faint">
+              {softwareName && o.softwareId && (
+                <>
+                  <Link href={`/business/software/${o.softwareId}`} className="hover:underline">
+                    {softwareName}
+                  </Link>
+                  {subscription && " · "}
+                </>
+              )}
+              {subscription && (
+                <Link href={`/business/subscriptions/${subscription.id}`} className="hover:underline">
+                  {subscription.planName ? `${subscription.planName} subscription` : "Subscription"}
                 </Link>
-                {subscription && " · "}
-              </>
-            )}
-            {subscription && (
-              <Link href={`/business/subscriptions/${subscription.id}`} className="hover:underline">
-                {subscription.planName ? `${subscription.planName} subscription` : "Subscription"}
-              </Link>
-            )}
-            {(softwareName || subscription) && " · "}
-            Last detected {formatIsoDate(o.lastDetectedAt.toISOString().slice(0, 10), ctx.fmt)}
-          </p>
+              )}
+              {(softwareName || subscription) && " · "}
+              Last detected {formatIsoDate(o.lastDetectedAt.toISOString().slice(0, 10), ctx.fmt)}
+            </p>
+          </div>
         </div>
         <div className="text-right">
           {estimate ? (

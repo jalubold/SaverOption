@@ -54,6 +54,8 @@ export interface AttentionItem {
   title: string;
   detail: string;
   href: string;
+  /** The software it's about, for its logo (null for workspace-level items). */
+  software: { name: string; logo: string | null } | null;
 }
 
 export interface SpendModel {
@@ -173,24 +175,25 @@ function attentionItems(ctx: BizContext, subs: Subscription[], opps: Opportunity
   for (const s of subs) {
     if (!isLive(s)) continue;
     const href = `/business/subscriptions/${s.id}`;
+    const software = { name: s.softwareName, logo: s.logoSrc };
     if (s.nextRenewalDate) {
       const days = daysBetween(ctx.today, s.nextRenewalDate);
       const m = monthlyEquivalent(s);
       const high = s.billingInterval === "yearly" || (m !== null && s.currency === pref && m >= highCut);
       if (days >= 0 && days <= 14 && high && s.renewalDecision === "undecided")
-        out.push({ kind: "renewal_soon", title: `${s.softwareName} renews in ${days} day${days === 1 ? "" : "s"}`, detail: "High-cost renewal with no decision recorded.", href });
-    } else out.push({ kind: "missing_date", title: `${s.softwareName} has no renewal date`, detail: "Add it so reminders and the renewal calendar include it.", href: `${href}/edit` });
+        out.push({ kind: "renewal_soon", title: `${s.softwareName} renews in ${days} day${days === 1 ? "" : "s"}`, detail: "High-cost renewal with no decision recorded.", href, software });
+    } else out.push({ kind: "missing_date", title: `${s.softwareName} has no renewal date`, detail: "Add it so reminders and the renewal calendar include it.", href: `${href}/edit`, software });
     if (s.cancellationDeadline && s.autoRenew) {
       const d = daysBetween(ctx.today, s.cancellationDeadline);
-      if (d >= 0 && d <= 14) out.push({ kind: "deadline_soon", title: `Cancellation deadline for ${s.softwareName} in ${d} day${d === 1 ? "" : "s"}`, detail: "After it, the next period is charged automatically.", href });
+      if (d >= 0 && d <= 14) out.push({ kind: "deadline_soon", title: `Cancellation deadline for ${s.softwareName} in ${d} day${d === 1 ? "" : "s"}`, detail: "After it, the next period is charged automatically.", href, software });
     }
-    if (isRecurring(s) && s.priceMinor === null) out.push({ kind: "missing_price", title: `${s.softwareName} has no price`, detail: "It's left out of spending totals until a price is added.", href: `${href}/edit` });
-    if (!s.ownerPersonId) out.push({ kind: "no_owner", title: `${s.softwareName} has no owner`, detail: "Assign someone to own renewals and seats.", href: `${href}/edit` });
+    if (isRecurring(s) && s.priceMinor === null) out.push({ kind: "missing_price", title: `${s.softwareName} has no price`, detail: "It's left out of spending totals until a price is added.", href: `${href}/edit`, software });
+    if (!s.ownerPersonId) out.push({ kind: "no_owner", title: `${s.softwareName} has no owner`, detail: "Assign someone to own renewals and seats.", href: `${href}/edit`, software });
     const seats = seatSummary(s);
-    if (seats.available && seats.available > 0 && seats.purchased) out.push({ kind: "unused_seats", title: `${seats.available} unused ${s.softwareName} seat${seats.available === 1 ? "" : "s"}`, detail: `${seats.assigned} of ${seats.purchased} in use.`, href: `/business/licenses/${s.id}` });
+    if (seats.available && seats.available > 0 && seats.purchased) out.push({ kind: "unused_seats", title: `${seats.available} unused ${s.softwareName} seat${seats.available === 1 ? "" : "s"}`, detail: `${seats.assigned} of ${seats.purchased} in use.`, href: `/business/licenses/${s.id}`, software });
   }
   for (const o of opps) {
-    if (o.type === "overlapping_software" && o.status === "open") out.push({ kind: "overlap", title: o.title, detail: "Potential overlap for review — not a confirmed duplicate.", href: `/business/savings?focus=${o.id}#${o.id}` });
+    if (o.type === "overlapping_software" && o.status === "open") out.push({ kind: "overlap", title: o.title, detail: "Potential overlap for review — not a confirmed duplicate.", href: `/business/savings?focus=${o.id}#${o.id}`, software: null });
   }
   const order: AttentionItem["kind"][] = ["deadline_soon", "renewal_soon", "unused_seats", "overlap", "missing_price", "missing_date", "no_owner"];
   return out.sort((a, b) => order.indexOf(a.kind) - order.indexOf(b.kind));

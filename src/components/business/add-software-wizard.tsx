@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { addSoftwareAction } from "@/app/business/actions/records";
-import { annualized, formatMoney, monthlyEquivalent, nextPeriodDate, parseMoney, type CostTerms } from "@/lib/business/calc";
+import { annualized, formatMoney, monthlyEquivalent, nextPeriodDate, normalizeName, parseMoney, type CostTerms } from "@/lib/business/calc";
 import {
   BILLING_INTERVALS,
   billingIntervalLabels,
@@ -15,7 +15,9 @@ import {
   type PricingModel,
   type SoftwareCategory,
 } from "@/lib/business/constants";
+import { businessLogos } from "@/lib/business/logo-map";
 import { ActionForm, CheckboxField, SelectField, Submit, TextAreaField, TextField, useBizForm, useIdempotencyKey } from "@/components/business/forms";
+import { SoftwareLogo } from "@/components/business/software-logo";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, cn } from "@/components/ui/primitives";
 
@@ -24,6 +26,16 @@ export interface WizardSoftware {
   name: string;
   vendorName: string | null;
   category: SoftwareCategory;
+  /** Logo path, or null for a monogram. */
+  logoSrc?: string | null;
+}
+
+/** A well-known tool's logo for a name typed as new software (the server resolves the final logo). */
+function knownLogo(name: string): string | null {
+  const key = normalizeName(name);
+  if (!key) return null;
+  const hit = businessLogos.find((l) => l.names.some((n) => normalizeName(n) === key));
+  return hit ? `/logos/business/${hit.slug}.svg` : null;
 }
 export interface WizardPerson {
   id: string;
@@ -237,9 +249,12 @@ function WizardBody({
                       onClick={() => setSoftwareId(s.id)}
                       className={cn("flex w-full items-center justify-between gap-2 border-b border-line px-3 py-2.5 text-left text-[13.5px] last:border-0", s.id === softwareId ? "bg-accent-soft" : "hover:bg-subtle")}
                     >
-                      <span>
-                        <span className="font-medium">{s.name}</span>
-                        <span className="ml-2 text-faint">{[s.vendorName, categoryLabels[s.category]].filter(Boolean).join(" · ")}</span>
+                      <span className="flex min-w-0 items-center gap-2.5">
+                        <SoftwareLogo name={s.name} src={s.logoSrc} size={28} />
+                        <span className="min-w-0">
+                          <span className="font-medium">{s.name}</span>
+                          <span className="ml-2 text-faint">{[s.vendorName, categoryLabels[s.category]].filter(Boolean).join(" · ")}</span>
+                        </span>
                       </span>
                       {s.id === softwareId && <Icon name="check" size={15} className="text-accent-ink" />}
                     </button>
@@ -352,6 +367,28 @@ function WizardBody({
 
         {/* Step 5: review */}
         <div hidden={step !== 4}>
+          {(() => {
+            const reviewName = mode === "existing" ? (selected?.name ?? "") : name.trim();
+            if (!reviewName) return null;
+            const cat = mode === "existing" ? selected?.category : category;
+            return (
+              <div className="mb-5 flex items-center gap-3 rounded-xl border border-line bg-subtle/60 px-3.5 py-3">
+                <SoftwareLogo name={reviewName} src={mode === "existing" ? selected?.logoSrc : knownLogo(reviewName)} size={44} />
+                <div className="min-w-0">
+                  <p className="truncate text-[15px] font-semibold text-fg">{reviewName}</p>
+                  <p className="truncate text-[12.5px] text-faint">
+                    {[cat ? categoryLabels[cat] : null, mode === "existing" ? "From your inventory" : "New software"].filter(Boolean).join(" · ")}
+                  </p>
+                </div>
+                {!softwareOnly && monthly !== null && (
+                  <div className="ml-auto shrink-0 text-right">
+                    <p className="tabular text-[15px] font-semibold text-heading">{formatMoney(Math.round(monthly), currency)}</p>
+                    <p className="text-[11.5px] text-faint">a month</p>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
           <dl className="grid gap-x-6 gap-y-3 text-[14px] sm:grid-cols-2">
             <Row label="Software" value={mode === "existing" ? (selected?.name ?? "—") : `${name || "—"} (new)`} />
             {softwareOnly ? (

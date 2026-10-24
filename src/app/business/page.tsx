@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import type { ReactNode } from "react";
 import { GoogleButton } from "@/components/auth/auth-forms";
-import { BarList, StackedBar } from "@/components/business/charts";
+import { trackable } from "@/components/business/landing/example-data";
+import { LicensesVisual, RenewalsVisual, ReportsVisual, SavingsVisual, SpendVisual } from "@/components/business/landing/feature-visuals";
+import { HeroPreview } from "@/components/business/landing/hero-preview";
+import { LogoStrip } from "@/components/business/landing/logo-strip";
+import { FaqAccordion, FeatureRow, IconTile } from "@/components/business/landing/sections";
 import { BusinessPublicHeader } from "@/components/business/public-header";
-import { Kpi, Meter, Money, Pill } from "@/components/business/ui";
+import { LogoStack } from "@/components/business/software-logo";
 import { JsonLd } from "@/components/seo/json-ld";
 import { FormMessage } from "@/components/ui/form";
 import { Icon, type IconProps } from "@/components/ui/icon";
 import { buttonClass, Container, Eyebrow, SectionHeading } from "@/components/ui/primitives";
-import { formatMoney, groupMonthly, monthlyEquivalent, seatSummary, summarizeSpend, type SubscriptionCalc } from "@/lib/business/calc";
-import { billingIntervalLabels } from "@/lib/business/constants";
 import { businessReady, getBizSession } from "@/lib/server/business/context";
 import { googleSignInEnabled } from "@/lib/server/supabase";
 import { faqJsonLd, pageMetadata } from "@/lib/seo";
@@ -22,61 +23,6 @@ export const metadata: Metadata = {
   ...pageMetadata({ title: "Saver Option Business: software spend management", description, path: "/business" }),
   title: { absolute: "Saver Option Business: software spend management" },
 };
-
-/**
- * A small fictional company, used only to illustrate the product with its real
- * components. Every figure shown on this page is computed from these rows by the
- * same calculation layer the app uses, and is labelled "Example data".
- */
-type Example = SubscriptionCalc & { name: string; category: string; department: string };
-const ex = (e: Partial<Example> & Pick<Example, "id" | "name" | "priceMinor" | "billingInterval" | "category" | "department">): Example => ({
-  currency: "USD",
-  customIntervalCount: null,
-  customIntervalUnit: null,
-  pricingModel: "flat",
-  purchasedSeats: null,
-  status: "active",
-  archived: false,
-  nextRenewalDate: null,
-  namedSeats: 0,
-  reportedAssignedSeats: null,
-  ...e,
-});
-const example: Example[] = [
-  ex({ id: "1", name: "Team chat", priceMinor: 12_000, billingInterval: "monthly", category: "Team chat", department: "Operations", pricingModel: "per_seat", purchasedSeats: 15, namedSeats: 12 }),
-  ex({ id: "2", name: "Design tool", priceMinor: 144_000, billingInterval: "yearly", category: "Design", department: "Design", pricingModel: "per_seat", purchasedSeats: 8, namedSeats: 5 }),
-  ex({ id: "3", name: "Cloud hosting", priceMinor: 95_000, billingInterval: "monthly", category: "Cloud & hosting", department: "Engineering" }),
-  ex({ id: "4", name: "CRM", priceMinor: 90_000, billingInterval: "quarterly", category: "CRM & sales", department: "Sales" }),
-  ex({ id: "5", name: "Docs & wiki", priceMinor: 16_000, billingInterval: "monthly", category: "Docs & knowledge base", department: "Engineering", purchasedSeats: 20, reportedAssignedSeats: 11 }),
-  ex({ id: "6", name: "Email marketing", priceMinor: 30_000, billingInterval: "monthly", category: "Marketing", department: "Marketing" }),
-];
-const usd = (minor: number) => formatMoney(Math.round(minor), "USD", { whole: true });
-
-function ExampleLabel() {
-  return (
-    <p className="mb-3 flex items-center gap-1.5 text-[11.5px] font-medium uppercase tracking-[0.06em] text-faint">
-      <Icon name="info" size={12} /> Example data — a fictional company
-    </p>
-  );
-}
-
-function Feature({ id, icon, title, body, children }: { id?: string; icon: IconProps["name"]; title: string; body: string; children: ReactNode }) {
-  return (
-    <article id={id} className="biz-card flex flex-col p-5">
-      <div className="flex items-center gap-2.5">
-        <span className="icon-tile size-9">
-          <Icon name={icon} size={17} />
-        </span>
-        <h3 className="text-[16px] font-semibold text-heading">{title}</h3>
-      </div>
-      <p className="mt-2 text-[14px] leading-relaxed text-muted">{body}</p>
-      <div className="mt-4 flex-1 rounded-xl border border-line bg-bg p-4">
-        <ExampleLabel />
-        {children}
-      </div>
-    </article>
-  );
-}
 
 const faq = [
   {
@@ -117,19 +63,19 @@ const faq = [
   },
 ];
 
-const steps = [
-  { title: "Sign in with Google", body: "One button for new and returning users. No password to manage." },
-  { title: "Create your workspace", body: "Add your company name, default currency and time zone." },
-  { title: "Add your software", body: "Record each subscription's price, billing interval, renewal date, owner and seats." },
-  { title: "Act on what it shows", body: "See spend by vendor, category and department, decide on renewals, and review savings." },
+const steps: { icon: IconProps["name"]; title: string; body: string }[] = [
+  { icon: "lock", title: "Sign in with Google", body: "One button for new and returning users. No password to manage." },
+  { icon: "building", title: "Create your workspace", body: "Add your company name, default currency and time zone." },
+  { icon: "plus", title: "Add your software", body: "Record each subscription's price, billing interval, renewal date, owner and seats." },
+  { icon: "trending-up", title: "Act on what it shows", body: "See spend by vendor, category and department, decide on renewals, and review savings." },
 ];
 
-const principles = [
-  { icon: "lock" as const, title: "Google sign-in, basic profile only", body: "Name, email address and profile picture. Saver Option doesn't request Gmail, Drive or Calendar access and doesn't keep Google access tokens." },
-  { icon: "shield" as const, title: "Your workspace stays yours", body: "Every request is checked against your membership on the server, and the database itself refuses links between records of different workspaces." },
-  { icon: "users" as const, title: "Role-based permissions", body: "Owners, admins, finance, members and read-only viewers each get what their role allows — enforced on the server, not just hidden in the interface." },
-  { icon: "credit-card" as const, title: "You choose what to record", body: "No bank or card connections. Card numbers are never stored — a payment method is just a label." },
-  { icon: "download" as const, title: "Export or delete any time", body: "Download your workspace as JSON or CSV whenever you like; the owner can delete it permanently." },
+const principles: { icon: IconProps["name"]; title: string; body: string }[] = [
+  { icon: "lock", title: "Google sign-in, basic profile only", body: "Name, email address and profile picture. Saver Option doesn't request Gmail, Drive or Calendar access and doesn't keep Google access tokens." },
+  { icon: "shield", title: "Your workspace stays yours", body: "Every request is checked against your membership on the server, and the database itself refuses links between records of different workspaces." },
+  { icon: "users", title: "Role-based permissions", body: "Owners, admins, finance, members and read-only viewers each get what their role allows — enforced on the server, not just hidden in the interface." },
+  { icon: "credit-card", title: "You choose what to record", body: "No bank or card connections. Card numbers are never stored — a payment method is just a label." },
+  { icon: "download", title: "Export or delete any time", body: "Download your workspace as JSON or CSV whenever you like; the owner can delete it permanently." },
 ];
 
 export default async function BusinessLandingPage(props: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
@@ -137,15 +83,6 @@ export default async function BusinessLandingPage(props: { searchParams: Promise
   const { user } = await getBizSession();
   const ready = businessReady();
   const google = ready && (await googleSignInEnabled());
-
-  const summary = summarizeSpend(example, "2026-10-23");
-  const byCategory = [...groupMonthly(example, (s) => (s as Example).category).entries()].map(([label, t]) => ({ label, value: t.USD ?? 0, display: `${usd(t.USD ?? 0)}/mo` })).sort((a, b) => b.value - a.value);
-  const byDepartment = [...groupMonthly(example, (s) => (s as Example).department).entries()].map(([label, t]) => ({ label, value: t.USD ?? 0, display: `${usd(t.USD ?? 0)}/mo` })).sort((a, b) => b.value - a.value);
-  const byInterval = [...groupMonthly(example, (s) => s.billingInterval).entries()].map(([k, t]) => ({ label: billingIntervalLabels[k], value: t.USD ?? 0, display: `${usd(t.USD ?? 0)}/mo` })).sort((a, b) => b.value - a.value);
-  const seated = example.filter((s) => s.purchasedSeats).map((s) => ({ s, seats: seatSummary(s) }));
-  const unused = seated.reduce((t, x) => t + (x.seats.unusedMonthly ?? 0), 0);
-  const design = seated.find((x) => x.s.id === "2")!.seats;
-  const docs = seated.find((x) => x.s.id === "5")!.seats;
 
   const cta = user ? (
     <Link href="/business/dashboard" className={buttonClass("primary", "lg")}>
@@ -156,26 +93,38 @@ export default async function BusinessLandingPage(props: { searchParams: Promise
       <GoogleButton next="/business/dashboard" disabled={!google} />
     </div>
   );
+  const unavailable =
+    !user && !google ? (
+      <p className="max-w-md text-[13px] text-warn">{ready ? "Google sign-in isn't switched on yet. Please check back a little later." : "Saver Option Business isn't switched on for this site yet."}</p>
+    ) : null;
 
   return (
     <>
       <BusinessPublicHeader signedIn={Boolean(user)} />
+
+      {/* ── Hero ─────────────────────────────────────────────────── */}
       <div className="theme-dark">
-        <section className="hero-glow border-b border-line">
-          <Container className="grid grid-cols-1 gap-12 py-14 sm:py-20 lg:grid-cols-[minmax(0,1fr)_440px] lg:items-center lg:gap-14">
-            <div className="min-w-0">
-              {q.signed_out === "1" && (
-                <div className="mb-5 max-w-md">
-                  <FormMessage tone="success">You&apos;ve been signed out.</FormMessage>
-                </div>
-              )}
+        <section className="hero-glow relative overflow-hidden border-b border-line">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 [background-image:radial-gradient(rgb(255_255_255/0.08)_1px,transparent_1px)] [background-size:22px_22px] [mask-image:radial-gradient(70%_60%_at_50%_0%,#000_30%,transparent_100%)]"
+          />
+          <Container className="relative pt-12 sm:pt-20">
+            {q.signed_out === "1" && (
+              <div className="mb-5 max-w-md">
+                <FormMessage tone="success">You&apos;ve been signed out.</FormMessage>
+              </div>
+            )}
+            <div className="max-w-3xl">
               <Eyebrow>
                 <strong>Saver Option Business</strong>
                 <span aria-hidden="true">•</span>
                 Software spend management
               </Eyebrow>
-              <h1 className="mt-5 max-w-2xl text-[2.6rem] font-semibold leading-[1.04] tracking-[-0.035em] text-heading sm:text-[3.5rem]">Spend smarter on software.</h1>
-              <p className="mt-5 max-w-xl text-[17px] leading-relaxed text-muted">
+              <h1 className="display mt-6 text-[3.1rem] leading-[0.98] sm:text-[4.6rem] lg:text-[5.4rem]">
+                Spend smarter on <em className="accent [text-shadow:0_0_48px_color-mix(in_oklab,var(--accent)_65%,transparent)]">software.</em>
+              </h1>
+              <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-muted sm:text-[18px]">
                 Track subscriptions, manage renewals, optimize licenses, and uncover opportunities to save — all from one workspace.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -184,29 +133,32 @@ export default async function BusinessLandingPage(props: { searchParams: Promise
                   Explore features
                 </Link>
               </div>
-              {!user && !google && (
-                <p className="mt-3 max-w-md text-[13px] text-warn">{ready ? "Google sign-in isn't switched on yet. Please check back a little later." : "Saver Option Business isn't switched on for this site yet."}</p>
-              )}
-              <p className="mt-4 text-[13px] text-faint">Google sign-in only · your name, email and profile picture, nothing more.</p>
+              {unavailable && <div className="mt-3">{unavailable}</div>}
+              <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-[13px] text-faint">
+                {["Google sign-in only — name, email and picture", "No bank or card connections", "Export or delete any time"].map((t) => (
+                  <li key={t} className="flex items-center gap-1.5">
+                    <Icon name="check" size={13} className="text-accent-ink" />
+                    {t}
+                  </li>
+                ))}
+              </ul>
             </div>
+          </Container>
 
-            <div className="theme-light rounded-[20px] border border-line bg-bg p-4 text-fg shadow-[0_24px_60px_-30px_rgb(0_0_0/0.6)]">
-              <ExampleLabel />
-              <div className="grid grid-cols-2 gap-3">
-                <Kpi label="Monthly software spend" value={<Money totals={summary.monthly} preferred="USD" />} sub={`${summary.activeCount} active subscriptions`} />
-                <Kpi label="Annualized spend" value={<Money totals={summary.annualized} preferred="USD" />} sub="Run-rate × 12" />
-              </div>
-              <div className="biz-card mt-3 p-4">
-                <p className="mb-3 text-[13px] font-semibold">Spending by category</p>
-                <BarList caption="Example: spending by category" rows={byCategory} max={4} />
-              </div>
+          <Container className="relative mt-12 pb-14 sm:mt-16 sm:pb-20">
+            <div aria-hidden="true" className="pointer-events-none absolute inset-x-[8%] top-[6%] h-[55%] rounded-full bg-accent/30 blur-[90px]" />
+            <div className="relative">
+              <HeroPreview />
             </div>
           </Container>
         </section>
       </div>
 
+      <LogoStrip />
+
+      {/* ── Features ─────────────────────────────────────────────── */}
       <section id="features" className="scroll-mt-20 border-b border-line">
-        <Container className="py-16 sm:py-20">
+        <Container className="py-16 sm:py-24">
           <SectionHeading
             title={
               <>
@@ -215,164 +167,196 @@ export default async function BusinessLandingPage(props: { searchParams: Promise
             }
             description="Built on what your team records — nothing is estimated until there's data to base it on."
           />
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            <Feature icon="layers" title="Subscription tracking" body="Every plan with its price, currency, billing interval, renewal date, owner, department and contract notes. Search, filter, export to CSV.">
-              <ul className="divide-y divide-line text-[13px]">
-                {example.slice(0, 4).map((s) => (
-                  <li key={s.id} className="flex items-center justify-between gap-2 py-1.5">
-                    <span className="min-w-0 truncate">{s.name}</span>
-                    <span className="flex shrink-0 items-center gap-2">
-                      <Pill>{billingIntervalLabels[s.billingInterval]}</Pill>
-                      <span className="tabular w-20 text-right font-medium">{usd(monthlyEquivalent(s)!)}/mo</span>
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </Feature>
-            <Feature icon="chart" title="Spending dashboard" body="Monthly and annualized cost, spend by vendor, category and department, and how much is billed monthly versus yearly.">
-              <StackedBar caption="Example: monthly equivalent by billing interval" segments={byInterval} />
-            </Feature>
-            <Feature icon="calendar" title="Renewal reminders" body="A renewal calendar, decisions to renew, renegotiate or cancel, and in-app reminders before each renewal and cancellation deadline.">
-              <ul className="space-y-2 text-[13px]">
-                {[
-                  { name: "CRM", when: "in 9 days", amount: usd(90_000), note: "Cancel within 4 days" },
-                  { name: "Design tool", when: "in 21 days", amount: usd(144_000), note: "Yearly" },
-                  { name: "Team chat", when: "in 26 days", amount: usd(12_000), note: "Monthly" },
-                ].map((r) => (
-                  <li key={r.name} className="flex items-center justify-between gap-2">
-                    <span>
-                      <span className="font-medium">{r.name}</span> <span className="text-faint">renews {r.when}</span>
-                    </span>
-                    <span className="flex items-center gap-2">
-                      <Pill tone={r.note.startsWith("Cancel") ? "warn" : "neutral"}>{r.note}</Pill>
-                      <span className="tabular font-medium">{r.amount}</span>
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </Feature>
-            <Feature icon="key" title="License management" body="Purchased versus assigned seats, who holds each one, and what unassigned seats cost when the plan is priced per seat.">
-              <ul className="space-y-2.5 text-[13px]">
-                {seated.map(({ s, seats }) => (
-                  <li key={s.id}>
-                    <div className="flex justify-between gap-2">
-                      <span>{s.name}</span>
-                      <span className="text-faint">
-                        {seats.assigned} of {seats.purchased} seats
-                      </span>
-                    </div>
-                    <Meter value={seats.utilization} label={`${s.name} utilization`} />
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-3 text-[12.5px] text-muted">Unassigned seats cost about {usd(unused)} a month.</p>
-            </Feature>
-            <Feature icon="piggy" title="Savings opportunities" body="Explainable findings — unused seats, potential overlap, annual billing, renewals to review and matching Saver Option deals — each with its evidence.">
-              <ul className="space-y-2.5 text-[13px]">
-                <li className="rounded-lg border border-line bg-surface p-2.5">
-                  <div className="flex justify-between gap-2">
-                    <span className="font-medium">{design.available} unused seats on Design tool</span>
-                    <span className="tabular font-medium">{usd((design.unusedMonthly ?? 0) * 12)}/yr</span>
-                  </div>
-                  <p className="mt-0.5 text-[12px] text-muted">From the per-seat price you pay. Confidence: high.</p>
-                </li>
-                <li className="rounded-lg border border-line bg-surface p-2.5">
-                  <div className="flex justify-between gap-2">
-                    <span className="font-medium">Docs &amp; wiki is {Math.round(docs.utilization ?? 0)}% utilized</span>
-                    <span className="text-faint">Potential</span>
-                  </div>
-                  <p className="mt-0.5 text-[12px] text-muted">A flat-priced plan: shown for review without an amount, since it depends on the vendor&apos;s smaller plans.</p>
-                </li>
-              </ul>
-            </Feature>
-            <Feature icon="trending-up" title="Reports & analytics" body="Spend by vendor, category, department and billing interval, renewal commitments, utilization and savings — filtered by date, currency and team, exported to CSV.">
-              <BarList caption="Example: spending by department" rows={byDepartment} max={4} />
-            </Feature>
+          <div className="mt-12 space-y-20 sm:space-y-28">
+            <FeatureRow
+              icon="calendar"
+              tone="violet"
+              eyebrow="Subscriptions & renewals"
+              title={
+                <>
+                  Never be surprised by a <em className="accent">renewal.</em>
+                </>
+              }
+              body="Record each subscription once — price, currency, billing interval, renewal date, owner and department — and see what's coming up on a timeline."
+              bullets={[
+                "In-app reminders 30, 14 and 7 days before renewals and cancellation deadlines",
+                "Decide to renew, renegotiate or cancel, with the history kept",
+                "Search, filter and export the list to CSV",
+              ]}
+              visual={<RenewalsVisual />}
+            />
+            <FeatureRow
+              flip
+              icon="chart"
+              tone="blue"
+              eyebrow="Spending dashboard"
+              title={
+                <>
+                  See where the budget <em className="accent">goes.</em>
+                </>
+              }
+              body="Monthly and annualized run-rate, broken down by vendor, category and department — calculated only from what your team records."
+              bullets={["Totals per currency — amounts are never converted or mixed", "Spend by vendor, category and department", "Monthly versus yearly billing at a glance"]}
+              visual={<SpendVisual />}
+            />
+            <FeatureRow
+              icon="key"
+              tone="aqua"
+              eyebrow="Licenses & seats"
+              title={
+                <>
+                  Pay for the seats you <em className="accent">use.</em>
+                </>
+              }
+              body="Compare purchased and assigned seats on every plan, see who holds each one, and what unassigned seats cost on per-seat pricing."
+              bullets={[
+                "Assign, reassign and release seats person by person",
+                "Utilization per plan and across the workspace",
+                "Seats are assigned or reported by your team — never presented as measured usage",
+              ]}
+              visual={<LicensesVisual />}
+            />
+            <FeatureRow
+              flip
+              icon="piggy"
+              tone="orange"
+              eyebrow="Savings opportunities"
+              title={
+                <>
+                  Find savings you can <em className="accent">explain.</em>
+                </>
+              }
+              body="Rules look for unused seats, potential overlap, monthly plans worth checking for annual billing and renewals to review — each finding shows the evidence behind it."
+              bullets={[
+                "Estimates only where your prices and seats support one — potential, not guaranteed",
+                "Potential savings kept separate from savings you confirm",
+                "Matching offers from the Saver Option deals catalog",
+              ]}
+              visual={<SavingsVisual />}
+            />
+            <FeatureRow
+              icon="download"
+              tone="indigo"
+              eyebrow="Reports & exports"
+              title={
+                <>
+                  Reports that match the <em className="accent">dashboard.</em>
+                </>
+              }
+              body="Filter by date range, currency, category, department and vendor, and export what you see. Reports and the dashboard are built from the same numbers."
+              bullets={["CSV export for subscriptions and every report", "Full workspace export as JSON", "An audit log of significant changes"]}
+              visual={<ReportsVisual />}
+            />
           </div>
         </Container>
       </section>
 
+      {/* ── How it works ─────────────────────────────────────────── */}
       <section id="how-it-works" className="scroll-mt-20 border-b border-line bg-surface">
-        <Container className="py-16 sm:py-20">
+        <Container className="py-16 sm:py-24">
           <SectionHeading
             title={
               <>
                 How it <em>works</em>
               </>
             }
+            description="From sign-in to your first overview in four steps."
           />
-          <ol className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <ol className="relative grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {steps.map((s, i) => (
-              <li key={s.title} className="rounded-2xl border border-line bg-bg p-5">
-                <span className="flex size-8 items-center justify-center rounded-full bg-accent-soft text-[14px] font-semibold text-accent-ink">{i + 1}</span>
-                <h3 className="mt-3 text-[15.5px] font-semibold text-heading">{s.title}</h3>
-                <p className="mt-1 text-[14px] leading-relaxed text-muted">{s.body}</p>
+              <li key={s.title} className="relative rounded-2xl border border-line bg-bg p-5">
+                <div className="flex items-center justify-between">
+                  <IconTile icon={s.icon} size={44} />
+                  <span aria-hidden="true" className="display text-[2.2rem] text-line-strong">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                </div>
+                <h3 className="mt-4 text-[16px] font-semibold text-heading">{s.title}</h3>
+                <p className="mt-1.5 text-[14px] leading-relaxed text-muted">{s.body}</p>
               </li>
             ))}
           </ol>
-          <div className="mt-8 flex flex-wrap items-center gap-3 rounded-2xl border border-dashed border-line-strong p-5">
-            <Icon name="tag" size={18} className="text-accent-ink" />
-            <p className="min-w-0 flex-1 text-[14px] text-muted">
-              Savings opportunities link to matching listings in the <Link href="/deals" className="text-accent-ink underline underline-offset-2">Saver Option deals catalog</Link> —
-              discounts, credits and alternatives from the providers&apos; own pages.
-            </p>
-          </div>
-        </Container>
-      </section>
-
-      <section className="border-b border-line">
-        <Container className="py-16 sm:py-20">
-          <SectionHeading
-            title={
-              <>
-                Privacy and security <em>principles</em>
-              </>
-            }
-            description="How Saver Option Business handles your company's data."
-          />
-          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {principles.map((p) => (
-              <li key={p.title} className="rounded-2xl border border-line bg-surface p-5">
-                <Icon name={p.icon} size={20} className="text-accent-ink" />
-                <h3 className="mt-3 text-[15.5px] font-semibold text-heading">{p.title}</h3>
-                <p className="mt-1 text-[14px] leading-relaxed text-muted">{p.body}</p>
-              </li>
-            ))}
-          </ul>
-        </Container>
-      </section>
-
-      <section id="faq" className="scroll-mt-20 border-b border-line bg-surface">
-        <Container className="max-w-3xl py-16 sm:py-20">
-          <SectionHeading
-            title={
-              <>
-                Frequently asked <em>questions</em>
-              </>
-            }
-          />
-          <div className="divide-y divide-line rounded-2xl border border-line bg-bg">
-            {faq.map((f) => (
-              <details key={f.q} className="group px-5 py-4">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[15px] font-medium text-heading">
-                  {f.q}
-                  <Icon name="chevron-down" size={16} className="shrink-0 text-faint transition-transform group-open:rotate-180" />
-                </summary>
-                <p className="mt-2 text-[14.5px] leading-relaxed text-muted">{f.a}</p>
-              </details>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      <div className="theme-dark">
-        <section className="hero-glow">
-          <Container className="flex flex-col items-start gap-6 py-16 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h2 className="text-[1.9rem] font-semibold leading-tight tracking-tight text-heading">See where your software budget goes.</h2>
-              <p className="mt-2 text-[15px] text-muted">Start with one subscription — the dashboard fills in from there.</p>
+          <div className="mt-8 grid gap-4 md:grid-cols-2">
+            <div className="flex items-start gap-3 rounded-2xl border border-dashed border-line-strong p-5">
+              <Icon name="eye" size={18} className="mt-0.5 text-accent-ink" />
+              <p className="min-w-0 flex-1 text-[14px] leading-relaxed text-muted">
+                Prefer to look around first? After signing in you can open a separate demo workspace with a fictional company&apos;s sample data.
+              </p>
             </div>
-            {cta}
+            <div className="flex items-start gap-3 rounded-2xl border border-dashed border-line-strong p-5">
+              <Icon name="tag" size={18} className="mt-0.5 text-accent-ink" />
+              <p className="min-w-0 flex-1 text-[14px] leading-relaxed text-muted">
+                Savings opportunities link to matching listings in the{" "}
+                <Link href="/deals" className="text-accent-ink underline underline-offset-2">
+                  Saver Option deals catalog
+                </Link>{" "}
+                — discounts, credits and alternatives from the providers&apos; own pages.
+              </p>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* ── Privacy & security ───────────────────────────────────── */}
+      <div className="theme-dark">
+        <section aria-labelledby="privacy-heading" className="relative overflow-hidden border-b border-line">
+          <div aria-hidden="true" className="pointer-events-none absolute -left-40 top-0 size-[480px] rounded-full bg-accent/20 blur-[120px]" />
+          <Container className="relative py-16 sm:py-24">
+            <SectionHeading
+              id="privacy-heading"
+              title={
+                <>
+                  Privacy and security <em className="accent">principles</em>
+                </>
+              }
+              description="How Saver Option Business handles your company's data."
+            />
+            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {principles.map((p) => (
+                <li key={p.title} className="rounded-2xl border border-line bg-surface/70 p-5">
+                  <IconTile icon={p.icon} size={42} />
+                  <h3 className="mt-4 text-[15.5px] font-semibold text-heading">{p.title}</h3>
+                  <p className="mt-1.5 text-[14px] leading-relaxed text-muted">{p.body}</p>
+                </li>
+              ))}
+              <li className="flex flex-col justify-between rounded-2xl border border-dashed border-line-strong p-5">
+                <p className="text-[14px] leading-relaxed text-muted">How Saver Option handles personal data across the site, including Google sign-in, is described in the privacy policy.</p>
+                <Link href="/privacy" className="mt-4 inline-flex items-center gap-1.5 text-[14px] font-semibold text-accent-ink hover:underline underline-offset-4">
+                  Read the privacy policy <Icon name="arrow-right" size={14} />
+                </Link>
+              </li>
+            </ul>
+          </Container>
+        </section>
+      </div>
+
+      {/* ── FAQ ──────────────────────────────────────────────────── */}
+      <section id="faq" className="scroll-mt-20 border-b border-line">
+        <Container className="grid gap-10 py-16 sm:py-24 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.4fr)] lg:gap-16">
+          <div className="lg:sticky lg:top-24 lg:self-start">
+            <h2 className="display text-[2.25rem] sm:text-[3rem]">
+              Frequently asked <em>questions</em>
+            </h2>
+            <p className="mt-3 max-w-sm text-[15px] leading-relaxed text-muted">What Saver Option Business does — and what it doesn&apos;t do yet.</p>
+          </div>
+          <FaqAccordion items={faq} />
+        </Container>
+      </section>
+
+      {/* ── Final call to action ─────────────────────────────────── */}
+      <div className="theme-dark">
+        <section className="hero-glow relative overflow-hidden">
+          <Container className="flex flex-col items-center py-16 text-center sm:py-24">
+            <LogoStack items={trackable.slice(0, 8)} max={8} size={36} />
+            <p className="mt-3 text-[12.5px] text-faint">Slack, Figma, AWS — and anything else you pay for</p>
+            <h2 className="display mt-6 max-w-3xl text-[2.5rem] sm:text-[3.6rem]">
+              See where your software budget <em className="accent">goes.</em>
+            </h2>
+            <p className="mt-4 max-w-md text-[16px] leading-relaxed text-muted">Start with one subscription — the dashboard fills in from there.</p>
+            <div className="mt-8 flex w-full flex-col items-center gap-3">
+              {cta}
+              {unavailable}
+            </div>
           </Container>
         </section>
       </div>

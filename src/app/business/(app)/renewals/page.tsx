@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { RenewalTimeline, type TimelineItem } from "@/components/business/charts";
 import { RecordRenewalForm, RenewalDecisionForm } from "@/components/business/record-forms";
+import { SoftwareLogo } from "@/components/business/software-logo";
 import { Card, EmptyState, InlineNote, LinkButton, Money, PageHeader, Pill, StatusPill, TableWrap, Tabs } from "@/components/business/ui";
 import { Icon } from "@/components/ui/icon";
 import { cn } from "@/components/ui/primitives";
@@ -64,9 +66,9 @@ export default async function RenewalsPage(props: { searchParams: Promise<Search
           {view === "upcoming" && <Upcoming ctx={ctx} live={live} windowParam={one(q.window)} />}
           {view === "calendar" && <Calendar ctx={ctx} live={live} monthParam={one(q.month)} />}
           {view === "attention" && <Attention ctx={ctx} groups={attention} people={activePeople} />}
-          {view === "history" && <History ctx={ctx} events={events} />}
+          {view === "history" && <History ctx={ctx} events={events} logos={new Map(subs.map((x) => [x.id, x.logoSrc]))} />}
         </div>
-        <aside className="space-y-4">
+        <aside className="min-w-0 space-y-4">
           <Card title="Reminders">
             <div className="space-y-2.5 text-[13px] text-muted">
               <p>
@@ -106,98 +108,150 @@ function Upcoming({ ctx, live, windowParam }: { ctx: BizContext; live: Subscript
     if (s.priceMinor === null) unpriced++;
     else addTo(expected, s.currency, s.priceMinor);
   }
+  const TIMELINE_DAYS = 60;
+  const timeline: TimelineItem[] = [];
+  for (const s of live) {
+    if (s.nextRenewalDate) {
+      const d = daysBetween(ctx.today, s.nextRenewalDate);
+      if (d >= 0 && d <= TIMELINE_DAYS)
+        timeline.push({
+          id: s.id,
+          name: s.softwareName,
+          logo: s.logoSrc,
+          date: s.nextRenewalDate,
+          dateLabel: formatIsoDate(s.nextRenewalDate, fmt),
+          daysLeft: d,
+          amount: s.priceMinor !== null ? formatMoney(s.priceMinor, s.currency) : null,
+          href: `/business/subscriptions/${s.id}`,
+          kind: "renewal",
+        });
+    }
+    if (s.autoRenew && s.cancellationDeadline) {
+      const d = daysBetween(ctx.today, s.cancellationDeadline);
+      if (d >= 0 && d <= TIMELINE_DAYS)
+        timeline.push({
+          id: s.id,
+          name: s.softwareName,
+          logo: s.logoSrc,
+          date: s.cancellationDeadline,
+          dateLabel: formatIsoDate(s.cancellationDeadline, fmt),
+          daysLeft: d,
+          amount: null,
+          href: `/business/subscriptions/${s.id}`,
+          kind: "deadline",
+        });
+    }
+  }
+  const deadlineCount = timeline.filter((t) => t.kind === "deadline").length;
   return (
-    <Card
-      title={`Renewing in the next ${win === 365 ? "12 months" : `${win} days`}`}
-      description="Expected amounts are each subscription's current price per billing period."
-      action={
-        <form method="get" action="/business/renewals" className="flex items-center gap-2">
-          <label htmlFor="renewal-window" className="sr-only">
-            Window
-          </label>
-          <select id="renewal-window" name="window" defaultValue={String(win)} className="biz-select">
-            {WINDOWS.map((w) => (
-              <option key={w} value={w}>
-                {w === 365 ? "Next 12 months" : `Next ${w} days`}
-              </option>
-            ))}
-          </select>
-          <button type="submit" className="btn btn-secondary h-9 rounded-[9px] px-3 text-[13px]">
-            Show
-          </button>
-        </form>
-      }
-    >
-      {rows.length === 0 ? (
-        <EmptyState icon="calendar" title="No renewals in this window">
-          Renewals appear here from each subscription&apos;s next renewal date.
-        </EmptyState>
-      ) : (
-        <>
-          <div className="mb-3 flex flex-wrap items-baseline gap-x-2 text-[13px] text-muted">
-            <span>Expected in this window:</span>
-            <Money totals={expected} preferred={ctx.workspace.defaultCurrency} className="!flex-row gap-2 font-semibold text-fg" />
-            {unpriced > 0 && <span className="text-faint">· {unpriced} without a price</span>}
-          </div>
-          <TableWrap>
-            <table className="biz-table">
-              <thead>
-                <tr>
-                  <th>Software</th>
-                  <th>Renews</th>
-                  <th className="num">Expected</th>
-                  <th>Billing</th>
-                  <th>Auto-renew</th>
-                  <th>Cancel by</th>
-                  <th>Contract ends</th>
-                  <th>Renewal owner</th>
-                  <th>Decision</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((s) => {
-                  const days = daysBetween(ctx.today, s.nextRenewalDate!);
-                  const deadlineDays = s.cancellationDeadline ? daysBetween(ctx.today, s.cancellationDeadline) : null;
-                  return (
-                    <tr key={s.id}>
-                      <td>
-                        <Link href={`/business/subscriptions/${s.id}`} className="font-medium hover:underline">
-                          {s.softwareName}
-                        </Link>
-                        {s.planName && <span className="block text-[12px] text-faint">{s.planName}</span>}
-                      </td>
-                      <td className="whitespace-nowrap">
-                        {formatIsoDate(s.nextRenewalDate, fmt)}
-                        <span className={cn("block text-[12px]", days <= 7 ? "text-warn" : "text-faint")}>{days === 0 ? "Today" : `${days} day${days === 1 ? "" : "s"}`}</span>
-                      </td>
-                      <td className="num">{s.priceMinor !== null ? formatMoney(s.priceMinor, s.currency) : <span className="text-faint">—</span>}</td>
-                      <td className="whitespace-nowrap">{intervalLabel(s)}</td>
-                      <td>{s.autoRenew ? "Yes" : <Pill>Manual</Pill>}</td>
-                      <td className="whitespace-nowrap">
-                        {s.cancellationDeadline ? (
-                          <span className={cn(deadlineDays !== null && deadlineDays >= 0 && deadlineDays <= 14 && "text-warn")}>{formatIsoDate(s.cancellationDeadline, fmt)}</span>
-                        ) : (
-                          <span className="text-faint">—</span>
-                        )}
-                      </td>
-                      <td className="whitespace-nowrap">{s.contractEndDate ? formatIsoDate(s.contractEndDate, fmt) : <span className="text-faint">—</span>}</td>
-                      <td className="whitespace-nowrap">{s.renewalOwnerName ?? s.ownerName ?? <span className="text-faint">—</span>}</td>
-                      <td>
-                        <Pill tone={s.renewalDecision === "undecided" ? "outline" : s.renewalDecision === "cancel" ? "warn" : "accent"}>{renewalDecisionLabels[s.renewalDecision]}</Pill>
-                      </td>
-                      <td>
-                        <StatusPill status={s.status} label={subscriptionStatusLabels[s.status]} />
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </TableWrap>
-        </>
-      )}
-    </Card>
+    <div className="space-y-5">
+      <Card
+        title="Next 60 days"
+        description={`${timeline.length - deadlineCount} renewal${timeline.length - deadlineCount === 1 ? "" : "s"}${deadlineCount ? ` and ${deadlineCount} cancellation deadline${deadlineCount === 1 ? "" : "s"}` : ""}, placed on their dates.`}
+      >
+        {timeline.length === 0 ? (
+          <p className="text-[13.5px] text-muted">Nothing renews in the next 60 days.</p>
+        ) : (
+          <RenewalTimeline items={timeline} days={TIMELINE_DAYS} startLabel="Today" />
+        )}
+      </Card>
+      <Card
+        title={`Renewing in the next ${win === 365 ? "12 months" : `${win} days`}`}
+        description="Expected amounts are each subscription's current price per billing period."
+        action={
+          <form method="get" action="/business/renewals" className="flex items-center gap-2">
+            <label htmlFor="renewal-window" className="sr-only">
+              Window
+            </label>
+            <select id="renewal-window" name="window" defaultValue={String(win)} className="biz-select">
+              {WINDOWS.map((w) => (
+                <option key={w} value={w}>
+                  {w === 365 ? "Next 12 months" : `Next ${w} days`}
+                </option>
+              ))}
+            </select>
+            <button type="submit" className="btn btn-secondary h-9 rounded-[9px] px-3 text-[13px]">
+              Show
+            </button>
+          </form>
+        }
+      >
+        {rows.length === 0 ? (
+          <EmptyState icon="calendar" title="No renewals in this window">
+            Renewals appear here from each subscription&apos;s next renewal date.
+          </EmptyState>
+        ) : (
+          <>
+            <div className="mb-3 flex flex-wrap items-baseline gap-x-2 text-[13px] text-muted">
+              <span>Expected in this window:</span>
+              <Money totals={expected} preferred={ctx.workspace.defaultCurrency} className="!flex-row gap-2 font-semibold text-fg" />
+              {unpriced > 0 && <span className="text-faint">· {unpriced} without a price</span>}
+            </div>
+            <TableWrap>
+              <table className="biz-table">
+                <thead>
+                  <tr>
+                    <th>Software</th>
+                    <th>Renews</th>
+                    <th className="num">Expected</th>
+                    <th>Billing</th>
+                    <th>Auto-renew</th>
+                    <th>Cancel by</th>
+                    <th>Contract ends</th>
+                    <th>Renewal owner</th>
+                    <th>Decision</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((s) => {
+                    const days = daysBetween(ctx.today, s.nextRenewalDate!);
+                    const deadlineDays = s.cancellationDeadline ? daysBetween(ctx.today, s.cancellationDeadline) : null;
+                    return (
+                      <tr key={s.id}>
+                        <td className="min-w-44">
+                          <span className="flex items-center gap-2.5">
+                            <SoftwareLogo name={s.softwareName} src={s.logoSrc} size={30} />
+                            <span className="min-w-0">
+                              <Link href={`/business/subscriptions/${s.id}`} className="font-medium hover:underline">
+                                {s.softwareName}
+                              </Link>
+                              {s.planName && <span className="block text-[12px] text-faint">{s.planName}</span>}
+                            </span>
+                          </span>
+                        </td>
+                        <td className="whitespace-nowrap">
+                          {formatIsoDate(s.nextRenewalDate, fmt)}
+                          <span className={cn("block text-[12px]", days <= 7 ? "text-warn" : "text-faint")}>{days === 0 ? "Today" : `${days} day${days === 1 ? "" : "s"}`}</span>
+                        </td>
+                        <td className="num">{s.priceMinor !== null ? formatMoney(s.priceMinor, s.currency) : <span className="text-faint">—</span>}</td>
+                        <td className="whitespace-nowrap">{intervalLabel(s)}</td>
+                        <td>{s.autoRenew ? "Yes" : <Pill>Manual</Pill>}</td>
+                        <td className="whitespace-nowrap">
+                          {s.cancellationDeadline ? (
+                            <span className={cn(deadlineDays !== null && deadlineDays >= 0 && deadlineDays <= 14 && "text-warn")}>{formatIsoDate(s.cancellationDeadline, fmt)}</span>
+                          ) : (
+                            <span className="text-faint">—</span>
+                          )}
+                        </td>
+                        <td className="whitespace-nowrap">{s.contractEndDate ? formatIsoDate(s.contractEndDate, fmt) : <span className="text-faint">—</span>}</td>
+                        <td className="whitespace-nowrap">{s.renewalOwnerName ?? s.ownerName ?? <span className="text-faint">—</span>}</td>
+                        <td>
+                          <Pill tone={s.renewalDecision === "undecided" ? "outline" : s.renewalDecision === "cancel" ? "warn" : "accent"}>{renewalDecisionLabels[s.renewalDecision]}</Pill>
+                        </td>
+                        <td>
+                          <StatusPill status={s.status} label={subscriptionStatusLabels[s.status]} />
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </TableWrap>
+          </>
+        )}
+      </Card>
+    </div>
   );
 }
 
@@ -255,15 +309,18 @@ function Calendar({ ctx, live, monthParam }: { ctx: BizContext; live: Subscripti
       href={`/business/subscriptions/${e.sub.id}`}
       title={`${e.sub.softwareName}: ${e.kind === "renewal" ? "renewal" : "cancellation deadline"}${e.projected ? " (projected)" : ""}`}
       className={cn(
-        "block truncate rounded-md px-1.5 py-0.5 text-[11.5px] leading-4 hover:underline",
+        "flex min-w-0 items-center gap-1.5 rounded-md px-1 py-0.5 text-[11.5px] leading-4 hover:underline",
         e.kind === "deadline" ? "bg-warn-soft text-warn" : e.projected ? "border border-dashed border-line-strong text-muted" : "bg-accent-soft text-accent-ink",
-        !compact && "text-[13px] leading-5",
+        !compact && "px-1.5 py-1 text-[13px] leading-5",
       )}
     >
-      {e.kind === "deadline" ? "Cancel by · " : ""}
-      {e.sub.softwareName}
-      {!compact && e.sub.priceMinor !== null && e.kind === "renewal" && <span className="text-faint"> · {formatMoney(e.sub.priceMinor, e.sub.currency)}</span>}
-      {!compact && e.projected && <span className="text-faint"> · projected</span>}
+      <SoftwareLogo name={e.sub.softwareName} src={e.sub.logoSrc} size={compact ? 16 : 20} className={cn(e.projected && "opacity-70")} />
+      <span className="min-w-0 truncate">
+        {e.kind === "deadline" ? "Cancel by · " : ""}
+        {e.sub.softwareName}
+        {!compact && e.sub.priceMinor !== null && e.kind === "renewal" && <span className="text-faint"> · {formatMoney(e.sub.priceMinor, e.sub.currency)}</span>}
+        {!compact && e.projected && <span className="text-faint"> · projected</span>}
+      </span>
     </Link>
   );
 
@@ -439,12 +496,15 @@ function Item({ s, detail, children }: { s: Subscription; detail: string; childr
   return (
     <li className="py-3">
       <div className="flex flex-wrap items-start justify-between gap-2">
-        <div className="min-w-0">
-          <Link href={`/business/subscriptions/${s.id}`} className="text-[14px] font-medium text-fg hover:underline">
-            {s.softwareName}
-            {s.planName && <span className="font-normal text-faint"> · {s.planName}</span>}
-          </Link>
-          <p className="text-[12.5px] text-muted">{detail}</p>
+        <div className="flex min-w-0 items-start gap-3">
+          <SoftwareLogo name={s.softwareName} src={s.logoSrc} size={34} className="mt-0.5" />
+          <div className="min-w-0">
+            <Link href={`/business/subscriptions/${s.id}`} className="text-[14px] font-medium text-fg hover:underline">
+              {s.softwareName}
+              {s.planName && <span className="font-normal text-faint"> · {s.planName}</span>}
+            </Link>
+            <p className="text-[12.5px] text-muted">{detail}</p>
+          </div>
         </div>
         <span className="text-[12.5px] text-faint">{s.renewalOwnerName ?? s.ownerName ?? "No owner"}</span>
       </div>
@@ -467,7 +527,7 @@ function Expand({ label, children }: { label: string; children: ReactNode }) {
 
 // ─── History ────────────────────────────────────────────────────────────────
 
-function History({ ctx, events }: { ctx: BizContext; events: Awaited<ReturnType<typeof getRenewalEvents>> }) {
+function History({ ctx, events, logos }: { ctx: BizContext; events: Awaited<ReturnType<typeof getRenewalEvents>>; logos: Map<string, string | null> }) {
   const fmt = ctx.workspace.dateFormat;
   return (
     <Card title="Renewal history" description="Outcomes recorded at each renewal date.">
@@ -492,10 +552,13 @@ function History({ ctx, events }: { ctx: BizContext; events: Awaited<ReturnType<
               {events.map((e) => (
                 <tr key={e.id}>
                   <td className="whitespace-nowrap">{formatIsoDate(e.renewalDate, fmt)}</td>
-                  <td>
-                    <Link href={`/business/subscriptions/${e.subscriptionId}`} className="font-medium hover:underline">
-                      {e.softwareName}
-                    </Link>
+                  <td className="min-w-40">
+                    <span className="flex items-center gap-2.5">
+                      <SoftwareLogo name={e.softwareName} src={logos.get(e.subscriptionId) ?? null} size={26} />
+                      <Link href={`/business/subscriptions/${e.subscriptionId}`} className="font-medium hover:underline">
+                        {e.softwareName}
+                      </Link>
+                    </span>
                   </td>
                   <td>
                     <Pill tone={e.outcome === "cancelled" ? "outline" : e.outcome === "renegotiated" ? "accent" : "success"}>{outcomeLabels[e.outcome]}</Pill>

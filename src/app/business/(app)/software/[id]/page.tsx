@@ -1,13 +1,16 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { RadialGauge } from "@/components/business/charts";
+import { LogoTitle } from "@/components/business/logo-title";
 import { ArchiveSoftwareButton } from "@/components/business/record-forms";
-import { Card, DefinitionList, EmptyState, InlineNote, Kpi, LinkButton, Meter, Money, PageHeader, Pill, StatusPill, TableWrap } from "@/components/business/ui";
+import { SoftwareLogo } from "@/components/business/software-logo";
+import { Card, DefinitionList, EmptyState, InlineNote, Kpi, LinkButton, Money, PageHeader, Pill, StatusPill, TableWrap } from "@/components/business/ui";
 import { Icon } from "@/components/ui/icon";
 import { daysBetween, formatIsoDate, formatMoney, isLive, licenseTotals, monthlyEquivalent, periodSuffix, seatSummary, summarizeSpend, totalsList } from "@/lib/business/calc";
 import { categoryLabels, OVERLAP_PRONE_CATEGORIES, softwareStatusLabels, subscriptionStatusLabels } from "@/lib/business/constants";
 import { isUuid } from "@/lib/business/form";
 import { can, canEditRecord } from "@/lib/business/permissions";
-import { alternativesFor, liveOffersFor, verificationLabel } from "@/lib/server/business/catalog-match";
+import { alternativesFor, liveOffersFor, matchCatalogProduct, verificationLabel } from "@/lib/server/business/catalog-match";
 import { requireBizContext } from "@/lib/server/business/context";
 import { getActivity, getSoftware, getSoftwareList, getSubscriptions } from "@/lib/server/business/data";
 import { offerTypeLabels } from "@/lib/labels";
@@ -58,7 +61,11 @@ export default async function SoftwarePage(props: { params: Promise<{ id: string
   return (
     <>
       <PageHeader
-        title={sw.name}
+        title={
+          <LogoTitle name={sw.name} src={sw.logoSrc} size={48}>
+            {sw.name}
+          </LogoTitle>
+        }
         description={
           <span className="flex flex-wrap items-center gap-2">
             <StatusPill status={sw.status} label={softwareStatusLabels[sw.status]} />
@@ -176,22 +183,22 @@ export default async function SoftwarePage(props: { params: Promise<{ id: string
               <p className="text-[13.5px] text-muted">No subscription tracks seats.</p>
             ) : (
               <>
-                <div className="grid grid-cols-3 gap-3">
-                  <div className="rounded-xl border border-line px-3 py-2.5">
-                    <p className="text-[12px] text-faint">Purchased</p>
-                    <p className="tabular text-[16px] font-semibold">{seats.purchased}</p>
+                <div className="flex flex-col items-center gap-4 sm:flex-row">
+                  <RadialGauge value={seats.utilization} label="Seat utilization" sub="seats in use" size={116} />
+                  <div className="grid w-full min-w-0 flex-1 grid-cols-3 gap-3">
+                    <div className="rounded-xl border border-line px-3 py-2.5">
+                      <p className="text-[12px] text-faint">Purchased</p>
+                      <p className="tabular text-[16px] font-semibold">{seats.purchased}</p>
+                    </div>
+                    <div className="rounded-xl border border-line px-3 py-2.5">
+                      <p className="text-[12px] text-faint">In use</p>
+                      <p className="tabular text-[16px] font-semibold">{seats.assigned}</p>
+                    </div>
+                    <div className="rounded-xl border border-line px-3 py-2.5">
+                      <p className="text-[12px] text-faint">Available</p>
+                      <p className="tabular text-[16px] font-semibold">{seats.available}</p>
+                    </div>
                   </div>
-                  <div className="rounded-xl border border-line px-3 py-2.5">
-                    <p className="text-[12px] text-faint">In use</p>
-                    <p className="tabular text-[16px] font-semibold">{seats.assigned}</p>
-                  </div>
-                  <div className="rounded-xl border border-line px-3 py-2.5">
-                    <p className="text-[12px] text-faint">Available</p>
-                    <p className="tabular text-[16px] font-semibold">{seats.available}</p>
-                  </div>
-                </div>
-                <div className="mt-4">
-                  <Meter value={seats.utilization} label="Seat utilization" tone={seats.utilization !== null && seats.utilization < 60 ? "warn" : "accent"} />
                 </div>
                 {totalsList(seats.unusedMonthly).length > 0 && (
                   <p className="mt-2 text-[13px] text-muted">
@@ -230,13 +237,16 @@ export default async function SoftwarePage(props: { params: Promise<{ id: string
               <p className="text-[13px] text-muted">
                 Other active tools tracked as {categoryLabels[sw.category]}. Teams often need only one — this needs a review, not a confirmed duplicate.
               </p>
-              <ul className="mt-2 space-y-1 text-[13.5px]">
+              <ul className="mt-3 space-y-2 text-[13.5px]">
                 {overlaps.map((o) => (
-                  <li key={o.id}>
-                    <Link href={`/business/software/${o.id}`} className="font-medium text-fg hover:underline underline-offset-2">
-                      {o.name}
-                    </Link>
-                    {o.ownerName && <span className="text-faint"> · {o.ownerName}</span>}
+                  <li key={o.id} className="flex items-center gap-2.5">
+                    <SoftwareLogo name={o.name} src={o.logoSrc} size={26} />
+                    <span className="min-w-0">
+                      <Link href={`/business/software/${o.id}`} className="font-medium text-fg hover:underline underline-offset-2">
+                        {o.name}
+                      </Link>
+                      {o.ownerName && <span className="text-faint"> · {o.ownerName}</span>}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -249,15 +259,18 @@ export default async function SoftwarePage(props: { params: Promise<{ id: string
             ) : (
               <ul className="divide-y divide-line">
                 {deals.slice(0, 4).map((o) => (
-                  <li key={o.slug} className="py-2.5 first:pt-0 last:pb-0">
-                    <Link href={`/deals/${o.slug}`} className="text-[13.5px] font-medium text-fg hover:underline underline-offset-2">
-                      {o.title}
-                    </Link>
-                    <p className="mt-1 flex flex-wrap items-center gap-1.5 text-[12px] text-muted">
-                      <Pill tone="accent">{offerTypeLabels[o.type]}</Pill>
-                      <span>{verificationLabel(o)}</span>
-                    </p>
-                    {o.eligibility[0] && <p className="mt-1 text-[12px] text-faint">Eligibility: {o.eligibility[0]}</p>}
+                  <li key={o.slug} className="flex gap-3 py-2.5 first:pt-0 last:pb-0">
+                    <SoftwareLogo name={o.product.name} src={o.product.logo?.src ?? sw.logoSrc} size={32} className="mt-0.5" />
+                    <div className="min-w-0">
+                      <Link href={`/deals/${o.slug}`} className="text-[13.5px] font-medium text-fg hover:underline underline-offset-2">
+                        {o.title}
+                      </Link>
+                      <p className="mt-1 flex flex-wrap items-center gap-1.5 text-[12px] text-muted">
+                        <Pill tone="accent">{offerTypeLabels[o.type]}</Pill>
+                        <span>{verificationLabel(o)}</span>
+                      </p>
+                      {o.eligibility[0] && <p className="mt-1 text-[12px] text-faint">Eligibility: {o.eligibility[0]}</p>}
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -271,14 +284,17 @@ export default async function SoftwarePage(props: { params: Promise<{ id: string
             ) : (
               <ul className="divide-y divide-line">
                 {alternatives.map((a) => (
-                  <li key={a.productSlug} className="py-2.5 first:pt-0 last:pb-0">
-                    <Link href={`/products/${a.productSlug}`} className="text-[13.5px] font-medium text-fg hover:underline underline-offset-2">
-                      {a.productName}
-                    </Link>
-                    <p className="mt-0.5 text-[12.5px] text-muted">{a.tagline}</p>
-                    <p className="mt-0.5 text-[12px] text-faint">
-                      Listed under “{a.sharedTag}”{a.license ? ` · ${a.license}` : ""}
-                    </p>
+                  <li key={a.productSlug} className="flex gap-3 py-2.5 first:pt-0 last:pb-0">
+                    <SoftwareLogo name={a.productName} src={matchCatalogProduct(a.productName)?.logo?.src ?? null} size={32} className="mt-0.5" />
+                    <div className="min-w-0">
+                      <Link href={`/products/${a.productSlug}`} className="text-[13.5px] font-medium text-fg hover:underline underline-offset-2">
+                        {a.productName}
+                      </Link>
+                      <p className="mt-0.5 text-[12.5px] text-muted">{a.tagline}</p>
+                      <p className="mt-0.5 text-[12px] text-faint">
+                        Listed under “{a.sharedTag}”{a.license ? ` · ${a.license}` : ""}
+                      </p>
+                    </div>
                   </li>
                 ))}
               </ul>

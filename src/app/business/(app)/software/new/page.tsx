@@ -29,7 +29,7 @@ export default async function NewSoftwarePage() {
       <div className="max-w-3xl">
         <AddSoftwareWizard
           workspaceId={ws}
-          software={software.filter((s) => s.status !== "archived").map((s) => ({ id: s.id, name: s.name, vendorName: s.vendorName, category: s.category }))}
+          software={software.filter((s) => s.status !== "archived").map((s) => ({ id: s.id, name: s.name, vendorName: s.vendorName, category: s.category, logoSrc: s.logoSrc }))}
           people={people.filter((p) => p.status === "active").map((p) => ({ id: p.id, name: p.name, departmentName: p.departmentName }))}
           departments={departments.filter((d) => !d.archivedAt).map((d) => ({ id: d.id, name: d.name }))}
           defaultCurrency={ctx.workspace.defaultCurrency}

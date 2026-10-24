@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArchiveDepartmentButton, AssignMembersForm, CreateDepartmentForm, RenameDepartmentForm } from "@/components/business/department-forms";
+import { LogoStack } from "@/components/business/software-logo";
 import { Card, EmptyState, Money, PageHeader, Pill, TableWrap } from "@/components/business/ui";
 import { can } from "@/lib/business/permissions";
 import { groupsFrom } from "@/lib/server/business/analytics";
@@ -29,6 +30,16 @@ export default async function DepartmentsPage(props: { searchParams: Promise<Rec
   const peopleBy = count(people, (p) => p.departmentId);
   const softwareBy = count(software.filter((s) => s.status !== "archived"), (s) => s.departmentId);
   const subsBy = count(subs, (s) => s.departmentId);
+  // Each department's tools: software it owns plus software its subscriptions are for.
+  const toolsBy = new Map<string, Map<string, { name: string; src: string | null }>>();
+  const addTool = (dept: string | null, id: string, name: string, src: string | null) => {
+    if (!dept) return;
+    const m = toolsBy.get(dept) ?? new Map();
+    m.set(id, { name, src });
+    toolsBy.set(dept, m);
+  };
+  for (const sw of software) if (sw.status !== "archived") addTool(sw.departmentId, sw.id, sw.name, sw.logoSrc);
+  for (const sub of subs) addTool(sub.departmentId, sub.softwareId, sub.softwareName, sub.logoSrc);
   const active = departments.filter((d) => !d.archivedAt);
   const archived = departments.filter((d) => d.archivedAt);
   const managing = typeof q.manage === "string" && manage ? departments.find((d) => d.id === q.manage) : undefined;
@@ -40,6 +51,7 @@ export default async function DepartmentsPage(props: { searchParams: Promise<Rec
         <thead>
           <tr>
             <th>Department</th>
+            <th>Tools</th>
             <th className="num">People</th>
             <th className="num">Software</th>
             <th className="num">Subscriptions</th>
@@ -64,6 +76,7 @@ export default async function DepartmentsPage(props: { searchParams: Promise<Rec
                   </Link>
                 </span>
               </td>
+              <td>{toolsBy.get(d.id)?.size ? <LogoStack items={[...toolsBy.get(d.id)!.values()]} max={5} size={24} /> : <span className="text-faint">—</span>}</td>
               <td className="num">{peopleBy.get(d.id) ?? 0}</td>
               <td className="num">{softwareBy.get(d.id) ?? 0}</td>
               <td className="num">{subsBy.get(d.id) ?? 0}</td>

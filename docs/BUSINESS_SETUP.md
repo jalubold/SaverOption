@@ -124,6 +124,16 @@ Reminder windows default to 30, 14 and 7 days before each renewal (and before ca
 
 `biz_reminders` records each reminder once, so no path can create a duplicate.
 
+## Software logos
+
+Software rows show a logo so lists are quicker to scan (`src/lib/server/business/logos.ts`):
+
+1. a bundled square mark for about 95 well-known tools, matched by name or website (`public/logos/business/*.svg`, listed in `src/lib/business/logo-map.ts`), else
+2. the logo of the linked or matching Saver Option catalog product (`public/logos/*.svg`), else
+3. a coloured monogram from the software's name.
+
+The bundled marks come from the Iconify "logos" set and Simple Icons (both CC0). They're stored with the app; nothing is fetched from third parties when a page loads. Logos are trademarks of their owners and are shown only to identify the tools a workspace tracks. They don't imply a partnership or an integration.
+
 ## Demo workspace
 
 "Explore the demo" creates a separate workspace, "Northwind Studio (demo)", flagged `is_demo`, with a fictional company's departments, people, subscriptions, seats, renewals and payments. Prices are sample figures, not vendor quotes. Every page shows a demo banner; it can be reset from Settings. Demo data is never added to a real workspace.

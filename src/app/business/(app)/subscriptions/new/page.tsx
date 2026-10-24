@@ -1,4 +1,5 @@
 import { AddSoftwareWizard } from "@/components/business/add-software-wizard";
+import { LogoTitle } from "@/components/business/logo-title";
 import { InlineNote, PageHeader } from "@/components/business/ui";
 import { isUuid } from "@/lib/business/form";
 import { can } from "@/lib/business/permissions";
@@ -27,14 +28,22 @@ export default async function NewSubscriptionPage(props: { searchParams: Promise
   return (
     <>
       <PageHeader
-        title={wanted ? `Add a subscription for ${wanted.name}` : "Add software"}
+        title={
+          wanted ? (
+            <LogoTitle name={wanted.name} src={wanted.logoSrc} size={40}>
+              Add a subscription for {wanted.name}
+            </LogoTitle>
+          ) : (
+            "Add software"
+          )
+        }
         description="Pick software from your inventory or add a new one, then enter the subscription, ownership and seats. Only the software is required."
         crumbs={crumbs}
       />
       <div className="max-w-3xl">
         <AddSoftwareWizard
           workspaceId={ws}
-          software={live.map((s) => ({ id: s.id, name: s.name, vendorName: s.vendorName, category: s.category }))}
+          software={live.map((s) => ({ id: s.id, name: s.name, vendorName: s.vendorName, category: s.category, logoSrc: s.logoSrc }))}
           people={people.filter((p) => p.status === "active").map((p) => ({ id: p.id, name: p.name, departmentName: p.departmentName }))}
           departments={departments.filter((d) => !d.archivedAt).map((d) => ({ id: d.id, name: d.name }))}
           defaultCurrency={ctx.workspace.defaultCurrency}

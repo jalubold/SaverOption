@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { LogoTitle } from "@/components/business/logo-title";
 import { SubscriptionForm } from "@/components/business/subscription-form";
 import { InlineNote, LinkButton, PageHeader } from "@/components/business/ui";
 import { isUuid } from "@/lib/business/form";
@@ -22,7 +23,12 @@ export default async function EditSubscriptionPage(props: { params: Promise<{ id
     { label: sub.softwareName, href: `/business/subscriptions/${id}` },
     { label: "Edit" },
   ];
-  const title = `Edit ${sub.softwareName}${sub.planName ? ` · ${sub.planName}` : ""}`;
+  const title = (
+    <LogoTitle name={sub.softwareName} src={sub.logoSrc} size={40}>
+      Edit {sub.softwareName}
+      {sub.planName ? ` · ${sub.planName}` : ""}
+    </LogoTitle>
+  );
 
   if (!canEditRecord(ctx.role, { ownerPersonId: sub.ownerPersonId }, ctx.personId)) {
     return (

@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { LogoTitle } from "@/components/business/logo-title";
 import { SoftwareForm } from "@/components/business/software-form";
 import { InlineNote, LinkButton, PageHeader } from "@/components/business/ui";
 import { isUuid } from "@/lib/business/form";
@@ -16,11 +17,16 @@ export default async function EditSoftwarePage(props: { params: Promise<{ id: st
   const sw = await getSoftware(ctx, id);
   if (!sw) notFound();
   const crumbs = [{ label: "Software Inventory", href: "/business/software" }, { label: sw.name, href: `/business/software/${id}` }, { label: "Edit" }];
+  const title = (
+    <LogoTitle name={sw.name} src={sw.logoSrc} size={40}>
+      Edit {sw.name}
+    </LogoTitle>
+  );
 
   if (!canEditRecord(ctx.role, { ownerPersonId: sw.ownerPersonId }, ctx.personId)) {
     return (
       <>
-        <PageHeader title={`Edit ${sw.name}`} crumbs={crumbs} />
+        <PageHeader title={title} crumbs={crumbs} />
         <InlineNote title="You can view this software but not change it">
           Owners, admins and finance can edit any record; members can edit the ones they own. <LinkButton href={`/business/software/${id}`}>Back to {sw.name}</LinkButton>
         </InlineNote>
@@ -30,7 +36,7 @@ export default async function EditSoftwarePage(props: { params: Promise<{ id: st
   if (sw.status === "archived") {
     return (
       <>
-        <PageHeader title={`Edit ${sw.name}`} crumbs={crumbs} />
+        <PageHeader title={title} crumbs={crumbs} />
         <InlineNote tone="warn" title="This software is archived">
           Restore it from its page before editing. <LinkButton href={`/business/software/${id}`}>Open {sw.name}</LinkButton>
         </InlineNote>
@@ -43,7 +49,7 @@ export default async function EditSoftwarePage(props: { params: Promise<{ id: st
   const archivedDepartment = sw.departmentId ? departments.find((d) => d.id === sw.departmentId && d.archivedAt) : undefined;
   return (
     <>
-      <PageHeader title={`Edit ${sw.name}`} crumbs={crumbs} />
+      <PageHeader title={title} crumbs={crumbs} />
       <div className="max-w-3xl space-y-4">
         {archivedDepartment && (
           <InlineNote tone="warn" title={`The ${archivedDepartment.name} department is archived`}>

@@ -5,6 +5,7 @@ import { useCallback, useState } from "react";
 import { archiveSubscriptionsAction, bulkAssignAction } from "@/app/business/actions/records";
 import type { FormState } from "@/lib/business/form";
 import { ActionForm, ConfirmSubmit, Submit } from "@/components/business/forms";
+import { SoftwareLogo } from "@/components/business/software-logo";
 import { Pill, StatusPill } from "@/components/business/ui";
 import { Icon } from "@/components/ui/icon";
 
@@ -13,6 +14,7 @@ export interface SubscriptionRowView {
   id: string;
   softwareId: string;
   softwareName: string;
+  logoSrc: string | null;
   planName: string | null;
   vendorName: string | null;
   categoryLabel: string;
@@ -170,11 +172,16 @@ export function SubscriptionTable({
                     />
                   </td>
                 )}
-                <td className="min-w-40">
-                  <Link href={`/business/subscriptions/${r.id}`} className="font-medium text-fg hover:underline underline-offset-2">
-                    {r.softwareName}
-                  </Link>
-                  {r.planName && <span className="block text-[12px] text-faint">{r.planName}</span>}
+                <td className="min-w-48">
+                  <span className="flex items-center gap-2.5">
+                    <SoftwareLogo name={r.softwareName} src={r.logoSrc} size={30} />
+                    <span className="min-w-0">
+                      <Link href={`/business/subscriptions/${r.id}`} className="font-medium text-fg hover:underline underline-offset-2">
+                        {r.softwareName}
+                      </Link>
+                      {r.planName && <span className="block text-[12px] text-faint">{r.planName}</span>}
+                    </span>
+                  </span>
                 </td>
                 <td className="whitespace-nowrap">{r.vendorName ?? <span className="text-faint">—</span>}</td>
                 <td className="whitespace-nowrap">{r.categoryLabel}</td>

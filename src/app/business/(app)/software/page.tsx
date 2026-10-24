@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { LogoStack, SoftwareLogo } from "@/components/business/software-logo";
+import { SummaryStrip, StripStat } from "@/components/business/summary-strip";
 import { Card, EmptyState, InlineNote, LinkButton, Money, PageHeader, StatusPill, Tabs } from "@/components/business/ui";
 import { buttonClass, cn } from "@/components/ui/primitives";
 import { addTo, groupMonthly, isLive, type CurrencyTotals } from "@/lib/business/calc";
@@ -90,6 +92,13 @@ export default async function SoftwareInventoryPage(props: { searchParams: Promi
     for (const s of items) for (const [c, v] of Object.entries(monthly.get(s.id) ?? {})) addTo(t, c, v);
     return t;
   };
+  const byId = new Map(software.map((s) => [s.id, s]));
+  const logoOf = (id: string) => byId.get(id)?.logoSrc ?? null;
+  const statusCount = (st: SoftwareStatus) => rows.filter((s) => s.status === st).length;
+  const unpaid = rows.filter((s) => s.status !== "archived" && !(counts.get(s.id)?.live ?? 0)).length;
+  // Highest monthly cost first (default currency first), then the rest by name.
+  const cost = (s: Software) => monthly.get(s.id)?.[pref] ?? 0;
+  const ranked = [...rows].sort((a, b) => cost(b) - cost(a) || Number(Boolean(monthly.get(b.id))) - Number(Boolean(monthly.get(a.id))) || a.name.localeCompare(b.name));
   const canAdd = can(ctx.role, "records.manage");
   const filtered = Boolean(f.q || f.category || f.status || f.vendor || f.department || f.owner);
 
@@ -132,15 +141,23 @@ export default async function SoftwareInventoryPage(props: { searchParams: Promi
                 <p>These records look alike by the rules below. They need a human review: they may be separate tools on purpose.</p>
                 <ul className="mt-2 space-y-1">
                   {duplicates.slice(0, 6).map((p) => (
-                    <li key={`${p.a.id}-${p.b.id}`}>
-                      <Link href={`/business/software/${p.a.id}`} className="font-medium text-fg underline underline-offset-2">
-                        {p.a.name}
-                      </Link>{" "}
-                      and{" "}
-                      <Link href={`/business/software/${p.b.id}`} className="font-medium text-fg underline underline-offset-2">
-                        {p.b.name}
-                      </Link>
-                      <span className="text-faint"> — {p.reasons.join("; ")}</span>
+                    <li key={`${p.a.id}-${p.b.id}`} className="flex items-start gap-2.5">
+                      <span className="mt-px inline-flex shrink-0 items-center" aria-hidden="true">
+                        <SoftwareLogo name={p.a.name} src={logoOf(p.a.id)} size={22} />
+                        <span className="-ml-1 rounded-[7px] ring-2 ring-warn-soft">
+                          <SoftwareLogo name={p.b.name} src={logoOf(p.b.id)} size={22} />
+                        </span>
+                      </span>
+                      <span className="min-w-0">
+                        <Link href={`/business/software/${p.a.id}`} className="font-medium text-fg underline underline-offset-2">
+                          {p.a.name}
+                        </Link>{" "}
+                        and{" "}
+                        <Link href={`/business/software/${p.b.id}`} className="font-medium text-fg underline underline-offset-2">
+                          {p.b.name}
+                        </Link>
+                        <span className="text-faint"> — {p.reasons.join("; ")}</span>
+                      </span>
                     </li>
                   ))}
                 </ul>
@@ -184,10 +201,31 @@ export default async function SoftwareInventoryPage(props: { searchParams: Promi
             )}
           </form>
 
-          <p className="mb-3 text-[13px] text-muted">
-            {rows.length} software record{rows.length === 1 ? "" : "s"}
-            {f.status !== "archived" && " · monthly equivalent of their active subscriptions"}
-          </p>
+          {rows.length > 0 && (
+            <SummaryStrip
+              label="Summary of this view"
+              aside={
+                <>
+                  <LogoStack items={ranked.map((s) => ({ name: s.name, src: s.logoSrc }))} max={7} size={28} />
+                  <span className="text-[12px] text-faint">
+                    {rows.length} record{rows.length === 1 ? "" : "s"}
+                  </span>
+                </>
+              }
+            >
+              {f.status === "archived" ? (
+                <StripStat label="Archived" value={rows.length} />
+              ) : (
+                <>
+                  <StripStat label="Active" value={statusCount("active")} />
+                  <StripStat label="Evaluating" value={statusCount("evaluating")} />
+                  <StripStat label="Deprecated" value={statusCount("deprecated")} tone={statusCount("deprecated") > 0 ? "warn" : undefined} />
+                  <StripStat label="No live plan" value={unpaid} sub="Free, unpaid or untracked" />
+                  <StripStat label="Monthly equivalent" value={<Money totals={groupTotal(rows)} preferred={pref} />} sub="Active, priced plans" />
+                </>
+              )}
+            </SummaryStrip>
+          )}
 
           {rows.length === 0 ? (
             <Card>
@@ -200,10 +238,13 @@ export default async function SoftwareInventoryPage(props: { searchParams: Promi
               {groups.map((g) => (
                 <section key={g.key} aria-label={g.label || "Software"}>
                   {g.label && (
-                    <div className="mb-2 flex items-baseline justify-between gap-3">
-                      <h2 className="text-[14.5px] font-semibold">
-                        {g.label} <span className="font-normal text-faint">· {g.items.length}</span>
-                      </h2>
+                    <div className="mb-2 flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5">
+                      <div className="flex min-w-0 items-center gap-2.5">
+                        <LogoStack items={g.items.map((s) => ({ name: s.name, src: s.logoSrc }))} max={4} size={22} />
+                        <h2 className="truncate text-[14.5px] font-semibold">
+                          {g.label} <span className="font-normal text-faint">· {g.items.length}</span>
+                        </h2>
+                      </div>
                       <Money totals={groupTotal(g.items)} preferred={pref} className="text-[13px] text-muted" empty="" />
                     </div>
                   )}
@@ -213,21 +254,26 @@ export default async function SoftwareInventoryPage(props: { searchParams: Promi
                         const c = counts.get(s.id) ?? { live: 0, total: 0 };
                         return (
                           <li key={s.id}>
-                            <Link href={`/business/software/${s.id}`} className="biz-card flex h-full flex-col px-4 py-3.5 transition-colors hover:border-line-strong">
-                              <span className="flex items-start justify-between gap-2">
-                                <span className="min-w-0">
+                            <Link href={`/business/software/${s.id}`} className="biz-card group flex h-full flex-col px-4 py-4 transition-[border-color,box-shadow] hover:border-line-strong hover:shadow-md">
+                              <span className="flex items-start gap-3">
+                                <SoftwareLogo name={s.name} src={s.logoSrc} size={40} className="transition-transform group-hover:scale-105" />
+                                <span className="min-w-0 flex-1">
                                   <span className="block truncate text-[14.5px] font-semibold text-fg">{s.name}</span>
                                   <span className="block truncate text-[12.5px] text-faint">{[s.vendorName, categoryLabels[s.category]].filter(Boolean).join(" · ")}</span>
                                 </span>
                                 <StatusPill status={s.status} label={softwareStatusLabels[s.status]} />
                               </span>
-                              {s.businessPurpose && <span className="mt-2 line-clamp-2 text-[12.5px] text-muted">{s.businessPurpose}</span>}
-                              <span className="mt-auto flex items-end justify-between gap-2 pt-3 text-[12.5px]">
-                                <span className="text-faint">
+                              {s.businessPurpose && <span className="mt-3 line-clamp-2 text-[12.5px] text-muted">{s.businessPurpose}</span>}
+                              <span aria-hidden="true" className="min-h-3 flex-1" />
+                              <span className="flex items-end justify-between gap-2 border-t border-line pt-3 text-[12.5px]">
+                                <span className="min-w-0 text-faint">
                                   {c.total ? `${c.live} live of ${c.total} subscription${c.total === 1 ? "" : "s"}` : "No subscription"}
-                                  {s.ownerName && <span className="block">Owner: {s.ownerName}</span>}
+                                  {s.ownerName && <span className="block truncate">Owner: {s.ownerName}</span>}
                                 </span>
-                                <Money totals={monthly.get(s.id) ?? {}} preferred={pref} className="text-[13.5px] font-medium text-fg" />
+                                <span className="shrink-0 text-right">
+                                  <Money totals={monthly.get(s.id) ?? {}} preferred={pref} className="text-[14px] font-semibold text-heading" />
+                                  {monthly.get(s.id) && <span className="block text-[11px] text-faint">a month</span>}
+                                </span>
                               </span>
                             </Link>
                           </li>
@@ -255,11 +301,16 @@ export default async function SoftwareInventoryPage(props: { searchParams: Promi
                               const c = counts.get(s.id) ?? { live: 0, total: 0 };
                               return (
                                 <tr key={s.id}>
-                                  <td className="min-w-40">
-                                    <Link href={`/business/software/${s.id}`} className="font-medium text-fg hover:underline underline-offset-2">
-                                      {s.name}
-                                    </Link>
-                                    {s.businessPurpose && <span className="block max-w-xs truncate text-[12px] text-faint">{s.businessPurpose}</span>}
+                                  <td className="min-w-48">
+                                    <span className="flex items-center gap-2.5">
+                                      <SoftwareLogo name={s.name} src={s.logoSrc} size={30} />
+                                      <span className="min-w-0">
+                                        <Link href={`/business/software/${s.id}`} className="font-medium text-fg hover:underline underline-offset-2">
+                                          {s.name}
+                                        </Link>
+                                        {s.businessPurpose && <span className="block max-w-xs truncate text-[12px] text-faint">{s.businessPurpose}</span>}
+                                      </span>
+                                    </span>
                                   </td>
                                   <td className="whitespace-nowrap">{s.vendorName ?? <span className="text-faint">—</span>}</td>
                                   <td className="whitespace-nowrap">{categoryLabels[s.category]}</td>

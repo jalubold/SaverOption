@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { BarList, StackedBar, TrendChart } from "@/components/business/charts";
+import { BarList, DonutChart, RadialGauge, StackedBar, TrendChart, type BarRow } from "@/components/business/charts";
+import { SoftwareLogo } from "@/components/business/software-logo";
 import { Card, EmptyState, InlineNote, Kpi, Meter, Money, PageHeader, Pill, StatusPill, TableWrap } from "@/components/business/ui";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass } from "@/components/ui/primitives";
@@ -9,6 +10,7 @@ import { categoryLabels, opportunityTypeLabels, SOFTWARE_CATEGORIES, subscriptio
 import { can } from "@/lib/business/permissions";
 import type { Group } from "@/lib/server/business/analytics";
 import { requireBizContext } from "@/lib/server/business/context";
+import { logoFor } from "@/lib/server/business/logos";
 import { buildReport, hasFilters, paramsQuery, RANGE_PRESETS, rangeLabels, type ReportKey } from "@/lib/server/business/reports";
 
 export const metadata = { title: "Reports" };
@@ -37,11 +39,27 @@ export default async function ReportsPage(props: { searchParams: Promise<Raw> })
   const currencyNote = params.currency ? params.currency : model.currencies.length > 1 ? "all currencies, shown separately" : (model.currencies[0] ?? pref);
   const multiCurrency = !params.currency && model.currencies.length > 1;
 
-  const groupRows = (groups: Group[]) =>
+  const groupRows = (groups: Group[], logoOf?: (g: Group) => string | null): BarRow[] =>
     groups
       .filter((g) => (g.totals[cur] ?? 0) > 0)
       .sort((a, b) => (b.totals[cur] ?? 0) - (a.totals[cur] ?? 0))
-      .map((g) => ({ label: g.label, value: g.totals[cur]!, display: `${whole(g.totals[cur]!, cur)}/mo`, sub: `· ${g.count} ${g.count === 1 ? "subscription" : "subscriptions"}` }));
+      .map((g) => ({
+        label: g.label,
+        value: g.totals[cur]!,
+        display: `${whole(g.totals[cur]!, cur)}/mo`,
+        sub: `· ${g.count} ${g.count === 1 ? "subscription" : "subscriptions"}`,
+        ...(logoOf ? { logo: logoOf(g) } : {}),
+      }));
+  // A vendor's own mark when it's a well-known one, else the logo of its only tool, else a monogram.
+  const vendorLogo = (g: Group): string | null => {
+    if (g.key === "__none__") return null;
+    const own = logoFor(g.label, null, null);
+    if (own) return own;
+    const tools = [...new Map(model.subs.filter((x) => x.vendorId === g.key).map((x) => [x.softwareId, x.logoSrc])).values()];
+    return tools.length === 1 ? tools[0] : null;
+  };
+  const categoryRows = groupRows(model.byCategory);
+  const categoryTotal = categoryRows.reduce((t, r) => t + r.value, 0);
 
   const controls = (
     <form method="get" action="/business/reports" className="biz-card mb-5 flex flex-wrap items-end gap-3 px-4 py-3">
@@ -234,10 +252,13 @@ export default async function ReportsPage(props: { searchParams: Promise<Raw> })
                 const a = annualized(r);
                 return (
                   <tr key={r.id}>
-                    <td>
-                      <Link href={`/business/subscriptions/${r.id}`} className="font-medium hover:underline">
-                        {r.softwareName}
-                      </Link>
+                    <td className="min-w-40">
+                      <span className="flex items-center gap-2.5">
+                        <SoftwareLogo name={r.softwareName} src={r.logoSrc} size={26} />
+                        <Link href={`/business/subscriptions/${r.id}`} className="font-medium hover:underline">
+                          {r.softwareName}
+                        </Link>
+                      </span>
                     </td>
                     <td className="text-muted">{r.planName ?? "—"}</td>
                     <td className="whitespace-nowrap">{intervalLabel(r)}</td>
@@ -268,8 +289,48 @@ export default async function ReportsPage(props: { searchParams: Promise<Raw> })
       </Card>
 
       <div className="mt-5 grid gap-5 lg:grid-cols-2">
-        <Breakdown title="By vendor" cur={cur} rows={groupRows(model.byVendor)} groups={model.byVendor} multi={multiCurrency} pref={pref} action={exportLink("vendors")} />
-        <Breakdown title="By category" cur={cur} rows={groupRows(model.byCategory)} groups={model.byCategory} multi={multiCurrency} pref={pref} action={exportLink("categories")} />
+        <Breakdown title="By vendor" cur={cur} rows={groupRows(model.byVendor, vendorLogo)} groups={model.byVendor} multi={multiCurrency} pref={pref} action={exportLink("vendors")} />
+        <Card title="By category" description={`Monthly equivalent of active subscriptions, ${cur}`} action={exportLink("categories")} className="min-w-0">
+          {categoryRows.length ? (
+            <>
+              <DonutChart
+                caption={`Spending by category, ${cur}`}
+                segments={categoryRows.map((r) => ({ label: r.label, value: r.value, display: r.display }))}
+                centerLabel="Per month"
+                centerValue={whole(categoryTotal, cur)}
+                otherLabel="Other categories"
+              />
+              <details className="mt-3 text-[12.5px]">
+                <summary className="cursor-pointer select-none text-faint hover:text-fg">View as table</summary>
+                <table className="biz-table mt-2">
+                  <caption className="sr-only">Spending by category, {cur}</caption>
+                  <thead>
+                    <tr>
+                      <th>Category</th>
+                      <th className="num">Subscriptions</th>
+                      <th className="num">Monthly</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {model.byCategory
+                      .filter((g) => (g.totals[cur] ?? 0) > 0)
+                      .sort((a, b) => (b.totals[cur] ?? 0) - (a.totals[cur] ?? 0))
+                      .map((g) => (
+                        <tr key={g.key}>
+                          <td>{g.label}</td>
+                          <td className="num">{g.count}</td>
+                          <td className="num">{whole(g.totals[cur]!, cur)}/mo</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </details>
+            </>
+          ) : (
+            <p className="text-[13.5px] text-muted">No priced active subscriptions in {cur}.</p>
+          )}
+          {multiCurrency && <GroupTable groups={model.byCategory} pref={pref} />}
+        </Card>
         <Breakdown title="By department" cur={cur} rows={groupRows(model.byDepartment)} groups={model.byDepartment} multi={multiCurrency} pref={pref} action={exportLink("departments")} />
         <Card title="By billing interval" description={`Monthly equivalent, ${cur}`} action={exportLink("intervals")}>
           <StackedBar caption={`Monthly equivalent by billing interval, ${cur}`} segments={model.byInterval.map((g) => ({ label: g.label, value: g.totals[cur] ?? 0, display: `${whole(g.totals[cur] ?? 0, cur)}/mo` }))} />
@@ -329,11 +390,16 @@ export default async function ReportsPage(props: { searchParams: Promise<Raw> })
                   <tbody>
                     {commitments.rows.map((r) => (
                       <tr key={r.sub.id}>
-                        <td>
-                          <Link href={`/business/subscriptions/${r.sub.id}`} className="font-medium hover:underline">
-                            {r.sub.softwareName}
-                          </Link>
-                          <span className="block text-[12px] text-faint">{intervalLabel(r.sub)}</span>
+                        <td className="min-w-40">
+                          <span className="flex items-center gap-2.5">
+                            <SoftwareLogo name={r.sub.softwareName} src={r.sub.logoSrc} size={26} />
+                            <span className="min-w-0">
+                              <Link href={`/business/subscriptions/${r.sub.id}`} className="font-medium hover:underline">
+                                {r.sub.softwareName}
+                              </Link>
+                              <span className="block text-[12px] text-faint">{intervalLabel(r.sub)}</span>
+                            </span>
+                          </span>
                         </td>
                         <td className="whitespace-nowrap">{formatIsoDate(r.dates[0], fmt)}</td>
                         <td className="num">{r.dates.length}</td>
@@ -355,11 +421,14 @@ export default async function ReportsPage(props: { searchParams: Promise<Raw> })
           <p className="text-[13.5px] text-muted">No subscriptions track purchased seats in this selection.</p>
         ) : (
           <>
-            <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-              <Stat label="Purchased seats" value={model.licenses.purchased} />
-              <Stat label="In use" value={model.licenses.assigned} />
-              <Stat label="Available" value={model.licenses.available} />
-              <Stat label="Utilization" value={percent(model.licenses.utilization)} />
+            <div className="mb-4 flex flex-col items-center gap-4 sm:flex-row">
+              <RadialGauge value={model.licenses.utilization} label="Overall seat utilization" sub="in use" size={112} />
+              <div className="grid w-full min-w-0 flex-1 grid-cols-2 gap-3 sm:grid-cols-4">
+                <Stat label="Purchased seats" value={model.licenses.purchased} />
+                <Stat label="In use" value={model.licenses.assigned} />
+                <Stat label="Available" value={model.licenses.available} />
+                <Stat label="Utilization" value={percent(model.licenses.utilization)} />
+              </div>
             </div>
             <TableWrap>
               <table className="biz-table">
@@ -376,11 +445,16 @@ export default async function ReportsPage(props: { searchParams: Promise<Raw> })
                 <tbody>
                   {report.licenseRows.map(({ sub, seats }) => (
                     <tr key={sub.id}>
-                      <td>
-                        <Link href={`/business/licenses/${sub.id}`} className="font-medium hover:underline">
-                          {sub.softwareName}
-                        </Link>
-                        <span className="block text-[12px] text-faint">{seats.assignedSource === "named" ? "Named assignments" : seats.assignedSource === "reported" ? "Reported count" : "Nothing recorded"}</span>
+                      <td className="min-w-44">
+                        <span className="flex items-center gap-2.5">
+                          <SoftwareLogo name={sub.softwareName} src={sub.logoSrc} size={26} />
+                          <span className="min-w-0">
+                            <Link href={`/business/licenses/${sub.id}`} className="font-medium hover:underline">
+                              {sub.softwareName}
+                            </Link>
+                            <span className="block text-[12px] text-faint">{seats.assignedSource === "named" ? "Named assignments" : seats.assignedSource === "reported" ? "Reported count" : "Nothing recorded"}</span>
+                          </span>
+                        </span>
                       </td>
                       <td className="num">{seats.purchased}</td>
                       <td className="num">{seats.assigned}</td>
@@ -571,14 +645,14 @@ function Breakdown({
 }: {
   title: string;
   cur: string;
-  rows: { label: string; value: number; display: string; sub?: string }[];
+  rows: BarRow[];
   groups: Group[];
   multi: boolean;
   pref: string;
   action: ReactNode;
 }) {
   return (
-    <Card title={title} description={`Monthly equivalent of active subscriptions, ${cur}`} action={action}>
+    <Card title={title} description={`Monthly equivalent of active subscriptions, ${cur}`} action={action} className="min-w-0">
       {rows.length ? <BarList caption={`${title}, ${cur}`} rows={rows} max={10} /> : <p className="text-[13.5px] text-muted">No priced active subscriptions in {cur}.</p>}
       {multi && <GroupTable groups={groups} pref={pref} />}
     </Card>

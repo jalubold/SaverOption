@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { RadialGauge } from "@/components/business/charts";
 import { ArchiveSubscriptionButton, DeletePaymentButton, PaymentForm, RecordRenewalForm, RenewalDecisionForm } from "@/components/business/record-forms";
-import { Card, DefinitionList, InlineNote, Kpi, LinkButton, Meter, Money, PageHeader, Pill, StatusPill, TableWrap } from "@/components/business/ui";
+import { LogoTitle } from "@/components/business/logo-title";
+import { SoftwareLogo } from "@/components/business/software-logo";
+import { Card, DefinitionList, InlineNote, Kpi, LinkButton, Money, PageHeader, Pill, StatusPill, TableWrap } from "@/components/business/ui";
 import { Icon } from "@/components/ui/icon";
 import {
   addTo,
@@ -113,7 +116,11 @@ export default async function SubscriptionPage(props: { params: Promise<{ id: st
   return (
     <>
       <PageHeader
-        title={title}
+        title={
+          <LogoTitle name={sub.softwareName} src={sub.logoSrc}>
+            {title}
+          </LogoTitle>
+        }
         description={
           <span className="flex flex-wrap items-center gap-2">
             {sub.archived ? <Pill tone="outline">Archived</Pill> : <StatusPill status={sub.status} label={subscriptionStatusLabels[sub.status]} />}
@@ -239,14 +246,14 @@ export default async function SubscriptionPage(props: { params: Promise<{ id: st
               <p className="text-[13.5px] text-muted">Seats aren&apos;t tracked for this subscription.{canEdit ? " Add the purchased seat count to track utilization." : ""}</p>
             ) : (
               <>
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                  <Stat label="Purchased" value={seatInfo.purchased ?? "—"} />
-                  <Stat label="In use" value={seatInfo.assigned} sub={seatInfo.assignedSource === "named" ? "Named assignments" : seatInfo.assignedSource === "reported" ? "Reported count" : "None recorded"} />
-                  <Stat label="Available" value={seatInfo.available ?? "—"} />
-                  <Stat label="Cost per seat" value={seatInfo.costPerSeatMonthly !== null ? `${formatMoney(Math.round(seatInfo.costPerSeatMonthly), sub.currency)}/mo` : "—"} sub={sub.pricingModel === "per_seat" ? undefined : "Flat price"} />
-                </div>
-                <div className="mt-4">
-                  <Meter value={seatInfo.utilization} label="Seat utilization" tone={seatInfo.utilization !== null && seatInfo.utilization < 60 ? "warn" : "accent"} />
+                <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-center">
+                  <RadialGauge value={seatInfo.utilization} label="Seat utilization" sub={seatInfo.purchased !== null ? "seats in use" : "no seat count"} size={116} />
+                  <div className="grid w-full min-w-0 flex-1 grid-cols-2 gap-3">
+                    <Stat label="Purchased" value={seatInfo.purchased ?? "—"} />
+                    <Stat label="In use" value={seatInfo.assigned} sub={seatInfo.assignedSource === "named" ? "Named assignments" : seatInfo.assignedSource === "reported" ? "Reported count" : "None recorded"} />
+                    <Stat label="Available" value={seatInfo.available ?? "—"} />
+                    <Stat label="Cost per seat" value={seatInfo.costPerSeatMonthly !== null ? `${formatMoney(Math.round(seatInfo.costPerSeatMonthly), sub.currency)}/mo` : "—"} sub={sub.pricingModel === "per_seat" ? undefined : "Flat price"} />
+                  </div>
                 </div>
                 {seatInfo.unusedMonthly !== null && seatInfo.unusedMonthly > 0 && (
                   <p className="mt-2 text-[13px] text-muted">
@@ -419,15 +426,18 @@ export default async function SubscriptionPage(props: { params: Promise<{ id: st
             ) : (
               <ul className="divide-y divide-line">
                 {deals.slice(0, 4).map((o) => (
-                  <li key={o.slug} className="py-2.5 first:pt-0 last:pb-0">
-                    <Link href={`/deals/${o.slug}`} className="text-[13.5px] font-medium text-fg hover:underline underline-offset-2">
-                      {o.title}
-                    </Link>
-                    <p className="mt-1 flex flex-wrap items-center gap-1.5 text-[12px] text-muted">
-                      <Pill tone="accent">{offerTypeLabels[o.type]}</Pill>
-                      <span>{verificationLabel(o)}</span>
-                    </p>
-                    {o.eligibility[0] && <p className="mt-1 text-[12px] text-faint">Eligibility: {o.eligibility[0]}</p>}
+                  <li key={o.slug} className="flex gap-3 py-2.5 first:pt-0 last:pb-0">
+                    <SoftwareLogo name={o.product.name} src={o.product.logo?.src ?? sub.logoSrc} size={32} className="mt-0.5" />
+                    <div className="min-w-0">
+                      <Link href={`/deals/${o.slug}`} className="text-[13.5px] font-medium text-fg hover:underline underline-offset-2">
+                        {o.title}
+                      </Link>
+                      <p className="mt-1 flex flex-wrap items-center gap-1.5 text-[12px] text-muted">
+                        <Pill tone="accent">{offerTypeLabels[o.type]}</Pill>
+                        <span>{verificationLabel(o)}</span>
+                      </p>
+                      {o.eligibility[0] && <p className="mt-1 text-[12px] text-faint">Eligibility: {o.eligibility[0]}</p>}
+                    </div>
                   </li>
                 ))}
               </ul>

@@ -15,6 +15,7 @@ import type {
 } from "@/lib/business/constants";
 import { db } from "@/lib/server/db";
 import type { BizContext } from "@/lib/server/business/context";
+import { logoFor } from "@/lib/server/business/logos";
 
 /**
  * Read queries for the business app. Every query is filtered by the caller's
@@ -64,6 +65,8 @@ export interface Software {
   status: SoftwareStatus;
   notes: string | null;
   catalogProductId: string | null;
+  /** Logo path (catalog or well-known tool), or null for a monogram. */
+  logoSrc: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -72,6 +75,9 @@ export interface Subscription extends SubscriptionCalc {
   softwareId: string;
   softwareName: string;
   softwareStatus: SoftwareStatus;
+  /** Logo path for the software, or null for a monogram. */
+  logoSrc: string | null;
+  catalogProductId: string | null;
   category: SoftwareCategory;
   vendorId: string | null;
   vendorName: string | null;
@@ -111,6 +117,8 @@ function mapSubscription(r: any): Subscription {
     softwareId: r.software_id,
     softwareName: r.software_name,
     softwareStatus: r.software_status,
+    logoSrc: logoFor(r.software_name, r.software_website, r.software_catalog_product_id),
+    catalogProductId: r.software_catalog_product_id,
     category: r.software_category,
     vendorId: r.vendor_id,
     vendorName: r.vendor_name,
@@ -172,6 +180,7 @@ function mapSoftware(r: any): Software {
     status: r.status,
     notes: r.notes,
     catalogProductId: r.catalog_product_id,
+    logoSrc: logoFor(r.name, r.website, r.catalog_product_id),
     createdAt: r.created_at,
     updatedAt: r.updated_at,
   };
@@ -180,6 +189,7 @@ function mapSoftware(r: any): Software {
 const subscriptionSelect = (ws: string) => db()`
   select s.*, s.created_at::date::text as created_on,
     sw.name as software_name, sw.category as software_category, sw.status as software_status, sw.vendor_id,
+    sw.website as software_website, sw.catalog_product_id as software_catalog_product_id,
     v.name as vendor_name,
     op.name as owner_name, d.name as department_name, rp.name as renewal_owner_name,
     sw.owner_person_id as sw_owner_person_id, swo.name as sw_owner_name,

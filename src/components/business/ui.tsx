@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { formatMoney, totalsList, type CurrencyTotals } from "@/lib/business/calc";
 import { Icon, type IconProps } from "@/components/ui/icon";
 import { buttonClass, cn } from "@/components/ui/primitives";
@@ -78,19 +78,40 @@ export function Card({
   );
 }
 
-export function Kpi({ label, value, sub, href, icon }: { label: string; value: ReactNode; sub?: ReactNode; href?: string; icon?: IconProps["name"] }) {
+export type KpiTone = "violet" | "blue" | "green" | "orange" | "amber" | "pink";
+const kpiTiles: Record<KpiTone, [string, string]> = {
+  violet: ["#8b5cf6", "#5b21b6"],
+  blue: ["#3b8bf0", "#1d4fc4"],
+  green: ["#22b07d", "#047857"],
+  orange: ["#f47b3f", "#c2410c"],
+  amber: ["#f2ae1c", "#b45309"],
+  pink: ["#e6639b", "#be185d"],
+};
+
+/** A coloured glossy tile behind an icon (the brand's icon-tile, recoloured). */
+export function IconTile({ icon, tone = "violet", size = 32, className }: { icon: IconProps["name"]; tone?: KpiTone; size?: number; className?: string }) {
+  const [from, to] = kpiTiles[tone];
+  return (
+    <span aria-hidden="true" className={cn("icon-tile shrink-0", className)} style={{ width: size, height: size, borderRadius: Math.round(size * 0.3), "--tile-from": from, "--tile-to": to } as CSSProperties}>
+      <Icon name={icon} size={Math.round(size * 0.5)} />
+    </span>
+  );
+}
+
+export function Kpi({ label, value, sub, href, icon, tone, chart }: { label: string; value: ReactNode; sub?: ReactNode; href?: string; icon?: IconProps["name"]; tone?: KpiTone; chart?: ReactNode }) {
   const body = (
     <>
       <div className="flex items-center justify-between gap-2">
         <p className="text-[12.5px] font-medium text-muted">{label}</p>
-        {icon && <Icon name={icon} size={15} className="text-faint" />}
+        {icon && (tone ? <IconTile icon={icon} tone={tone} size={30} /> : <Icon name={icon} size={15} className="text-faint" />)}
       </div>
-      <div className="tabular mt-1.5 text-[1.45rem] font-semibold leading-tight tracking-tight text-heading">{value}</div>
+      <div className={cn("tabular text-[1.45rem] font-semibold leading-tight tracking-tight text-heading", tone ? "mt-0.5" : "mt-1.5")}>{value}</div>
       {sub && <div className="mt-1 text-[12px] text-faint">{sub}</div>}
+      {chart && <div className="mt-3">{chart}</div>}
     </>
   );
   return href ? (
-    <Link href={href} className="biz-card block px-4 py-3.5 transition-colors hover:border-line-strong">
+    <Link href={href} className="biz-card biz-card-lift block px-4 py-3.5">
       {body}
     </Link>
   ) : (

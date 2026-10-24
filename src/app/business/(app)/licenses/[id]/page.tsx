@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { RadialGauge } from "@/components/business/charts";
+import { LogoTitle } from "@/components/business/logo-title";
 import { AssignSeatsForm, ReassignSeatForm, ReleaseSeatButton } from "@/components/business/record-forms";
-import { Card, EmptyState, InlineNote, Kpi, LinkButton, Meter, PageHeader, Pill, StatusPill, TableWrap } from "@/components/business/ui";
+import { Card, EmptyState, InlineNote, Kpi, LinkButton, PageHeader, Pill, StatusPill, TableWrap } from "@/components/business/ui";
 import { formatIsoDate, formatMoney, isLive, percent, seatSummary } from "@/lib/business/calc";
 import { subscriptionStatusLabels } from "@/lib/business/constants";
 import { isUuid } from "@/lib/business/form";
@@ -34,7 +36,11 @@ export default async function SeatAllocationPage(props: { params: Promise<{ id: 
   return (
     <>
       <PageHeader
-        title={`${sub.softwareName} seats`}
+        title={
+          <LogoTitle name={sub.softwareName} src={sub.logoSrc} size={44}>
+            {sub.softwareName} seats
+          </LogoTitle>
+        }
         crumbs={[{ label: "Licenses & Seats", href: "/business/licenses" }, { label: title }]}
         description={
           <>
@@ -132,14 +138,30 @@ export default async function SeatAllocationPage(props: { params: Promise<{ id: 
               </table>
             </TableWrap>
           )}
-          {seats.purchased !== null && seats.purchased > 0 && (
-            <div className="mt-4">
-              <Meter value={seats.utilization} label="Utilization" />
-            </div>
-          )}
         </Card>
 
-        <div className="space-y-5">
+        <div className="min-w-0 space-y-5">
+          <Card title="Utilization">
+            <div className="flex items-center gap-5">
+              <RadialGauge value={seats.utilization} label="Seat utilization" sub={seats.purchased === null ? "no seat count" : "in use"} size={124} />
+              <dl className="min-w-0 flex-1 space-y-2 text-[13px]">
+                <div className="flex items-center gap-2">
+                  <span aria-hidden="true" className="size-2.5 rounded-[3px] bg-accent" />
+                  <dt className="text-muted">In use</dt>
+                  <dd className="tabular ml-auto font-semibold text-fg">{seats.assigned}</dd>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span aria-hidden="true" className="size-2.5 rounded-[3px] bg-subtle ring-1 ring-line-strong" />
+                  <dt className="text-muted">Available</dt>
+                  <dd className="tabular ml-auto font-semibold text-fg">{seats.available ?? "—"}</dd>
+                </div>
+                <div className="flex items-center gap-2 border-t border-line pt-2">
+                  <dt className="text-muted">Purchased</dt>
+                  <dd className="tabular ml-auto font-semibold text-fg">{seats.purchased ?? "—"}</dd>
+                </div>
+              </dl>
+            </div>
+          </Card>
           {editable ? (
             <Card title="Assign seats">
               {seats.purchased !== null && seats.available === 0 ? (

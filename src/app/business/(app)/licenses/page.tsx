@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { RadialGauge } from "@/components/business/charts";
+import { SoftwareLogo } from "@/components/business/software-logo";
 import { Card, DefinitionList, EmptyState, InlineNote, Kpi, LinkButton, Meter, Money, PageHeader, Pill, TableWrap, Tabs } from "@/components/business/ui";
 import { formatMoney, formatMonth, isLive, lastMonths, licenseTotals, percent, seatSummary, totalsList } from "@/lib/business/calc";
 import { hasAssignmentHistory, utilizationByMonth } from "@/lib/business/utilization";
@@ -35,6 +37,11 @@ export default async function LicensesPage(props: { searchParams: Promise<Search
     .map((s) => ({ s, seats: seatSummary(s) }))
     .filter((r) => view === "all" || (r.seats.available ?? 0) > 0)
     .sort((a, b) => (b.seats.unusedMonthly ?? -1) - (a.seats.unusedMonthly ?? -1) || (b.seats.available ?? 0) - (a.seats.available ?? 0) || a.s.softwareName.localeCompare(b.s.softwareName));
+  const mostUnused = tracked
+    .map((s) => ({ s, seats: seatSummary(s) }))
+    .filter((r) => (r.seats.available ?? 0) > 0)
+    .sort((a, b) => (b.seats.unusedMonthly ?? -1) - (a.seats.unusedMonthly ?? -1) || (b.seats.available ?? 0) - (a.seats.available ?? 0))
+    .slice(0, 3);
   const unassignedCount = tracked.filter((s) => (seatSummary(s).available ?? 0) > 0).length;
   const flatWithSeats = tracked.filter((s) => s.pricingModel === "flat").length;
 
@@ -157,13 +164,18 @@ export default async function LicensesPage(props: { searchParams: Promise<Search
                 <tbody>
                   {rows.map(({ s, seats }) => (
                     <tr key={s.id}>
-                      <td>
-                        <Link href={`/business/licenses/${s.id}`} className="font-medium hover:underline">
-                          {s.softwareName}
-                        </Link>
-                        <span className="block text-[12px] text-faint">
-                          {[s.planName, s.departmentName].filter(Boolean).join(" · ") || "—"}
-                          {s.status === "trial" && " · Trial"}
+                      <td className="min-w-44">
+                        <span className="flex items-center gap-2.5">
+                          <SoftwareLogo name={s.softwareName} src={s.logoSrc} size={30} />
+                          <span className="min-w-0">
+                            <Link href={`/business/licenses/${s.id}`} className="font-medium hover:underline">
+                              {s.softwareName}
+                            </Link>
+                            <span className="block text-[12px] text-faint">
+                              {[s.planName, s.departmentName].filter(Boolean).join(" · ") || "—"}
+                              {s.status === "trial" && " · Trial"}
+                            </span>
+                          </span>
                         </span>
                       </td>
                       <td className="num">{seats.purchased}</td>
@@ -208,7 +220,53 @@ export default async function LicensesPage(props: { searchParams: Promise<Search
           )}
         </Card>
 
-        <div className="space-y-5">
+        <div className="min-w-0 space-y-5">
+          <Card title="Overall utilization" description="Seats in use across the subscriptions in this view.">
+            {totals.tracked === 0 ? (
+              <p className="text-[13.5px] text-muted">No subscription in this view tracks seats.</p>
+            ) : (
+              <>
+                <div className="flex items-center gap-5">
+                  <RadialGauge value={totals.utilization} label="Overall seat utilization" sub="in use" size={132} />
+                  <dl className="min-w-0 space-y-2 text-[13px]">
+                    <div className="flex items-center gap-2">
+                      <span aria-hidden="true" className="size-2.5 rounded-[3px] bg-accent" />
+                      <dt className="text-muted">In use</dt>
+                      <dd className="tabular ml-auto pl-3 font-semibold text-fg">{totals.assigned}</dd>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span aria-hidden="true" className="size-2.5 rounded-[3px] bg-subtle ring-1 ring-line-strong" />
+                      <dt className="text-muted">Available</dt>
+                      <dd className="tabular ml-auto pl-3 font-semibold text-fg">{totals.available}</dd>
+                    </div>
+                    <div className="flex items-center gap-2 border-t border-line pt-2">
+                      <dt className="text-muted">Purchased</dt>
+                      <dd className="tabular ml-auto pl-3 font-semibold text-fg">{totals.purchased}</dd>
+                    </div>
+                  </dl>
+                </div>
+                {mostUnused.length > 0 && (
+                  <div className="mt-4 border-t border-line pt-3">
+                    <p className="text-[12px] font-medium text-faint">Most unassigned seats</p>
+                    <ul className="mt-2 space-y-2">
+                      {mostUnused.map(({ s, seats }) => (
+                        <li key={s.id}>
+                          <Link href={`/business/licenses/${s.id}`} className="flex items-center gap-2.5 text-[13px] hover:underline underline-offset-2">
+                            <SoftwareLogo name={s.softwareName} src={s.logoSrc} size={24} />
+                            <span className="min-w-0 truncate font-medium text-fg">{s.softwareName}</span>
+                            <span className="tabular ml-auto shrink-0 text-muted">
+                              {seats.available} free
+                              {seats.unusedMonthly ? <span className="text-faint"> · {formatMoney(Math.round(seats.unusedMonthly), s.currency)}/mo</span> : null}
+                            </span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </>
+            )}
+          </Card>
           <Card title="How seats are counted">
             <DefinitionList
               className="!grid-cols-1"
