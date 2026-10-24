@@ -1,7 +1,7 @@
 /**
  * Logos for well-known business software, matched by name or website. Generated
  * by scratchpad/logos-pkg/build-business-logos.cjs from the Iconify "logos" set
- * (CC0/MIT) and simple-icons (CC0). Brand marks identify the software a team
+ * (CC0/MIT) and simple-icons (CC0); grok.svg is from LobeHub's icons (MIT). Brand marks identify the software a team
  * uses; they don't imply any affiliation. Files: public/logos/business/<slug>.svg.
  */
 export const businessLogos: { slug: string; names: string[]; hosts: string[] }[] = [
@@ -856,6 +856,19 @@ export const businessLogos: { slug: string; names: string[]; hosts: string[] }[]
     "hosts": [
       "claude.ai",
       "anthropic.com"
+    ]
+  },
+  {
+    "slug": "grok",
+    "names": [
+      "Grok",
+      "SuperGrok",
+      "xAI",
+      "xAI API"
+    ],
+    "hosts": [
+      "grok.com",
+      "x.ai"
     ]
   },
   {

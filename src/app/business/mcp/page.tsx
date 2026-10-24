@@ -31,11 +31,11 @@ export const metadata: Metadata = {
 };
 
 // Logos only identify each client; listing one doesn't mean it's supported or endorses Saver Option.
-const clientLogos: Record<McpClientInfo["id"], string | null> = {
+const clientLogos: Record<McpClientInfo["id"], string> = {
   claude: "/logos/business/claude.svg",
   chatgpt: "/logos/chatgpt.svg",
   gemini: "/logos/gemini-api.svg",
-  grok: null,
+  grok: "/logos/business/grok.svg",
 };
 
 const prompts: { q: string; tool: string; write?: boolean }[] = [
