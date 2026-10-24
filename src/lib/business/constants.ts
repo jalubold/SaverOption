@@ -184,6 +184,3 @@ export type Confidence = "low" | "medium" | "high";
 
 /** A reasonable set of currencies for the pickers; any ISO 4217 code is accepted by the server. */
 export const COMMON_CURRENCIES = ["USD", "EUR", "GBP", "CAD", "AUD", "SGD", "IDR", "INR", "JPY", "CHF", "SEK", "NZD", "BRL", "MXN", "ZAR", "AED"] as const;
-
-/** Cookie holding which sidebar groups are open (read on the server, so the first paint is already right). */
-export const NAV_COOKIE = "so_biz_nav";

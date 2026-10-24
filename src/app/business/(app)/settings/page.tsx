@@ -20,6 +20,7 @@ const sections = [
   { href: "/business/settings/preferences", label: "Preferences", icon: "gear", body: "Default currency, time zone, fiscal year and date format." },
   { href: "/business/settings/security", label: "Security", icon: "shield", body: "Sign-in, sessions, how workspace data is protected, and the audit log." },
   { href: "/business/settings/mcp", label: "AI clients (MCP)", icon: "sparkles", body: "Connections from AI assistants to this workspace; revoke any of them." },
+  { href: "/business/integrations", label: "Integrations", icon: "link", body: "CSV import, AI clients and Saver Option deals — what's connected and what's available." },
 ] as const;
 
 export default async function SettingsPage() {

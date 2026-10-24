@@ -11,56 +11,60 @@ import { buttonClass, cn } from "@/components/ui/primitives";
 import { MobileMenuButton, Popover, QuickJump, SidebarFrame, SidebarNav, type NavGroup, type QuickAction } from "@/components/business/shell-client";
 
 /**
- * The sidebar, in the order people use it: the overview, AI, what they track,
- * what it tells them, and the workspace itself (folded by default — it's
- * visited least). Short labels; Quick jump (⌘K) reaches everything by typing.
+ * The sidebar: a flat list, most-used first, with plain section labels —
+ * Overview and the assistant, then the records people manage, what they tell
+ * them, and the workspace. Departments and Integrations live under Settings
+ * (and in Quick jump), so the list stays short.
  */
 const groups: NavGroup[] = [
-  { id: "home", label: null, items: [{ label: "Overview", href: "/business/dashboard", icon: "home", keywords: "dashboard home" }] },
   {
-    id: "ai",
-    label: "AI",
+    id: "home",
+    label: null,
     items: [
-      { label: "AI Assistant", href: "/business/assistant", icon: "sparkles", keywords: "chat claude ask" },
-      { label: "AI clients (MCP)", href: "/business/settings/mcp", icon: "code", keywords: "mcp claude chatgpt gemini grok connect" },
+      { label: "Overview", href: "/business/dashboard", icon: "home", keywords: "dashboard home" },
+      { label: "AI Assistant", href: "/business/assistant", icon: "sparkles", keywords: "chat claude ask ai" },
     ],
   },
   {
-    id: "track",
-    label: "Track",
+    id: "manage",
+    label: "Manage",
     items: [
       { label: "Subscriptions", href: "/business/subscriptions", icon: "layers", keywords: "plans billing" },
+      { label: "Renewals", href: "/business/renewals", icon: "calendar", keywords: "upcoming deadlines calendar" },
       { label: "Software", href: "/business/software", icon: "box", keywords: "inventory tools apps" },
       { label: "Licenses & seats", href: "/business/licenses", icon: "key", keywords: "seats utilization users" },
-      { label: "Renewals", href: "/business/renewals", icon: "calendar", keywords: "upcoming deadlines calendar" },
     ],
   },
   {
     id: "insights",
-    label: "Insights & savings",
+    label: "Insights",
     items: [
       { label: "Analytics", href: "/business/analytics", icon: "trending-up", keywords: "spend charts vendors categories" },
-      { label: "Reports", href: "/business/reports", icon: "chart", keywords: "export csv" },
       { label: "Savings", href: "/business/savings", icon: "piggy", keywords: "opportunities save money" },
+      { label: "Reports", href: "/business/reports", icon: "chart", keywords: "export csv" },
       { label: "Deals", href: "/business/deals", icon: "tag", keywords: "discounts offers stack" },
     ],
   },
   {
     id: "workspace",
     label: "Workspace",
-    defaultClosed: true,
     items: [
       { label: "Team", href: "/business/team", icon: "users", keywords: "members invite people roles" },
-      { label: "Departments", href: "/business/settings/departments", icon: "building", keywords: "teams org" },
-      { label: "Integrations", href: "/business/integrations", icon: "link", keywords: "csv import connect" },
+      { label: "AI clients (MCP)", href: "/business/settings/mcp", icon: "code", keywords: "mcp claude chatgpt gemini grok connect ai" },
       { label: "Settings", href: "/business/settings", icon: "gear", keywords: "company preferences notifications security" },
     ],
   },
 ];
 
+/** Reached from Settings rather than the sidebar; listed in Quick jump. */
+const morePages: QuickAction[] = [
+  { label: "Departments", href: "/business/settings/departments", icon: "building", group: "Workspace", keywords: "teams org" },
+  { label: "Integrations", href: "/business/integrations", icon: "link", group: "Workspace", keywords: "csv import connect" },
+];
+
 /** Pages from the sidebar plus common actions, for Quick jump. */
 function quickActions(ctx: BizContext): QuickAction[] {
-  const pages = groups.flatMap((g) => g.items.map((it) => ({ ...it, group: g.label ?? "Overview" })));
+  const pages = [...groups.flatMap((g) => g.items.map((it) => ({ ...it, group: g.label ?? "Overview" }))), ...morePages];
   const actions: QuickAction[] = [
     ...(can(ctx.role, "records.manage")
       ? [
@@ -176,7 +180,7 @@ function TrialCard({ trial, upgrade, collapsed }: { trial: TrialBadge; upgrade: 
   );
 }
 
-function Sidebar({ ctx, plan, navOpen, collapsed }: { ctx: BizContext; plan: ShellPlan; navOpen: Record<string, boolean>; collapsed?: boolean }) {
+function Sidebar({ ctx, plan, collapsed }: { ctx: BizContext; plan: ShellPlan; collapsed?: boolean }) {
   return (
     <>
       <Link href="/business/dashboard" className={cn("flex h-14 shrink-0 items-center gap-2 px-1.5", collapsed && "justify-center px-0")} aria-label="Saver Option Business overview">
@@ -196,7 +200,7 @@ function Sidebar({ ctx, plan, navOpen, collapsed }: { ctx: BizContext; plan: She
           <span className={collapsed ? "sr-only" : undefined}>Add software</span>
         </Link>
       )}
-      <SidebarNav groups={groups} collapsed={collapsed} savedOpen={navOpen} />
+      <SidebarNav groups={groups} collapsed={collapsed} />
       <div className="mt-auto pt-4">
         {plan.trial && <TrialCard trial={plan.trial} upgrade={plan.upgrade} collapsed={collapsed} />}
       </div>
@@ -226,20 +230,10 @@ function BillingStrip({ notice }: { notice: BillingNotice }) {
   );
 }
 
-/** Parses the sidebar-groups cookie ("track:0.workspace:1"). */
-export function parseNavCookie(value: string | undefined): Record<string, boolean> {
-  const out: Record<string, boolean> = {};
-  for (const part of (value ?? "").split(".").slice(0, 20)) {
-    const m = /^([a-z]{1,20}):([01])$/.exec(part);
-    if (m) out[m[1]] = m[2] === "1";
-  }
-  return out;
-}
-
-export function AppShell({ ctx, unread, notice, plan, navOpen, children }: { ctx: BizContext; unread: number; notice: BillingNotice | null; plan: ShellPlan; navOpen: Record<string, boolean>; children: ReactNode }) {
+export function AppShell({ ctx, unread, notice, plan, children }: { ctx: BizContext; unread: number; notice: BillingNotice | null; plan: ShellPlan; children: ReactNode }) {
   const name = displayName(ctx.user);
   return (
-    <SidebarFrame sidebar={<Sidebar ctx={ctx} plan={plan} navOpen={navOpen} />} collapsedSidebar={<Sidebar ctx={ctx} plan={plan} navOpen={navOpen} collapsed />}>
+    <SidebarFrame sidebar={<Sidebar ctx={ctx} plan={plan} />} collapsedSidebar={<Sidebar ctx={ctx} plan={plan} collapsed />}>
       <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b border-line bg-bg/95 px-3 backdrop-blur sm:px-5">
         <MobileMenuButton />
         <form action="/business/search" method="get" role="search" className="relative min-w-0 max-w-md flex-1">
