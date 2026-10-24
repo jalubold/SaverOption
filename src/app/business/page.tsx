@@ -95,7 +95,7 @@ export default async function BusinessLandingPage(props: { searchParams: Promise
   const google = ready && (await googleSignInEnabled());
   const offers = await offerViews();
   const contact = businessContactEmail();
-  const faq = [...baseFaq, ...pricingFaq(offers, contact)];
+  const faq = [...baseFaq, ...pricingFaq(offers)];
 
   const cta = user ? (
     <Link href="/business/dashboard" className={buttonClass("primary", "lg", "w-full")}>
@@ -508,7 +508,7 @@ function monthly(offers: OfferView[], plan: OfferView["plan"]): string | null {
 }
 
 /** Questions about the trial and plans, with the prices this deployment actually shows. */
-function pricingFaq(offers: OfferView[], contact: string): { q: string; a: string }[] {
+function pricingFaq(offers: OfferView[]): { q: string; a: string }[] {
   const pro = monthly(offers, "pro");
   const business = monthly(offers, "business");
   const prices = [pro && `Pro (${pro}/month)`, business && `Business (${business}/month)`].filter(Boolean).join(" or ");
@@ -530,7 +530,7 @@ function pricingFaq(offers: OfferView[], contact: string): { q: string; a: strin
       a: "Software records, reports and the AI tools pause until an owner or admin chooses a plan. Nothing is deleted: your data, settings, members and exports stay available. There's one free trial per account — creating another workspace doesn't start a new one.",
     },
     { q: "Can we cancel?", a: "Yes, any time in Settings → Plan & billing. Cancelling takes effect at the end of the period you've paid for, and you keep access until then." },
-    { q: "Do you offer self-hosted or white-label versions?", a: `They're arranged directly with us rather than bought online. Email ${contact} with what you need.` },
+    { q: "Do you offer self-hosted or white-label versions?", a: "Yes. Both are priced to your setup rather than bought online: use Contact us in the pricing section, tell us what you need, and we'll put together a proposal." },
   ];
 }
 
@@ -605,13 +605,24 @@ function Pricing({ offers, contact, assistant, signedIn }: { offers: OfferView[]
               ))}
               <li className="flex flex-col rounded-2xl border border-dashed border-line-strong p-6" data-pricing-plan="contact">
                 <h3 className="text-[18px] font-semibold text-heading">Self-Hosted &amp; White-Label</h3>
-                <p className="mt-1 text-[13.5px] text-muted">Run it on your own infrastructure, or offer it under your own brand.</p>
-                <p className="mt-5 text-[15px] text-muted">Arranged directly with us — no online checkout.</p>
+                <p className="mt-1 text-[13.5px] text-muted">Your own deployment, or your own brand.</p>
+                <p className="mt-5">
+                  <span className="display text-[2.6rem] leading-none text-heading">Custom</span>
+                </p>
+                <p className="mt-1 min-h-5 text-[13px] text-faint">Pricing tailored to your setup</p>
+                <ul className="mt-5 grid gap-2 text-[14px] text-muted">
+                  {["Self-hosted on your own servers or cloud", "White-label under your brand, for your clients", "Scope, pricing and terms agreed with our team"].map((f) => (
+                    <li key={f} className="flex gap-2">
+                      <Icon name="check" size={15} className="mt-0.5 shrink-0 text-accent-ink" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-5 text-[13.5px] leading-relaxed text-muted">Tell us what you need and we&apos;ll put together a proposal.</p>
                 <div className="mt-auto pt-6">
                   <a href={`mailto:${contact}?subject=${encodeURIComponent("Saver Option Business — Self-Hosted / White-Label inquiry")}`} className={buttonClass("secondary", "md", "w-full")}>
                     <Icon name="mail" size={15} /> Contact us
                   </a>
-                  <p className="mt-2 text-center text-[12px] text-faint">{contact}</p>
                 </div>
               </li>
             </ul>

@@ -268,7 +268,7 @@ export default async function BillingPage({ searchParams }: { searchParams: Prom
           </section>
         )}
 
-        <Card title="Self-Hosted and White-Label" description="Arranged directly with us — there's no online checkout for these.">
+        <Card title="Self-Hosted and White-Label" description="Custom pricing tailored to your setup. Tell us what you need and we'll put together a proposal.">
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <p className="text-[14px] font-medium text-fg">Self-Hosted</p>
@@ -284,7 +284,6 @@ export default async function BillingPage({ searchParams }: { searchParams: Prom
               <Icon name="mail" size={14} />
               Contact us
             </a>
-            <span className="text-[12.5px] text-faint">{contact}</span>
           </div>
         </Card>
 

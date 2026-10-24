@@ -544,7 +544,7 @@ export const guides: DocPage[] = [
       {
         heading: "Plans",
         blocks: [
-          { type: "p", text: "**Pro** includes every Saver Option Business feature. **Business** includes everything in Pro with more members (people who sign in; open invitations count). The prices and member limits shown in Plan & billing are the ones that apply. **Self-Hosted** and **White-Label** are arranged directly — use the Contact us button." },
+          { type: "p", text: "**Pro** includes every Saver Option Business feature. **Business** includes everything in Pro with more members (people who sign in; open invitations count). The prices and member limits shown in Plan & billing are the ones that apply. **Self-Hosted** and **White-Label** have custom pricing tailored to your setup — use Contact us and we'll put together a proposal." },
         ],
       },
       {
