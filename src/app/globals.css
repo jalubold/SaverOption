@@ -376,6 +376,13 @@
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
   }
+  @media (max-width: 639px) {
+    .biz-table th,
+    .biz-table td {
+      padding-left: 0.55rem;
+      padding-right: 0.55rem;
+    }
+  }
   .biz-select {
     height: 2.25rem;
     border-radius: 9px;
@@ -508,7 +515,12 @@
 @keyframes so-reveal {
   from {
     opacity: 0;
-    transform: translateY(48px) scale(0.98);
+    transform: translateY(32px);
+  }
+}
+@keyframes so-wipe {
+  from {
+    clip-path: inset(0 100% 0 0);
   }
 }
 @keyframes so-tilt {
@@ -563,6 +575,10 @@
     animation: so-draw 1.5s var(--so-ease) backwards;
     animation-delay: var(--d, 0ms);
   }
+  .viz-wipe {
+    animation: so-wipe 1.4s var(--so-ease) backwards;
+    animation-delay: var(--d, 150ms);
+  }
   .viz-fade {
     animation: so-fade 1.2s ease-out backwards;
     animation-delay: var(--d, 300ms);
@@ -585,30 +601,26 @@
     animation: so-pulse-ring 1.8s ease-out infinite;
   }
 
-  /* Landing: reveal on scroll, and a 3D preview that straightens as it scrolls in. */
+  /* Landing: sections reveal once as they come into view (RevealOnScroll adds
+     is-pending / is-in; without JavaScript nothing is hidden), and the hero
+     preview straightens from a 3D tilt as it scrolls in (transform only). */
+  .so-reveal.is-pending {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  .so-reveal.is-in {
+    animation: so-reveal 0.8s var(--so-ease) backwards;
+  }
+  /* Charts in a pending section wait, then draw when it comes into view. */
+  .so-scroll-viz.is-pending :is(.viz-grow-x, .viz-draw, .viz-fade, .viz-sweep, .viz-gauge, .viz-pop, .viz-wipe) {
+    animation-play-state: paused;
+  }
   @supports (animation-timeline: view()) {
-    .so-reveal {
-      animation: so-reveal linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 75%;
-    }
     .so-tilt {
       transform-origin: 50% 0%;
       animation: so-tilt linear both;
       animation-timeline: view();
       animation-range: entry 0% cover 42%;
-    }
-    /* Charts inside a revealed section draw as they come into view instead of on load. */
-    .so-scroll-viz .viz-grow-x,
-    .so-scroll-viz .viz-draw,
-    .so-scroll-viz .viz-sweep,
-    .so-scroll-viz .viz-gauge,
-    .so-scroll-viz .viz-pop {
-      animation-timeline: view();
-      animation-range: entry 10% cover 40%;
-      animation-delay: 0ms;
-      animation-duration: auto;
-      animation-timing-function: var(--so-ease);
     }
   }
 
@@ -771,6 +783,7 @@
     .so-page,
     .viz-grow-x,
     .viz-draw,
+    .viz-wipe,
     .viz-fade,
     .viz-sweep,
     .viz-gauge,

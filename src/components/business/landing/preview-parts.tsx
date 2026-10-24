@@ -7,18 +7,6 @@ import { intervalLabel, pricePerPeriod, type ExampleSub, type TimelineEntry } fr
 
 /** Building blocks for the landing page's product previews (example data only). */
 
-export function ExampleLabel({ className, note }: { className?: string; note?: string }) {
-  return (
-    <p className={cn("flex items-center gap-1.5 text-[11.5px] font-medium text-faint", className)}>
-      <Icon name="info" size={13} />
-      <span>
-        Example data — a fictional company
-        {note && <span className="font-normal"> · {note}</span>}
-      </span>
-    </p>
-  );
-}
-
 /** A faux browser window around a preview. */
 export function AppWindow({ children, path, className }: { children: ReactNode; path: string; className?: string }) {
   return (

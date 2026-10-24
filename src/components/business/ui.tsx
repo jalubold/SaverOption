@@ -143,17 +143,23 @@ export function Kpi({
   );
 }
 
-/** Per-currency amounts, one per line (never summed across currencies). */
+/**
+ * Per-currency amounts, never converted or summed: the preferred currency as
+ * the figure, any other currencies as a smaller "+ €99.00" underneath.
+ */
 export function Money({ totals, preferred, compact, empty = "—", className }: { totals: CurrencyTotals; preferred?: string; compact?: boolean; empty?: string; className?: string }) {
   const list = totalsList(totals, preferred);
   if (list.length === 0) return <span className={className}>{empty}</span>;
+  const [main, ...rest] = list;
+  const fmt = (t: { amount: number; currency: string }) => formatMoney(t.amount, t.currency, { compact, whole: compact });
   return (
     <span className={cn("inline-flex flex-col", className)}>
-      {list.map((t) => (
-        <span key={t.currency} className="tabular whitespace-nowrap">
-          {formatMoney(t.amount, t.currency, { compact, whole: compact })}
+      <span className="tabular whitespace-nowrap">{fmt(main)}</span>
+      {rest.length > 0 && (
+        <span className="tabular whitespace-nowrap text-[0.8em] font-normal opacity-65" title="Amounts in other currencies are kept separate, not converted.">
+          + {rest.map(fmt).join(" + ")}
         </span>
-      ))}
+      )}
     </span>
   );
 }

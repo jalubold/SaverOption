@@ -212,6 +212,8 @@ export default async function DashboardPage() {
 
   const activityLogo = (entityType: string | null, entityId: string | null) => (entityType === "subscription" && entityId ? logoById.get(entityId) : entityType === "software" && entityId ? softwareById.get(entityId) : null) ?? null;
 
+  // One headline figure in the main currency; other currencies are listed beside it, never converted.
+  const [heroMain, ...heroRest] = totalsList(s.monthly, pref);
   return (
     <>
       {/* ── Hero: this month's run-rate at a glance ─────────────────────────── */}
@@ -226,8 +228,14 @@ export default async function DashboardPage() {
             <h1 className="mt-1 text-[26px] font-semibold leading-tight tracking-tight text-heading">Overview</h1>
             <p className="mt-6 text-[12.5px] font-medium text-muted">Monthly software spend</p>
             <div className="so-ink tabular mt-1 w-fit text-[2.35rem] font-semibold leading-[1.1] tracking-tight sm:text-[2.75rem]">
-              <Money totals={s.monthly} preferred={pref} />
+              {heroMain ? formatMoney(heroMain.amount, heroMain.currency) : "—"}
             </div>
+            {heroRest.length > 0 && (
+              <p className="mt-1.5 text-[12.5px] text-muted">
+                Plus <span className="tabular font-medium text-fg">{heroRest.map((t) => formatMoney(t.amount, t.currency)).join(" + ")}</span>/mo billed in{" "}
+                {heroRest.map((t) => t.currency).join(" and ")} — kept separate, not converted
+              </p>
+            )}
             <div className="mt-3 flex flex-wrap items-center gap-2 text-[12.5px]">
               {showDelta && (
                 <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-medium", delta > 0 ? "bg-[#eb6834]/20 text-[#ffb08a]" : "bg-[#1baf7a]/20 text-[#7be0b6]")}>
@@ -560,8 +568,8 @@ export default async function DashboardPage() {
                   <tr>
                     <th>Software</th>
                     <th>Renews</th>
-                    <th className="num">Expected</th>
-                    <th>Status</th>
+                    <th className="num hidden sm:table-cell">Expected</th>
+                    <th className="hidden sm:table-cell">Status</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -573,13 +581,23 @@ export default async function DashboardPage() {
                           <Link href={`/business/subscriptions/${r.id}`} className="hover:underline">
                             <SoftwareName name={r.softwareName} src={r.logoSrc} sub={intervalLabel(r)} size={28} />
                           </Link>
+                          {(r.status !== "active" || !r.autoRenew) && (
+                            <div className="mt-1 flex gap-1 pl-9 sm:hidden">
+                              {r.status !== "active" && <StatusPill status={r.status} label={subscriptionStatusLabels[r.status]} />}
+                              {!r.autoRenew && <Pill>Manual</Pill>}
+                            </div>
+                          )}
                         </td>
-                        <td className="whitespace-nowrap">
-                          {formatIsoDate(r.nextRenewalDate, fmt)}
-                          <span className={cn("ml-1.5 rounded px-1 text-[11px] font-medium", d <= 7 ? "bg-accent-soft text-accent-ink" : "bg-subtle text-faint")}>{d === 0 ? "today" : `${d}d`}</span>
-                        </td>
-                        <td className="num">{r.priceMinor !== null ? formatMoney(r.priceMinor, r.currency) : "—"}</td>
                         <td>
+                          <span className="whitespace-nowrap">{formatIsoDate(r.nextRenewalDate, fmt)}</span>
+                          {/* On phones the expected amount sits here instead of its own column. */}
+                          <span className="mt-0.5 flex items-center gap-1.5 whitespace-nowrap sm:contents">
+                            <span className={cn("rounded px-1 text-[11px] font-medium sm:ml-1.5", d <= 7 ? "bg-accent-soft text-accent-ink" : "bg-subtle text-faint")}>{d === 0 ? "today" : `${d}d`}</span>
+                            <span className="tabular text-[12.5px] font-medium sm:hidden">{r.priceMinor !== null ? formatMoney(r.priceMinor, r.currency) : "—"}</span>
+                          </span>
+                        </td>
+                        <td className="num hidden sm:table-cell">{r.priceMinor !== null ? formatMoney(r.priceMinor, r.currency) : "—"}</td>
+                        <td className="hidden sm:table-cell">
                           <StatusPill status={r.status} label={subscriptionStatusLabels[r.status]} />
                           {!r.autoRenew && <Pill className="ml-1">Manual</Pill>}
                         </td>
@@ -601,8 +619,8 @@ export default async function DashboardPage() {
                   <tr>
                     <th>Software</th>
                     <th className="num">Monthly</th>
-                    <th className="num">Annualized</th>
-                    <th>Owner</th>
+                    <th className="num hidden sm:table-cell">Annualized</th>
+                    <th className="hidden sm:table-cell">Owner</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -614,8 +632,8 @@ export default async function DashboardPage() {
                         </Link>
                       </td>
                       <td className="num">{formatMoney(Math.round(monthlyEquivalent(r)!), r.currency)}</td>
-                      <td className="num">{formatMoney(Math.round(annualized(r)!), r.currency)}</td>
-                      <td className="whitespace-nowrap">{r.ownerName ?? <span className="text-faint">—</span>}</td>
+                      <td className="num hidden sm:table-cell">{formatMoney(Math.round(annualized(r)!), r.currency)}</td>
+                      <td className="hidden whitespace-nowrap sm:table-cell">{r.ownerName ?? <span className="text-faint">—</span>}</td>
                     </tr>
                   ))}
                 </tbody>

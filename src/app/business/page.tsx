@@ -7,7 +7,7 @@ import { LicensesVisual, RenewalsVisual, ReportsVisual, SavingsVisual, SpendVisu
 import { HeroPreview } from "@/components/business/landing/hero-preview";
 import { LogoStrip } from "@/components/business/landing/logo-strip";
 import { FaqAccordion, FeatureRow, IconTile } from "@/components/business/landing/sections";
-import { Aurora, SpotlightGroup } from "@/components/business/motion";
+import { Aurora, RevealOnScroll, SpotlightGroup } from "@/components/business/motion";
 import { BusinessPublicHeader } from "@/components/business/public-header";
 import { LogoStack, SoftwareLogo } from "@/components/business/software-logo";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -104,6 +104,7 @@ export default async function BusinessLandingPage(props: { searchParams: Promise
   return (
     <>
       <BusinessPublicHeader signedIn={Boolean(user)} />
+      <RevealOnScroll />
 
       {/* ── Hero ─────────────────────────────────────────────────── */}
       <div className="theme-dark">

@@ -33,7 +33,13 @@ export default async function McpClientPage(props: { params: Promise<{ client: s
     <article>
       <DocHeader eyebrow="AI and MCP" title={`Connect ${c.name}`} description={`Using ${c.name} (${c.vendor}) with the Saver Option Business MCP server.`} badge={<StatusBadge status={c.status} />} />
       <div className="prose-body text-[15.5px]">
-        {!verified && (
+        {c.status === "partial" && (
+          <Note>
+            <strong className="font-semibold text-fg">Partially verified.</strong> {c.readTools} ({c.testedSurface}). Write tools: {c.writeTools.charAt(0).toLowerCase() + c.writeTools.slice(1)}.
+            Adding the connector follows {c.vendor}&apos;s own steps in the documentation linked below; use the server URL from Connection details.
+          </Note>
+        )}
+        {!verified && c.status !== "partial" && (
           <Note tone="warn">
             <strong className="font-semibold text-fg">Not yet verified with this server.</strong> We&apos;ll publish step-by-step instructions here once the connection has been tested.
           </Note>

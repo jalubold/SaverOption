@@ -11,7 +11,7 @@ import type { ReactNode } from "react";
 export function SiteChrome({ header, footer, children }: { header: ReactNode; footer: ReactNode; children: ReactNode }) {
   const path = usePathname() ?? "/";
   const business = path === "/business" || path.startsWith("/business/");
-  const businessPublic = path === "/business" || path === "/business/login" || path === "/business/signup";
+  const businessPublic = path === "/business" || path === "/business/mcp" || path === "/business/login" || path === "/business/signup";
   // The business app shell renders its own <main>.
   if (business && !businessPublic) return <>{children}</>;
   return (

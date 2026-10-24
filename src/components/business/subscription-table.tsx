@@ -147,8 +147,8 @@ export function SubscriptionTable({
                 </th>
               )}
               <th>Software</th>
-              <th>Vendor</th>
-              <th>Category</th>
+              <th className="hidden md:table-cell">Vendor</th>
+              <th className="hidden md:table-cell">Category</th>
               <th>Status</th>
               <th className="num">Price</th>
               <th className="num">Monthly equiv.</th>
@@ -172,7 +172,7 @@ export function SubscriptionTable({
                     />
                   </td>
                 )}
-                <td className="min-w-48">
+                <td className="min-w-40 sm:min-w-48">
                   <span className="flex items-center gap-2.5">
                     <SoftwareLogo name={r.softwareName} src={r.logoSrc} size={30} />
                     <span className="min-w-0">
@@ -183,8 +183,8 @@ export function SubscriptionTable({
                     </span>
                   </span>
                 </td>
-                <td className="whitespace-nowrap">{r.vendorName ?? <span className="text-faint">—</span>}</td>
-                <td className="whitespace-nowrap">{r.categoryLabel}</td>
+                <td className="hidden whitespace-nowrap md:table-cell">{r.vendorName ?? <span className="text-faint">—</span>}</td>
+                <td className="hidden whitespace-nowrap md:table-cell">{r.categoryLabel}</td>
                 <td className="whitespace-nowrap">
                   {r.archived ? <Pill tone="outline">Archived</Pill> : <StatusPill status={r.status} label={r.statusLabel} />}
                 </td>

@@ -1,7 +1,7 @@
 import { Sparkline } from "@/components/business/charts";
 import { LogoStack } from "@/components/business/software-logo";
 import { byId, monthlyTotal, runRateTrend, trackable, usd } from "./example-data";
-import { AppWindow, ExampleLabel, SubRow } from "./preview-parts";
+import { AppWindow, SubRow } from "./preview-parts";
 import { IconTile } from "./sections";
 
 /** The right-hand side of /business/login and /business/signup: what you get, with a small example preview. */
@@ -30,7 +30,6 @@ export function SignInAside() {
       </ul>
       <AppWindow path="/business/dashboard" className="mt-8 hidden sm:block">
         <div className="p-4">
-          <ExampleLabel className="mb-3" />
           <div className="grid gap-3 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
             <div className="biz-card px-3.5 py-3">
               <p className="text-[11.5px] font-medium text-muted">Monthly software spend</p>

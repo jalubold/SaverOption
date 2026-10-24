@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useId, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useId, useMemo, useRef, useState, type CSSProperties } from "react";
 import { formatMoney } from "@/lib/business/calc";
 import { SoftwareLogo } from "@/components/business/software-logo";
 import { cn } from "@/components/ui/primitives";
@@ -194,8 +194,20 @@ export function TrendChart({ points, caption, currency, height = 200 }: { points
   const formatTick = (v: number) => formatMoney(v, currency, { compact: true, whole: true });
   const [hover, setHover] = useState<number | null>(null);
   const ref = useRef<SVGSVGElement>(null);
+  const wrap = useRef<HTMLDivElement>(null);
   const gradientId = useId();
-  const W = 640;
+  // Drawn at the container's real width so the axis labels stay readable on phones.
+  const [W, setW] = useState(640);
+  useEffect(() => {
+    const el = wrap.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(([e]) => {
+      const w = Math.round(e.contentRect.width);
+      if (w > 0) setW(w);
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
   const H = height;
   const pad = { l: 52, r: 16, t: 12, b: 26 };
   const { ticks, y, x } = useMemo(() => {
@@ -207,7 +219,7 @@ export function TrendChart({ points, caption, currency, height = 200 }: { points
     const x = (i: number) => pad.l + ((W - pad.l - pad.r) * i) / Math.max(points.length - 1, 1);
     return { ticks, y, x };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [points, H]);
+  }, [points, H, W]);
   if (points.length === 0) return null;
   // Monotone curve: smooth between months without overshooting the recorded values.
   const line = monotonePath(points.map((p, i) => [x(i), y(p.value)]));
@@ -220,9 +232,9 @@ export function TrendChart({ points, caption, currency, height = 200 }: { points
     const i = Math.round(((px - pad.l) / (W - pad.l - pad.r)) * (points.length - 1));
     setHover(Math.max(0, Math.min(points.length - 1, i)));
   };
-  const labelEvery = Math.ceil(points.length / 6);
+  const labelEvery = Math.ceil(points.length / (W < 420 ? 4 : 6));
   return (
-    <div style={vizVars} className="relative">
+    <div ref={wrap} style={vizVars} className="relative">
       <svg
         ref={ref}
         viewBox={`0 0 ${W} ${H}`}
@@ -419,7 +431,7 @@ export function Sparkline({ values, label, tone = "accent", height = 36 }: { val
   const line = monotonePath(pts);
   const color = tone === "light" ? "#ffffff" : "var(--accent)";
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="block w-full" style={{ height: H }} role="img" aria-label={label}>
+    <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="viz-wipe block w-full" style={{ height: H }} role="img" aria-label={label}>
       <defs>
         <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor={color} stopOpacity={tone === "light" ? 0.35 : 0.25} />
@@ -427,7 +439,7 @@ export function Sparkline({ values, label, tone = "accent", height = 36 }: { val
         </linearGradient>
       </defs>
       <path d={`${line} L${W},${H} L0,${H} Z`} fill={`url(#${id})`} className="viz-fade" />
-      <path d={line} pathLength={1} fill="none" stroke={color} strokeWidth="2" vectorEffect="non-scaling-stroke" strokeLinecap="round" strokeLinejoin="round" className="viz-draw" />
+      <path d={line} fill="none" stroke={color} strokeWidth="2" vectorEffect="non-scaling-stroke" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -565,6 +577,7 @@ export function RenewalTimeline({ items, days, startLabel }: { items: TimelineIt
         <span className="inline-flex items-center gap-1.5">
           <span aria-hidden="true" className="size-2.5 rounded-[3px] ring-2 ring-[#eda100]" /> Cancellation deadline
         </span>
+        <span className="sm:hidden">Swipe the timeline to see all {days} days →</span>
       </p>
     </div>
   );

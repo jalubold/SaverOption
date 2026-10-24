@@ -4,8 +4,7 @@ import { billingIntervalLabels } from "@/lib/business/constants";
 /**
  * Example data for the public landing and sign-in previews: a fictional
  * company's software, with sample prices (not vendor quotes). Every figure is
- * derived with the same calculation layer the app uses, and every preview that
- * shows it carries the "Example data — a fictional company" label.
+ * derived with the same calculation layer the app uses.
  */
 
 export type ExampleSub = SubscriptionCalc & {

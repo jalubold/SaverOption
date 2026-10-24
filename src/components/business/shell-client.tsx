@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { createContext, useContext, useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { Icon, type IconProps } from "@/components/ui/icon";
 import { cn } from "@/components/ui/primitives";
 
@@ -131,13 +132,18 @@ export function MobileMenuButton() {
 }
 
 /**
- * A small popover menu (profile, workspace switcher). Closes on outside click,
- * Escape and after a form inside it submits — a tick later, because removing a
- * form during its submit event cancels a native (non-JavaScript) submission.
+ * A small popover menu (profile, workspace switcher). The panel is portalled to
+ * <body> with fixed positioning next to its trigger, so the sidebar's own
+ * scrolling and width never clip it or slide it under the nav. Closes on
+ * outside click, Escape, resize, and after a form inside it submits — a tick
+ * later, because removing a form during its submit event cancels a native
+ * (non-JavaScript) submission.
  */
 export function Popover({ trigger, children, align = "left", label, className }: { trigger: ReactNode; children: ReactNode; align?: "left" | "right"; label: string; className?: string }) {
   const [open, setOpen] = useState(false);
+  const [pos, setPos] = useState<{ top: number; left: number; width: number; maxHeight: number; dark: boolean } | null>(null);
   const ref = useRef<HTMLDivElement>(null);
+  const panel = useRef<HTMLDivElement>(null);
   const id = useId();
   const path = usePathname();
   const [lastPath, setLastPath] = useState(path);
@@ -145,27 +151,62 @@ export function Popover({ trigger, children, align = "left", label, className }:
     setLastPath(path);
     setOpen(false);
   }
+  const place = useCallback(() => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const vw = document.documentElement.clientWidth;
+    const width = Math.min(272, vw - 16);
+    const left = Math.max(8, Math.min(align === "right" ? r.right - width : r.left, vw - width - 8));
+    const top = r.bottom + 6;
+    setPos({ top, left, width, maxHeight: Math.max(160, window.innerHeight - top - 12), dark: Boolean(el.closest(".theme-dark")) });
+  }, [align]);
   useEffect(() => {
     if (!open) return;
-    const onDown = (e: MouseEvent) => ref.current && !ref.current.contains(e.target as Node) && setOpen(false);
+    const inside = (t: EventTarget | null) => Boolean(t instanceof Node && (ref.current?.contains(t) || panel.current?.contains(t)));
+    const onDown = (e: MouseEvent) => !inside(e.target) && setOpen(false);
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    const onResize = () => setOpen(false);
+    const onScroll = (e: Event) => !inside(e.target) && place();
     document.addEventListener("mousedown", onDown);
     window.addEventListener("keydown", onKey);
+    window.addEventListener("resize", onResize);
+    window.addEventListener("scroll", onScroll, true);
     return () => {
       document.removeEventListener("mousedown", onDown);
       window.removeEventListener("keydown", onKey);
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("scroll", onScroll, true);
     };
-  }, [open]);
+  }, [open, place]);
   return (
     <div ref={ref} className={cn("relative", className)} onSubmitCapture={() => setTimeout(() => setOpen(false), 0)}>
-      <button type="button" aria-expanded={open} aria-controls={id} aria-label={label} onClick={() => setOpen((v) => !v)} className="w-full">
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={id}
+        aria-label={label}
+        onClick={() => {
+          if (!open) place();
+          setOpen((v) => !v);
+        }}
+        className="w-full"
+      >
         {trigger}
       </button>
-      {open && (
-        <div id={id} className={cn("absolute z-40 mt-1.5 w-64 rounded-xl border border-line bg-surface p-1.5 text-fg shadow-[0_12px_32px_-12px_rgb(0_0_0/0.35)]", align === "right" ? "right-0" : "left-0")}>
-          {children}
-        </div>
-      )}
+      {open &&
+        pos &&
+        createPortal(
+          <div
+            ref={panel}
+            id={id}
+            className={cn("fixed z-[70] overflow-y-auto rounded-xl border border-line bg-surface p-1.5 text-fg shadow-[0_16px_40px_-12px_rgb(0_0_0/0.45)]", pos.dark && "theme-dark")}
+            style={{ top: pos.top, left: pos.left, width: pos.width, maxHeight: pos.maxHeight }}
+          >
+            {children}
+          </div>,
+          document.body,
+        )}
     </div>
   );
 }

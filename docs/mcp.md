@@ -72,13 +72,15 @@ Revocation and reuse detection run outside the failing transaction, so they pers
 
 `/business/settings/mcp` shows the server URL, the compatibility matrix, the connections (owners/admins see everyone's; others their own) with access level, connected and last-used dates, and **Disconnect** (`revokeGrantById`, audited as `mcp.disconnected`). Connecting is audited as `mcp.connected`.
 
+`/business/mcp` is the public page for the MCP server (linked as "AI & MCP" in the Business header and listed in the sitemap): the server URL for the current host, an illustrative conversation built from the landing page's example data, each client's status straight from `mcp-clients.ts`, how to connect, example questions with the tool each one uses, the safety model, the tool list from `toolsFor()`, and an FAQ. It never shows a client as working unless `mcp-clients.ts` says it was tested.
+
 ## Client compatibility
 
 Source of truth: `src/lib/business/mcp-clients.ts` (rendered in the app and docs). Matrix last reviewed: **2026-10-24**.
 
 | Client | Status | Last verified | Tested surface | Read tools | Write tools |
 | --- | --- | --- | --- | --- | --- |
-| Claude (Anthropic) | Not yet tested | — | — | Not yet tested | Not yet tested |
+| Claude (Anthropic) | Partially verified | 2026-10-24 | Custom connector on a claude.ai account, used from Claude Code on the web | Verified (sign-in; `list_subscriptions`, `get_spend_summary`, `get_upcoming_renewals`, `search_deals` returned the workspace's data) | Not yet tested (connection approved read-only) |
 | ChatGPT (OpenAI) | Not yet tested | — | — | Not yet tested | Not yet tested |
 | Gemini (Google) | Not yet tested | — | — | Not yet tested | Not yet tested |
 | Grok (xAI) | Not yet tested | — | — | Not yet tested | Not yet tested |

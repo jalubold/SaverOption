@@ -209,7 +209,7 @@ function Upcoming({ ctx, live, windowParam }: { ctx: BizContext; live: Subscript
                     const deadlineDays = s.cancellationDeadline ? daysBetween(ctx.today, s.cancellationDeadline) : null;
                     return (
                       <tr key={s.id}>
-                        <td className="min-w-44">
+                        <td className="min-w-36 sm:min-w-44">
                           <span className="flex items-center gap-2.5">
                             <SoftwareLogo name={s.softwareName} src={s.logoSrc} size={30} />
                             <span className="min-w-0">

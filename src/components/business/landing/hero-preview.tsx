@@ -4,7 +4,7 @@ import { SoftwareLogo } from "@/components/business/software-logo";
 import { Icon, type IconProps } from "@/components/ui/icon";
 import { cn } from "@/components/ui/primitives";
 import { annualTotal, byCategory, byId, monthlyTotal, potentialAnnual, renewalsIn30, runRateTrend, summary, timeline, usd } from "./example-data";
-import { AppWindow, ExampleLabel, FakeControl, MiniTimeline, PreviewCard, SubRow } from "./preview-parts";
+import { AppWindow, FakeControl, MiniTimeline, PreviewCard, SubRow } from "./preview-parts";
 
 const nav: { icon: IconProps["name"]; label: string }[] = [
   { icon: "home", label: "Overview" },
@@ -52,7 +52,6 @@ export function HeroPreview() {
               <SoftwareLogo name="Northwind Studio" size={30} />
               <div className="min-w-0">
                 <p className="truncate text-[14px] font-semibold text-heading">Northwind Studio · Overview</p>
-                <ExampleLabel note="sample prices, not vendor quotes" />
               </div>
             </div>
             <span aria-hidden="true" className="hidden items-center gap-2 md:flex">

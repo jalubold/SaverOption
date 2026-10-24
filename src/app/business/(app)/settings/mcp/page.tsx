@@ -44,6 +44,10 @@ export default async function McpSettingsPage() {
             <Link href="/business/docs/mcp" className="font-semibold text-accent-ink hover:underline">
               How it works and what each tool does →
             </Link>
+            <span className="mx-2 text-faint">·</span>
+            <Link href="/business/mcp#ask" className="font-semibold text-accent-ink hover:underline">
+              Example questions →
+            </Link>
           </p>
         </Card>
         <Card title="Client compatibility" description="Only clients marked Verified have been tested end to end with this server.">

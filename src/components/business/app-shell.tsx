@@ -12,6 +12,7 @@ import { MobileMenuButton, Popover, SidebarFrame, SidebarNav, type NavItem } fro
 const main: NavItem[] = [
   { label: "Overview", href: "/business/dashboard", icon: "home" },
   { label: "AI Assistant", href: "/business/assistant", icon: "sparkles" },
+  { label: "AI clients (MCP)", href: "/business/settings/mcp", icon: "code" },
   { label: "Subscriptions", href: "/business/subscriptions", icon: "layers" },
   { label: "Software Inventory", href: "/business/software", icon: "box" },
   { label: "Licenses & Seats", href: "/business/licenses", icon: "key" },
@@ -25,7 +26,6 @@ const workspaceNav: NavItem[] = [
   { label: "Team Members", href: "/business/team", icon: "users" },
   { label: "Departments", href: "/business/settings/departments", icon: "building" },
   { label: "Integrations", href: "/business/integrations", icon: "link" },
-  { label: "AI clients (MCP)", href: "/business/settings/mcp", icon: "code" },
   { label: "Settings", href: "/business/settings", icon: "gear" },
 ];
 const groups = [
