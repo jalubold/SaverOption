@@ -8,6 +8,7 @@ const links = [
   { href: "/business#features", label: "Features" },
   { href: "/business/mcp", label: "AI & MCP" },
   { href: "/business#how-it-works", label: "How it works" },
+  { href: "/business#pricing", label: "Pricing" },
   { href: "/business#faq", label: "FAQ" },
   { href: "/business/docs", label: "Docs" },
   { href: "/deals", label: "Software deals" },

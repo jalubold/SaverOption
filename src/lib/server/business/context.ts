@@ -6,6 +6,8 @@ import { todayIn } from "@/lib/business/calc";
 import type { DateFormat, Role } from "@/lib/business/constants";
 import type { FormState } from "@/lib/business/form";
 import { can, type Capability } from "@/lib/business/permissions";
+import { hasPremium } from "@/lib/business/billing";
+import { accessFor, assertPremium } from "@/lib/server/business/billing";
 import { db, dbConfigured } from "@/lib/server/db";
 import { authConfigured, getUser, type SessionUser } from "@/lib/server/supabase";
 
@@ -62,7 +64,7 @@ export interface BizContext {
 /** An expected failure with a message that's safe to show. */
 export class BizError extends Error {
   constructor(
-    readonly code: "auth" | "forbidden" | "not_found" | "conflict" | "invalid" | "stale" | "unavailable",
+    readonly code: "auth" | "forbidden" | "not_found" | "conflict" | "invalid" | "stale" | "unavailable" | "locked",
     message: string,
   ) {
     super(message);
@@ -178,11 +180,28 @@ export async function requireBizUser(next: string): Promise<SessionUser> {
   return user;
 }
 
-/** For app pages: signed in and a member of a workspace, or sent to sign-in / onboarding. */
-export async function requireBizContext(next: string): Promise<BizContext> {
+/**
+ * Which pages and actions stay open when a workspace's trial or subscription
+ * has ended: account and workspace settings, members, billing and security.
+ * Everything else ("premium") needs an active trial or subscription.
+ */
+export interface AccessOptions {
+  billing?: "open";
+}
+
+/** The app paths that stay open when the plan has ended (their pages pass { billing: "open" }). */
+export function opensWhenLocked(path: string): boolean {
+  const p = path.split(/[?#]/)[0];
+  if (p === "/business/settings/departments") return false;
+  return p === "/business/team" || p === "/business/settings" || p.startsWith("/business/settings/");
+}
+
+/** For app pages: signed in and a member of a workspace, or sent to sign-in / onboarding (or to Billing when the plan has ended). */
+export async function requireBizContext(next: string, opts: AccessOptions = {}): Promise<BizContext> {
   const { user, ctx } = await getBizSession();
   if (!user) redirect(`/business/login?next=${encodeURIComponent(safeBusinessNext(next))}`);
   if (!ctx) redirect("/business/onboarding");
+  if (opts.billing !== "open" && !hasPremium(await accessFor(ctx.workspace))) redirect("/business/settings/billing?locked=1");
   return ctx;
 }
 
@@ -195,7 +214,7 @@ export function assertCan(ctx: BizContext, capability: Capability, message = "Yo
  * workspace switched in another tab becomes an error message instead, so the
  * user's typed input stays on screen.
  */
-export async function actionContext(form: FormData | null): Promise<BizContext> {
+export async function actionContext(form: FormData | null, opts: AccessOptions = {}): Promise<BizContext> {
   if (!businessReady()) throw new BizError("unavailable", "Saver Option Business isn't available right now.");
   const { user, ctx } = await getBizSession();
   if (!user) throw new BizError("auth", "Your session has expired. Sign in again to continue.");
@@ -204,13 +223,14 @@ export async function actionContext(form: FormData | null): Promise<BizContext> 
   if (form && posted !== ctx.workspace.id) {
     throw new BizError("stale", "You switched to another workspace in a different tab. Reload this page and try again.");
   }
+  if (opts.billing !== "open") await assertPremium(ctx);
   return ctx;
 }
 
 /** Runs a server action body with consistent error handling. */
-export async function runAction(form: FormData | null, fn: (ctx: BizContext) => Promise<FormState>): Promise<FormState> {
+export async function runAction(form: FormData | null, fn: (ctx: BizContext) => Promise<FormState>, opts: AccessOptions = {}): Promise<FormState> {
   try {
-    const ctx = await actionContext(form);
+    const ctx = await actionContext(form, opts);
     return await fn(ctx);
   } catch (err) {
     unstable_rethrow(err);

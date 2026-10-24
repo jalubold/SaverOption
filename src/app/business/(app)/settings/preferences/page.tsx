@@ -17,7 +17,7 @@ function timeZones(current: string): string[] {
 }
 
 export default async function PreferencesPage() {
-  const ctx = await requireBizContext("/business/settings/preferences");
+  const ctx = await requireBizContext("/business/settings/preferences", { billing: "open" });
   const ws = ctx.workspace;
   const editable = can(ctx.role, "workspace.manage");
   return (

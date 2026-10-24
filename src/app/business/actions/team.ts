@@ -29,7 +29,7 @@ export async function revokeInvitationAction(_prev: FormState, form: FormData): 
     await revokeInvitation(ctx, id);
     refresh();
     return { ok: true, message: "Access revoked." };
-  });
+  }, { billing: "open" });
 }
 
 export async function changeRoleAction(_prev: FormState, form: FormData): Promise<FormState> {
@@ -41,7 +41,7 @@ export async function changeRoleAction(_prev: FormState, form: FormData): Promis
     await changeMemberRole(ctx, id, role);
     refresh();
     return { ok: true, message: "Role updated." };
-  });
+  }, { billing: "open" });
 }
 
 /** Removes a member, or lets someone leave the workspace (then they go to whichever workspace they have left). */
@@ -52,7 +52,7 @@ export async function removeMemberAction(_prev: FormState, form: FormData): Prom
     if (!isUuid(id)) throw new BizError("not_found", "That member wasn't found.");
     self = (await removeMember(ctx, id)).self;
     return { ok: true, message: "Member removed." };
-  });
+  }, { billing: "open" });
   refresh();
   if (result.ok && self) redirect("/business/dashboard");
   return result;

@@ -61,7 +61,7 @@ async function activeConnections(workspaceId: string, userId: string): Promise<{
 }
 
 export default async function SecurityPage() {
-  const ctx = await requireBizContext("/business/settings/security");
+  const ctx = await requireBizContext("/business/settings/security", { billing: "open" });
   const name = displayName(ctx.user);
   const connections = await activeConnections(ctx.workspace.id, ctx.user.id);
   const isAdmin = can(ctx.role, "members.manage");

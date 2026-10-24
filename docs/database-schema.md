@@ -35,6 +35,10 @@ Migrations: `supabase/migrations/20261024000000_business.sql` (core) and `202610
 | `biz_oauth_codes` | Authorization codes | SHA-256 only, 10-minute expiry, PKCE challenge, single use |
 | `biz_oauth_tokens` | Access (1 h) and refresh (30 d) tokens | SHA-256 only; `used_at` marks a rotated refresh token |
 | `biz_reports` | Saved savings report snapshots | `content` JSON, `source` `app` or `mcp` |
+| `biz_billing` | One per workspace: free trial dates and the Creem subscription | Plan, interval, Creem status, customer/subscription/product IDs, price, period dates, `synced_at` for ordering. No card data |
+| `biz_trial_claims` | Accounts that have had a free trial | User id and SHA-256 of the email; kept when the workspace is deleted |
+| `biz_billing_checkouts` | Checkouts started from the app | Id sent to Creem as `request_id`; `pending` / `completed` / `failed` |
+| `biz_billing_events` | Creem webhook deliveries handled | Event id (primary key = idempotency), type, result and a short note; no payloads or customer details |
 
 ## Integrity rules worth knowing
 

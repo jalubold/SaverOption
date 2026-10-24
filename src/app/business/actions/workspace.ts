@@ -3,8 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect, unstable_rethrow } from "next/navigation";
+import { hasPremium, resolveAccess } from "@/lib/business/billing";
 import { COMPANY_SIZES } from "@/lib/business/constants";
 import { FormReader, isUuid, stateFromErrors, type FormState } from "@/lib/business/form";
+import { getBillingRecord } from "@/lib/server/business/billing";
 import { BizError, businessReady, getBizSession, listMemberships, runAction, WORKSPACE_COOKIE } from "@/lib/server/business/context";
 import { createDemoWorkspace, resetDemoWorkspace } from "@/lib/server/business/demo";
 import { acceptInvitation } from "@/lib/server/business/team";
@@ -48,7 +50,9 @@ export async function createWorkspaceAction(_prev: FormState, form: FormData): P
     const id = await createWorkspace(user, { name, industry, companySize, website, defaultCurrency, timeZone });
     await selectWorkspace(id);
     revalidatePath("/business", "layout");
-    redirect("/business/onboarding?step=subscription");
+    // Without a trial (already used on this account) the next step is choosing a plan.
+    const access = resolveAccess(await getBillingRecord(id), { isDemo: false, now: new Date() });
+    redirect(hasPremium(access) ? "/business/onboarding?step=subscription" : "/business/settings/billing?locked=1");
   } catch (err) {
     unstable_rethrow(err);
     if (err instanceof BizError) return { error: err.message };
@@ -115,7 +119,7 @@ export async function updateCompanyAction(_prev: FormState, form: FormData): Pro
     await updateCompany(ctx, input);
     revalidatePath("/business", "layout");
     return { ok: true, message: "Company details saved." };
-  });
+  }, { billing: "open" });
 }
 
 export async function updatePreferencesAction(_prev: FormState, form: FormData): Promise<FormState> {
@@ -126,7 +130,7 @@ export async function updatePreferencesAction(_prev: FormState, form: FormData):
     await updatePreferences(ctx, input);
     revalidatePath("/business", "layout");
     return { ok: true, message: "Preferences saved. Dates and defaults now use them everywhere." };
-  });
+  }, { billing: "open" });
 }
 
 export async function updateNotificationsAction(_prev: FormState, form: FormData): Promise<FormState> {
@@ -139,7 +143,7 @@ export async function updateNotificationsAction(_prev: FormState, form: FormData
     await updateNotificationSettings(ctx, { reminderDays: days, notifyInApp, notifyEmail: ctx.workspace.notifyEmail });
     revalidatePath("/business", "layout");
     return { ok: true, message: days.length ? "Reminder settings saved." : "Renewal reminders are switched off." };
-  });
+  }, { billing: "open" });
 }
 
 export async function deleteWorkspaceAction(_prev: FormState, form: FormData): Promise<FormState> {
@@ -148,7 +152,7 @@ export async function deleteWorkspaceAction(_prev: FormState, form: FormData): P
     await deleteWorkspace(ctx, r.requiredText("confirmName", { label: "Workspace name", max: 80 }));
     (await cookies()).delete(WORKSPACE_COOKIE);
     return { ok: true };
-  });
+  }, { billing: "open" });
   if (!result.ok) return result;
   revalidatePath("/business", "layout");
   redirect("/business/onboarding");

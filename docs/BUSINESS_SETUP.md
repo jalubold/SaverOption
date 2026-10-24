@@ -66,6 +66,8 @@ Nothing new is required: Business uses `POSTGRES_URL`, `NEXT_PUBLIC_SUPABASE_URL
 | --- | --- | --- |
 | `CRON_SECRET` | **server only** | Optional. Enables the daily reminder run: Vercel Cron calls `/api/cron/business-reminders` (see `vercel.json`) with `Authorization: Bearer <CRON_SECRET>`. Without it the route answers 503 and reminders are still created whenever someone opens the app. |
 | `ANTHROPIC_API_KEY` | **server only** | Optional. Enables the in-app AI Savings Assistant. Without it the assistant page says it isn't configured and nothing is sent to a model. |
+| `CREEM_API_KEY`, `CREEM_WEBHOOK_SECRET`, `CREEM_TEST_MODE`, `CREEM_PRODUCT_*` | **server only** | Paid plans through Creem. Without them the 7-day trial still runs, and Plan & billing shows list prices with a contact link instead of checkout. See `BILLING.md`. |
+| `BILLING_PRICE_*`, `BILLING_*_MEMBER_LIMIT`, `BUSINESS_CONTACT_EMAIL` | **server only** | Optional plan settings: list prices, member limits, where Self-Hosted / White-Label inquiries go. |
 
 ## Database
 
@@ -153,11 +155,10 @@ The bundled marks come from the Iconify "logos" set and Simple Icons (both CC0).
 ## Not included yet
 
 - File attachments, and a built-in PDF export (saved savings reports can be printed to PDF from the browser).
-- Exchange rates (totals stay per currency).
 - Usage integrations (SSO or vendor APIs), so seat usage is assigned or reported, not measured.
 - Email delivery (see above).
 - Accounting, expense, card or bank integrations.
-- Paid plans or billing (there's no pricing page).
+- Changing plan or interval in the app (cancel and subscribe again, or contact us); see `BILLING.md`.
 - Verified AI client compatibility: the MCP server targets Claude, ChatGPT, Gemini and Grok, but none has been tested end to end yet (see `mcp.md`).
 
 ## Testing

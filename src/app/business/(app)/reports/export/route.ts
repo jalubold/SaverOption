@@ -4,6 +4,8 @@ import { opportunityStatusLabels, opportunityTypeLabels, subscriptionStatusLabel
 import { csvAmount, toCsv, type Cell } from "@/lib/business/csv";
 import { can } from "@/lib/business/permissions";
 import type { Group } from "@/lib/server/business/analytics";
+import { hasPremium } from "@/lib/business/billing";
+import { accessFor } from "@/lib/server/business/billing";
 import { getBizSession } from "@/lib/server/business/context";
 import { workspaceDisplay } from "@/lib/server/business/display-currency";
 import { buildReport, REPORT_KEYS, type Report, type ReportKey } from "@/lib/server/business/reports";
@@ -151,6 +153,9 @@ export async function GET(request: NextRequest) {
   if (!user) return NextResponse.json({ error: "Sign in to export reports." }, { status: 401, headers: { "Cache-Control": "no-store" } });
   if (!ctx) return NextResponse.json({ error: "You don't have access to a workspace." }, { status: 403, headers: { "Cache-Control": "no-store" } });
   if (!can(ctx.role, "data.export")) return NextResponse.json({ error: "Your role can't export data." }, { status: 403, headers: { "Cache-Control": "no-store" } });
+  if (!hasPremium(await accessFor(ctx.workspace))) {
+    return NextResponse.json({ error: "This workspace's trial or subscription has ended. Choose a plan in Settings → Billing." }, { status: 402, headers: { "Cache-Control": "no-store" } });
+  }
 
   const raw: Record<string, string> = {};
   for (const [k, v] of request.nextUrl.searchParams) if (k !== "report") raw[k] = v;

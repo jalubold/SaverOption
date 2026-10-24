@@ -13,6 +13,7 @@ import { getMembers } from "@/lib/server/business/data";
 export const metadata = { title: "Settings" };
 
 const sections = [
+  { href: "/business/settings/billing", label: "Plan & billing", icon: "credit-card", body: "Your plan, the free trial, payments and invoices (handled by Creem)." },
   { href: "/business/settings/company", label: "Company", icon: "building", body: "Name, logo, industry, size and contact details." },
   { href: "/business/settings/departments", label: "Departments", icon: "users", body: "Create, rename and archive departments; assign people." },
   { href: "/business/settings/notifications", label: "Notifications", icon: "bell", body: "Renewal reminder windows and in-app notifications." },
@@ -22,7 +23,7 @@ const sections = [
 ] as const;
 
 export default async function SettingsPage() {
-  const ctx = await requireBizContext("/business/settings");
+  const ctx = await requireBizContext("/business/settings", { billing: "open" });
   const ws = ctx.workspace;
   const me = (await getMembers(ws.id)).find((m) => m.userId === ctx.user.id);
   const name = displayName(ctx.user);

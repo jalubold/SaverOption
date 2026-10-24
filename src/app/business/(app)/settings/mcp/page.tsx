@@ -16,7 +16,7 @@ export const metadata = { title: "AI clients (MCP)" };
 const day = (d: Date | null, fmt: string) => (d ? formatIsoDate(d.toISOString().slice(0, 10), fmt) : "—");
 
 export default async function McpSettingsPage() {
-  const ctx = await requireBizContext("/business/settings/mcp");
+  const ctx = await requireBizContext("/business/settings/mcp", { billing: "open" });
   const urls = await urlsFromHeaders();
   const connections = await listConnections(ctx);
   const fmt = ctx.workspace.dateFormat;

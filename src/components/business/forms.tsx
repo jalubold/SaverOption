@@ -45,6 +45,7 @@ export function ActionForm({
     if (handled.current === state) return;
     handled.current = state;
     if (state.ok && state.redirectTo) router.push(state.redirectTo);
+    if (state.ok && state.externalUrl) window.location.assign(state.externalUrl);
     if (state.ok || state.error) onDone?.(state);
   }, [state, router, onDone]);
   return (

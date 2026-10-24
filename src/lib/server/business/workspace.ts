@@ -1,6 +1,7 @@
 import { COMPANY_SIZES, DATE_FORMATS, type DateFormat } from "@/lib/business/constants";
 import type { FormReader } from "@/lib/business/form";
 import { db } from "@/lib/server/db";
+import { startTrialIfEligible } from "@/lib/server/business/billing";
 import { assertCan, BizError, displayName, logActivity, type BizContext } from "@/lib/server/business/context";
 import type { SessionUser } from "@/lib/server/supabase";
 
@@ -60,6 +61,7 @@ export function readPreferencesInput(r: FormReader, current: { defaultCurrency: 
 /**
  * Creates a workspace owned by the user, with the user added to its people
  * directory. Only ever called from an explicit "Create workspace" action.
+ * It starts with the free trial if this account hasn't had one.
  */
 export async function createWorkspace(
   user: SessionUser,
@@ -75,6 +77,8 @@ export async function createWorkspace(
     const [person] = await sql`
       insert into biz_people (workspace_id, name, email, user_id) values (${ws.id}, ${displayName(user)}, ${user.email}, ${user.id}) returning id`;
     await sql`insert into biz_memberships (workspace_id, user_id, role, person_id) values (${ws.id}, ${user.id}, 'owner', ${person.id})`;
+    // The free trial, once per account (the demo workspace isn't billed).
+    if (!input.isDemo) await startTrialIfEligible(sql, user, ws.id);
     await sql`
       insert into biz_activity (workspace_id, actor_id, actor_name, action, entity_type, entity_id, summary)
       values (${ws.id}, ${user.id}, ${displayName(user)}, 'workspace.created', 'workspace', ${ws.id}, ${`Created the ${input.name} workspace`})`;

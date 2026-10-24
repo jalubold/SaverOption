@@ -11,6 +11,8 @@ import { buttonClass, cn } from "@/components/ui/primitives";
 import { summarizeSpend } from "@/lib/business/calc";
 import { roleLabels } from "@/lib/business/constants";
 import { can } from "@/lib/business/permissions";
+import { TRIAL_DAYS } from "@/lib/business/billing";
+import { trialUsed } from "@/lib/server/business/billing";
 import { getBizSession, requireBizUser } from "@/lib/server/business/context";
 import { getDepartments, getInvitationsForEmail, getPeople, getSoftwareList, getSubscriptions } from "@/lib/server/business/data";
 
@@ -25,6 +27,7 @@ export default async function OnboardingPage(props: PageProps<"/business/onboard
   const invitations = user.emailConfirmed ? await getInvitationsForEmail(user.email) : [];
   const wantsNew = q.new === "1";
   const step = !ctx || wantsNew ? 0 : q.step === "done" ? 2 : 1;
+  const usedTrial = step === 0 && (await trialUsed(user));
 
   return (
     <div className="min-h-dvh bg-bg text-fg">
@@ -84,6 +87,11 @@ export default async function OnboardingPage(props: PageProps<"/business/onboard
             <section className="biz-card p-5 sm:p-7">
               <h1 className="text-[22px] font-semibold tracking-tight">Create your company workspace</h1>
               <p className="mt-1 text-[14px] text-muted">A workspace holds your company&apos;s software, subscriptions and team. You can invite colleagues later.</p>
+              <p className="mt-3 rounded-lg bg-subtle px-3 py-2 text-[13px] text-muted" data-trial-note={usedTrial ? "used" : "new"}>
+                {usedTrial
+                  ? "You've already used your free trial, so this workspace will need a paid plan (Settings → Plan & billing) before you can add records."
+                  : `It starts with a ${TRIAL_DAYS}-day free trial with everything included — no card needed. After that, choose a paid plan to keep going.`}
+              </p>
               <div className="mt-6">
                 <CreateWorkspaceForm />
               </div>

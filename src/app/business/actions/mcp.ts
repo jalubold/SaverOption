@@ -13,5 +13,5 @@ export async function disconnectClientAction(_prev: FormState, form: FormData): 
     await disconnect(ctx, id);
     revalidatePath("/business/settings/mcp");
     return { ok: true, message: "Disconnected. That AI client can no longer reach this workspace." };
-  });
+  }, { billing: "open" });
 }

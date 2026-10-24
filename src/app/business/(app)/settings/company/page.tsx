@@ -6,7 +6,7 @@ import { requireBizContext } from "@/lib/server/business/context";
 export const metadata = { title: "Company settings" };
 
 export default async function CompanySettingsPage() {
-  const ctx = await requireBizContext("/business/settings/company");
+  const ctx = await requireBizContext("/business/settings/company", { billing: "open" });
   const ws = ctx.workspace;
   const editable = can(ctx.role, "workspace.manage");
   return (

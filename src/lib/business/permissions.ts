@@ -21,11 +21,13 @@ export type Capability =
   /** Payments, renewal outcomes, savings decisions and confirmed savings. */
   | "spend.manage"
   /** CSV and data exports. */
-  | "data.export";
+  | "data.export"
+  /** The workspace's Saver Option plan: checkout, cancellation and the billing portal. */
+  | "billing.manage";
 
 const grants: Record<Role, ReadonlySet<Capability>> = {
-  owner: new Set(["workspace.manage", "workspace.own", "members.manage", "directory.manage", "records.manage", "records.manage_own", "spend.manage", "data.export"]),
-  admin: new Set(["workspace.manage", "members.manage", "directory.manage", "records.manage", "records.manage_own", "spend.manage", "data.export"]),
+  owner: new Set(["workspace.manage", "workspace.own", "members.manage", "directory.manage", "records.manage", "records.manage_own", "spend.manage", "data.export", "billing.manage"]),
+  admin: new Set(["workspace.manage", "members.manage", "directory.manage", "records.manage", "records.manage_own", "spend.manage", "data.export", "billing.manage"]),
   finance: new Set(["records.manage", "records.manage_own", "spend.manage", "data.export"]),
   member: new Set(["records.manage_own"]),
   viewer: new Set(),

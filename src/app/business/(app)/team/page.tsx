@@ -16,7 +16,7 @@ const roleTone: Record<Role, "accent" | "neutral" | "outline"> = { owner: "accen
 
 export default async function TeamPage(props: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const q = await props.searchParams;
-  const ctx = await requireBizContext("/business/team");
+  const ctx = await requireBizContext("/business/team", { billing: "open" });
   const ws = ctx.workspace.id;
   const [members, invitations, people, departments, seats, subs] = await Promise.all([getMembers(ws), getOpenInvitations(ws), getPeople(ws), getDepartments(ws), getSeatAssignments(ws), getSubscriptions(ws)]);
   const fmt = ctx.workspace.dateFormat;

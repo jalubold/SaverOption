@@ -14,6 +14,8 @@ export interface FormState {
   message?: string;
   /** Where the client should go next (validated by the server action). */
   redirectTo?: string;
+  /** A page outside the app to open next — a payment provider's checkout or portal, from the server. */
+  externalUrl?: string;
 }
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;

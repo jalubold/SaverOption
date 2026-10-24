@@ -1,6 +1,7 @@
 import { roleLabels, type Role } from "@/lib/business/constants";
 import { assignableRoles, canEditRecord, canManageMember } from "@/lib/business/permissions";
 import { db } from "@/lib/server/db";
+import { assertMemberCapacity } from "@/lib/server/business/billing";
 import { assertCan, BizError, displayName, logActivity, type BizContext, type Db } from "@/lib/server/business/context";
 import type { SessionUser } from "@/lib/server/supabase";
 
@@ -22,6 +23,7 @@ export async function inviteMember(ctx: BizContext, email: string, role: Role): 
       select 1 from biz_memberships m join auth.users u on u.id = m.user_id
       where m.workspace_id = ${ws} and lower(u.email) = ${email}`;
     if (member) throw new BizError("conflict", `${email} is already a member.`);
+    await assertMemberCapacity(ctx, sql);
     const [{ n }] = await sql`select count(*)::int as n from biz_invitations where workspace_id = ${ws} and accepted_at is null and revoked_at is null`;
     if (n >= 50) throw new BizError("invalid", "This workspace has 50 open invitations. Revoke some first.");
     await sql`insert into biz_invitations (workspace_id, email, role, invited_by) values (${ws}, ${email}, ${role}, ${ctx.user.id})`;

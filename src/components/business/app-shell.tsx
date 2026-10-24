@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { createDemoAction, switchWorkspaceAction } from "@/app/business/actions/workspace";
+import type { BillingNotice } from "@/lib/business/billing";
 import { roleLabels } from "@/lib/business/constants";
 import { can } from "@/lib/business/permissions";
 import { displayName, type BizContext } from "@/lib/server/business/context";
@@ -129,7 +130,29 @@ function Sidebar({ ctx, collapsed }: { ctx: BizContext; collapsed?: boolean }) {
   );
 }
 
-export function AppShell({ ctx, unread, children }: { ctx: BizContext; unread: number; children: ReactNode }) {
+const noticeTone: Record<BillingNotice["tone"], string> = {
+  accent: "border-accent/25 bg-accent-soft",
+  warn: "border-warn/30 bg-warn-soft",
+  danger: "border-danger/30 bg-danger/10",
+};
+
+function BillingStrip({ notice }: { notice: BillingNotice }) {
+  return (
+    <div className={cn("flex flex-wrap items-center gap-x-3 gap-y-1 border-b px-4 py-2 text-[12.5px] text-fg sm:px-6", noticeTone[notice.tone])} data-billing-notice={notice.tone}>
+      <span className="min-w-0">
+        <Icon name={notice.tone === "accent" ? "calendar" : "alert"} size={13} className={cn("mr-1.5 inline", notice.tone === "danger" ? "text-danger" : notice.tone === "warn" ? "text-warn" : "text-accent-ink")} />
+        <strong className="font-semibold">{notice.title}.</strong> {notice.body}
+      </span>
+      {notice.cta && (
+        <Link href="/business/settings/billing" className="ml-auto shrink-0 font-semibold text-accent-ink underline underline-offset-2">
+          {notice.cta} →
+        </Link>
+      )}
+    </div>
+  );
+}
+
+export function AppShell({ ctx, unread, notice, children }: { ctx: BizContext; unread: number; notice: BillingNotice | null; children: ReactNode }) {
   const name = displayName(ctx.user);
   return (
     <SidebarFrame sidebar={<Sidebar ctx={ctx} />} collapsedSidebar={<Sidebar ctx={ctx} collapsed />}>
@@ -178,6 +201,9 @@ export function AppShell({ ctx, unread, children }: { ctx: BizContext; unread: n
               <Link href="/business/settings" className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-[13px] text-muted hover:bg-subtle hover:text-fg">
                 <Icon name="user" size={14} /> Account settings
               </Link>
+              <Link href="/business/settings/billing" className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-[13px] text-muted hover:bg-subtle hover:text-fg">
+                <Icon name="credit-card" size={14} /> Plan &amp; billing
+              </Link>
               <Link href="/deals" className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-[13px] text-muted hover:bg-subtle hover:text-fg">
                 <Icon name="tag" size={14} /> Saver Option deals
               </Link>
@@ -191,6 +217,7 @@ export function AppShell({ ctx, unread, children }: { ctx: BizContext; unread: n
           </Popover>
         </div>
       </header>
+      {notice && <BillingStrip notice={notice} />}
       {ctx.workspace.isDemo && (
         <div className="border-b border-warn/30 bg-warn-soft px-4 py-2 text-[12.5px] text-fg sm:px-6">
           <Icon name="info" size={13} className="mr-1.5 inline text-warn" />

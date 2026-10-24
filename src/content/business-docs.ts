@@ -521,6 +521,71 @@ export const guides: DocPage[] = [
     ],
   },
   {
+    slug: "billing",
+    title: "Plans, free trial and billing",
+    nav: "Plans & billing",
+    description: "The 7-day free trial, Pro and Business plans, paying through Creem, cancelling, and what happens when a plan ends.",
+    group: "Use Saver Option Business",
+    sections: [
+      {
+        heading: "The free trial",
+        blocks: [
+          {
+            type: "list",
+            items: [
+              "A new workspace starts with a **7-day free trial** with everything included. No card is needed.",
+              "There's one free trial per account. Signing out, using another device or creating another workspace doesn't start a new one.",
+              "The time left and the exact end are shown at the top of every page and in [Settings → Plan & billing](/business/settings/billing).",
+              "The demo workspace (Northwind Studio) is sample data and isn't billed.",
+            ],
+          },
+        ],
+      },
+      {
+        heading: "Plans",
+        blocks: [
+          { type: "p", text: "**Pro** includes every Saver Option Business feature. **Business** includes everything in Pro with more members (people who sign in; open invitations count). The prices and member limits shown in Plan & billing are the ones that apply. **Self-Hosted** and **White-Label** are arranged directly — use the Contact us button." },
+        ],
+      },
+      {
+        heading: "Subscribing",
+        blocks: [
+          {
+            type: "list",
+            ordered: true,
+            items: [
+              "Owners and admins open [Settings → Plan & billing](/business/settings/billing), pick monthly or yearly, and choose a plan.",
+              "The confirmation page shows the plan, interval, price (read from Creem), trial terms, when the first charge happens and that a payment method is needed.",
+              "Continue to Creem's checkout to pay. Saver Option never sees card details.",
+              "The plan becomes active once Creem confirms the payment — usually within seconds. Closing the checkout charges nothing.",
+            ],
+          },
+          { type: "note", text: "Subscribing during the free trial starts the paid plan straight away; the remaining trial days aren't added on." },
+        ],
+      },
+      {
+        heading: "Managing and cancelling",
+        blocks: [
+          {
+            type: "list",
+            items: [
+              "**Manage billing** opens Creem's customer portal for the payment method and invoices.",
+              "**Cancel subscription** ends the plan at the close of the paid period. You keep access until then and nothing more is charged.",
+              "Changing plan or interval isn't available in the app yet: cancel and subscribe again after the period ends, or contact us.",
+            ],
+          },
+        ],
+      },
+      {
+        heading: "When a trial or plan ends",
+        blocks: [
+          { type: "p", text: "Software records, the dashboard, reports, the assistant and AI client (MCP) tools pause until a plan is active. Nothing is deleted. Settings, members, Plan & billing, security, the workspace JSON export and the subscriptions CSV stay available." },
+          { type: "p", text: "If a payment fails, a banner asks you to update the payment method; access continues until the end of the period already paid for." },
+        ],
+      },
+    ],
+  },
+  {
     slug: "troubleshooting",
     title: "Troubleshooting",
     description: "Fixes for common problems with sign-in, AI client connections, CSV imports and totals.",
@@ -598,11 +663,11 @@ export const guides: DocPage[] = [
       },
       {
         heading: "Which AI clients work?",
-        blocks: [{ type: "p", text: "The MCP server targets Claude, ChatGPT, Gemini and Grok. None has been verified end to end yet; the [compatibility table](/business/docs/mcp) shows the current status." }],
+        blocks: [{ type: "p", text: "The MCP server targets Claude, ChatGPT, Gemini and Grok. Claude has been tested (sign-in and the read tools); the others haven't been verified end to end yet. The [compatibility table](/business/docs/mcp) shows the current status." }],
       },
       {
-        heading: "Is there a paid plan?",
-        blocks: [{ type: "p", text: "No paid plans exist, so there's no pricing page." }],
+        heading: "What does it cost?",
+        blocks: [{ type: "p", text: "Every new workspace starts with a 7-day free trial with everything included — no card needed. After that a paid plan (Pro or Business) is needed; there's no free plan. See [Plans & billing](/business/docs/billing)." }],
       },
       {
         heading: "Can we export or delete our data?",

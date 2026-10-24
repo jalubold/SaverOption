@@ -19,7 +19,9 @@ import { findPotentialDuplicates } from "@/lib/business/duplicates";
 import { FormReader } from "@/lib/business/form";
 import { can } from "@/lib/business/permissions";
 import { validateArgs, type ObjectSchema } from "@/lib/business/schema";
+import { hasPremium } from "@/lib/business/billing";
 import { buildSpendModel, type Group } from "@/lib/server/business/analytics";
+import { accessFor } from "@/lib/server/business/billing";
 import { BizError, type BizContext } from "@/lib/server/business/context";
 import { getCostHistory, getDepartments, getPayments, getPeople, getRealizedSavings, getSoftwareList, getSubscription, getSubscriptions, type Subscription } from "@/lib/server/business/data";
 import { createSubscription, readSoftwareInput, readSubscriptionInput, updateSubscription } from "@/lib/server/business/records";
@@ -727,6 +729,9 @@ export function toolsFor(scopes: string[]): ToolDef[] {
 export async function callTool(ctx: ToolContext, name: string, rawArgs: unknown): Promise<{ ok: true; result: unknown } | { ok: false; message: string }> {
   const tool = tools.find((t) => t.name === name);
   if (!tool) return { ok: false, message: `Unknown tool: ${name}.` };
+  if (!hasPremium(await accessFor(ctx.biz.workspace))) {
+    return { ok: false, message: `This workspace's Saver Option free trial or subscription has ended, so its tools are paused. An owner or admin can choose a plan at ${ctx.urls.origin}/business/settings/billing — the data is kept.` };
+  }
   if (tool.write && !ctx.scopes.includes(SCOPE_WRITE)) return { ok: false, message: "This connection is read-only. To add or change records, disconnect and connect again choosing “Read and change”." };
   const v = validateArgs(tool.inputSchema, rawArgs);
   if (!v.ok) return { ok: false, message: `Invalid arguments: ${v.errors.join(" ")}` };

@@ -6,7 +6,7 @@ import { requireBizContext } from "@/lib/server/business/context";
 export const metadata = { title: "Notification settings" };
 
 export default async function NotificationSettingsPage() {
-  const ctx = await requireBizContext("/business/settings/notifications");
+  const ctx = await requireBizContext("/business/settings/notifications", { billing: "open" });
   const ws = ctx.workspace;
   const editable = can(ctx.role, "workspace.manage");
   return (
