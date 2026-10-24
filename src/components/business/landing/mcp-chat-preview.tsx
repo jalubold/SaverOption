@@ -42,14 +42,10 @@ export function McpChatPreview({ className }: { className?: string }) {
   return (
     <div className={cn("theme-light overflow-hidden rounded-[20px] border border-line bg-bg text-fg shadow-[0_40px_80px_-40px_rgb(0_0_0/0.7),0_0_0_1px_rgb(0_0_0/0.04)]", className)}>
       <h3 className="sr-only">An illustrative conversation in Claude with Saver Option connected</h3>
-      <div className="flex items-center justify-between gap-3 border-b border-line bg-surface px-4 py-3">
+      <div className="flex items-center gap-3 border-b border-line bg-surface px-4 py-3">
         <span className="flex min-w-0 items-center gap-2">
           <SoftwareLogo name="Claude" src={CLAUDE_LOGO} size={28} />
           <span className="truncate text-[13.5px] font-semibold text-heading">Claude</span>
-        </span>
-        <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#1baf7a]/12 px-2.5 py-1 text-[11.5px] font-medium text-[#0c7350]">
-          <span className="viz-live size-1.5 rounded-full bg-[#1baf7a]" />
-          Saver Option · Read only
         </span>
       </div>
 
