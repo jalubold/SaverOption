@@ -1,4 +1,5 @@
 import { getAudiences, getCategories, getProductBySlug, getAllProductSlugs, getOffersForProduct, queryOffers } from "@/lib/catalog";
+import { docNav } from "@/components/business/docs/nav-items";
 import { absoluteUrl } from "@/lib/seo";
 
 /** Every public, indexable URL with when it last changed: the sitemap, and what IndexNow is told about. */
@@ -53,6 +54,7 @@ export async function siteUrls(): Promise<SiteUrl[]> {
     })),
     ...products.map((p) => ({ url: absoluteUrl(`/products/${p.slug}`), lastModified: p.lastModified, changeFrequency: "weekly" as const, priority: 0.5 })),
     { url: absoluteUrl("/business"), changeFrequency: "monthly", priority: 0.6 },
+    ...docNav.map((d) => ({ url: absoluteUrl(d.href), changeFrequency: "monthly" as const, priority: d.href === "/business/docs" ? 0.5 : 0.4 })),
     { url: absoluteUrl("/about"), changeFrequency: "yearly", priority: 0.3 },
     { url: absoluteUrl("/partnerships"), changeFrequency: "yearly", priority: 0.3 },
     { url: absoluteUrl("/promote"), changeFrequency: "monthly", priority: 0.4 },

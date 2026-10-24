@@ -104,12 +104,19 @@ export interface Subscription extends SubscriptionCalc {
   renewalOwnerPersonId: string | null;
   renewalOwnerName: string | null;
   renewalNotes: string | null;
+  /** Where the record came from: entered in the app, a CSV import, an AI client over MCP, the in-app assistant, or demo data. */
+  source: SubscriptionSource;
+  /** When someone last confirmed the details (entered or edited them); null when never reviewed, e.g. after an import. */
+  lastVerifiedOn: string | null;
+  importJobId: string | null;
   archivedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
   /** created_at as a calendar date. */
   createdOn: string;
 }
+
+export type SubscriptionSource = "manual" | "csv_import" | "mcp" | "assistant" | "demo";
 
 function mapSubscription(r: any): Subscription {
   return {
@@ -156,6 +163,9 @@ function mapSubscription(r: any): Subscription {
     renewalOwnerPersonId: r.renewal_owner_person_id,
     renewalOwnerName: r.renewal_owner_name,
     renewalNotes: r.renewal_notes,
+    source: r.source ?? "manual",
+    lastVerifiedOn: r.last_verified_on ?? null,
+    importJobId: r.import_job_id ?? null,
     archivedAt: r.archived_at,
     createdAt: r.created_at,
     updatedAt: r.updated_at,

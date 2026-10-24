@@ -31,6 +31,7 @@ import { isUuid } from "@/lib/business/form";
 import { can, canEditRecord } from "@/lib/business/permissions";
 import { liveOffersFor, verificationLabel } from "@/lib/server/business/catalog-match";
 import { requireBizContext } from "@/lib/server/business/context";
+import { getImportJob } from "@/lib/server/business/import";
 import {
   getActivity,
   getCostHistory,
@@ -67,7 +68,7 @@ export default async function SubscriptionPage(props: { params: Promise<{ id: st
     getActivity(ws, { entityIds: [id], limit: 30 }),
     getPeople(ws),
   ]);
-  const deals = await liveOffersFor(software?.catalogProductId ?? null);
+  const [deals, importJob] = await Promise.all([liveOffersFor(software?.catalogProductId ?? null), sub.importJobId ? getImportJob(ws, sub.importJobId) : null]);
   const fmt = ctx.workspace.dateFormat;
   const d = (iso: string | null | undefined) => formatIsoDate(iso, fmt);
   const when = (date: Date) => {
@@ -182,6 +183,35 @@ export default async function SubscriptionPage(props: { params: Promise<{ id: st
                 ...(sub.billingInterval === "monthly" ? [{ label: "Annual price option", value: sub.annualPriceOptionMinor !== null ? formatMoney(sub.annualPriceOptionMinor, sub.currency) : "Not recorded", hint: "The vendor's price for a year, to compare with monthly billing." }] : []),
                 ...(sub.endedOn ? [{ label: "Ended on", value: d(sub.endedOn) }] : []),
                 { label: "Reminders", value: sub.reminderDays ? `${sub.reminderDays.join(", ")} days before` : `Workspace default (${ctx.workspace.reminderDays.length ? `${ctx.workspace.reminderDays.join(", ")} days` : "off"})` },
+                {
+                  label: "Record source",
+                  value:
+                    sub.source === "csv_import" ? (
+                      importJob ? (
+                        <>
+                          Imported from CSV on {d(importJob.createdAt.toISOString().slice(0, 10))} ·{" "}
+                          <Link href={`/business/subscriptions/import?job=${importJob.id}#history`} className="text-accent-ink underline underline-offset-2">
+                            {importJob.fileName ?? "view import"}
+                          </Link>
+                        </>
+                      ) : (
+                        "Imported from CSV"
+                      )
+                    ) : sub.source === "mcp" ? (
+                      "Added by an AI client (MCP)"
+                    ) : sub.source === "assistant" ? (
+                      "Added with the AI assistant"
+                    ) : sub.source === "demo" ? (
+                      "Demo data"
+                    ) : (
+                      "Entered in the app"
+                    ),
+                },
+                {
+                  label: "Last verified",
+                  value: sub.lastVerifiedOn ? d(sub.lastVerifiedOn) : sub.source === "csv_import" ? <Pill tone="warn">Not verified since import</Pill> : "Not verified",
+                  hint: "When someone last entered or saved these details. Editing and saving the subscription marks it verified.",
+                },
               ]}
             />
           </Card>

@@ -171,11 +171,12 @@ export const opportunityTypeLabels: Record<OpportunityType, string> = {
 export const OPPORTUNITY_STATUSES = ["open", "reviewed", "dismissed", "actioned", "resolved"] as const;
 export type OpportunityStatus = (typeof OPPORTUNITY_STATUSES)[number];
 
+/** The Spend Detective's recommendation states (stored values unchanged). "Realized" is shown on top of "Accepted" once a confirmed saving exists. */
 export const opportunityStatusLabels: Record<OpportunityStatus, string> = {
-  open: "Open",
-  reviewed: "Reviewed",
+  open: "New",
+  reviewed: "Reviewing",
   dismissed: "Dismissed",
-  actioned: "Actioned",
+  actioned: "Accepted",
   resolved: "No longer detected",
 };
 

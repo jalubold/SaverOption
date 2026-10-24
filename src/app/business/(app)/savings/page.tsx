@@ -29,14 +29,14 @@ import { requireBizContext } from "@/lib/server/business/context";
 import { getRealizedSavings, getSoftwareList, getSubscriptions, type Opportunity } from "@/lib/server/business/data";
 import { refreshSavings } from "@/lib/server/business/savings-sync";
 
-export const metadata = { title: "Savings opportunities" };
+export const metadata = { title: "Spend Detective — savings opportunities" };
 
 type Raw = Record<string, string | string[] | undefined>;
 const one = (v: string | string[] | undefined) => (typeof v === "string" ? v : Array.isArray(v) ? v[0] : undefined);
 
 const STATUS_VIEWS = ["open", "actioned", "dismissed", "resolved", "all"] as const;
 type StatusView = (typeof STATUS_VIEWS)[number];
-const viewLabels: Record<StatusView, string> = { open: "Open", actioned: "Actioned", dismissed: "Dismissed", resolved: "No longer detected", all: "All" };
+const viewLabels: Record<StatusView, string> = { open: "New & reviewing", actioned: "Accepted", dismissed: "Dismissed", resolved: "No longer detected", all: "All" };
 const inView = (o: Opportunity, v: StatusView) => (v === "all" ? true : v === "open" ? o.status === "open" || o.status === "reviewed" : o.status === v);
 
 const confidenceTone: Record<Confidence, "success" | "accent" | "neutral"> = { high: "success", medium: "accent", low: "neutral" };
@@ -67,6 +67,7 @@ export default async function SavingsPage(props: { searchParams: Promise<Raw> })
   const potential = potentialSavings(opps);
   const active = opps.filter((o) => o.status === "open" || o.status === "reviewed");
   const realizedTotal = realizedTotals(realized);
+  const realizedFor = new Set(realized.map((r) => r.opportunityId).filter((id): id is string => Boolean(id)));
   const list = opps
     .filter((o) => inView(o, view) && (!type || o.type === type) && (!confidence || o.confidence === confidence))
     .sort((a, b) => (b.estMonthlyMinor ?? -1) - (a.estMonthlyMinor ?? -1) || b.createdAt.getTime() - a.createdAt.getTime());
@@ -120,9 +121,13 @@ export default async function SavingsPage(props: { searchParams: Promise<Raw> })
   return (
     <>
       <PageHeader
-        title="Savings opportunities"
+        title={
+          <span className="flex flex-wrap items-baseline gap-x-2">
+            Spend Detective <span className="text-[15px] font-normal text-faint">· savings opportunities</span>
+          </span>
+        }
         crumbs={[{ label: "Overview", href: "/business/dashboard" }, { label: "Savings opportunities" }]}
-        description="Findings from your own subscription, seat and renewal data, plus matching Saver Option listings. Every estimate comes from prices your team entered; potential savings aren't realized until someone confirms them."
+        description="Rule-based checks of your own subscription, seat and renewal records, plus matching Saver Option listings. Every estimate comes from prices your team entered, and no product usage is assumed — Saver Option has no usage data, so seats count as used when they're assigned or reported. Potential savings aren't realized until someone confirms them."
         actions={<LinkButton href="/business/reports">Reports</LinkButton>}
       />
 
@@ -223,6 +228,7 @@ export default async function SavingsPage(props: { searchParams: Promise<Raw> })
                   subscription={sub}
                   softwareName={sw?.name}
                   logo={sub ? { name: sub.softwareName, src: sub.logoSrc } : sw ? { name: sw.name, src: sw.logoSrc } : undefined}
+                  realized={realizedFor.has(o.id)}
                   currencyOptions={currencyOptions}
                 />
               );
@@ -344,6 +350,7 @@ function OpportunityCard({
   subscription,
   softwareName,
   logo,
+  realized,
   currencyOptions,
 }: {
   o: Opportunity;
@@ -351,6 +358,8 @@ function OpportunityCard({
   subscription?: { id: string; softwareName: string; planName: string | null; currency: string };
   softwareName?: string;
   logo?: { name: string; src: string | null };
+  /** A confirmed realized saving exists for this opportunity. */
+  realized?: boolean;
   currencyOptions: { value: string; label: string }[];
 }) {
   const estimate = o.estMonthlyMinor !== null && o.currency ? potentialSavings([{ ...o, status: "open" }]) : null;
@@ -380,6 +389,7 @@ function OpportunityCard({
               <Pill tone="outline">{opportunityTypeLabels[o.type]}</Pill>
               <Pill tone={confidenceTone[o.confidence]}>{confidenceLabels[o.confidence]}</Pill>
               <StatusPill status={o.status} label={opportunityStatusLabels[o.status]} />
+              {realized && <Pill tone="success">Realized</Pill>}
             </div>
             <h2 className="text-[15px] font-semibold text-fg">{o.title}</h2>
             <p className="mt-1 text-[12.5px] text-faint">

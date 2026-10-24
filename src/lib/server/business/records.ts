@@ -261,6 +261,9 @@ export interface CreateSubscriptionArgs {
   input: SubscriptionInput;
   idempotencyKey: string;
   seatPersonIds: string[];
+  /** Defaults to "manual" (entered in the app). */
+  source?: "manual" | "csv_import" | "mcp" | "assistant";
+  importJobId?: string | null;
 }
 
 /**
@@ -273,58 +276,65 @@ export async function createSubscription(ctx: BizContext, a: CreateSubscriptionA
   const ws = ctx.workspace.id;
   const [existing] = await db()`select id, software_id from biz_subscriptions where workspace_id = ${ws} and idempotency_key = ${a.idempotencyKey}`;
   if (existing) return { id: existing.id, softwareId: existing.software_id, duplicate: true };
+  return db().begin((sql) => createSubscriptionIn(sql, ctx, a));
+}
+
+/** createSubscription inside a transaction the caller already holds (CSV import creates many in one). */
+export async function createSubscriptionIn(sql: Db, ctx: BizContext, a: CreateSubscriptionArgs): Promise<{ id: string; softwareId: string; duplicate: boolean }> {
+  assertCan(ctx, "records.manage");
+  const ws = ctx.workspace.id;
   const i = a.input;
   if (a.seatPersonIds.length && i.purchasedSeats !== null && a.seatPersonIds.length > i.purchasedSeats)
     throw new BizError("invalid", `You assigned ${a.seatPersonIds.length} people but purchased ${i.purchasedSeats} seats.`);
-
-  return db().begin(async (sql) => {
-    let softwareId = a.softwareId;
-    let softwareName: string;
-    if (a.newSoftware) {
-      softwareId = await createSoftware(sql, ctx, a.newSoftware);
-      softwareName = a.newSoftware.name;
-    } else {
-      if (!softwareId) throw new BizError("invalid", "Choose the software this subscription is for.");
-      const sw = await loadSoftwareRow(sql, ws, softwareId);
-      if (sw.status === "archived") throw new BizError("invalid", "That software is archived. Restore it first.");
-      softwareName = sw.name;
-    }
-    await checkRefs(sql, ws, { people: [i.ownerPersonId, ...a.seatPersonIds], departments: [i.departmentId] });
-    const endedOn = i.status === "cancelled" || i.status === "expired" ? (i.endedOn ?? ctx.today) : null;
-    const [row] = await sql`
-      insert into biz_subscriptions (workspace_id, software_id, idempotency_key, plan_name, price_minor, currency, pricing_model,
-        billing_interval, custom_interval_count, custom_interval_unit, start_date, next_renewal_date, auto_renew, cancellation_deadline,
-        contract_end_date, status, ended_on, purchased_seats, reported_assigned_seats, payment_method, owner_person_id, department_id,
-        contract_reference, contract_notes, notes, annual_price_option_minor, reminder_days, created_by)
-      values (${ws}, ${softwareId}, ${a.idempotencyKey}, ${i.planName}, ${i.priceMinor}, ${i.currency}, ${i.pricingModel},
-        ${i.billingInterval}, ${i.customIntervalCount}, ${i.customIntervalUnit}, ${i.startDate}, ${i.nextRenewalDate}, ${i.autoRenew},
-        ${i.cancellationDeadline}, ${i.contractEndDate}, ${i.status}, ${endedOn}, ${i.purchasedSeats}, ${i.reportedAssignedSeats},
-        ${i.paymentMethod}, ${i.ownerPersonId}, ${i.departmentId}, ${i.contractReference}, ${i.contractNotes}, ${i.notes},
-        ${i.annualPriceOptionMinor}, ${i.reminderDays}, ${ctx.user.id})
-      on conflict (idempotency_key) do nothing
-      returning id`;
-    if (!row) {
-      // A concurrent submission of the same form won the race.
-      const [dupe] = await sql`select id, software_id from biz_subscriptions where workspace_id = ${ws} and idempotency_key = ${a.idempotencyKey}`;
-      if (!dupe) throw new BizError("conflict", "This form was already used. Reload the page and try again.");
-      return { id: dupe.id, softwareId: dupe.software_id, duplicate: true };
-    }
-    await insertCostHistory(sql, ctx, row.id, i, i.startDate ?? ctx.today, "Subscription added");
-    for (const personId of a.seatPersonIds) {
-      await sql`insert into biz_seat_assignments (workspace_id, subscription_id, person_id, assigned_by) values (${ws}, ${row.id}, ${personId}, ${ctx.user.id})`;
-    }
-    await logActivity(sql, ctx, {
-      action: "subscription.created",
-      entityType: "subscription",
-      entityId: row.id,
-      summary: `Added a ${i.billingInterval === "custom" ? "custom" : i.billingInterval} subscription for ${softwareName}${i.planName ? ` (${i.planName})` : ""}`,
-      details: { softwareId, seats: a.seatPersonIds.length },
-    });
-    if (a.seatPersonIds.length) {
-      await logActivity(sql, ctx, { action: "seats.assigned", entityType: "subscription", entityId: row.id, summary: `Assigned ${a.seatPersonIds.length} ${softwareName} seat${a.seatPersonIds.length === 1 ? "" : "s"}` });
-    }
-    return { id: row.id, softwareId: softwareId!, duplicate: false };
+  const source = a.source ?? "manual";
+  // Entered or confirmed by a person; imported rows stay unverified until someone reviews them.
+  const verifiedOn = source === "csv_import" ? null : ctx.today;
+  let softwareId = a.softwareId;
+  let softwareName: string;
+  if (a.newSoftware) {
+    softwareId = await createSoftware(sql, ctx, a.newSoftware);
+    softwareName = a.newSoftware.name;
+  } else {
+    if (!softwareId) throw new BizError("invalid", "Choose the software this subscription is for.");
+    const sw = await loadSoftwareRow(sql, ws, softwareId);
+    if (sw.status === "archived") throw new BizError("invalid", "That software is archived. Restore it first.");
+    softwareName = sw.name;
+  }
+  await checkRefs(sql, ws, { people: [i.ownerPersonId, ...a.seatPersonIds], departments: [i.departmentId] });
+  const endedOn = i.status === "cancelled" || i.status === "expired" ? (i.endedOn ?? ctx.today) : null;
+  const [row] = await sql`
+    insert into biz_subscriptions (workspace_id, software_id, idempotency_key, plan_name, price_minor, currency, pricing_model,
+      billing_interval, custom_interval_count, custom_interval_unit, start_date, next_renewal_date, auto_renew, cancellation_deadline,
+      contract_end_date, status, ended_on, purchased_seats, reported_assigned_seats, payment_method, owner_person_id, department_id,
+      contract_reference, contract_notes, notes, annual_price_option_minor, reminder_days, created_by, source, last_verified_on, import_job_id)
+    values (${ws}, ${softwareId}, ${a.idempotencyKey}, ${i.planName}, ${i.priceMinor}, ${i.currency}, ${i.pricingModel},
+      ${i.billingInterval}, ${i.customIntervalCount}, ${i.customIntervalUnit}, ${i.startDate}, ${i.nextRenewalDate}, ${i.autoRenew},
+      ${i.cancellationDeadline}, ${i.contractEndDate}, ${i.status}, ${endedOn}, ${i.purchasedSeats}, ${i.reportedAssignedSeats},
+      ${i.paymentMethod}, ${i.ownerPersonId}, ${i.departmentId}, ${i.contractReference}, ${i.contractNotes}, ${i.notes},
+      ${i.annualPriceOptionMinor}, ${i.reminderDays}, ${ctx.user.id}, ${source}, ${verifiedOn}, ${a.importJobId ?? null})
+    on conflict (idempotency_key) do nothing
+    returning id`;
+  if (!row) {
+    // A concurrent submission of the same form won the race.
+    const [dupe] = await sql`select id, software_id from biz_subscriptions where workspace_id = ${ws} and idempotency_key = ${a.idempotencyKey}`;
+    if (!dupe) throw new BizError("conflict", "This form was already used. Reload the page and try again.");
+    return { id: dupe.id, softwareId: dupe.software_id, duplicate: true };
+  }
+  await insertCostHistory(sql, ctx, row.id, i, i.startDate ?? ctx.today, "Subscription added");
+  for (const personId of a.seatPersonIds) {
+    await sql`insert into biz_seat_assignments (workspace_id, subscription_id, person_id, assigned_by) values (${ws}, ${row.id}, ${personId}, ${ctx.user.id})`;
+  }
+  await logActivity(sql, ctx, {
+    action: "subscription.created",
+    entityType: "subscription",
+    entityId: row.id,
+    summary: `Added a ${i.billingInterval === "custom" ? "custom" : i.billingInterval} subscription for ${softwareName}${i.planName ? ` (${i.planName})` : ""}${source === "mcp" ? " via an AI client (MCP)" : source === "assistant" ? " via the AI assistant" : ""}`,
+    details: { softwareId, seats: a.seatPersonIds.length, source },
   });
+  if (a.seatPersonIds.length) {
+    await logActivity(sql, ctx, { action: "seats.assigned", entityType: "subscription", entityId: row.id, summary: `Assigned ${a.seatPersonIds.length} ${softwareName} seat${a.seatPersonIds.length === 1 ? "" : "s"}` });
+  }
+  return { id: row.id, softwareId: softwareId!, duplicate: false };
 }
 
 export async function updateSubscription(ctx: BizContext, id: string, i: SubscriptionInput): Promise<void> {
@@ -346,7 +356,7 @@ export async function updateSubscription(ctx: BizContext, id: string, i: Subscri
         contract_end_date = ${i.contractEndDate}, status = ${i.status}, ended_on = ${endedOn}, purchased_seats = ${i.purchasedSeats},
         reported_assigned_seats = ${i.reportedAssignedSeats}, payment_method = ${i.paymentMethod}, owner_person_id = ${i.ownerPersonId},
         department_id = ${i.departmentId}, contract_reference = ${i.contractReference}, contract_notes = ${i.contractNotes}, notes = ${i.notes},
-        annual_price_option_minor = ${i.annualPriceOptionMinor}, reminder_days = ${i.reminderDays}, updated_at = now()
+        annual_price_option_minor = ${i.annualPriceOptionMinor}, reminder_days = ${i.reminderDays}, last_verified_on = ${ctx.today}, updated_at = now()
       where workspace_id = ${ws} and id = ${id}`;
     const changes: string[] = [];
     if (costChanged(before, i)) {

@@ -11,16 +11,21 @@ import { MobileMenuButton, Popover, SidebarFrame, SidebarNav, type NavItem } fro
 
 const main: NavItem[] = [
   { label: "Overview", href: "/business/dashboard", icon: "home" },
+  { label: "AI Assistant", href: "/business/assistant", icon: "sparkles" },
   { label: "Subscriptions", href: "/business/subscriptions", icon: "layers" },
   { label: "Software Inventory", href: "/business/software", icon: "box" },
   { label: "Licenses & Seats", href: "/business/licenses", icon: "key" },
   { label: "Renewals", href: "/business/renewals", icon: "calendar" },
+  { label: "Analytics", href: "/business/analytics", icon: "trending-up" },
   { label: "Savings Opportunities", href: "/business/savings", icon: "piggy" },
+  { label: "Deals for your stack", href: "/business/deals", icon: "tag" },
   { label: "Reports", href: "/business/reports", icon: "chart" },
 ];
 const workspaceNav: NavItem[] = [
   { label: "Team Members", href: "/business/team", icon: "users" },
   { label: "Departments", href: "/business/settings/departments", icon: "building" },
+  { label: "Integrations", href: "/business/integrations", icon: "link" },
+  { label: "AI clients (MCP)", href: "/business/settings/mcp", icon: "code" },
   { label: "Settings", href: "/business/settings", icon: "gear" },
 ];
 const groups = [

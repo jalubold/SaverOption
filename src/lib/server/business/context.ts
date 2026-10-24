@@ -132,6 +132,37 @@ export const getBizSession = cache(async (): Promise<{ user: SessionUser | null;
   };
 });
 
+/**
+ * Context for a request authorized by an MCP access token instead of a browser
+ * session: the same membership and role lookup, for the one workspace the
+ * connection was granted. Null when the person is no longer a member, so a
+ * removed member's connections stop working immediately.
+ */
+export async function contextForMember(userId: string, workspaceId: string): Promise<BizContext | null> {
+  if (!businessReady()) return null;
+  const memberships = await listMemberships(userId);
+  const current = memberships.find((m) => m.workspaceId === workspaceId);
+  if (!current) return null;
+  const [[row], [u]] = await Promise.all([
+    db()`select * from biz_workspaces where id = ${workspaceId}`,
+    // to_jsonb keeps this working whichever auth.users columns the database has.
+    db()`select u.id, u.email, to_jsonb(u)->>'email_confirmed_at' as email_confirmed_at, to_jsonb(u)->'raw_user_meta_data' as meta from auth.users u where u.id = ${userId}`,
+  ]);
+  if (!row || !u?.email) return null;
+  const meta = (u.meta ?? {}) as Record<string, unknown>;
+  const name = typeof meta.full_name === "string" ? meta.full_name : typeof meta.name === "string" ? meta.name : null;
+  const user: SessionUser = { id: u.id, email: String(u.email).toLowerCase(), emailConfirmed: Boolean(u.email_confirmed_at), name: name ? name.slice(0, 120) : null, avatarUrl: null };
+  const workspace = mapWorkspace(row);
+  return {
+    user,
+    workspace,
+    role: current.role,
+    personId: current.personId,
+    memberships: [{ workspaceId: current.workspaceId, name: current.name, role: current.role, isDemo: current.isDemo }],
+    today: todayIn(workspace.timeZone),
+  };
+}
+
 /** Post-sign-in destinations are limited to the business app's own pages. */
 export function safeBusinessNext(value: unknown, fallback = "/business/dashboard"): string {
   if (typeof value !== "string" || value.length > 300) return fallback;

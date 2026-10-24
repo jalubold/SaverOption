@@ -238,11 +238,11 @@ async function seed(sql: Db, ws: string, user: SessionUser): Promise<void> {
     const [sub] = await sql`
       insert into biz_subscriptions (workspace_id, software_id, plan_name, price_minor, currency, pricing_model, billing_interval, start_date,
         next_renewal_date, auto_renew, cancellation_deadline, status, ended_on, purchased_seats, reported_assigned_seats, payment_method,
-        annual_price_option_minor, created_by, created_at)
+        annual_price_option_minor, created_by, created_at, source)
       values (${ws}, ${s.id}, ${d.plan}, ${minor(d.price)}, ${currency}, ${d.model}, ${d.interval}, ${start}, ${status === "cancelled" ? null : renewal},
         ${status === "cancelled" ? false : (d.autoRenew ?? true)}, ${d.cancelDeadlineInDays !== undefined ? addDays(today, d.cancelDeadlineInDays) : null},
         ${status}, ${endedOn}, ${d.seats ?? null}, ${d.reported ?? null}, ${d.payment ?? null},
-        ${d.annualOption !== undefined ? minor(d.annualOption) : null}, ${user.id}, ${new Date(`${start}T09:00:00Z`)})
+        ${d.annualOption !== undefined ? minor(d.annualOption) : null}, ${user.id}, ${new Date(`${start}T09:00:00Z`)}, 'demo')
       returning id`;
     const history = d.priceChange
       ? [

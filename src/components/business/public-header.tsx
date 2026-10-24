@@ -33,6 +33,11 @@ export function BusinessPublicHeader({ signedIn }: { signedIn: boolean }) {
               </Link>
             </li>
             <li>
+              <Link href="/business/docs" className="rounded-md px-2.5 py-1.5 text-muted transition-colors hover:bg-subtle hover:text-fg">
+                Docs
+              </Link>
+            </li>
+            <li>
               <Link href="/deals" className="rounded-md px-2.5 py-1.5 text-muted transition-colors hover:bg-subtle hover:text-fg">
                 Software deals
               </Link>

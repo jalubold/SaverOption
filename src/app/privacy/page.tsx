@@ -81,6 +81,14 @@ export default function PrivacyPage() {
               members, according to their role.
             </li>
             <li>
+              <strong>AI features in Business.</strong> If a member connects an AI client (such as Claude or ChatGPT) to a
+              workspace over MCP, we store the connection — which app, who connected it, the access level and when it was
+              last used — and only hashed tokens. The AI client receives the data its requests return, under its
+              provider&apos;s own terms. If the in-app AI assistant is switched on and used, the question and the data the
+              assistant looks up for it are sent to Anthropic to generate the answer; the conversation itself is kept only
+              in the browser tab, not on our servers.
+            </li>
+            <li>
               <strong>Functional cookies.</strong> Only on the listing purchase flow and advertiser pages: a sign-in
               session cookie, a cookie that links your checkout to your account (kept up to 7 days), and a random ID that
               counts the steps of the purchase flow without identifying you (kept up to 30 days). In Saver Option Business:
@@ -115,8 +123,8 @@ export default function PrivacyPage() {
           <h2>Who else processes it</h2>
           <p>
             We use a hosting provider (Vercel) to serve the site and measure page visits, a database provider (Upstash)
-            to store the aggregate counts, Supabase to store advertiser accounts, listings, orders and Business workspaces, Google to sign you
-            in, and an email provider to send the newsletter. They process data only on our behalf. Lemon Squeezy
+            to store the aggregate counts, Supabase to store advertiser accounts, listings, orders and Business workspaces, Anthropic to generate
+            answers in the Business AI assistant when it&apos;s used, Google to sign you in, and an email provider to send the newsletter. They process data only on our behalf. Lemon Squeezy
             processes payments as the merchant of record, under its own privacy policy. When you follow a link to a software provider, their own privacy policy applies on their site.
           </p>
 

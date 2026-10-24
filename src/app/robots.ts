@@ -27,6 +27,14 @@ const PRIVATE = [
   "/business/onboarding",
   "/business/notifications",
   "/business/search",
+  "/business/analytics",
+  "/business/deals",
+  "/business/integrations",
+  "/business/assistant",
+  "/business/oauth/",
+  // MCP and OAuth endpoints for AI clients (not pages).
+  "/mcp",
+  "/oauth/",
 ];
 
 /**

@@ -4,6 +4,8 @@ Saver Option Business (`/business`) is the software-spend management product tha
 
 It runs on the same infrastructure as the advertiser features: **Supabase Auth** (Google sign-in) and **Supabase Postgres**, read and written only from the server. No new service is needed.
 
+Developer reference: `architecture.md`, `database-schema.md`, `security.md`, `integrations.md`, `mcp.md`, `mcp-tools.md` and `deployment.md` in this folder. User documentation is published at `/business/docs`.
+
 ## Routes
 
 | Route | What it is |
@@ -12,18 +14,27 @@ It runs on the same infrastructure as the advertiser features: **Supabase Auth**
 | `/business/login`, `/business/signup` | Continue with Google (the only sign-in method) |
 | `/business/onboarding` | Create a workspace → company details → first subscription → dashboard. Also accepts access invitations and opens the demo workspace |
 | `/business/dashboard` | Overview: KPIs, charts, renewals, highest-cost software, savings, activity, needs attention |
-| `/business/subscriptions` (`/new`, `/:id`, `/:id/edit`, `/export`) | Subscription list with filters, bulk actions and CSV export; the Add Software flow; details; edit |
+| `/business/subscriptions` (`/new`, `/:id`, `/:id/edit`, `/export`) | Subscription list with filters, bulk actions and CSV export; the Add Software flow; details (with source and last-verified date); edit |
+| `/business/subscriptions/import` (`/template`) | CSV import: template, column mapping, preview, duplicate detection, confirm, import history |
 | `/business/software` (`/new`, `/:id`, `/:id/edit`) | Software inventory (with or without a paid subscription), potential duplicates |
 | `/business/licenses` (`/:id`) | Seats: purchased, in use, available, utilization, unused cost; assign, reassign, release |
 | `/business/renewals` | Upcoming, calendar, requires attention, history |
-| `/business/savings` | Savings opportunities, decisions, confirmed (realized) savings |
-| `/business/reports` (`/export`) | Reports with date range, currency, category, department and vendor filters; CSV exports; audit log |
+| `/business/analytics` | Trends, period changes, largest subscriptions, cost per seat, commitments and insights — each labelled actual, estimate or projection |
+| `/business/savings` | Spend Detective: savings opportunities, decisions, confirmed (realized) savings |
+| `/business/deals` | Saver Option Deals listings matched to the workspace's tools, same-category listings, catalog search |
+| `/business/reports` (`/export`, `/saved/:id`) | Reports with date range, currency, category, department and vendor filters; CSV exports; saved savings reports; audit log |
+| `/business/assistant` | AI Savings Assistant (needs `ANTHROPIC_API_KEY`; otherwise says it isn't configured) |
+| `/business/integrations` | What's connected, available or planned |
 | `/business/team` | Members and roles, access by email, people directory |
-| `/business/settings` (`/company`, `/departments`, `/notifications`, `/preferences`, `/export`) | Account, workspace settings, data export (JSON), demo reset, delete workspace |
+| `/business/settings` (`/company`, `/departments`, `/notifications`, `/preferences`, `/security`, `/mcp`, `/export`) | Account, workspace settings, security overview, AI client (MCP) connections, data export (JSON), demo reset, delete workspace |
 | `/business/notifications`, `/business/search` | In-app notifications; workspace search |
+| `/business/docs` (`/:guide`, `/mcp`, `/mcp/:client`, `/mcp/security`) | Public user documentation |
+| `/business/oauth/authorize`, `/business/oauth/consent` | OAuth authorization and consent for AI clients |
+| `/mcp` | Remote MCP server (Streamable HTTP); see `mcp.md` |
+| `/oauth/register`, `/oauth/token`, `/oauth/revoke`, `/.well-known/oauth-authorization-server`, `/.well-known/oauth-protected-resource(/mcp)` | OAuth 2.1 endpoints and discovery for MCP clients |
 | `/api/cron/business-reminders` | Daily reminder run (needs `CRON_SECRET`) |
 
-Every page under `/business` except the landing and sign-in pages requires a signed-in user with a membership in the current workspace. Signed-out visitors go to `/business/login?next=…`; signed-in users without a workspace go to `/business/onboarding`. The `next` value is limited to `/business/…` paths, so it can't redirect anywhere else.
+Every page under `/business` except the landing, sign-in and docs pages (and the OAuth consent page, which needs a signed-in user but not a workspace) requires a signed-in user with a membership in the current workspace. Signed-out visitors go to `/business/login?next=…`; signed-in users without a workspace go to `/business/onboarding`. The `next` value is limited to `/business/…` paths, so it can't redirect anywhere else.
 
 ## Google sign-in
 
@@ -54,6 +65,7 @@ Nothing new is required: Business uses `POSTGRES_URL`, `NEXT_PUBLIC_SUPABASE_URL
 | Variable | Scope | Notes |
 | --- | --- | --- |
 | `CRON_SECRET` | **server only** | Optional. Enables the daily reminder run: Vercel Cron calls `/api/cron/business-reminders` (see `vercel.json`) with `Authorization: Bearer <CRON_SECRET>`. Without it the route answers 503 and reminders are still created whenever someone opens the app. |
+| `ANTHROPIC_API_KEY` | **server only** | Optional. Enables the in-app AI Savings Assistant. Without it the assistant page says it isn't configured and nothing is sent to a model. |
 
 ## Database
 
@@ -140,13 +152,17 @@ The bundled marks come from the Iconify "logos" set and Simple Icons (both CC0).
 
 ## Not included yet
 
-- CSV import of subscriptions, file attachments and PDF export.
+- File attachments, and a built-in PDF export (saved savings reports can be printed to PDF from the browser).
 - Exchange rates (totals stay per currency).
 - Usage integrations (SSO or vendor APIs), so seat usage is assigned or reported, not measured.
 - Email delivery (see above).
+- Accounting, expense, card or bank integrations.
+- Paid plans or billing (there's no pricing page).
+- Verified AI client compatibility: the MCP server targets Claude, ChatGPT, Gemini and Grok, but none has been tested end to end yet (see `mcp.md`).
 
 ## Testing
 
 - `npm test` runs the unit tests (Node's built-in runner) for calculations, savings rules, permissions, utilization history and duplicate detection.
 - The end-to-end suite runs against `next start` with a local Postgres and a mock of Supabase Auth's Google flow. It covers sign-in, onboarding, CRUD, seats, renewals, savings, reports versus the dashboard, CSV exports, and authorization: cross-workspace ids, role restrictions, and replayed server actions from a lower role.
+- More detail: `deployment.md` (suites and what they cover), `mcp.md` (client verification checklist).
 - **Real Google OAuth can only be verified on the deployed site with the Google provider switched on.** After deploying, sign in at `/business/login` with a Google account, create a workspace, sign out, and sign back in.

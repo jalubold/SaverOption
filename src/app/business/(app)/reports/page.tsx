@@ -2,7 +2,9 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { BarList, DonutChart, RadialGauge, StackedBar, TrendChart, type BarRow } from "@/components/business/charts";
 import { SoftwareLogo } from "@/components/business/software-logo";
+import { GenerateReportForm } from "@/components/business/report-forms";
 import { Card, EmptyState, InlineNote, Kpi, Meter, Money, PageHeader, Pill, StatusPill, TableWrap } from "@/components/business/ui";
+import { listSavedReports } from "@/lib/server/business/savings-report";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass } from "@/components/ui/primitives";
 import { annualized, firstYearValue, formatIsoDate, formatMonth, formatMoney, intervalLabel, monthlyEquivalent, percent, totalsList, type CurrencyTotals } from "@/lib/business/calc";
@@ -20,7 +22,7 @@ const whole = (minor: number, currency: string) => formatMoney(Math.round(minor)
 
 export default async function ReportsPage(props: { searchParams: Promise<Raw> }) {
   const ctx = await requireBizContext("/business/reports");
-  const report = await buildReport(ctx, await props.searchParams);
+  const [report, savedReports] = await Promise.all([buildReport(ctx, await props.searchParams), listSavedReports(ctx, 10)]);
   const { params, model, options } = report;
   const fmt = ctx.workspace.dateFormat;
   const pref = ctx.workspace.defaultCurrency;
@@ -554,6 +556,32 @@ export default async function ReportsPage(props: { searchParams: Promise<Raw> })
           )}
         </Card>
       </div>
+
+      <Card
+        title="Savings reports"
+        description="Dated snapshots of spend, potential and confirmed savings, and upcoming renewals — to share or compare later. AI clients connected over MCP can generate them too."
+        className="mt-5"
+        action={can(ctx.role, "data.export") ? <GenerateReportForm workspaceId={ctx.workspace.id} /> : null}
+      >
+        {savedReports.length === 0 ? (
+          <p className="text-[13.5px] text-muted">No saved reports yet.</p>
+        ) : (
+          <ul className="divide-y divide-line">
+            {savedReports.map((r) => (
+              <li key={r.id} className="flex flex-wrap items-center justify-between gap-2 py-2.5">
+                <Link href={`/business/reports/saved/${r.id}`} className="min-w-0 text-[13.5px] font-medium text-fg hover:underline">
+                  {r.title}
+                </Link>
+                <span className="text-[12px] text-faint">
+                  {formatIsoDate(r.createdAt.toISOString().slice(0, 10), fmt)}
+                  {r.createdByName ? ` · ${r.createdByName}` : ""}
+                  {r.source === "mcp" ? " · via AI client" : ""}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Card>
 
       <Card id="activity" title="Audit log" description={`Changes recorded in the workspace, ${period} (latest 200).`} className="mt-5 scroll-mt-20" action={exportLink("activity")}>
         {report.activity.length === 0 ? (

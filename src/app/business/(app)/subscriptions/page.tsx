@@ -92,6 +92,11 @@ export default async function SubscriptionsPage(props: { searchParams: Promise<R
               </a>
             )}
             {canManage && (
+              <LinkButton href="/business/subscriptions/import" icon="download">
+                Import CSV
+              </LinkButton>
+            )}
+            {canManage && (
               <LinkButton href="/business/subscriptions/new" variant="primary" icon="plus">
                 Add software
               </LinkButton>
@@ -107,13 +112,18 @@ export default async function SubscriptionsPage(props: { searchParams: Promise<R
             title="No subscriptions yet"
             action={
               canManage ? (
-                <LinkButton href="/business/subscriptions/new" variant="primary" size="md" icon="plus">
-                  Add your first subscription
-                </LinkButton>
+                <div className="flex flex-wrap justify-center gap-2">
+                  <LinkButton href="/business/subscriptions/new" variant="primary" size="md" icon="plus">
+                    Add your first subscription
+                  </LinkButton>
+                  <LinkButton href="/business/subscriptions/import" size="md" icon="download">
+                    Import from CSV
+                  </LinkButton>
+                </div>
               ) : undefined
             }
           >
-            Add the tools your company pays for — price, billing interval and renewal date — and they&apos;ll appear here, on the dashboard and in reports.
+            Add the tools your company pays for — price, billing interval and renewal date — and they&apos;ll appear here, on the dashboard and in reports. Already tracking them in a spreadsheet? Import it as CSV.
           </EmptyState>
         </Card>
       ) : (

@@ -17,6 +17,8 @@ const sections = [
   { href: "/business/settings/departments", label: "Departments", icon: "users", body: "Create, rename and archive departments; assign people." },
   { href: "/business/settings/notifications", label: "Notifications", icon: "bell", body: "Renewal reminder windows and in-app notifications." },
   { href: "/business/settings/preferences", label: "Preferences", icon: "gear", body: "Default currency, time zone, fiscal year and date format." },
+  { href: "/business/settings/security", label: "Security", icon: "shield", body: "Sign-in, sessions, how workspace data is protected, and the audit log." },
+  { href: "/business/settings/mcp", label: "AI clients (MCP)", icon: "sparkles", body: "Connections from AI assistants to this workspace; revoke any of them." },
 ] as const;
 
 export default async function SettingsPage() {
