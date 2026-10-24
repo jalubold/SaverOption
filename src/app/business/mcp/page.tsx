@@ -8,12 +8,11 @@ import { FaqAccordion, IconTile, type TileTone } from "@/components/business/lan
 import { Aurora, RevealOnScroll, SpotlightGroup } from "@/components/business/motion";
 import { BusinessPublicHeader } from "@/components/business/public-header";
 import { SoftwareLogo } from "@/components/business/software-logo";
-import { Pill } from "@/components/business/ui";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Icon, type IconProps } from "@/components/ui/icon";
 import { buttonClass, Container, Eyebrow, SectionHeading } from "@/components/ui/primitives";
 import { formatIsoDate } from "@/lib/business/calc";
-import { mcpClients, statusLabels, type McpClientInfo } from "@/lib/business/mcp-clients";
+import { mcpClients, type McpClientInfo } from "@/lib/business/mcp-clients";
 import { assistantConfigured } from "@/lib/server/business/assistant";
 import { businessReady, getBizSession } from "@/lib/server/business/context";
 import { urlsFromHeaders } from "@/lib/server/mcp/pending";
@@ -36,6 +35,14 @@ const clientLogos: Record<McpClientInfo["id"], string> = {
   chatgpt: "/logos/chatgpt.svg",
   gemini: "/logos/gemini-api.svg",
   grok: "/logos/business/grok.svg",
+};
+
+// Where each vendor documents remote MCP support (summarised from mcp-clients.ts → documented).
+const clientWhere: Record<McpClientInfo["id"], string> = {
+  claude: "Custom connectors on claude.ai, in the desktop and mobile apps, and in Claude Code.",
+  chatgpt: "Remote MCP servers in ChatGPT's developer mode (beta), depending on plan and workspace settings.",
+  gemini: "Remote MCP servers in the Gemini CLI.",
+  grok: "Remote MCP tools through the xAI API.",
 };
 
 const prompts: { q: string; tool: string; write?: boolean }[] = [
@@ -67,10 +74,6 @@ const safety: { icon: IconProps["name"]; tone: TileTone; title: string; body: st
 
 const listOf = (xs: string[]) => (xs.length < 2 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs.at(-1)}`);
 
-function statusTone(c: McpClientInfo) {
-  return c.status === "verified" ? "success" : c.status === "partial" ? "accent" : "outline";
-}
-
 export default async function McpLandingPage() {
   const { user } = await getBizSession();
   const ready = businessReady();
@@ -86,7 +89,7 @@ export default async function McpLandingPage() {
       q: "Which AI assistants can I connect?",
       a: `Any client that supports remote MCP servers with OAuth sign-in should be able to connect. ${
         tested.length
-          ? tested.map((c) => `${c.name} is ${statusLabels[c.status].toLowerCase()} (${formatIsoDate(c.lastVerified!)}): ${c.summary}`).join(" ")
+          ? tested.map((c) => `${c.name} has been tested with this server (${formatIsoDate(c.lastVerified!)}): ${c.summary}`).join(" ")
           : "No client has been tested end to end with this server yet."
       }${untested.length ? ` ${listOf(untested)} haven't been tested yet.` : ""}`,
     },
@@ -186,25 +189,20 @@ export default async function McpLandingPage() {
             <SectionHeading
               title={
                 <>
-                  Which AI clients <em>work</em>
+                  Use the assistant you <em>already have</em>
                 </>
               }
-              description="What has actually been tested with this server, and when. We only publish step-by-step instructions for a client once its connection is verified."
+              description="Saver Option speaks the open Model Context Protocol (MCP) with OAuth sign-in — the way these assistants connect to remote tools."
             />
           </div>
           <SpotlightGroup>
             <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {mcpClients.map((c) => (
                 <li key={c.id} className="so-reveal so-spot biz-card-lift relative flex flex-col rounded-2xl border border-line bg-surface p-5">
-                  <div className="flex items-start justify-between gap-3">
-                    <SoftwareLogo name={c.name} src={clientLogos[c.id]} size={40} />
-                    <Pill tone={statusTone(c)}>{statusLabels[c.status]}</Pill>
-                  </div>
+                  <SoftwareLogo name={c.name} src={clientLogos[c.id]} size={40} />
                   <h3 className="mt-4 text-[16px] font-semibold text-heading">{c.name}</h3>
                   <p className="text-[12.5px] text-faint">{c.vendor}</p>
-                  <p className="mt-3 flex-1 text-[13.5px] leading-relaxed text-muted">
-                    {c.lastVerified && c.summary ? `Tested ${formatIsoDate(c.lastVerified)}. ${c.summary}` : "Not tested with this server yet."}
-                  </p>
+                  <p className="mt-3 flex-1 text-[13.5px] leading-relaxed text-muted">{clientWhere[c.id]}</p>
                   <Link href={`/business/docs/mcp/${c.id}`} className="mt-4 inline-flex items-center gap-1 text-[13.5px] font-semibold text-accent-ink hover:underline underline-offset-4">
                     Details <Icon name="arrow-right" size={13} />
                   </Link>
@@ -212,7 +210,10 @@ export default async function McpLandingPage() {
               ))}
             </ul>
           </SpotlightGroup>
-          <p className="so-reveal mt-5 text-[12.5px] text-faint">
+          <p className="so-reveal mt-5 text-[12.5px] leading-relaxed text-faint">
+            {tested.length
+              ? `Tested end to end so far: ${listOf(tested.map((c) => `${c.name} (${formatIsoDate(c.lastVerified!)})`))} — the others are next, see each client's details. `
+              : "None of these has been tested end to end with this server yet. "}
             Names and logos belong to their owners and identify each client only — no partnership or endorsement is implied. Which plans can add custom connectors is decided by each
             provider.
           </p>
