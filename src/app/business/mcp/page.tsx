@@ -120,12 +120,12 @@ export default async function McpLandingPage() {
   const primary = (
     <SignedInSwitch
       signedIn={
-        <Link href="/business/settings/mcp" className={buttonClass("primary", "lg")}>
+        <Link href="/business/settings/mcp" className={buttonClass("primary", "lg", "w-full max-w-xs sm:w-64")}>
           Connect an AI client <Icon name="arrow-right" size={15} />
         </Link>
       }
       signedOut={
-        <div className="so-shine-hover w-full max-w-xs shadow-[0_10px_30px_-12px_rgb(124_58_236/0.55)]">
+        <div className="so-shine-hover w-full max-w-xs shadow-[0_10px_30px_-12px_rgb(124_58_236/0.55)] sm:w-64">
           <GoogleButton next="/business/settings/mcp" disabled={!google} />
         </div>
       }
@@ -161,9 +161,10 @@ export default async function McpLandingPage() {
                 Connect Claude or another assistant that supports remote MCP servers to your workspace. It answers from your own subscriptions, renewals and savings — with the
                 numbers and how they were calculated.
               </p>
+              {/* Both buttons share one width, side by side or stacked. */}
               <div className="so-rise mt-8 flex flex-wrap items-center gap-3" style={{ "--d": "420ms" } as CSSProperties}>
                 {primary}
-                <Link href="/business/docs/mcp" className={buttonClass("secondary", "lg")}>
+                <Link href="/business/docs/mcp" className={buttonClass("secondary", "lg", "w-full max-w-xs sm:w-64")}>
                   Setup guide
                 </Link>
               </div>
