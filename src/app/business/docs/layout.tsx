@@ -10,7 +10,7 @@ import { docGroups } from "@/content/business-docs";
 export default function DocsLayout({ children }: { children: ReactNode }) {
   return (
     <>
-      <BusinessPublicHeader signedIn={false} />
+      <BusinessPublicHeader />
       <main id="main" className="flex-1 bg-bg">
         <Container className="grid gap-6 py-8 sm:py-12 lg:grid-cols-[230px_minmax(0,1fr)] lg:gap-12">
           <aside className="min-w-0">

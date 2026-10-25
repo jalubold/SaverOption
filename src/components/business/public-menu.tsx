@@ -2,10 +2,13 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { useSignedInHint } from "@/components/business/session-hint";
 import { Icon } from "@/components/ui/icon";
 
 /** The public Business header's links on screens too narrow for the inline nav. */
-export function PublicMobileMenu({ links, signedIn }: { links: { href: string; label: string }[]; signedIn: boolean }) {
+export function PublicMobileMenu({ links, signedIn: known }: { links: { href: string; label: string }[]; signedIn?: boolean }) {
+  const hint = useSignedInHint();
+  const signedIn = known ?? hint;
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {

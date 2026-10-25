@@ -2,23 +2,23 @@ import type { Metadata } from "next";
 import type { CSSProperties } from "react";
 import Link from "next/link";
 import { GoogleButton } from "@/components/auth/auth-forms";
-import { CopyField } from "@/components/business/copy-field";
 import { McpChatPreview } from "@/components/business/landing/mcp-chat-preview";
 import { FaqAccordion, IconTile, type TileTone } from "@/components/business/landing/sections";
 import { Aurora, RevealOnScroll, SpotlightGroup } from "@/components/business/motion";
 import { BusinessPublicHeader } from "@/components/business/public-header";
+import { HostUrlField, SignedInSwitch } from "@/components/business/session-hint";
 import { SoftwareLogo } from "@/components/business/software-logo";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Icon, type IconProps } from "@/components/ui/icon";
 import { buttonClass, Container, Eyebrow, SectionHeading } from "@/components/ui/primitives";
 import { mcpClients, type McpClientInfo } from "@/lib/business/mcp-clients";
 import { assistantConfigured } from "@/lib/server/business/assistant";
-import { businessReady, getBizSession } from "@/lib/server/business/context";
-import { urlsFromHeaders } from "@/lib/server/mcp/pending";
+import { businessReady } from "@/lib/server/business/context";
 import { SCOPE_READ, SCOPE_WRITE } from "@/lib/server/mcp/oauth";
 import { toolsFor } from "@/lib/server/mcp/tools";
 import { googleSignInEnabled } from "@/lib/server/supabase";
 import { faqJsonLd, pageMetadata } from "@/lib/seo";
+import { siteConfig } from "@/config/site";
 
 const description =
   "Connect Claude or another AI assistant that supports remote MCP servers to your Saver Option Business workspace, and ask about subscriptions, renewals, spending and savings in plain language.";
@@ -27,6 +27,11 @@ export const metadata: Metadata = {
   ...pageMetadata({ title: "Ask your AI assistant about your software spend (MCP) — Saver Option Business", description, path: "/business/mcp" }),
   title: { absolute: "Ask your AI assistant about your software spend (MCP) — Saver Option Business" },
 };
+
+// Prerendered and served from the CDN so navigating here is instant; refreshed every 5 minutes.
+// Signed-in variants are chosen in the browser (SignedInSwitch).
+export const dynamic = "force-static";
+export const revalidate = 300;
 
 // Logos only identify each client; listing one doesn't mean it's supported or endorses Saver Option.
 const clientLogos: Record<McpClientInfo["id"], string> = {
@@ -69,10 +74,8 @@ const safety: { icon: IconProps["name"]; tone: TileTone; title: string; body: st
 const listOf = (xs: string[]) => (xs.length < 2 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs.at(-1)}`);
 
 export default async function McpLandingPage() {
-  const { user } = await getBizSession();
   const ready = businessReady();
   const google = ready && (await googleSignInEnabled());
-  const urls = await urlsFromHeaders();
   const readTools = toolsFor([SCOPE_READ]);
   const writeTools = toolsFor([SCOPE_READ, SCOPE_WRITE]).filter((t) => t.write);
   const tested = mcpClients.filter((c) => c.status === "verified" || c.status === "partial");
@@ -114,19 +117,24 @@ export default async function McpLandingPage() {
       : []),
   ];
 
-  const primary = user ? (
-    <Link href="/business/settings/mcp" className={buttonClass("primary", "lg")}>
-      Connect an AI client <Icon name="arrow-right" size={15} />
-    </Link>
-  ) : (
-    <div className="so-shine-hover w-full max-w-xs shadow-[0_10px_30px_-12px_rgb(124_58_236/0.55)]">
-      <GoogleButton next="/business/settings/mcp" disabled={!google} />
-    </div>
+  const primary = (
+    <SignedInSwitch
+      signedIn={
+        <Link href="/business/settings/mcp" className={buttonClass("primary", "lg")}>
+          Connect an AI client <Icon name="arrow-right" size={15} />
+        </Link>
+      }
+      signedOut={
+        <div className="so-shine-hover w-full max-w-xs shadow-[0_10px_30px_-12px_rgb(124_58_236/0.55)]">
+          <GoogleButton next="/business/settings/mcp" disabled={!google} />
+        </div>
+      }
+    />
   );
 
   return (
     <>
-      <BusinessPublicHeader signedIn={Boolean(user)} />
+      <BusinessPublicHeader />
       <RevealOnScroll />
 
       {/* ── Hero ─────────────────────────────────────────────────── */}
@@ -159,14 +167,19 @@ export default async function McpLandingPage() {
                   Setup guide
                 </Link>
               </div>
-              {!user && !google && (
-                <p className="mt-3 max-w-md text-[13px] text-warn">
-                  {ready ? "Google sign-in isn't switched on yet. Please check back a little later." : "Saver Option Business isn't switched on for this site yet."}
-                </p>
+              {!google && (
+                <SignedInSwitch
+                  signedIn={null}
+                  signedOut={
+                    <p className="mt-3 max-w-md text-[13px] text-warn">
+                      {ready ? "Google sign-in isn't switched on yet. Please check back a little later." : "Saver Option Business isn't switched on for this site yet."}
+                    </p>
+                  }
+                />
               )}
               <div className="so-rise mt-8 max-w-lg" style={{ "--d": "540ms" } as CSSProperties}>
                 <p className="mb-2 text-[12.5px] font-medium text-faint">Server URL</p>
-                <CopyField value={urls.mcp} label="MCP server URL" />
+                <HostUrlField path="/mcp" fallback={`${siteConfig.url}/mcp`} label="MCP server URL" />
                 <p className="mt-2 text-[12px] text-faint">Streamable HTTP · OAuth 2.1 sign-in with PKCE · read only unless you allow changes</p>
               </div>
             </div>
@@ -250,9 +263,18 @@ export default async function McpLandingPage() {
               Signed in already? Your workspace&apos;s <strong className="font-semibold text-fg">Settings → AI clients (MCP)</strong> page has the URL, the client status and every
               connection, with Disconnect.
             </p>
-            <Link href={user ? "/business/settings/mcp" : "/business/docs/mcp"} className={buttonClass("secondary", "md", "shrink-0")}>
-              {user ? "Open AI clients (MCP)" : "Read the setup guide"} <Icon name="arrow-right" size={14} />
-            </Link>
+            <SignedInSwitch
+              signedIn={
+                <Link href="/business/settings/mcp" className={buttonClass("secondary", "md", "shrink-0")}>
+                  Open AI clients (MCP) <Icon name="arrow-right" size={14} />
+                </Link>
+              }
+              signedOut={
+                <Link href="/business/docs/mcp" className={buttonClass("secondary", "md", "shrink-0")}>
+                  Read the setup guide <Icon name="arrow-right" size={14} />
+                </Link>
+              }
+            />
           </div>
         </Container>
       </section>

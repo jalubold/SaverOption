@@ -11,6 +11,7 @@ import { FeatureStory, Magnetic, PointerLight, PointerTilt, ScrollScrub, ScrollW
 import { FaqAccordion, IconTile, type TileTone } from "@/components/business/landing/sections";
 import { Aurora, RevealOnScroll, SpotlightGroup } from "@/components/business/motion";
 import { BusinessPublicHeader } from "@/components/business/public-header";
+import { QueryFlag, SignedInSwitch } from "@/components/business/session-hint";
 import { LogoStack, SoftwareLogo } from "@/components/business/software-logo";
 import { JsonLd } from "@/components/seo/json-ld";
 import { FormMessage } from "@/components/ui/form";
@@ -20,7 +21,7 @@ import { planLabels, PLANS, TRIAL_DAYS } from "@/lib/business/billing";
 import { formatMoney } from "@/lib/business/calc";
 import { assistantConfigured } from "@/lib/server/business/assistant";
 import { offerViews, pricingInfo, type OfferView } from "@/lib/server/business/billing";
-import { businessReady, getBizSession } from "@/lib/server/business/context";
+import { businessReady } from "@/lib/server/business/context";
 import { businessContactEmail, planFeatures } from "@/lib/server/business/plans";
 import { googleSignInEnabled } from "@/lib/server/supabase";
 import { seatSummary } from "@/lib/business/calc";
@@ -33,6 +34,11 @@ export const metadata: Metadata = {
   ...pageMetadata({ title: "Saver Option Business: software spend management", description, path: "/business" }),
   title: { absolute: "Saver Option Business: software spend management" },
 };
+
+// Prerendered and served from the CDN so navigating here is instant; refreshed every 5 minutes
+// (Creem prices, Google sign-in status). Signed-in variants are chosen in the browser (SignedInSwitch).
+export const dynamic = "force-static";
+export const revalidate = 300;
 
 const baseFaq = [
   {
@@ -88,30 +94,37 @@ const principles: { icon: IconProps["name"]; tone: TileTone; title: string; body
   { icon: "download", tone: "pink", title: "Export or delete any time", body: "Download your workspace as JSON or CSV whenever you like; the owner can delete it permanently." },
 ];
 
-export default async function BusinessLandingPage(props: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
-  const q = await props.searchParams;
-  const { user } = await getBizSession();
+export default async function BusinessLandingPage() {
   const ready = businessReady();
   const google = ready && (await googleSignInEnabled());
   const offers = await offerViews();
   const contact = businessContactEmail();
   const faq = [...baseFaq, ...pricingFaq(offers)];
 
-  const cta = user ? (
-    <Link href="/business/dashboard" className={buttonClass("primary", "lg", "w-full")}>
-      Open your dashboard <Icon name="arrow-right" size={15} />
-    </Link>
-  ) : (
-    <div className="so-shine-hover w-full max-w-xs shadow-[0_10px_30px_-12px_rgb(124_58_236/0.55)]">
-      <GoogleButton next="/business/dashboard" disabled={!google} />
-    </div>
+  const cta = (
+    <SignedInSwitch
+      signedIn={
+        <Link href="/business/dashboard" className={buttonClass("primary", "lg", "w-full")}>
+          Open your dashboard <Icon name="arrow-right" size={15} />
+        </Link>
+      }
+      signedOut={
+        <div className="so-shine-hover w-full max-w-xs shadow-[0_10px_30px_-12px_rgb(124_58_236/0.55)]">
+          <GoogleButton next="/business/dashboard" disabled={!google} />
+        </div>
+      }
+    />
   );
-  const unavailable =
-    !user && !google ? (
-      <p className="max-w-md text-[13px] text-warn">
-        {ready ? "Google sign-in isn't switched on yet. Please check back a little later." : "Saver Option Business isn't switched on for this site yet."}
-      </p>
-    ) : null;
+  const unavailable = !google ? (
+    <SignedInSwitch
+      signedIn={null}
+      signedOut={
+        <p className="max-w-md text-[13px] text-warn">
+          {ready ? "Google sign-in isn't switched on yet. Please check back a little later." : "Saver Option Business isn't switched on for this site yet."}
+        </p>
+      }
+    />
+  ) : null;
 
   const story: StoryItem[] = [
     {
@@ -195,7 +208,7 @@ export default async function BusinessLandingPage(props: { searchParams: Promise
 
   return (
     <div className="theme-dark lx-page text-fg">
-      <BusinessPublicHeader signedIn={Boolean(user)} />
+      <BusinessPublicHeader />
       <RevealOnScroll />
 
       {/* ── Hero ─────────────────────────────────────────────────── */}
@@ -205,11 +218,11 @@ export default async function BusinessLandingPage(props: { searchParams: Promise
         <div aria-hidden="true" className="lx-dots-lit" />
         <div aria-hidden="true" className="lx-light" />
         <Container className="relative flex flex-col items-center pt-14 text-center sm:pt-24">
-          {q.signed_out === "1" && (
+          <QueryFlag name="signed_out" value="1">
             <div className="mb-6 w-full max-w-md text-left">
               <FormMessage tone="success">You&apos;ve been signed out.</FormMessage>
             </div>
-          )}
+          </QueryFlag>
           <Link
             href="/business/mcp"
             className="so-rise group inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.04] py-1 pl-1 pr-3.5 text-[12.5px] text-muted shadow-[inset_0_1px_0_rgb(255_255_255/0.06)] backdrop-blur-md transition-colors hover:border-accent/50 hover:text-fg"
@@ -405,7 +418,7 @@ export default async function BusinessLandingPage(props: { searchParams: Promise
       </section>
 
       {/* ── Pricing ──────────────────────────────────────────────── */}
-      <Pricing offers={offers} contact={contact} assistant={assistantConfigured()} signedIn={Boolean(user)} />
+      <Pricing offers={offers} contact={contact} assistant={assistantConfigured()} />
 
       {/* ── FAQ ──────────────────────────────────────────────────── */}
       <section id="faq" className="scroll-mt-20 border-b border-line">
@@ -535,8 +548,7 @@ function pricingFaq(offers: OfferView[]): { q: string; a: string }[] {
 }
 
 /** Pro, Business and the contact-only options; prices come from Creem when it's configured. */
-function Pricing({ offers, contact, assistant, signedIn }: { offers: OfferView[]; contact: string; assistant: boolean; signedIn: boolean }) {
-  const start = signedIn ? "/business/settings/billing#plans" : "/business/login?next=%2Fbusiness%2Fdashboard";
+function Pricing({ offers, contact, assistant }: { offers: OfferView[]; contact: string; assistant: boolean }) {
   const info = pricingInfo(offers);
   const live = offers.some((o) => o.available);
   return (
@@ -597,9 +609,18 @@ function Pricing({ offers, contact, assistant, signedIn }: { offers: OfferView[]
                     ))}
                   </ul>
                   <div className="mt-auto pt-6">
-                    <Link href={start} className={buttonClass(plan === "business" ? "primary" : "secondary", "md", "w-full")}>
-                      {signedIn ? "See plans in your workspace" : `Start the ${TRIAL_DAYS}-day free trial`}
-                    </Link>
+                    <SignedInSwitch
+                      signedIn={
+                        <Link href="/business/settings/billing#plans" className={buttonClass(plan === "business" ? "primary" : "secondary", "md", "w-full")}>
+                          See plans in your workspace
+                        </Link>
+                      }
+                      signedOut={
+                        <Link href="/business/login?next=%2Fbusiness%2Fdashboard" className={buttonClass(plan === "business" ? "primary" : "secondary", "md", "w-full")}>
+                          Start the {TRIAL_DAYS}-day free trial
+                        </Link>
+                      }
+                    />
                   </div>
                 </li>
               ))}

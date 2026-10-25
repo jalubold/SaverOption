@@ -7,6 +7,9 @@ import { NextResponse, type NextRequest } from "next/server";
  * renders. Every other route skips this entirely.
  */
 export async function proxy(request: NextRequest) {
+  // The public Business pages (landing, AI & MCP, docs) are prerendered and need no session:
+  // skipping the Supabase round trip keeps navigating to them instant.
+  if (PUBLIC_BUSINESS.test(request.nextUrl.pathname)) return NextResponse.next();
   // Business pages read the requested path to send signed-out visitors back after sign-in.
   if (request.nextUrl.pathname.startsWith("/business")) {
     request.headers.set("x-so-path", (request.nextUrl.pathname + request.nextUrl.search).slice(0, 300));
@@ -34,6 +37,8 @@ export async function proxy(request: NextRequest) {
   await supabase.auth.getUser();
   return response;
 }
+
+const PUBLIC_BUSINESS = /^\/business(?:\/mcp|\/docs(?:\/[^/]+)*)?\/?$/;
 
 export const config = {
   matcher: ["/dashboard/:path*", "/admin/:path*", "/claim", "/login", "/signup", "/promote/:path*", "/business/:path*"],

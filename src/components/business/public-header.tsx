@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BrandMark } from "@/components/brand/logo";
 import { PublicMobileMenu } from "@/components/business/public-menu";
+import { SignedInSwitch } from "@/components/business/session-hint";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, Container } from "@/components/ui/primitives";
 
@@ -14,8 +15,27 @@ const links = [
   { href: "/deals", label: "Software deals" },
 ];
 
-/** Header for the public Saver Option Business pages (landing, sign-in, docs). */
-export function BusinessPublicHeader({ signedIn }: { signedIn: boolean }) {
+/**
+ * Header for the public Saver Option Business pages (landing, sign-in, docs).
+ * Without `signedIn` (prerendered pages), the browser's sign-in hint picks the buttons.
+ */
+export function BusinessPublicHeader({ signedIn }: { signedIn?: boolean }) {
+  const dashboard = (
+    <Link href="/business/dashboard" className={buttonClass("primary", "sm")}>
+      <span className="hidden min-[380px]:inline">Open dashboard</span>
+      <span className="min-[380px]:hidden">Dashboard</span> <Icon name="arrow-right" size={13} />
+    </Link>
+  );
+  const signIn = (
+    <>
+      <Link href="/business/login" className={buttonClass("ghost", "sm", "hidden lg:inline-flex")}>
+        Sign in
+      </Link>
+      <Link href="/business/signup" className={buttonClass("primary", "sm")}>
+        Get started
+      </Link>
+    </>
+  );
   return (
     // Inline background: .theme-dark sets an opaque one outside the utility layers.
     <header className="theme-dark sticky top-0 z-40 border-b border-line backdrop-blur-md" style={{ backgroundColor: "color-mix(in oklab, var(--bg) 82%, transparent)" }}>
@@ -40,21 +60,7 @@ export function BusinessPublicHeader({ signedIn }: { signedIn: boolean }) {
           </ul>
         </nav>
         <div className="ml-auto flex shrink-0 items-center gap-2">
-          {signedIn ? (
-            <Link href="/business/dashboard" className={buttonClass("primary", "sm")}>
-              <span className="hidden min-[380px]:inline">Open dashboard</span>
-              <span className="min-[380px]:hidden">Dashboard</span> <Icon name="arrow-right" size={13} />
-            </Link>
-          ) : (
-            <>
-              <Link href="/business/login" className={buttonClass("ghost", "sm", "hidden lg:inline-flex")}>
-                Sign in
-              </Link>
-              <Link href="/business/signup" className={buttonClass("primary", "sm")}>
-                Get started
-              </Link>
-            </>
-          )}
+          {signedIn === undefined ? <SignedInSwitch signedIn={dashboard} signedOut={signIn} /> : signedIn ? dashboard : signIn}
           <PublicMobileMenu links={links} signedIn={signedIn} />
         </div>
       </Container>
