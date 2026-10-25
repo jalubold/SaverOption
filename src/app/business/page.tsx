@@ -5,6 +5,7 @@ import { GoogleButton } from "@/components/auth/auth-forms";
 import { byId, pricePerPeriod, trackable, usd } from "@/components/business/landing/example-data";
 import { LicensesVisual, RenewalsVisual, ReportsVisual, SavingsVisual, SpendVisual } from "@/components/business/landing/feature-visuals";
 import { HeroPreview } from "@/components/business/landing/hero-preview";
+import { McpChatPreview } from "@/components/business/landing/mcp-chat-preview";
 import { PricingSwitch } from "@/components/business/pricing-switch";
 import { LogoStrip } from "@/components/business/landing/logo-strip";
 import { FeatureStory, Magnetic, PointerLight, PointerTilt, ScrollScrub, ScrollWords, type StoryItem } from "@/components/business/landing/luxe";
@@ -203,6 +204,24 @@ export default async function BusinessLandingPage() {
       body: "Filter by date range, currency, category, department and vendor, and export what you see. Reports and the dashboard are built from the same numbers.",
       bullets: ["CSV export for subscriptions and every report", "Full workspace export as JSON", "An audit log of significant changes"],
       visual: <ReportsVisual />,
+    },
+    {
+      id: "feature-ai",
+      icon: "sparkles",
+      eyebrow: "AI & MCP",
+      title: (
+        <>
+          Ask your AI about your <em className="accent">spend.</em>
+        </>
+      ),
+      body: "Connect Claude, ChatGPT, Gemini, Grok or another assistant that supports remote MCP servers, and ask about subscriptions, renewals and savings in plain language. It answers from your workspace, with the numbers behind each answer.",
+      bullets: [
+        "You sign in on Saver Option and choose one workspace, read only or read and change",
+        "Changes come back as a preview and are saved only after you confirm",
+        "Nothing cancels, renews or buys anything at a vendor — disconnect any time",
+      ],
+      visual: <McpChatPreview />,
+      link: { href: "/business/mcp", label: "Learn more about AI & MCP" },
     },
   ];
 

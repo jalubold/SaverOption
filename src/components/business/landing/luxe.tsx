@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Icon, type IconProps } from "@/components/ui/icon";
 import { cn } from "@/components/ui/primitives";
@@ -228,6 +229,8 @@ export interface StoryItem {
   body: string;
   bullets: string[];
   visual: ReactNode;
+  /** Optional follow-up page, shown under the bullets. */
+  link?: { href: string; label: string };
 }
 
 /**
@@ -320,6 +323,12 @@ export function FeatureStory({ items }: { items: StoryItem[] }) {
                 </li>
               ))}
             </ul>
+            {it.link && (
+              <Link href={it.link.href} className="group mt-7 inline-flex items-center gap-1.5 text-[14.5px] font-semibold text-accent-ink hover:text-fg">
+                {it.link.label}
+                <Icon name="arrow-right" size={15} className="transition-transform group-hover:translate-x-0.5" />
+              </Link>
+            )}
             <div className="so-reveal so-scroll-viz mt-10 lg:hidden">{it.visual}</div>
           </li>
         ))}
