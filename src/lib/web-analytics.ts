@@ -56,7 +56,10 @@ export function parseStatsQuery(sp: SearchParams): StatsQuery {
   return { range, filters };
 }
 
-/** Builds a /stats URL for a query; pass overrides to change range or add/remove a filter. */
+/**
+ * Builds the stats URL for a query; pass overrides to change range or add/remove a filter. The
+ * default view is the prerendered /stats; anything else is /stats/view?….
+ */
 export function statsHref(q: StatsQuery, change: { range?: RangeKey; set?: [Dimension, string]; unset?: Dimension | "all" } = {}): string {
   const range = change.range ?? q.range;
   const filters: StatsFilters = change.unset === "all" ? {} : { ...q.filters };
@@ -66,7 +69,7 @@ export function statsHref(q: StatsQuery, change: { range?: RangeKey; set?: [Dime
   if (range !== DEFAULT_RANGE) sp.set("range", range);
   for (const [dim, value] of Object.entries(filters) as [Dimension, string][]) sp.set(DIMENSIONS[dim].param, value);
   const qs = sp.toString();
-  return qs ? `/stats?${qs}` : "/stats";
+  return qs ? `/stats/view?${qs}` : "/stats";
 }
 
 // ─── Results ────────────────────────────────────────────────────────────────
