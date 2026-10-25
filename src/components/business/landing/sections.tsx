@@ -4,7 +4,7 @@ import { cn } from "@/components/ui/primitives";
 
 /** Layout pieces for the public /business landing page. */
 
-export type TileTone = "violet" | "blue" | "aqua" | "orange" | "indigo";
+export type TileTone = "violet" | "blue" | "aqua" | "orange" | "indigo" | "pink";
 
 const tileTones: Record<TileTone, CSSProperties> = {
   violet: {},
@@ -12,6 +12,7 @@ const tileTones: Record<TileTone, CSSProperties> = {
   aqua: { "--tile-from": "#1baf7a", "--tile-to": "#0c7350" } as CSSProperties,
   orange: { "--tile-from": "#eb6834", "--tile-to": "#b2441a" } as CSSProperties,
   indigo: { "--tile-from": "#6250d6", "--tile-to": "#3a2aa0" } as CSSProperties,
+  pink: { "--tile-from": "#d9468f", "--tile-to": "#9b2263" } as CSSProperties,
 };
 
 const glows: Record<TileTone, string> = {
@@ -20,6 +21,7 @@ const glows: Record<TileTone, string> = {
   aqua: "rgb(27 175 122 / 0.22)",
   orange: "rgb(235 104 52 / 0.22)",
   indigo: "rgb(98 80 214 / 0.24)",
+  pink: "rgb(217 70 143 / 0.22)",
 };
 
 export function IconTile({ icon, tone = "violet", size = 40, className }: { icon: IconProps["name"]; tone?: TileTone; size?: number; className?: string }) {

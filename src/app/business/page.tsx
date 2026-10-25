@@ -8,7 +8,7 @@ import { HeroPreview } from "@/components/business/landing/hero-preview";
 import { PricingSwitch } from "@/components/business/pricing-switch";
 import { LogoStrip } from "@/components/business/landing/logo-strip";
 import { FeatureStory, Magnetic, PointerLight, PointerTilt, ScrollScrub, ScrollWords, type StoryItem } from "@/components/business/landing/luxe";
-import { FaqAccordion, IconTile } from "@/components/business/landing/sections";
+import { FaqAccordion, IconTile, type TileTone } from "@/components/business/landing/sections";
 import { Aurora, RevealOnScroll, SpotlightGroup } from "@/components/business/motion";
 import { BusinessPublicHeader } from "@/components/business/public-header";
 import { LogoStack, SoftwareLogo } from "@/components/business/software-logo";
@@ -73,19 +73,19 @@ const baseFaq = [
   },
 ];
 
-const steps: { icon: IconProps["name"]; title: string; body: string }[] = [
-  { icon: "lock", title: "Sign in with Google", body: "One button for new and returning users. No password to manage." },
-  { icon: "building", title: "Create your workspace", body: "Add your company name, default currency and time zone." },
-  { icon: "plus", title: "Add your software", body: "Record each subscription's price, billing interval, renewal date, owner and seats." },
-  { icon: "trending-up", title: "Act on what it shows", body: "See spend by vendor, category and department, decide on renewals, and review savings." },
+const steps: { icon: IconProps["name"]; tone: TileTone; title: string; body: string }[] = [
+  { icon: "lock", tone: "violet", title: "Sign in with Google", body: "One button for new and returning users. No password to manage." },
+  { icon: "building", tone: "blue", title: "Create your workspace", body: "Add your company name, default currency and time zone." },
+  { icon: "plus", tone: "orange", title: "Add your software", body: "Record each subscription's price, billing interval, renewal date, owner and seats." },
+  { icon: "trending-up", tone: "aqua", title: "Act on what it shows", body: "See spend by vendor, category and department, decide on renewals, and review savings." },
 ];
 
-const principles: { icon: IconProps["name"]; title: string; body: string }[] = [
-  { icon: "lock", title: "Google sign-in, basic profile only", body: "Name, email address and profile picture. Saver Option doesn't request Gmail, Drive or Calendar access and doesn't keep Google access tokens." },
-  { icon: "shield", title: "Your workspace stays yours", body: "Every request is checked against your membership on the server, and the database itself refuses links between records of different workspaces." },
-  { icon: "users", title: "Role-based permissions", body: "Owners, admins, finance, members and read-only viewers each get what their role allows — enforced on the server, not just hidden in the interface." },
-  { icon: "credit-card", title: "You choose what to record", body: "No bank or card connections. Card numbers are never stored — a payment method is just a label." },
-  { icon: "download", title: "Export or delete any time", body: "Download your workspace as JSON or CSV whenever you like; the owner can delete it permanently." },
+const principles: { icon: IconProps["name"]; tone: TileTone; title: string; body: string }[] = [
+  { icon: "lock", tone: "blue", title: "Google sign-in, basic profile only", body: "Name, email address and profile picture. Saver Option doesn't request Gmail, Drive or Calendar access and doesn't keep Google access tokens." },
+  { icon: "shield", tone: "aqua", title: "Your workspace stays yours", body: "Every request is checked against your membership on the server, and the database itself refuses links between records of different workspaces." },
+  { icon: "users", tone: "violet", title: "Role-based permissions", body: "Owners, admins, finance, members and read-only viewers each get what their role allows — enforced on the server, not just hidden in the interface." },
+  { icon: "credit-card", tone: "orange", title: "You choose what to record", body: "No bank or card connections. Card numbers are never stored — a payment method is just a label." },
+  { icon: "download", tone: "pink", title: "Export or delete any time", body: "Download your workspace as JSON or CSV whenever you like; the owner can delete it permanently." },
 ];
 
 export default async function BusinessLandingPage(props: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
@@ -334,7 +334,7 @@ export default async function BusinessLandingPage(props: { searchParams: Promise
                 {steps.map((st, i) => (
                   <li key={st.title} className="lx-stagger so-spot lx-glass relative rounded-2xl p-5" style={{ "--i": i } as CSSProperties}>
                     <div className="flex items-center justify-between">
-                      <IconTile icon={st.icon} size={44} />
+                      <IconTile icon={st.icon} tone={st.tone} size={44} />
                       <span aria-hidden="true" className="display text-[2.2rem] text-line-strong">
                         {String(i + 1).padStart(2, "0")}
                       </span>
@@ -386,7 +386,7 @@ export default async function BusinessLandingPage(props: { searchParams: Promise
             <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {principles.map((pr) => (
                 <li key={pr.title} className="so-reveal so-spot lx-glass rounded-2xl p-5">
-                  <IconTile icon={pr.icon} size={42} />
+                  <IconTile icon={pr.icon} tone={pr.tone} size={42} />
                   <h3 className="mt-4 text-[15.5px] font-semibold text-heading">{pr.title}</h3>
                   <p className="mt-1.5 text-[14px] leading-relaxed text-muted">{pr.body}</p>
                 </li>

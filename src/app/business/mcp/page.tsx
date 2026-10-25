@@ -50,11 +50,11 @@ const prompts: { q: string; tool: string; write?: boolean }[] = [
   { q: "Add Loom at $15 a month, renewing on the 1st.", tool: "create_subscription", write: true },
 ];
 
-const steps: { icon: IconProps["name"]; title: string; body: string }[] = [
-  { icon: "copy", title: "Copy the server URL", body: "One address for every workspace — you pick the workspace when you sign in." },
-  { icon: "link", title: "Add it to your AI client", body: "As a custom connector or remote MCP server, following your client's own steps." },
-  { icon: "lock", title: "Sign in and choose access", body: "Sign in with Google on Saver Option, pick the workspace, and choose Read only or Read and change." },
-  { icon: "sparkles", title: "Ask in plain language", body: "Your assistant calls the tools it needs and answers with the numbers and where they came from." },
+const steps: { icon: IconProps["name"]; tone: TileTone; title: string; body: string }[] = [
+  { icon: "copy", tone: "blue", title: "Copy the server URL", body: "One address for every workspace — you pick the workspace when you sign in." },
+  { icon: "link", tone: "orange", title: "Add it to your AI client", body: "As a custom connector or remote MCP server, following your client's own steps." },
+  { icon: "lock", tone: "aqua", title: "Sign in and choose access", body: "Sign in with Google on Saver Option, pick the workspace, and choose Read only or Read and change." },
+  { icon: "sparkles", tone: "violet", title: "Ask in plain language", body: "Your assistant calls the tools it needs and answers with the numbers and where they came from." },
 ];
 
 const safety: { icon: IconProps["name"]; tone: TileTone; title: string; body: string }[] = [
@@ -63,7 +63,7 @@ const safety: { icon: IconProps["name"]; tone: TileTone; title: string; body: st
   { icon: "credit-card", tone: "orange", title: "Nothing moves money", body: "No tool cancels, renews or buys anything at a vendor, and none can make a payment." },
   { icon: "shield", tone: "blue", title: "One workspace, your role", body: "A connection reaches only the workspace you approved, with your role's permissions, checked on every call." },
   { icon: "clock", tone: "indigo", title: "Short-lived, revocable access", body: "Access tokens last an hour and are stored only as hashes. Disconnect in Settings and access ends straight away." },
-  { icon: "chart", tone: "violet", title: "Numbers that say what they are", body: "Each figure is labeled actual, normalized estimate or projection, and tool answers keep each currency separate." },
+  { icon: "chart", tone: "pink", title: "Numbers that say what they are", body: "Each figure is labeled actual, normalized estimate or projection, and tool answers keep each currency separate." },
 ];
 
 const listOf = (xs: string[]) => (xs.length < 2 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs.at(-1)}`);
@@ -234,7 +234,7 @@ export default async function McpLandingPage() {
               {steps.map((s, i) => (
                 <li key={s.title} className="so-reveal so-spot biz-card-lift relative rounded-2xl border border-line bg-bg p-5">
                   <div className="flex items-center justify-between">
-                    <IconTile icon={s.icon} size={44} />
+                    <IconTile icon={s.icon} tone={s.tone} size={44} />
                     <span aria-hidden="true" className="display text-[2.2rem] text-line-strong">
                       {String(i + 1).padStart(2, "0")}
                     </span>
