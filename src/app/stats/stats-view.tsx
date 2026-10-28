@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { after } from "next/server";
 import { siteConfig } from "@/config/site";
 import { PromoteTrigger } from "@/components/promote/promote-modal";
 import { BreakdownPanel, type PanelTab } from "@/components/stats/breakdown-panel";
@@ -6,6 +7,7 @@ import { TrafficChart } from "@/components/stats/daily-chart";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, cn, Container } from "@/components/ui/primitives";
 import { pageMetadata } from "@/lib/seo";
+import { loadTrafficSnapshot, saveTrafficSnapshot } from "@/lib/server/traffic-snapshots";
 import {
   ANALYTICS_SINCE,
   DIMENSIONS,
@@ -39,6 +41,9 @@ const fmtDate = (iso: string, withTime = false) =>
 /** The /stats page body for one range and set of filters. */
 export async function StatsView({ q }: { q: StatsQuery }) {
   const result = await getTrafficStats(q);
+  // When Vercel's API fails (e.g. a rate limit), show the last good numbers for this view instead of nothing.
+  const lastGood = result.ok ? null : await loadTrafficSnapshot(q);
+  if (result.ok) after(() => saveTrafficSnapshot(q, result.stats));
   const activeFilters = Object.entries(q.filters) as [Dimension, string][];
 
   return (
@@ -70,6 +75,7 @@ export async function StatsView({ q }: { q: StatsQuery }) {
                   <li key={key}>
                     <Link
                       href={statsHref(q, { range: key })}
+                      rel="nofollow"
                       scroll={false}
                       aria-current={q.range === key ? "page" : undefined}
                       className={cn(
@@ -91,6 +97,7 @@ export async function StatsView({ q }: { q: StatsQuery }) {
                   <li key={dim}>
                     <Link
                       href={statsHref(q, { unset: dim })}
+                      rel="nofollow"
                       scroll={false}
                       className="inline-flex h-9 items-center gap-1.5 rounded-full border border-accent/50 bg-accent/15 pl-3 pr-2 text-[13px] text-fg transition-colors hover:border-accent"
                     >
@@ -103,7 +110,7 @@ export async function StatsView({ q }: { q: StatsQuery }) {
                 ))}
                 {activeFilters.length > 1 && (
                   <li>
-                    <Link href={statsHref(q, { unset: "all" })} scroll={false} className="inline-flex h-9 items-center px-2 text-[13px] font-medium text-accent-ink hover:underline">
+                    <Link href={statsHref(q, { unset: "all" })} rel="nofollow" scroll={false} className="inline-flex h-9 items-center px-2 text-[13px] font-medium text-accent-ink hover:underline">
                       Clear all
                     </Link>
                   </li>
@@ -117,7 +124,16 @@ export async function StatsView({ q }: { q: StatsQuery }) {
       </section>
 
       <Container className="space-y-4 pb-24 pt-8 sm:space-y-5 sm:pt-10">
-        {result.ok ? <Dashboard stats={result.stats} q={q} /> : <Unavailable reason={result.reason} />}
+        {result.ok ? (
+          <Dashboard stats={result.stats} q={q} />
+        ) : lastGood ? (
+          <>
+            <StaleNotice reason={result.reason} fetchedAt={lastGood.fetchedAt} />
+            <Dashboard stats={lastGood} q={q} />
+          </>
+        ) : (
+          <Unavailable reason={result.reason} />
+        )}
 
         <section
           aria-labelledby="advertise-heading"
@@ -238,6 +254,19 @@ function StatTile({ label, value, note, delta = null }: { label: string; value: 
         )}
         <span>{note}</span>
       </p>
+    </div>
+  );
+}
+
+function StaleNotice({ reason, fetchedAt }: { reason: string; fetchedAt: string }) {
+  const limited = /\b429\b/.test(reason);
+  return (
+    <div role="status" className="flex flex-col gap-1 rounded-[14px] border border-warn/30 bg-warn-soft px-4 py-3 text-[13.5px] sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+      <p className="text-fg">
+        <strong className="font-semibold">{limited ? "Vercel Web Analytics is limiting requests right now." : "Vercel Web Analytics didn't answer just now."}</strong> Showing the last
+        numbers received, from {fmtDate(fetchedAt, true)} UTC. They update on their own once it answers again.
+      </p>
+      <code className="shrink-0 font-mono text-[11.5px] text-faint">{reason}</code>
     </div>
   );
 }

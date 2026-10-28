@@ -79,7 +79,7 @@ export function BreakdownPanel({ tabs }: { tabs: PanelTab[] }) {
               return (
                 <li key={`${r.label}-${r.href ?? ""}`}>
                   {r.href ? (
-                    <Link href={r.href} scroll={false} title={`Filter by ${r.label}`} className={cn(cls, "hover:bg-subtle")}>
+                    <Link href={r.href} rel="nofollow" scroll={false} title={`Filter by ${r.label}`} className={cn(cls, "hover:bg-subtle")}>
                       {inner}
                     </Link>
                   ) : (

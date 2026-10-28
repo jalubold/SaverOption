@@ -32,6 +32,8 @@ const PRIVATE = [
   "/business/integrations",
   "/business/assistant",
   "/business/oauth/",
+  // /stats with a range or filter: one URL per combination, each costing analytics API calls.
+  "/stats/view",
   // MCP and OAuth endpoints for AI clients (not pages).
   "/mcp",
   "/oauth/",

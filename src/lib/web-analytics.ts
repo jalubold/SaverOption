@@ -146,18 +146,28 @@ export class WebAnalyticsError extends Error {
 // Personal tokens scoped to the account can reject an explicit teamId; remember what worked.
 let sendTeamId = true;
 
+// After a 429, calls wait (Retry-After when the API sends it, else a minute) instead of
+// prolonging the rate limit; /stats shows the last good numbers meanwhile.
+let coolUntil = 0;
+
 async function query<T>(path: "count" | "aggregate", params: Record<string, string | number | undefined>, revalidate: number): Promise<T> {
   const s = settings();
   if (!s) throw new Error("VERCEL_ANALYTICS_TOKEN is not set");
+  if (Date.now() < coolUntil) throw new WebAnalyticsError(path, 429, "rate_limited");
   const attempt = async (withTeam: boolean) => {
     const url = new URL(`${s.base}/v1/query/web-analytics/visits/${path}`);
     url.searchParams.set("projectId", s.projectId);
     if (withTeam) url.searchParams.set("teamId", s.teamId);
     for (const [k, v] of Object.entries(params)) if (v !== undefined) url.searchParams.set(k, String(v));
-    return fetch(url, {
+    const res = await fetch(url, {
       headers: { Authorization: `Bearer ${s.token}` },
       next: { revalidate, tags: ["traffic-stats"] },
     });
+    if (res.status === 429) {
+      const wait = Number(res.headers.get("retry-after"));
+      coolUntil = Date.now() + Math.min(600, Math.max(5, Number.isFinite(wait) && wait > 0 ? wait : 60)) * 1000;
+    }
+    return res;
   };
   let res = await attempt(sendTeamId);
   if ((res.status === 403 || res.status === 404) && sendTeamId) {
@@ -259,14 +269,17 @@ export async function getTrafficStats(q: StatsQuery, now = new Date()): Promise<
 
   try {
     const dims = Object.keys(DIMENSIONS) as Dimension[];
-    // Totals and the time series are required; the comparison and breakdowns degrade to empty.
+    // Totals and the time series are required; the comparison and breakdowns degrade to empty,
+    // except on a rate limit, where a partial page would be saved as the last good one.
     const optional = <T,>(p: Promise<T>, fallback: T) =>
       p.catch((err) => {
+        if (err instanceof WebAnalyticsError && err.status === 429) throw err;
         console.error("[traffic-stats]", err instanceof Error ? err.message : err);
         return fallback;
       });
-    const [totals, series, previous, ...lists] = await Promise.all([
-      query<Totals>("count", countRange, revalidate),
+    // The first call alone: it settles whether the token takes a teamId before the other nine go out.
+    const totals = await query<Totals>("count", countRange, revalidate);
+    const [series, previous, ...lists] = await Promise.all([
       query<ApiRow[]>("aggregate", { ...range, by: granularity, limit: 100 }, revalidate),
       hasPrevious
         ? optional(query<Totals | null>("count", { since: new Date(prevStart).toISOString(), until: since, filter }, revalidate), null)
