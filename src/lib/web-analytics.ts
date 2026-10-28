@@ -175,7 +175,8 @@ let sendTeamId = true;
 
 // Vercel rate limits each endpoint separately. After a 429 that endpoint isn't called again
 // until the reset time the API gives (body `limit.resetMs`/`reset`, or Retry-After; else a minute),
-// so a rate limit isn't prolonged by our own retries.
+// so a rate limit isn't prolonged by our own retries. One answer never pauses calls for more than a day.
+export const MAX_COOLDOWN_MS = 24 * 3600_000;
 const coolUntil: Record<Endpoint, number> = { count: 0, aggregate: 0 };
 
 /** When an endpoint may be called again (ms since epoch), or 0. */
@@ -185,15 +186,24 @@ export function cooldownUntil(endpoint: Endpoint): number {
 
 /** Applies a cooldown learned elsewhere (another server instance, via the database). */
 export function noteCooldown(endpoint: Endpoint, until: number): void {
-  if (until > coolUntil[endpoint]) coolUntil[endpoint] = until;
+  const capped = Math.min(until, Date.now() + MAX_COOLDOWN_MS);
+  if (capped > coolUntil[endpoint]) coolUntil[endpoint] = capped;
+}
+
+/**
+ * A reset time in any of the units it arrives in: Vercel's docs show `reset` in seconds and
+ * `resetMs` in milliseconds, but responses have carried milliseconds in `reset`. Small numbers
+ * are read as seconds from now. Null when absent or already past.
+ */
+function asResetTime(n: unknown): number | null {
+  if (typeof n !== "number" || !Number.isFinite(n) || n <= 0) return null;
+  const t = n >= 1e11 ? n : n >= 1e9 ? n * 1000 : Date.now() + n * 1000;
+  return t > Date.now() ? Math.min(t, Date.now() + MAX_COOLDOWN_MS) : null;
 }
 
 function retryTime(res: Response, body: unknown): number {
   const limit = (body as { error?: { limit?: { resetMs?: unknown; reset?: unknown } } } | null)?.error?.limit;
-  if (typeof limit?.resetMs === "number" && limit.resetMs > Date.now()) return limit.resetMs;
-  if (typeof limit?.reset === "number" && limit.reset * 1000 > Date.now()) return limit.reset * 1000;
-  const wait = Number(res.headers.get("retry-after"));
-  return Date.now() + (Number.isFinite(wait) && wait > 0 ? wait : 60) * 1000;
+  return asResetTime(limit?.resetMs) ?? asResetTime(limit?.reset) ?? asResetTime(Number(res.headers.get("retry-after"))) ?? Date.now() + 60_000;
 }
 
 async function query<T>(path: Endpoint, params: Record<string, string | number | undefined>, revalidate: number): Promise<T> {

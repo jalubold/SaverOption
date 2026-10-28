@@ -5,6 +5,7 @@ import {
   fetchBreakdown,
   fetchSeries,
   fetchSummary,
+  MAX_COOLDOWN_MS,
   noteCooldown,
   PAGE_DIMENSIONS,
   trafficStatsConfigured,
@@ -81,10 +82,13 @@ async function syncCooldowns(): Promise<void> {
     for (const r of rows) {
       const endpoint = r.key === COOLDOWN_KEY.count ? "count" : "aggregate";
       const until = Date.parse(r.value);
-      if (Number.isFinite(until)) {
-        noteCooldown(endpoint, until);
-        shared[endpoint] = Math.max(shared[endpoint], until);
+      // A time further ahead than any cooldown can last was misread; drop it instead of waiting for it.
+      if (!Number.isFinite(until) || until > Date.now() + MAX_COOLDOWN_MS + 60_000) {
+        await db()`delete from public.app_settings where key = ${r.key} and value = ${r.value}`;
+        continue;
       }
+      noteCooldown(endpoint, until);
+      shared[endpoint] = Math.max(shared[endpoint], until);
     }
   } catch (err) {
     console.error("[traffic-stats] couldn't read the rate-limit state:", err instanceof Error ? err.message : err);
