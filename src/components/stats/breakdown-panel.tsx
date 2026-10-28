@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { Icon } from "@/components/ui/icon";
 import { cn } from "@/components/ui/primitives";
 
@@ -17,16 +17,40 @@ export interface PanelRow {
 export interface PanelTab {
   id: string;
   label: string;
-  rows: PanelRow[];
+  /** Rows that came with the page. */
+  rows?: PanelRow[];
+  /** Or a URL the rows load from when the tab is first opened (saves analytics API calls). */
+  src?: string;
+  /** Or neither: the data is temporarily unavailable. */
+  unavailable?: boolean;
   mono?: boolean;
 }
+
+type Loaded = { rows: PanelRow[] } | { failed: true };
 
 /** A breakdown card with tabs (e.g. Devices · Browsers · OS). Clicking a row filters the whole dashboard. */
 export function BreakdownPanel({ tabs }: { tabs: PanelTab[] }) {
   const [current, setCurrent] = useState(tabs[0].id);
+  const [loaded, setLoaded] = useState<Record<string, Loaded>>({});
   const baseId = useId();
   const tab = tabs.find((t) => t.id === current) ?? tabs[0];
-  const max = Math.max(...tab.rows.map((r) => r.visitors), 1);
+  const pending = tab.src !== undefined && !loaded[tab.src];
+  useEffect(() => {
+    const src = tab.src;
+    if (!src || loaded[src]) return;
+    let live = true;
+    fetch(src)
+      .then((r) => r.json())
+      .then((d: { ok?: boolean; rows?: PanelRow[] }) => live && setLoaded((m) => ({ ...m, [src]: d.ok && d.rows ? { rows: d.rows } : { failed: true } })))
+      .catch(() => live && setLoaded((m) => ({ ...m, [src]: { failed: true } })));
+    return () => {
+      live = false;
+    };
+  }, [tab.src, loaded]);
+  const got = tab.src ? loaded[tab.src] : undefined;
+  const rows = tab.rows ?? (got && "rows" in got ? got.rows : null);
+  const unavailable = tab.unavailable || (got !== undefined && "failed" in got);
+  const max = Math.max(...(rows ?? []).map((r) => r.visitors), 1);
 
   return (
     <section className="flex flex-col rounded-[18px] border border-line bg-surface p-4 sm:p-5">
@@ -54,11 +78,17 @@ export function BreakdownPanel({ tabs }: { tabs: PanelTab[] }) {
       </div>
 
       <div id={`${baseId}-panel`} role="tabpanel" aria-labelledby={`${baseId}-${tab.id}`} className="mt-3">
-        {tab.rows.length === 0 ? (
+        {pending ? (
+          <p className="py-8 text-center text-sm text-muted" aria-live="polite">
+            Loading…
+          </p>
+        ) : unavailable || !rows ? (
+          <p className="py-8 text-center text-sm text-muted">Temporarily unavailable. It comes back once Vercel Web Analytics answers again.</p>
+        ) : rows.length === 0 ? (
           <p className="py-8 text-center text-sm text-muted">No data for this period.</p>
         ) : (
           <ul className="space-y-1">
-            {tab.rows.map((r) => {
+            {rows.map((r) => {
               const inner = (
                 <>
                   <span

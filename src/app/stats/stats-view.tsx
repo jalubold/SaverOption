@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { after } from "next/server";
 import { siteConfig } from "@/config/site";
 import { PromoteTrigger } from "@/components/promote/promote-modal";
 import { BreakdownPanel, type PanelTab } from "@/components/stats/breakdown-panel";
@@ -7,14 +6,16 @@ import { TrafficChart } from "@/components/stats/daily-chart";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, cn, Container } from "@/components/ui/primitives";
 import { pageMetadata } from "@/lib/seo";
-import { loadTrafficSnapshot, saveTrafficSnapshot } from "@/lib/server/traffic-snapshots";
+import { getStatsView } from "@/lib/server/traffic-stats";
 import {
   ANALYTICS_SINCE,
   DIMENSIONS,
   dimensionValueLabel,
-  getTrafficStats,
+  LAZY_DIMENSIONS,
+  panelRows,
   RANGES,
   statsHref,
+  statsParams,
   type Dimension,
   type RangeKey,
   type StatsQuery,
@@ -40,10 +41,7 @@ const fmtDate = (iso: string, withTime = false) =>
 
 /** The /stats page body for one range and set of filters. */
 export async function StatsView({ q }: { q: StatsQuery }) {
-  const result = await getTrafficStats(q);
-  // When Vercel's API fails (e.g. a rate limit), show the last good numbers for this view instead of nothing.
-  const lastGood = result.ok ? null : await loadTrafficSnapshot(q);
-  if (result.ok) after(() => saveTrafficSnapshot(q, result.stats));
+  const view = await getStatsView(q);
   const activeFilters = Object.entries(q.filters) as [Dimension, string][];
 
   return (
@@ -124,15 +122,13 @@ export async function StatsView({ q }: { q: StatsQuery }) {
       </section>
 
       <Container className="space-y-4 pb-24 pt-8 sm:space-y-5 sm:pt-10">
-        {result.ok ? (
-          <Dashboard stats={result.stats} q={q} />
-        ) : lastGood ? (
-          <>
-            <StaleNotice reason={result.reason} fetchedAt={lastGood.fetchedAt} />
-            <Dashboard stats={lastGood} q={q} />
-          </>
+        {view.kind === "unavailable" ? (
+          <Unavailable reason={view.reason} retryAt={view.retryAt} />
         ) : (
-          <Unavailable reason={result.reason} />
+          <>
+            {view.kind !== "fresh" && <LimitedNotice partial={view.kind === "partial"} reason={view.reason} fetchedAt={view.stats.fetchedAt} retryAt={view.retryAt} />}
+            <Dashboard stats={view.stats} q={q} />
+          </>
         )}
 
         <section
@@ -163,24 +159,15 @@ export async function StatsView({ q }: { q: StatsQuery }) {
 function Dashboard({ stats, q }: { stats: TrafficStats; q: StatsQuery }) {
   const { totals, previous } = stats;
   const periodLabel = q.range === "all" ? "since launch" : RANGES[q.range].label.toLowerCase();
-  const buckets = Math.max(stats.series.length, 1);
-  const avg = Math.round(stats.series.reduce((s, p) => s + p.visitors, 0) / buckets);
+  const avg = stats.series ? Math.round(stats.series.reduce((s, p) => s + p.visitors, 0) / Math.max(stats.series.length, 1)) : null;
 
-  // Rows link to the same view with that value added as a filter; the active value links back out.
-  const tab = (id: Dimension, label: string, mono = false): PanelTab => ({
-    id,
-    label,
-    mono,
-    rows: stats.breakdowns[id].map((r) => {
-      const active = q.filters[id] === r.value;
-      return {
-        label: r.label,
-        visitors: r.visitors,
-        active,
-        href: r.other ? undefined : active ? statsHref(q, { unset: id }) : statsHref(q, { set: [id, r.value] }),
-      };
-    }),
-  });
+  // Page tabs come with the page (or are unavailable while Vercel limits requests); the others load when opened.
+  const lazy = new Set<Dimension>(LAZY_DIMENSIONS);
+  const tab = (id: Dimension, label: string, mono = false): PanelTab => {
+    if (lazy.has(id)) return { id, label, mono, src: `/api/stats/breakdown?${new URLSearchParams([["dim", id], ...statsParams(q)])}` };
+    const rows = stats.breakdowns[id];
+    return rows ? { id, label, mono, rows: panelRows(q, id, rows) } : { id, label, mono, unavailable: true };
+  };
 
   return (
     <>
@@ -194,7 +181,7 @@ function Dashboard({ stats, q }: { stats: TrafficStats; q: StatsQuery }) {
         />
         <StatTile
           label={stats.granularity === "hour" ? "Avg. visitors / hour" : "Avg. visitors / day"}
-          value={num(avg)}
+          value={avg === null ? "–" : num(avg)}
           note={stats.granularity === "hour" ? "Unique per hour" : "Unique per day"}
         />
       </section>
@@ -207,7 +194,11 @@ function Dashboard({ stats, q }: { stats: TrafficStats; q: StatsQuery }) {
           </p>
         </div>
         <div className="mt-4">
-          <TrafficChart points={stats.series} granularity={stats.granularity} />
+          {stats.series ? (
+            <TrafficChart points={stats.series} granularity={stats.granularity} />
+          ) : (
+            <p className="py-16 text-center text-sm text-muted">The chart will be back once Vercel Web Analytics answers again.</p>
+          )}
         </div>
       </section>
 
@@ -221,8 +212,8 @@ function Dashboard({ stats, q }: { stats: TrafficStats; q: StatsQuery }) {
       <p className="text-xs leading-relaxed text-faint">
         Figures come straight from Vercel Web Analytics (production traffic only, no cookies). Visitors are unique within
         the selected period; changes compare with the period of the same length just before it. Data starts on{" "}
-        {fmtDate(`${ANALYTICS_SINCE}T00:00:00Z`)}, when analytics was switched on. Refreshed {fmtDate(stats.fetchedAt, true)} UTC
-        and cached for up to an hour.
+        {fmtDate(`${ANALYTICS_SINCE}T00:00:00Z`)}, when analytics was switched on. Refreshed {fmtDate(stats.fetchedAt, true)} UTC;
+        the numbers update about every 30 minutes (every 15 for Today).
       </p>
     </>
   );
@@ -258,24 +249,33 @@ function StatTile({ label, value, note, delta = null }: { label: string; value: 
   );
 }
 
-function StaleNotice({ reason, fetchedAt }: { reason: string; fetchedAt: string }) {
+function retryLine(retryAt: string | null): string {
+  return retryAt ? ` Vercel accepts requests again around ${fmtDate(retryAt, true)} UTC.` : " They update on their own once it answers again.";
+}
+
+function LimitedNotice({ partial, reason, fetchedAt, retryAt }: { partial: boolean; reason: string; fetchedAt: string; retryAt: string | null }) {
   const limited = /\b429\b/.test(reason);
   return (
     <div role="status" className="flex flex-col gap-1 rounded-[14px] border border-warn/30 bg-warn-soft px-4 py-3 text-[13.5px] sm:flex-row sm:items-center sm:justify-between sm:gap-4">
       <p className="text-fg">
-        <strong className="font-semibold">{limited ? "Vercel Web Analytics is limiting requests right now." : "Vercel Web Analytics didn't answer just now."}</strong> Showing the last
-        numbers received, from {fmtDate(fetchedAt, true)} UTC. They update on their own once it answers again.
+        <strong className="font-semibold">{limited ? "Vercel Web Analytics is limiting requests right now." : "Vercel Web Analytics didn't answer just now."}</strong>{" "}
+        {partial
+          ? "The totals below are current; the chart and breakdowns come back once it answers again."
+          : `Showing the last numbers received, from ${fmtDate(fetchedAt, true)} UTC.`}
+        {retryLine(retryAt)}
       </p>
       <code className="shrink-0 font-mono text-[11.5px] text-faint">{reason}</code>
     </div>
   );
 }
 
-function Unavailable({ reason }: { reason: string }) {
+function Unavailable({ reason, retryAt }: { reason: string; retryAt: string | null }) {
   return (
     <div className="rounded-[18px] border border-dashed border-line-strong bg-surface px-6 py-14 text-center">
       <h2 className="text-lg font-semibold">Traffic stats are temporarily unavailable</h2>
-      <p className="mt-1.5 text-sm text-muted">We couldn&apos;t load the latest numbers. Please check back shortly.</p>
+      <p className="mt-1.5 text-sm text-muted">
+        We couldn&apos;t load the latest numbers.{retryAt ? retryLine(retryAt) : " Please check back shortly."}
+      </p>
       {/* A status code helps diagnose setup issues; it never includes the token. */}
       <p className="tabular mt-4 font-mono text-[11px] text-faint">Error: {reason}</p>
     </div>
