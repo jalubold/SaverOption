@@ -7,8 +7,8 @@ import { intervalLabel, pricePerPeriod, type ExampleSub, type TimelineEntry } fr
 
 /** Building blocks for the landing page's product previews (example data only). */
 
-/** A faux browser window around a preview. */
-export function AppWindow({ children, path, className }: { children: ReactNode; path: string; className?: string }) {
+/** A faux browser window around a preview, or (chrome="app") the Mac app's own window. */
+export function AppWindow({ children, path, className, chrome = "browser" }: { children: ReactNode; path: string; className?: string; chrome?: "browser" | "app" }) {
   return (
     <div className={cn("theme-light overflow-hidden rounded-[18px] border border-line bg-bg text-fg shadow-[0_1px_0_rgb(255_255_255/0.6)_inset,0_40px_80px_-40px_rgb(0_0_0/0.7),0_0_0_1px_rgb(0_0_0/0.04)]", className)}>
       <div className="flex items-center gap-3 border-b border-line bg-surface px-3.5 py-2.5" aria-hidden="true">
@@ -17,10 +17,14 @@ export function AppWindow({ children, path, className }: { children: ReactNode; 
           <span className="size-2.5 rounded-full bg-[#eda100]/80" />
           <span className="size-2.5 rounded-full bg-[#1baf7a]/80" />
         </span>
-        <span className="mx-auto flex min-w-0 max-w-xs flex-1 items-center justify-center gap-1.5 truncate rounded-md bg-subtle px-3 py-1 text-[11.5px] text-faint">
-          <Icon name="lock" size={11} />
-          <span className="truncate">saveroption.com{path}</span>
-        </span>
+        {chrome === "app" ? (
+          <span className="mx-auto truncate text-[12px] font-semibold text-muted">Saver Option Business</span>
+        ) : (
+          <span className="mx-auto flex min-w-0 max-w-xs flex-1 items-center justify-center gap-1.5 truncate rounded-md bg-subtle px-3 py-1 text-[11.5px] text-faint">
+            <Icon name="lock" size={11} />
+            <span className="truncate">saveroption.com{path}</span>
+          </span>
+        )}
         <span className="hidden w-[42px] sm:block" />
       </div>
       {children}

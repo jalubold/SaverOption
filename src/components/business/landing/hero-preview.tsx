@@ -31,11 +31,11 @@ function Tile({ label, value, icon, children }: { label: string; value: React.Re
 }
 
 /** The hero's faux dashboard: KPI tiles, category donut, subscriptions and the renewal strip, all example data. */
-export function HeroPreview() {
+export function HeroPreview({ chrome, timeline: withTimeline = true }: { chrome?: "browser" | "app"; timeline?: boolean }) {
   const rows = ["hubspot", "linear", "slack", "aws", "figma"].map(byId);
   const deadlines = timeline.filter((t) => t.kind === "deadline").length;
   return (
-    <AppWindow path="/business/dashboard">
+    <AppWindow path="/business/dashboard" chrome={chrome}>
       <div className="flex">
         <div aria-hidden="true" className="hidden w-14 shrink-0 flex-col items-center gap-1.5 border-r border-line bg-surface py-3.5 sm:flex">
           <BrandMark size={26} />
@@ -93,9 +93,11 @@ export function HeroPreview() {
             </PreviewCard>
           </div>
 
-          <PreviewCard title="Renewals · next 30 days" className="mt-3 hidden sm:block">
-            <MiniTimeline items={timeline} minGap={5} />
-          </PreviewCard>
+          {withTimeline && (
+            <PreviewCard title="Renewals · next 30 days" className="mt-3 hidden sm:block">
+              <MiniTimeline items={timeline} minGap={5} />
+            </PreviewCard>
+          )}
         </div>
       </div>
     </AppWindow>
