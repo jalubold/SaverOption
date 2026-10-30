@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties } from "react";
 import Link from "next/link";
 import { MacAppPreview } from "@/components/business/landing/mac-app-preview";
 import { LicensesVisual, RenewalsVisual, SavingsVisual, SpendVisual } from "@/components/business/landing/feature-visuals";
-import { Magnetic, PointerLight, PointerTilt, ScrollScrub } from "@/components/business/landing/luxe";
+import { FeatureStory, Magnetic, PointerLight, PointerTilt, ScrollScrub, type StoryItem } from "@/components/business/landing/luxe";
 import { IconTile, type TileTone } from "@/components/business/landing/sections";
 import { Aurora, RevealOnScroll, SpotlightGroup } from "@/components/business/motion";
 import { BusinessPublicHeader } from "@/components/business/public-header";
@@ -34,46 +34,71 @@ const desktop: { icon: IconProps["name"]; text: string }[] = [
   { icon: "clock", text: "Reopens on the page you left" },
 ];
 
-const benefits: { title: ReactNode; body: string; visual: ReactNode; glow: string }[] = [
+// The same feature story as on the Business landing page (bullets as there).
+const benefits: StoryItem[] = [
   {
+    id: "feature-spend",
+    icon: "chart",
+    eyebrow: "Spending dashboard",
     title: (
       <>
         Know where your money <em className="accent">goes.</em>
       </>
     ),
     body: "See all your software spending in one place. Understand monthly costs, annual commitments, and spending by category.",
+    bullets: ["Totals in your default currency, converted at the ECB's daily rate", "Spend by vendor, category and department", "Monthly versus yearly billing at a glance"],
     visual: <SpendVisual />,
-    glow: "rgb(124 58 236 / 0.26)",
   },
   {
+    id: "feature-renewals",
+    icon: "calendar",
+    eyebrow: "Subscriptions & renewals",
     title: (
       <>
         Never miss a <em className="accent">renewal.</em>
       </>
     ),
     body: "Track upcoming renewals, billing dates, and cancellation deadlines before they cost you another month.",
+    bullets: [
+      "In-app reminders 30, 14 and 7 days before renewals and cancellation deadlines",
+      "Decide to renew, renegotiate or cancel, with the history kept",
+      "Search, filter and export the list to CSV",
+    ],
     visual: <RenewalsVisual />,
-    glow: "rgb(42 120 214 / 0.24)",
   },
   {
+    id: "feature-seats",
+    icon: "key",
+    eyebrow: "Licenses & seats",
     title: (
       <>
         Manage licenses and <em className="accent">seats.</em>
       </>
     ),
     body: "Know who's using your software, track assigned seats, and identify unused licenses.",
+    bullets: [
+      "Assign, reassign and release seats person by person",
+      "Utilization per plan and across the workspace",
+      "Seats are assigned or reported by your team — never presented as measured usage",
+    ],
     visual: <LicensesVisual />,
-    glow: "rgb(235 104 52 / 0.2)",
   },
   {
+    id: "feature-savings",
+    icon: "piggy",
+    eyebrow: "Savings opportunities",
     title: (
       <>
         Find opportunities to <em className="accent">save.</em>
       </>
     ),
     body: "Discover potential savings, unnecessary subscriptions, and opportunities to reduce software costs.",
+    bullets: [
+      "Estimates only where your prices and seats support one — potential, not guaranteed",
+      "Potential savings kept separate from savings you confirm",
+      "Matching offers from the Saver Option deals catalog",
+    ],
     visual: <SavingsVisual />,
-    glow: "rgb(27 175 122 / 0.2)",
   },
 ];
 
@@ -205,9 +230,9 @@ export default async function DownloadPage() {
         </Container>
       </PointerLight>
 
-      {/* ── What it does ─────────────────────────────────────────── */}
-      <section className="relative border-b border-line">
-        <Container className="py-20 sm:py-28">
+      {/* ── What it does (the landing page's feature story) ──────── */}
+      <section id="features" className="scroll-mt-20 border-b border-line">
+        <Container className="pt-20 sm:pt-28">
           <div className="so-reveal">
             <SectionHeading
               title={
@@ -218,24 +243,9 @@ export default async function DownloadPage() {
               description="The same Saver Option Business you use in the browser — now in an app of its own."
             />
           </div>
-          <div className="mt-14 space-y-20 sm:mt-20 sm:space-y-28">
-            {benefits.map((b, i) => (
-              <article key={i} className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-                <div className={cn("so-reveal min-w-0", i % 2 === 1 && "lg:order-2")}>
-                  <p className="flex items-center gap-3 text-accent-ink">
-                    <span className="display text-[1.35rem] leading-none">{String(i + 1).padStart(2, "0")}</span>
-                    <span aria-hidden="true" className="h-px w-12 bg-linear-to-r from-accent to-transparent" />
-                  </p>
-                  <h3 className="display mt-5 text-[2.2rem] leading-[1.02] sm:text-[2.9rem]">{b.title}</h3>
-                  <p className="mt-4 max-w-md text-[16px] leading-relaxed text-muted">{b.body}</p>
-                </div>
-                <div className={cn("so-reveal so-scroll-viz relative isolate min-w-0", i % 2 === 1 && "lg:order-1")}>
-                  <div aria-hidden="true" className="pointer-events-none absolute inset-x-6 inset-y-10 -z-10 rounded-full blur-3xl" style={{ background: b.glow }} />
-                  {b.visual}
-                </div>
-              </article>
-            ))}
-          </div>
+        </Container>
+        <Container className="pb-12 sm:pb-20">
+          <FeatureStory items={benefits} />
         </Container>
       </section>
 
