@@ -3,7 +3,8 @@ import { formatPlanRate, listingPlans, withPrices } from "@/config/listing-plans
 import { DashboardShell, fmtDate, Panel } from "@/components/advertiser/dashboard-shell";
 import { ConnectLemonSqueezy } from "@/components/advertiser/setup-forms";
 import { Icon } from "@/components/ui/icon";
-import { cn } from "@/components/ui/primitives";
+import { buttonClass, cn } from "@/components/ui/primitives";
+import { recheckDodoAction } from "@/app/admin/setup/actions";
 import { siteConfig } from "@/config/site";
 import { formatMoney } from "@/lib/business/calc";
 import { billingSetupStatus } from "@/lib/server/business/billing";
@@ -124,7 +125,13 @@ export default async function AdminSetupPage() {
               />
             ))}
           </ul>
+          <form action={recheckDodoAction} className="mt-4">
+            <button type="submit" className={buttonClass("secondary", "sm")} data-recheck-dodo>
+              <Icon name="refresh" size={14} /> Re-check Dodo now
+            </button>
+          </form>
           <p className="mt-4 text-[13px] leading-snug text-faint">
+            Changed a product in Dodo? Re-check reads it again now (otherwise within 15 minutes).{" "}
             With a Dodo key set, every new listing checkout goes to Dodo — never to Lemon Squeezy. It opens once all three products check out
             (each a subscription billed every month, every 3 months or every year, in USD); until then the form saves submissions and offers
             email. Subscriptions started with Lemon Squeezy keep renewing there.

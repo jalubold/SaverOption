@@ -38,6 +38,9 @@ export interface DodoConfig {
 
 export class DodoError extends Error {}
 
+/** Cache tag of the product details (price and billing period), read again every 15 minutes or on "Re-check". */
+export const DODO_PRODUCTS_TAG = "dodo-products";
+
 export function dodoApiKey(): string | null {
   return process.env.DODO_PAYMENTS_API_KEY?.trim() || null;
 }
@@ -179,7 +182,7 @@ export async function dodoProduct(cfg: DodoConfig, productId: string): Promise<D
   try {
     const res = await fetch(`${cfg.baseUrl}/products/${encodeURIComponent(productId)}`, {
       headers: { Authorization: `Bearer ${cfg.apiKey}`, Accept: "application/json" },
-      next: { revalidate: 900, tags: ["dodo-products"] },
+      next: { revalidate: 900, tags: [DODO_PRODUCTS_TAG] },
       signal: AbortSignal.timeout(8_000),
     });
     if (!res.ok) return { error: res.status === 404 ? "not found in this mode" : `couldn't be read (${res.status})` };
