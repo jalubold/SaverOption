@@ -40,8 +40,10 @@ export function BusinessPublicHeader({ signedIn }: { signedIn?: boolean }) {
     </>
   );
   return (
-    // Inline background: .theme-dark sets an opaque one outside the utility layers.
-    <header data-tauri-drag-region className="theme-dark sticky top-0 z-40 border-b border-line backdrop-blur-md" style={{ backgroundColor: "color-mix(in oklab, var(--bg) 82%, transparent)" }}>
+    // Inline background: .theme-dark sets one outside the utility layers. Opaque, in the shade the header
+    // has over the dark landing page, so it looks the same on every page (light ones like AI & MCP and
+    // the docs included) and whatever scrolls underneath.
+    <header data-tauri-drag-region className="theme-dark sticky top-0 z-40 border-b border-line" style={{ backgroundColor: "color-mix(in oklab, var(--bg) 82%, #08070c)" }}>
       <Container data-tauri-drag-region className="flex h-16 items-center gap-6 desktop-app:max-xl:pl-[84px]">
         <Link href="/business" className="flex min-w-0 shrink items-center gap-2.5" aria-label="Saver Option Business home">
           <BrandMark className="shrink-0 drop-shadow-[0_4px_14px_color-mix(in_oklab,var(--accent)_55%,transparent)]" />
