@@ -125,8 +125,9 @@ export default async function AdminSetupPage() {
             ))}
           </ul>
           <p className="mt-4 text-[13px] leading-snug text-faint">
-            New listing checkouts go to Dodo once the key, webhook and all three products check out (each a subscription billed every month,
-            every 3 months or every year, in USD). Subscriptions started with Lemon Squeezy keep renewing there.
+            With a Dodo key set, every new listing checkout goes to Dodo — never to Lemon Squeezy. It opens once all three products check out
+            (each a subscription billed every month, every 3 months or every year, in USD); until then the form saves submissions and offers
+            email. Subscriptions started with Lemon Squeezy keep renewing there.
           </p>
         </Panel>
 
@@ -246,11 +247,15 @@ export default async function AdminSetupPage() {
             <div>
               <dt className="text-[11px] font-medium uppercase tracking-[0.08em] text-faint">Live payments</dt>
               <dd className="mt-1 text-fg">
-                {dodo.environment === "live_mode"
-                  ? "On (Dodo Payments live key)"
+                {dodo.apiKey
+                  ? dodo.environment === "live_mode" && dodo.plans.every((p) => p.problem === null)
+                    ? "On (Dodo Payments)"
+                    : dodo.environment === "live_mode"
+                      ? "Off: a Dodo product needs fixing (see Listing payments above)"
+                      : "Off: Dodo is on a test key"
                   : liveCheckoutEnabled()
                     ? "On (Lemon Squeezy)"
-                    : "Off: Dodo is on a test key, and Lemon Squeezy is waiting for written approval"}
+                    : "Off: waiting for Lemon Squeezy's written approval"}
               </dd>
             </div>
           </dl>

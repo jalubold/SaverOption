@@ -1,11 +1,13 @@
 import { withPrices, type ListingPlan } from "@/config/listing-plans";
-import { dodoCheckoutMode, dodoPrices } from "@/lib/server/dodo";
+import { dodoApiKey, dodoCheckoutMode, dodoPrices } from "@/lib/server/dodo";
 import { checkoutMode, getListingPlans, type CheckoutMode } from "@/lib/server/lemonsqueezy";
 
 /**
- * Which payment provider a listing checkout goes to. Dodo Payments takes every checkout
- * it can (live, or test where test payments are allowed); otherwise Lemon Squeezy works as
- * before. Subscriptions keep renewing with the provider they started with.
+ * Which payment provider a listing checkout goes to. Once a Dodo Payments API key is set,
+ * every new checkout is Dodo's: when Dodo can't take it yet (a product missing or billing
+ * differently, a test key on production), the form saves the submission and offers email
+ * instead of falling back to Lemon Squeezy, and /admin/setup says why. Without a Dodo key,
+ * Lemon Squeezy works as before. Subscriptions keep renewing with the provider they started with.
  */
 
 export type ListingProvider = "dodo" | "lemonsqueezy";
@@ -22,12 +24,8 @@ export interface CheckoutChoice {
 
 /** Where this visitor's checkout goes, and in which mode. */
 export async function checkoutChoice({ admin = false }: { admin?: boolean } = {}): Promise<CheckoutChoice> {
-  const dodo = await dodoCheckoutMode({ admin });
-  if (dodo === "live" || dodo === "test") return { provider: "dodo", mode: dodo };
-  const ls = await checkoutMode({ admin });
-  if (ls === "live" || ls === "test") return { provider: "lemonsqueezy", mode: ls };
-  // Nobody can check out right now: name the provider that's being set up.
-  return dodo === "unconfigured" ? { provider: "lemonsqueezy", mode: ls } : { provider: "dodo", mode: dodo };
+  if (dodoApiKey()) return { provider: "dodo", mode: await dodoCheckoutMode({ admin }) };
+  return { provider: "lemonsqueezy", mode: await checkoutMode({ admin }) };
 }
 
 /** The plans with the prices set at a provider (defaults where it has none). */

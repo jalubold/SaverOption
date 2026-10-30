@@ -65,12 +65,13 @@ export function declaredEnvironment(apiKey = dodoApiKey()): DodoEnvironment | nu
 }
 
 // A key whose prefix doesn't say is tried against the test host, then the live one (keys only work on their own).
-let probed: { key: string; environment: DodoEnvironment | null } | null = null;
+// A failed try is repeated after a minute, so a product fixed in Dodo is picked up without a redeploy.
+let probed: { key: string; environment: DodoEnvironment | null; at: number } | null = null;
 
 async function resolveEnvironment(apiKey: string, productId: string): Promise<DodoEnvironment | null> {
   const declared = declaredEnvironment(apiKey);
   if (declared) return declared;
-  if (probed?.key === apiKey) return probed.environment;
+  if (probed?.key === apiKey && (probed.environment || Date.now() - probed.at < 60_000)) return probed.environment;
   let environment: DodoEnvironment | null = null;
   for (const env of ["test_mode", "live_mode"] as const) {
     try {
@@ -87,7 +88,7 @@ async function resolveEnvironment(apiKey: string, productId: string): Promise<Do
       // Unreachable: try the other one.
     }
   }
-  probed = { key: apiKey, environment };
+  probed = { key: apiKey, environment, at: Date.now() };
   return environment;
 }
 
@@ -104,7 +105,7 @@ export async function dodoConfig(): Promise<DodoConfig | null> {
 /**
  * Whether a visitor can be sent to a Dodo checkout: a live key sells for real; a test key
  * sells test payments on preview/development deployments and to admins on production
- * (other visitors on production get "disabled", and the site falls back to Lemon Squeezy).
+ * (other visitors on production get "disabled": the form saves the submission and offers email).
  */
 export async function dodoCheckoutMode({ admin = false }: { admin?: boolean } = {}): Promise<CheckoutMode> {
   const cfg = await dodoConfig();
