@@ -9,7 +9,7 @@ export const metadata = pageMetadata({
   path: "/terms",
 });
 
-const LAST_UPDATED = "October 22, 2026";
+const LAST_UPDATED = "October 30, 2026";
 
 export default function TermsPage() {
   const name = siteConfig.name;
@@ -54,8 +54,8 @@ export default function TermsPage() {
               section of the homepage, and are always labelled &ldquo;Sponsored&rdquo;.
             </li>
             <li>
-              <strong>Payment.</strong> Payments are processed by Lemon Squeezy, which acts as the merchant of record for
-              the purchase; its terms also apply. Applicable taxes are added at checkout. Renewals are charged to the same
+              <strong>Payment.</strong> Payments are processed by Dodo Payments or, for subscriptions started there, Lemon
+              Squeezy. Whichever processes your payment acts as the merchant of record for the purchase, and its terms also apply. Applicable taxes are added at checkout. Renewals are charged to the same
               payment method on the renewal date shown in your dashboard. We never see or store your card details.
             </li>
             <li>
@@ -108,7 +108,7 @@ export default function TermsPage() {
           </ul>
           <p>
             To ask for a refund, email <a href={`mailto:${siteConfig.contactEmail}`}>{siteConfig.contactEmail}</a> with your
-            order number or listing reference. Refunds are issued through Lemon Squeezy to the original payment method.
+            order number or listing reference. Refunds are issued through the payment provider that took the payment (Dodo Payments or Lemon Squeezy), to the original payment method.
           </p>
 
           <h2>Trademarks</h2>

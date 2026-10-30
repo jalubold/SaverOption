@@ -4,6 +4,7 @@ import { formatPlanRate, getPlan } from "@/config/listing-plans";
 import { TestModeBadge } from "@/components/advertiser/status-pill";
 import { GoogleButton } from "@/components/auth/auth-forms";
 import { StatusPoller } from "@/components/promote/status-poller";
+import { providerNames } from "@/lib/server/listing-checkout";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, Container } from "@/components/ui/primitives";
 import { isPaid } from "@/lib/listing-status";
@@ -24,7 +25,7 @@ export const metadata = pageMetadata({
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /**
- * Where Lemon Squeezy sends the buyer after checkout. Arriving here proves
+ * Where the payment provider sends the buyer after checkout. Arriving here proves
  * nothing: the status shown is whatever verified webhooks have written to the
  * database, and only to the browser holding the claim cookie (or the owner).
  */
@@ -77,6 +78,7 @@ function Status({ sub, owned, signedIn, google }: { sub: SafeSubmission; owned: 
     </dl>
   );
   const testBadge = sub.checkout_test_mode ? <TestModeBadge /> : null;
+  const provider = providerNames[sub.billing_provider];
 
   if (isPaid(sub.payment_status)) {
     return (
@@ -93,7 +95,9 @@ function Status({ sub, owned, signedIn, google }: { sub: SafeSubmission; owned: 
         </p>
         {summary}
         <ol className="mt-6 space-y-2 text-sm text-muted">
-          <Step n={1} done>Payment verified by Lemon Squeezy. Your receipt is on its way to {sub.contact_email}.</Step>
+          <Step n={1} done>
+            Payment verified by {provider}. Your receipt is on its way to {sub.contact_email}.
+          </Step>
           <Step n={2}>Add a logo and a short description so your listing is ready to publish.</Step>
           <Step n={3}>We review it, then publish it. It stays live while your subscription is active; cancel anytime.</Step>
         </ol>
@@ -170,16 +174,18 @@ function Status({ sub, owned, signedIn, google }: { sub: SafeSubmission; owned: 
         Confirming your <em className="accent">payment</em>
       </h1>
       <p className="mt-2 text-[15px] leading-relaxed text-muted">
-        We show a confirmation only once Lemon Squeezy has verified the payment. This usually takes a few seconds. {testBadge}
+        We show a confirmation only once {provider} has verified the payment. This usually takes a few seconds. {testBadge}
       </p>
       {summary}
       <StatusPoller
+        provider={provider}
         fallback={
           <div className="mt-6 rounded-[14px] border border-line bg-subtle p-4 text-sm text-muted">
             <p className="font-medium text-fg">Still waiting for confirmation.</p>
             <p className="mt-1 leading-relaxed">
-              If you completed payment, your receipt email has a link to manage your listing, and this page will show it once confirmed. If you
-              left checkout early, your details are saved.
+              {sub.billing_provider === "lemonsqueezy"
+                ? "If you completed payment, your receipt email has a link to manage your listing, and this page will show it once confirmed. If you left checkout early, your details are saved."
+                : "If you completed payment, this page will show it once it's confirmed — keep this tab or come back to this link. If you left checkout early, your details are saved."}
             </p>
             <div className="mt-4 flex flex-col gap-2 sm:flex-row">
               <Link href={`/promote/success?s=${sub.id}`} className={buttonClass("secondary", "md")}>

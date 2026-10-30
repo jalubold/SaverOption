@@ -5,7 +5,7 @@
  */
 
 export type PaymentStatus = "awaiting_payment" | "pending" | "paid" | "failed" | "refunded" | "partially_refunded";
-/** Lemon Squeezy's subscription status. */
+/** A subscription's status, in Lemon Squeezy's words (Dodo's statuses are mapped to these). */
 export type SubscriptionStatus = "on_trial" | "active" | "paused" | "past_due" | "unpaid" | "cancelled" | "expired";
 export type ReviewStatus = "draft" | "pending_review" | "approved" | "rejected" | "published";
 /** Review status plus what time does to a published listing. */

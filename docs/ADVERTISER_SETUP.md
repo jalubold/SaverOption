@@ -1,6 +1,6 @@
 # Advertiser listings: setup and operations
 
-Paid "Promote your SaaS" listings, sold as subscriptions. A founder submits a product, subscribes through Lemon Squeezy, creates an account and completes a profile. An admin then reviews and publishes it. Everything below the payment provider is provider-agnostic: only `src/lib/server/lemonsqueezy.ts` and `src/app/api/webhooks/lemonsqueezy` know about Lemon Squeezy.
+Paid "Promote your SaaS" listings, sold as subscriptions. A founder submits a product, subscribes through Dodo Payments (or Lemon Squeezy, see below), creates an account and completes a profile. An admin then reviews and publishes it. Everything below the payment provider is provider-agnostic: only `src/lib/server/dodo.ts` + `dodo-events.ts` + `src/app/api/webhooks/dodo`, and `src/lib/server/lemonsqueezy.ts` + `src/app/api/webhooks/lemonsqueezy`, know about a provider. `src/lib/server/listing-checkout.ts` picks one per checkout: **Dodo whenever it can take the checkout** (configured, all three products check out, and live — or test where test payments are allowed), otherwise Lemon Squeezy as before. A subscription keeps renewing with the provider it started with (`submissions.billing_provider`), and both webhooks stay active.
 
 ## Advertiser flow
 
@@ -84,6 +84,10 @@ Paid "Promote your SaaS" listings, sold as subscriptions. A founder submits a pr
 | `LEMONSQUEEZY_WEBHOOK_SECRET` | **server only** | Optional. Generated and registered automatically by Connect. |
 | `LEMONSQUEEZY_VARIANT_ID_MONTHLY` / `_QUARTERLY` / `_YEARLY` | server | Optional. Matched automatically by billing interval (every month / 3 months / year). Env values override what Connect found. |
 | `LEMONSQUEEZY_LIVE_CHECKOUT_ENABLED` | server | Leave it `false` until Lemon Squeezy approves in writing. |
+| `DODO_PAYMENTS_API_KEY` | **server only** | Dodo → Developer → API Keys. A restricted key is enough: Checkout sessions **write**, Customers **write** (customer portal links), Products, Subscriptions and Payments **read**; everything else none. Test or live is read from its prefix (`dodo_test_` / `dodo_live_`). |
+| `DODO_PAYMENTS_WEBHOOK_KEY` | **server only** | The signing secret of the webhook endpoint `https://www.saveroption.com/api/webhooks/dodo` (Payment, Subscription and Refund events). |
+| `DODO_PRODUCT_ID_MONTHLY` / `_QUARTERLY` / `_YEARLY` | server | The three subscription products (USD, billed every month / every 3 months / every year). The site shows their prices. |
+| `DODO_PAYMENTS_ENVIRONMENT` | server | Optional: `test_mode` or `live_mode`, only if the key's prefix doesn't say. |
 
 Redeploy after changing variables. The `NEXT_PUBLIC_*` values are read at build time.
 
@@ -96,7 +100,20 @@ Redeploy after changing variables. The `NEXT_PUBLIC_*` values are read at build 
 | Preview or development deployments | Test mode (no real charges). |
 | Flag `true` | Live checkout, only after approval. |
 
-## 3. Lemon Squeezy
+## 3. Dodo Payments (new checkouts)
+
+1. Work in **Test Mode** first (the Live Mode switch in Dodo's sidebar off). Keys, products and webhooks belong to the mode they're made in.
+2. Create the three subscription products (USD): every month, every 3 months, every year, at the plan prices.
+3. Create the restricted API key (permissions above) and the webhook endpoint, and add the five variables to Vercel (Production, Sensitive). Redeploy.
+4. **`/admin/setup` → Listing payments (Dodo Payments)** shows the mode, the webhook URL and each product with its price and billing period. Checkout only goes to Dodo when all three are ✓ (a product that bills differently from its plan blocks it, so the price shown is always the price charged).
+5. With a **test key** on production, admins check out with Dodo test payments; visitors keep the Lemon Squeezy behaviour (closed while its flag is off). Preview deployments use test payments for everyone.
+6. **Going live:** once Dodo's account verification is done, switch to Live Mode, repeat steps 2–3 there, and replace the five values in Vercel with the live ones (`dodo_live_…`). Live checkout starts with the live key; there's no separate flag.
+
+> **Check with Dodo first:** Dodo's merchant acceptance policy doesn't mention advertising or directory listings specifically, but lists manual (non-automated) digital services and marketplace models among restricted categories, and every listing here is reviewed by hand. Describe the product accurately ("paid sponsored listings on a software deals directory, reviewed before publishing") during verification, and ask support to confirm it's accepted before taking live payments.
+
+How Dodo events are applied (`src/lib/server/dodo-events.ts`): signatures are checked per Standard Webhooks; the delivery id (`webhook-id`) makes retries apply once. `payment.succeeded` / `payment.failed` record orders keyed by the payment id; the first successful one marks the listing paid and queues it for review, later ones are renewals. `subscription.*` events set the status (`on_hold` → past due, `cancel_at_next_billing_date` → cancelled until the end of the period) and how long the listing stays live; an event that arrives before its payment answers 500 so Dodo retries it. `refund.succeeded` updates the order (a refund of the first payment cancels the listing). Events for other products are ignored.
+
+## 4. Lemon Squeezy
 
 1. Use **Test mode** (toggle at the bottom left of the dashboard) for everything until approval.
 2. **Products → New product** "Subscription", with three **subscription** variants:
@@ -123,7 +140,7 @@ Redeploy after changing variables. The `NEXT_PUBLIC_*` values are read at build 
 
 > **Blocker:** Lemon Squeezy's prohibited-products list includes advertising on websites, newsletters and social media, and marketplaces. Ask their support whether paid SaaS directory listings are allowed and get the answer in writing before setting `LEMONSQUEEZY_LIVE_CHECKOUT_ENABLED=true`. If they decline, only `lemonsqueezy.ts` and the webhook route need replacing (for example with Stripe or Paddle). Submissions, claims, dashboard, admin and analytics stay as they are.
 
-## 4. Test checklist (Lemon Squeezy test mode, on a preview deployment or as an admin)
+## 5. Test checklist (Lemon Squeezy test mode, on a preview deployment or as an admin)
 
 - [ ] `/promote`: fill in the details, change the plan, go back with **Edit**. Nothing is lost.
 - [ ] **Continue to Checkout** opens the Lemon Squeezy test checkout for the right plan and price, on the "Subscription" product. A checkout opened before the last Connect is never reused. The submission appears in `/admin` as *Awaiting payment*.
@@ -141,4 +158,4 @@ Redeploy after changing variables. The `NEXT_PUBLIC_*` values are read at build 
 - [ ] `/admin/metrics` shows the funnel, and test orders are not counted as revenue.
 - [ ] In production with the flag `false` and logged out, `/promote` offers **Submit listing** with no checkout.
 
-An automated version of this flow (checks against local Postgres with mocked Lemon Squeezy and Supabase Auth, including renewals, cancellation and expiry) was run before release.
+An automated version of this flow (checks against local Postgres with mocked Lemon Squeezy and Supabase Auth, including renewals, cancellation and expiry) was run before release. The Dodo path has its own automated suite (mocked Dodo API and signed webhooks: checkout session, payment linking, retries and duplicates, renewals, on hold, cancellation, refunds, customer portal, and the production test-key gate). A real purchase in Dodo's test mode is still the final check: **Continue to Checkout** opens Dodo's test checkout, a test card completes it, the webhook endpoint's deliveries in Dodo show `200`, and the listing shows *Paid* with **Manage subscription** opening Dodo's portal.

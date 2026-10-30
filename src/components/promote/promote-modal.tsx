@@ -21,7 +21,7 @@ const OpenContext = createContext<{ open: () => void; prefetch: () => void } | n
 /** Until the server answers. Checkout itself always re-checks on the server. */
 const fallbackContext: PromoteContext = { mode: "live", resume: null, paidId: null, signedIn: false };
 
-/** `plans` carry the current Lemon Squeezy prices, read by the (cached) root layout. */
+/** `plans` carry the current prices for sale, read by the (cached) root layout. */
 export function PromoteProvider({ plans, children }: { plans: ListingPlan[]; children: ReactNode }) {
   const [open, setOpen] = useState(false);
   // The form mounts on first open (not on every page), then stays mounted so typed details are kept.
@@ -125,7 +125,7 @@ function PromoteModal({ open, plans, ctx, onClose }: { open: boolean; plans: Lis
         <div className="mb-3">
           <TrafficPill />
         </div>
-        {ctx && <PromoteFlow mode={ctx.mode} plans={ctx.plans ?? plans} resume={ctx.resume} paidId={ctx.paidId} signedIn={ctx.signedIn} titleId={titleId} />}
+        {ctx && <PromoteFlow mode={ctx.mode} provider={ctx.provider} plans={ctx.plans ?? plans} resume={ctx.resume} paidId={ctx.paidId} signedIn={ctx.signedIn} titleId={titleId} />}
       </div>
     </dialog>
   );

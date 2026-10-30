@@ -11,7 +11,7 @@ import { Icon } from "@/components/ui/icon";
 import { buttonClass, cn } from "@/components/ui/primitives";
 
 /**
- * Promote form: details and subscription plan on one screen, then Lemon Squeezy checkout.
+ * Promote form: details and subscription plan on one screen, then the payment provider's checkout.
  * No account before checkout. The draft lives in sessionStorage so a refresh or
  * a cancelled checkout never loses it; an idempotency key stops duplicate submissions.
  */
@@ -34,6 +34,7 @@ type Closed = { saved: boolean; reference: string | null; mailto: string };
 
 export function PromoteFlow({
   mode,
+  provider = "our payment provider",
   plans = listingPlans,
   resume,
   paidId = null,
@@ -43,7 +44,9 @@ export function PromoteFlow({
   heading = true,
 }: {
   mode: FlowMode;
-  /** The plans with their current Lemon Squeezy prices (from the server). */
+  /** Who processes the payment, e.g. "Dodo Payments". */
+  provider?: string;
+  /** The plans with the provider's current prices (from the server). */
   plans?: ListingPlan[];
   resume: ResumeData | null;
   /** A paid submission from this browser that still needs an account. */
@@ -304,7 +307,7 @@ export function PromoteFlow({
       </div>
 
       {mode === "test" && (
-        <p className="mt-3 rounded-lg border border-warn/40 bg-warn-soft px-3 py-2 text-xs text-fg">Test mode: checkout uses Lemon Squeezy test payments. No real money is charged.</p>
+        <p className="mt-3 rounded-lg border border-warn/40 bg-warn-soft px-3 py-2 text-xs text-fg">Test mode: checkout uses {provider} test payments. No real money is charged.</p>
       )}
       {message && (
         <p role="alert" className="mt-3 flex items-start gap-2 rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-fg">
@@ -327,7 +330,7 @@ export function PromoteFlow({
       </button>
       <p className="mt-2.5 flex items-center justify-center gap-1.5 text-center text-xs text-faint">
         <Icon name="shield" size={13} />
-        {mode === "closed" ? "Nothing is charged now." : "Secure checkout by Lemon Squeezy. Renews until you cancel."}
+        {mode === "closed" ? "Nothing is charged now." : `Secure checkout by ${provider}. Renews until you cancel.`}
       </p>
       <p className="mt-1 text-center text-xs text-faint">
         By continuing you agree to our{" "}

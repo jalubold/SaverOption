@@ -11,7 +11,7 @@ import { PromoteProvider } from "@/components/promote/promote-modal";
 import { SiteChrome } from "@/components/layout/site-chrome";
 import { SiteHeader } from "@/components/layout/site-header";
 import { JsonLd } from "@/components/seo/json-ld";
-import { getListingPlans } from "@/lib/server/lemonsqueezy";
+import { listingPlansForSale } from "@/lib/server/listing-checkout";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 import "./globals.css";
 
@@ -65,8 +65,8 @@ const brandVars = {
 } as CSSProperties;
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  // Current prices for the promote popup; cached pages are rebuilt when Lemon Squeezy is (re)connected.
-  const plans = await getListingPlans();
+  // Current prices for the promote popup (Dodo's products, or the connected Lemon Squeezy variants).
+  const plans = await listingPlansForSale();
   return (
     // suppressHydrationWarning: the Mac app adds a class to <html> before the page hydrates (desktop/src-tauri/src/lib.rs).
     <html lang={siteConfig.locale} style={brandVars} className={`${GeistSans.variable} ${GeistMono.variable} ${instrumentSerif.variable}`} suppressHydrationWarning>

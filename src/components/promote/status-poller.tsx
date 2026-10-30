@@ -7,7 +7,18 @@ import { useEffect, useState } from "react";
  * Re-reads the server-verified payment status every few seconds while a
  * webhook is on its way. After `maxSeconds` it stops and shows `fallback`.
  */
-export function StatusPoller({ intervalSeconds = 3, maxSeconds = 120, fallback }: { intervalSeconds?: number; maxSeconds?: number; fallback: React.ReactNode }) {
+export function StatusPoller({
+  intervalSeconds = 3,
+  maxSeconds = 120,
+  provider = "the payment provider",
+  fallback,
+}: {
+  intervalSeconds?: number;
+  maxSeconds?: number;
+  /** Who's being waited for, e.g. "Dodo Payments". */
+  provider?: string;
+  fallback: React.ReactNode;
+}) {
   const router = useRouter();
   const [timedOut, setTimedOut] = useState(false);
 
@@ -28,7 +39,7 @@ export function StatusPoller({ intervalSeconds = 3, maxSeconds = 120, fallback }
   return (
     <p className="mt-5 flex items-center gap-2 text-sm text-muted" aria-live="polite">
       <span aria-hidden="true" className="size-4 animate-spin rounded-full border-2 border-line-strong border-t-accent" />
-      Checking with Lemon Squeezy… this page updates automatically.
+      Checking with {provider}… this page updates automatically.
     </p>
   );
 }

@@ -8,7 +8,9 @@ import { normalizeWebsite, validateDetails, type PromoteDetails, type PromoteErr
 import { CLAIM_TTL_DAYS, claimTokenMatches, newClaimToken, readClaimCookie, writeClaimCookie } from "@/lib/server/claim";
 import { dbConfigured } from "@/lib/server/db";
 import { ensureFunnelSession } from "@/lib/server/funnel-session";
-import { checkoutMode, createCheckout, getListingPlans, LemonSqueezyError } from "@/lib/server/lemonsqueezy";
+import { createDodoCheckout, DodoError } from "@/lib/server/dodo";
+import { createCheckout, LemonSqueezyError } from "@/lib/server/lemonsqueezy";
+import { checkoutChoice, plansFor } from "@/lib/server/listing-checkout";
 import { upgradeLegacyCatalog } from "@/lib/server/lemonsqueezy-setup";
 import { getSettings } from "@/lib/server/settings";
 import { requestOrigin } from "@/lib/server/origin";
@@ -30,9 +32,10 @@ export type StartCheckoutResult =
 const KEY_RE = /^[A-Za-z0-9_-]{16,64}$/;
 
 /**
- * Saves the pending submission and sends the visitor to Lemon Squeezy's hosted
- * checkout. Everything that matters is decided here on the server: the details
- * are re-validated, and the price and variant come from the connected Lemon Squeezy plans.
+ * Saves the pending submission and sends the visitor to the payment provider's hosted
+ * checkout (Dodo Payments, or Lemon Squeezy where Dodo can't take it). Everything that
+ * matters is decided here on the server: the details are re-validated, and the price and
+ * product come from the provider's plans.
  */
 export async function startCheckout(input: {
   details: PromoteDetails;
@@ -43,7 +46,8 @@ export async function startCheckout(input: {
 }): Promise<StartCheckoutResult> {
   // Never sell the old one-time product: switch to the subscription plans first if needed.
   if (await upgradeLegacyCatalog().catch(() => false)) revalidatePath("/", "layout");
-  const plan = getPlan(input.planId, await getListingPlans());
+  const choice = await checkoutChoice({ admin: isAdmin(await getUser()) });
+  const plan = getPlan(input.planId, await plansFor(choice.provider));
   if (!plan) return { kind: "error", message: "Choose a listing plan." };
   if (input.company) return { kind: "error", message: "Something went wrong. Please try again." };
   const details: PromoteDetails = {
@@ -83,7 +87,7 @@ export async function startCheckout(input: {
       ? { token: cookie.token, hash: sub.claim_token_hash!, expiresAt: new Date(Date.now() + CLAIM_TTL_DAYS * 86400_000) }
       : newClaimToken();
 
-    const mode = await checkoutMode({ admin: isAdmin(await getUser()) });
+    const { mode, provider } = choice;
     if (mode !== "live" && mode !== "test") {
       await setClaimToken(sub.id, claim);
       await writeClaimCookie(sub.id, claim.token);
@@ -92,24 +96,33 @@ export async function startCheckout(input: {
     }
 
     const testMode = mode === "test";
-    // Reuse a recent checkout for the same plan if this browser started it.
+    // Reuse a recent Lemon Squeezy checkout for the same plan if this browser started it.
     const connectedAt = (await getSettings()).get("ls_setup_at");
-    const reuse = ownsCookie ? reusableCheckout(sub, plan, testMode, connectedAt ? new Date(connectedAt) : null) : null;
+    const reuse = ownsCookie && provider === "lemonsqueezy" ? reusableCheckout(sub, plan, testMode, connectedAt ? new Date(connectedAt) : null) : null;
     if (reuse) {
       await recordFunnelEvent("checkout_started", { submissionId: sub.id, sessionId });
       return { kind: "redirect", url: reuse, testMode };
     }
 
     const origin = await requestOrigin();
-    const checkout = await createCheckout({
-      plan,
-      submissionId: sub.id,
-      email: details.email,
-      testMode,
-      redirectUrl: `${origin}/promote/success?s=${sub.id}`,
-      receiptLinkUrl: `${origin}/claim?s=${sub.id}&t=${claim.token}`,
-    });
-    await recordCheckout(sub.id, { id: checkout.id, url: checkout.url, plan: plan.id, testMode }, claim);
+    const checkout =
+      provider === "dodo"
+        ? await createDodoCheckout({
+            plan,
+            submissionId: sub.id,
+            email: details.email,
+            returnUrl: `${origin}/promote/success?s=${sub.id}`,
+            cancelUrl: `${origin}/promote`,
+          })
+        : await createCheckout({
+            plan,
+            submissionId: sub.id,
+            email: details.email,
+            testMode,
+            redirectUrl: `${origin}/promote/success?s=${sub.id}`,
+            receiptLinkUrl: `${origin}/claim?s=${sub.id}&t=${claim.token}`,
+          });
+    await recordCheckout(sub.id, { id: checkout.id, url: checkout.url, plan: plan.id, testMode, provider }, claim);
     await writeClaimCookie(sub.id, claim.token);
     await recordFunnelEvent("checkout_started", { submissionId: sub.id, sessionId });
     return { kind: "redirect", url: checkout.url, testMode };
@@ -118,7 +131,7 @@ export async function startCheckout(input: {
     return {
       kind: "error",
       message:
-        err instanceof LemonSqueezyError
+        err instanceof LemonSqueezyError || err instanceof DodoError
           ? "Checkout is temporarily unavailable. Your details are saved — please try again in a moment."
           : "Something went wrong saving your submission. Please try again.",
     };

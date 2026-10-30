@@ -9,7 +9,7 @@ export const metadata = pageMetadata({
   path: "/privacy",
 });
 
-const LAST_UPDATED = "October 24, 2026";
+const LAST_UPDATED = "October 30, 2026";
 
 export default function PrivacyPage() {
   const name = siteConfig.name;
@@ -57,8 +57,9 @@ export default function PrivacyPage() {
             </li>
             <li>
               <strong>Listing submissions and orders.</strong> The product details and work email you enter, and from
-              Lemon Squeezy the order number, plan, amounts, tax, payment or refund status, and your subscription&apos;s
-              status and renewal or end date. Card details are handled by Lemon Squeezy and never reach us.
+              our payment provider (Dodo Payments or Lemon Squeezy) the order or payment number, plan, amounts, tax, payment or refund
+              status, your subscription&apos;s status and renewal or end date, and its customer reference for you. Card details are
+              handled by the payment provider and never reach us.
             </li>
             <li>
               <strong>Sponsored listing statistics.</strong> Views of a sponsored listing and clicks to the
@@ -124,8 +125,8 @@ export default function PrivacyPage() {
           <p>
             We use a hosting provider (Vercel) to serve the site and measure page visits, a database provider (Upstash)
             to store the aggregate counts, Supabase to store advertiser accounts, listings, orders and Business workspaces, Anthropic to generate
-            answers in the Business AI assistant when it&apos;s used, Google to sign you in, and an email provider to send the newsletter. They process data only on our behalf. Lemon Squeezy
-            processes payments as the merchant of record, under its own privacy policy. When you follow a link to a software provider, their own privacy policy applies on their site.
+            answers in the Business AI assistant when it&apos;s used, Google to sign you in, and an email provider to send the newsletter. They process data only on our behalf. Dodo Payments and
+            Lemon Squeezy process payments as the merchant of record, each under its own privacy policy. When you follow a link to a software provider, their own privacy policy applies on their site.
           </p>
 
           <h2>How long we keep it</h2>

@@ -23,6 +23,7 @@ import { getForUser, isLocked, missingProfileFields, ordersFor, type SafeSubmiss
 import { isAdmin, requireUser, storageAdmin } from "@/lib/server/supabase";
 import { listingStats } from "@/lib/server/tracking";
 import { pageMetadata } from "@/lib/seo";
+import { providerNames } from "@/lib/server/listing-checkout";
 
 export const metadata = pageMetadata({ title: "Manage listing", description: "Manage your listing.", path: "/dashboard", noIndex: true });
 
@@ -79,7 +80,8 @@ export default async function ListingDetailPage(props: PageProps<"/dashboard/lis
       {q.billing === "unavailable" && (
         <div className="mt-6">
           <FormMessage tone="error">
-            Couldn&apos;t open your subscription settings just now. Please try again in a moment, or use the link in your Lemon Squeezy receipt email.
+            Couldn&apos;t open your subscription settings just now. Please try again in a moment, or use the link in your{" "}
+            {providerNames[sub.billing_provider]} receipt email.
           </FormMessage>
         </div>
       )}
@@ -140,14 +142,15 @@ export default async function ListingDetailPage(props: PageProps<"/dashboard/lis
                 )}
               </dl>
               {sub.subscription_status !== "expired" && (
-                // A plain link: the billing route redirects to Lemon Squeezy.
+                // A plain link: the billing route redirects to the payment provider's portal.
                 <a href={`/dashboard/listings/${sub.id}/billing`} className={buttonClass("secondary", "md", "mt-4 w-full")}>
                   Manage subscription <Icon name="arrow-up-right" size={14} />
                 </a>
               )}
               <p className="mt-3 text-xs leading-relaxed text-faint">
-                Update your card, switch plan or cancel in Lemon Squeezy&apos;s billing portal. If you cancel, your listing stays live until the
-                end of the period you&apos;ve paid for.
+                {sub.billing_provider === "lemonsqueezy" ? "Update your card, switch plan or cancel" : "Update your card or cancel"} in{" "}
+                {providerNames[sub.billing_provider]}&apos;s billing portal. If you cancel, your listing stays live until the end of the period
+                you&apos;ve paid for.
               </p>
             </Panel>
           )}
@@ -208,7 +211,7 @@ export default async function ListingDetailPage(props: PageProps<"/dashboard/lis
                 ))}
               </ul>
             )}
-            <p className="mt-3 text-xs text-faint">Payments are processed by Lemon Squeezy. We never see or store card details.</p>
+            <p className="mt-3 text-xs text-faint">Payments are processed by {providerNames[sub.billing_provider]}. We never see or store card details.</p>
           </Panel>
         </div>
       </div>
@@ -226,10 +229,13 @@ function NextStep({ sub, missing }: { sub: SafeSubmission; missing: string[] }) 
     body =
       refunded
         ? "This listing won't be published."
-        : "We'll update this page as soon as Lemon Squeezy confirms the payment.";
+        : `We'll update this page as soon as ${providerNames[sub.billing_provider]} confirms the payment.`;
   } else if (sub.subscription_status === "past_due" || sub.subscription_status === "unpaid") {
     title = "Renewal payment failed";
-    body = "Lemon Squeezy couldn't charge your card and will retry. Update your payment method from Manage subscription to keep your listing live.";
+    body =
+      sub.billing_provider === "lemonsqueezy"
+        ? "Lemon Squeezy couldn't charge your card and will retry. Update your payment method from Manage subscription to keep your listing live."
+        : `${providerNames[sub.billing_provider]} couldn't charge your card. Update your payment method from Manage subscription to keep your listing live.`;
   } else if (sub.subscription_status === "expired") {
     title = "Subscription ended";
     body = "Your listing is no longer shown. Submit a new listing any time.";

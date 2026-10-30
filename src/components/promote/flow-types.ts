@@ -14,6 +14,8 @@ export interface ResumeData {
 
 export interface PromoteContext {
   mode: FlowMode;
+  /** Who processes the payment ("Dodo Payments", "Lemon Squeezy"). */
+  provider?: string;
   /** An unpaid submission this browser started (cancelled checkout). */
   resume: ResumeData | null;
   /** A paid submission this browser started that isn't in an account yet. */

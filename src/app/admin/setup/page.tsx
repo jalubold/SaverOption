@@ -8,7 +8,9 @@ import { siteConfig } from "@/config/site";
 import { formatMoney } from "@/lib/business/calc";
 import { billingSetupStatus } from "@/lib/server/business/billing";
 import { db, dbConfigured } from "@/lib/server/db";
-import { checkoutMode, liveCheckoutEnabled, lsApiKey, lsCatalog, webhookSecret } from "@/lib/server/lemonsqueezy";
+import { dodoSetupStatus } from "@/lib/server/dodo";
+import { liveCheckoutEnabled, lsApiKey, lsCatalog, webhookSecret } from "@/lib/server/lemonsqueezy";
+import { checkoutChoice, providerNames } from "@/lib/server/listing-checkout";
 import { getSettings } from "@/lib/server/settings";
 import { authConfigured, googleSignInEnabled, requireAdmin, storageAdmin } from "@/lib/server/supabase";
 import { pageMetadata } from "@/lib/seo";
@@ -22,10 +24,10 @@ const modeText = {
   live: "Live checkout (real payments)",
   test: "Test checkout (no real charges)",
   disabled: "Closed: submissions are saved, no payment taken",
-  unconfigured: "Closed: Lemon Squeezy not connected yet",
+  unconfigured: "Closed: payments not connected yet",
 } as const;
 
-/** Integration checklist for admins: what's connected, what's missing, and the one-click Lemon Squeezy setup. */
+/** Integration checklist for admins: what's connected, what's missing, Dodo's status and the one-click Lemon Squeezy setup. */
 export default async function AdminSetupPage() {
   const user = await requireAdmin();
   let migrations: string[] | null = null;
@@ -36,15 +38,17 @@ export default async function AdminSetupPage() {
       migrations = null;
     }
   }
-  const [catalog, secret, saved, visitorMode, adminMode, google, creem] = await Promise.all([
+  const [catalog, secret, saved, visitor, adminChoice, google, creem, dodo] = await Promise.all([
     lsCatalog(),
     webhookSecret(),
     getSettings(),
-    checkoutMode({ admin: false }),
-    checkoutMode({ admin: true }),
+    checkoutChoice({ admin: false }),
+    checkoutChoice({ admin: true }),
     googleSignInEnabled(),
     billingSetupStatus(),
+    dodoSetupStatus(),
   ]);
+  const dodoWebhookUrl = `${siteConfig.url}/api/webhooks/dodo`;
   const hasKey = Boolean(lsApiKey());
   const variantsOk = listingPlans.every((p) => catalog.variants[p.id]);
   const plans = withPrices(catalog.prices);
@@ -78,6 +82,52 @@ export default async function AdminSetupPage() {
               hint="Supabase → Authentication → Sign In / Providers → Google: turn it on and paste the Client ID and Secret from Google Cloud. Until then, nobody can sign in."
             />
           </ul>
+        </Panel>
+
+        <Panel title="Listing payments (Dodo Payments)" className="min-w-0 lg:col-span-2">
+          <ul className="grid gap-3 sm:grid-cols-2">
+            <Check
+              ok={dodo.apiKey && dodo.environment !== null}
+              label="API key"
+              detail={
+                dodo.environment === "live_mode"
+                  ? "Live mode (live.dodopayments.com): real payments"
+                  : dodo.environment === "test_mode"
+                    ? "Test mode (test.dodopayments.com): no real charges"
+                    : undefined
+              }
+              hint={
+                dodo.apiKey
+                  ? "Couldn't tell whether the key is a test or live key. Set DODO_PAYMENTS_ENVIRONMENT to test_mode or live_mode in Vercel."
+                  : "Dodo → Developer → API Keys: create a key and add it as DODO_PAYMENTS_API_KEY in Vercel, then redeploy."
+              }
+            />
+            <Check
+              ok={dodo.webhookKey}
+              label="Webhook"
+              detail={dodoWebhookUrl}
+              hint={`Dodo → Developer → Webhooks: add ${dodoWebhookUrl} (Payment, Subscription and Refund events), copy its signing secret into DODO_PAYMENTS_WEBHOOK_KEY in Vercel, then redeploy.`}
+            />
+          </ul>
+          <ul className="mt-4 space-y-3 border-t border-line pt-4">
+            {dodo.plans.map((p) => (
+              <Check
+                key={p.plan.id}
+                ok={p.problem === null}
+                label={`${p.plan.name} plan`}
+                detail={
+                  p.info
+                    ? `${p.info.name ? `"${p.info.name}": ` : ""}${p.info.priceCents ? formatPlanRate(p.plan, p.info.priceCents) : "no price"} → ${p.productId}`
+                    : (p.productId ?? undefined)
+                }
+                hint={p.problem ?? undefined}
+              />
+            ))}
+          </ul>
+          <p className="mt-4 text-[13px] leading-snug text-faint">
+            New listing checkouts go to Dodo once the key, webhook and all three products check out (each a subscription billed every month,
+            every 3 months or every year, in USD). Subscriptions started with Lemon Squeezy keep renewing there.
+          </p>
         </Panel>
 
         <Panel title="Payments (Lemon Squeezy)">
@@ -181,16 +231,26 @@ export default async function AdminSetupPage() {
           <dl className="grid gap-3 text-sm sm:grid-cols-3">
             <div>
               <dt className="text-[11px] font-medium uppercase tracking-[0.08em] text-faint">Visitors</dt>
-              <dd className="mt-1 text-fg">{modeText[visitorMode]}</dd>
+              <dd className="mt-1 text-fg" data-setup-visitors>
+                {modeText[visitor.mode]}
+                {visitor.mode === "live" || visitor.mode === "test" ? ` · ${providerNames[visitor.provider]}` : ""}
+              </dd>
             </div>
             <div>
               <dt className="text-[11px] font-medium uppercase tracking-[0.08em] text-faint">You (admin)</dt>
-              <dd className="mt-1 text-fg">{modeText[adminMode]}</dd>
+              <dd className="mt-1 text-fg" data-setup-admin>
+                {modeText[adminChoice.mode]}
+                {adminChoice.mode === "live" || adminChoice.mode === "test" ? ` · ${providerNames[adminChoice.provider]}` : ""}
+              </dd>
             </div>
             <div>
               <dt className="text-[11px] font-medium uppercase tracking-[0.08em] text-faint">Live payments</dt>
               <dd className="mt-1 text-fg">
-                {liveCheckoutEnabled() ? "On" : "Off: waiting for Lemon Squeezy's written approval"}
+                {dodo.environment === "live_mode"
+                  ? "On (Dodo Payments live key)"
+                  : liveCheckoutEnabled()
+                    ? "On (Lemon Squeezy)"
+                    : "Off: Dodo is on a test key, and Lemon Squeezy is waiting for written approval"}
               </dd>
             </div>
           </dl>

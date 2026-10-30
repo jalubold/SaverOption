@@ -50,6 +50,9 @@ export interface Submission {
   listing_starts_at: Date | null;
   listing_ends_at: Date | null;
   subscription_id: string | null;
+  /** Who the checkout and subscription belong to (rows from before Dodo are Lemon Squeezy's). */
+  billing_provider: "lemonsqueezy" | "dodo";
+  provider_customer_id: string | null;
   subscription_status: SubscriptionStatus | null;
   subscription_renews_at: Date | null;
   subscription_ends_at: Date | null;
@@ -93,7 +96,7 @@ export interface Order {
 /** Columns that are safe to hand to page code (no claim token, checkout URL or idempotency key). */
 const PUBLIC_COLUMNS = [
   "id", "user_id", "product_name", "website", "contact_email", "description", "logo_url", "links", "plan",
-  "price_cents", "currency", "payment_status", "paid_at", "review_status", "review_notes", "reviewed_at", "slug",
+  "price_cents", "currency", "payment_status", "paid_at", "review_status", "review_notes", "reviewed_at", "slug", "billing_provider",
   "listing_starts_at", "listing_ends_at", "subscription_status", "subscription_renews_at", "subscription_ends_at",
   "paid_through", "checkout_test_mode", "claimed_at", "profile_started_at", "profile_completed_at", "created_at", "updated_at",
 ] as const;
@@ -144,11 +147,12 @@ export async function getSubmissionByClaim(claim: { submissionId: string; token:
 }
 
 /**
- * A checkout less than 23 hours old for the same plan and mode can be reused instead of creating another,
- * unless Lemon Squeezy was (re)connected since (`connectedAt`): it may be for another product or price.
+ * A Lemon Squeezy checkout less than 23 hours old for the same plan and mode can be reused instead of creating
+ * another, unless Lemon Squeezy was (re)connected since (`connectedAt`): it may be for another product or price.
+ * (Dodo checkout sessions aren't reused: a new one is made each time.)
  */
 export function reusableCheckout(sub: Submission, plan: ListingPlan, testMode: boolean, connectedAt: Date | null): string | null {
-  if (!sub.checkout_url || !sub.checkout_created_at) return null;
+  if (!sub.checkout_url || !sub.checkout_created_at || sub.billing_provider !== "lemonsqueezy") return null;
   if (connectedAt && sub.checkout_created_at <= connectedAt) return null;
   const fresh = Date.now() - sub.checkout_created_at.getTime() < 23 * 3600_000;
   return fresh && sub.checkout_plan === plan.id && sub.checkout_test_mode === testMode ? sub.checkout_url : null;
@@ -156,12 +160,12 @@ export function reusableCheckout(sub: Submission, plan: ListingPlan, testMode: b
 
 export async function recordCheckout(
   id: string,
-  checkout: { id: string; url: string; plan: ListingPlanId; testMode: boolean },
+  checkout: { id: string; url: string; plan: ListingPlanId; testMode: boolean; provider: Submission["billing_provider"] },
   claim: { hash: string; expiresAt: Date },
 ) {
   await db()`
     update submissions set checkout_id = ${checkout.id}, checkout_url = ${checkout.url}, checkout_plan = ${checkout.plan},
-      checkout_test_mode = ${checkout.testMode}, checkout_created_at = now(),
+      checkout_test_mode = ${checkout.testMode}, checkout_created_at = now(), billing_provider = ${checkout.provider},
       claim_token_hash = ${claim.hash}, claim_token_expires_at = ${claim.expiresAt}, updated_at = now()
     where id = ${id} and payment_status in ('awaiting_payment', 'failed')`;
 }
@@ -175,7 +179,7 @@ export async function setClaimToken(id: string, claim: { hash: string; expiresAt
 // ─── Payments (verified webhooks only) ───────────────────────────────────────
 
 /** Overall payment status from all of a submission's orders: any successful payment wins. */
-function rollUp(statuses: OrderStatus[]): PaymentStatus {
+export function rollUp(statuses: OrderStatus[]): PaymentStatus {
   if (statuses.includes("paid")) return "paid";
   if (statuses.includes("partially_refunded")) return "partially_refunded";
   if (statuses.includes("refunded")) return "refunded";
@@ -245,6 +249,7 @@ export async function applyOrderEvent(ev: OrderEvent, deliveryId: string, catalo
         -- The receipt email's claim link stays valid for 30 days after payment (still single-use).
         claim_token_expires_at = case when ${becamePaid} and claim_token_hash is not null
           then greatest(claim_token_expires_at, now() + interval '30 days') else claim_token_expires_at end,
+        billing_provider = case when ${becamePaid} then 'lemonsqueezy' else billing_provider end,
         updated_at = now()
       where id = ${sub.id}`;
 
@@ -283,7 +288,7 @@ export function paidThrough(
 }
 
 /** The submission a subscription belongs to: by subscription id, then the checkout's custom data, then its first order. */
-async function lockSubmissionForSubscription(
+export async function lockSubmissionForSubscription(
   tx: postgres.TransactionSql,
   ev: { subscriptionId: string; submissionId: string | null; orderId?: string | null },
 ): Promise<Submission | null> {
@@ -379,10 +384,14 @@ export async function applyInvoiceEvent(ev: InvoiceEvent, deliveryId: string, ca
   });
 }
 
-/** The Lemon Squeezy subscription behind the advertiser's own listing, if it has one. */
-export async function subscriptionIdFor(id: string, userId: string): Promise<string | null> {
-  const [row] = await db()<{ subscription_id: string | null }[]>`select subscription_id from submissions where id = ${id} and user_id = ${userId}`;
-  return row?.subscription_id ?? null;
+/** The subscription behind the advertiser's own listing (and whose it is), if it has one. */
+export async function subscriptionFor(
+  id: string,
+  userId: string,
+): Promise<{ subscriptionId: string | null; provider: Submission["billing_provider"]; customerId: string | null } | null> {
+  const [row] = await db()<Pick<Submission, "subscription_id" | "billing_provider" | "provider_customer_id">[]>`
+    select subscription_id, billing_provider, provider_customer_id from submissions where id = ${id} and user_id = ${userId}`;
+  return row ? { subscriptionId: row.subscription_id, provider: row.billing_provider, customerId: row.provider_customer_id } : null;
 }
 
 // ─── Claiming by an account ──────────────────────────────────────────────────

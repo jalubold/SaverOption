@@ -3,16 +3,18 @@ import type { FlowMode, PromoteContext } from "@/components/promote/flow-types";
 import { isPaid } from "@/lib/listing-status";
 import { readClaimCookie } from "@/lib/server/claim";
 import { dbConfigured } from "@/lib/server/db";
-import { checkoutMode, getListingPlans } from "@/lib/server/lemonsqueezy";
+import { checkoutChoice, plansFor, providerNames } from "@/lib/server/listing-checkout";
 import { getSubmissionByClaim } from "@/lib/server/submissions";
 import { getUser, isAdmin } from "@/lib/server/supabase";
 
 /** What the promote form needs: checkout mode for this visitor, plus any submission this browser started. */
 export async function loadPromoteContext({ fresh = false }: { fresh?: boolean } = {}): Promise<PromoteContext> {
   const user = await getUser();
-  const [mode, plans] = await Promise.all([checkoutMode({ admin: isAdmin(user) }), getListingPlans()]);
+  const { mode, provider } = await checkoutChoice({ admin: isAdmin(user) });
+  const plans = await plansFor(provider);
   const ctx: PromoteContext = {
     mode: (mode === "live" || mode === "test" ? mode : "closed") as FlowMode,
+    provider: providerNames[provider],
     resume: null,
     paidId: null,
     signedIn: Boolean(user),

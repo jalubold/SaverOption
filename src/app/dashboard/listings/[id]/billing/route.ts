@@ -1,15 +1,16 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { dbConfigured } from "@/lib/server/db";
+import { dodoPortalUrl } from "@/lib/server/dodo";
 import { subscriptionPortalUrl } from "@/lib/server/lemonsqueezy";
-import { subscriptionIdFor } from "@/lib/server/submissions";
+import { subscriptionFor } from "@/lib/server/submissions";
 import { getUser } from "@/lib/server/supabase";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /**
- * "Manage subscription": sends the listing's owner to Lemon Squeezy's customer
- * portal, where they update their card, switch plan or cancel. The portal link
- * is signed and short-lived, so it's fetched fresh on every visit.
+ * "Manage subscription": sends the listing's owner to their payment provider's
+ * customer portal (Dodo Payments or Lemon Squeezy), where they update their card or
+ * cancel. Portal links are signed and short-lived, so one is made on every visit.
  */
 export async function GET(request: NextRequest, ctx: RouteContext<"/dashboard/listings/[id]/billing">) {
   const { id } = await ctx.params;
@@ -24,7 +25,14 @@ export async function GET(request: NextRequest, ctx: RouteContext<"/dashboard/li
   const user = await getUser();
   if (!user) return go(new URL(`/login?next=${encodeURIComponent(`/dashboard/listings/${id}`)}`, origin));
 
-  const subscriptionId = await subscriptionIdFor(id.toLowerCase(), user.id);
-  const portal = subscriptionId ? await subscriptionPortalUrl(subscriptionId) : null;
+  const sub = await subscriptionFor(id.toLowerCase(), user.id);
+  const portal =
+    sub?.provider === "dodo"
+      ? sub.customerId
+        ? await dodoPortalUrl(sub.customerId, `${origin}/dashboard/listings/${id}`)
+        : null
+      : sub?.subscriptionId
+        ? await subscriptionPortalUrl(sub.subscriptionId)
+        : null;
   return go(portal ?? new URL(`/dashboard/listings/${id}?billing=unavailable`, origin));
 }
