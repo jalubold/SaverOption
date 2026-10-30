@@ -1,0 +1,91 @@
+# Saver Option Business for Mac (desktop/): builds a universal app (Apple silicon + Intel) on a
+# macOS runner and publishes it as a GitHub release, which /business/download links to.
+#
+# Each version (desktop/src-tauri/tauri.conf.json) is one release, tagged desktop-v<version>;
+# rebuilding the same version replaces its files. Every release carries Saver-Option-Business-mac.dmg
+# (the fixed name the download page looks for) and a versioned copy.
+#
+# The app is signed ad hoc (no Apple Developer ID yet), so macOS asks people to allow it once in
+# System Settings → Privacy & Security; the download page explains that.
+
+name: Desktop app (macOS)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "desktop/**"
+      - ".github/workflows/desktop.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: desktop-macos
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: macos-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Rust toolchain for both Mac architectures
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup target add aarch64-apple-darwin x86_64-apple-darwin
+
+      - name: Install the Tauri CLI
+        working-directory: desktop
+        run: npm ci
+
+      - name: Unit tests
+        working-directory: desktop/src-tauri
+        run: cargo test --locked
+
+      - name: Build the app (universal)
+        working-directory: desktop
+        run: npx tauri build --target universal-apple-darwin --bundles app
+
+      - name: Sign ad hoc and make the disk image
+        id: package
+        run: |
+          set -euo pipefail
+          VERSION=$(node -p "require('./desktop/src-tauri/tauri.conf.json').version")
+          APP="desktop/src-tauri/target/universal-apple-darwin/release/bundle/macos/Saver Option Business.app"
+          test -d "$APP"
+          codesign --force --deep --sign - "$APP"
+          codesign --verify --deep --strict --verbose=2 "$APP"
+          for bin in "$APP/Contents/MacOS/"*; do echo "$bin: $(lipo -archs "$bin")"; done
+          STAGE=$(mktemp -d)
+          cp -R "$APP" "$STAGE/"
+          ln -s /Applications "$STAGE/Applications"
+          mkdir -p out
+          hdiutil create -volname "Saver Option Business" -srcfolder "$STAGE" -ov -format UDZO "out/Saver-Option-Business-mac.dmg"
+          cp "out/Saver-Option-Business-mac.dmg" "out/Saver-Option-Business-$VERSION-mac.dmg"
+          shasum -a 256 out/*.dmg | tee out/SHA256SUMS.txt
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.package.outputs.version }}
+        run: |
+          set -euo pipefail
+          TAG="desktop-v$VERSION"
+          NOTES="Saver Option Business for Mac $VERSION — universal (Apple silicon and Intel), macOS 12 Monterey or later.
+
+          Download it from https://www.saveroption.com/business/download. The app isn't notarized by Apple yet: the first time, open System Settings → Privacy & Security and choose Open Anyway.
+
+          Built from ${GITHUB_SHA}."
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" out/*.dmg out/SHA256SUMS.txt --clobber
+          else
+            gh release create "$TAG" out/*.dmg out/SHA256SUMS.txt --title "Saver Option Business for Mac $VERSION" --notes "$NOTES" --target "$GITHUB_SHA"
+          fi

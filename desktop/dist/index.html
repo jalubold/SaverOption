@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Saver Option Business</title>
+    <style>
+      :root { color-scheme: dark; }
+      html, body { height: 100%; margin: 0; }
+      body {
+        display: flex; align-items: center; justify-content: center; text-align: center;
+        background: radial-gradient(60% 50% at 50% 35%, rgb(124 58 236 / 0.18), transparent 70%), #0c0e12;
+        color: #e7e9ee; font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        -webkit-user-select: none; user-select: none;
+      }
+      .mark { width: 72px; height: 72px; filter: drop-shadow(0 10px 30px rgb(124 58 236 / 0.55)); }
+      h1 { margin: 18px 0 4px; font-size: 18px; font-weight: 600; letter-spacing: -0.01em; }
+      p { margin: 0; color: #9aa0ac; }
+      button {
+        margin-top: 18px; padding: 9px 18px; border-radius: 10px; border: 1px solid rgb(255 255 255 / 0.18);
+        background: linear-gradient(#7c3aec, #4803bd); color: #fff; font: 600 14px/1 inherit; cursor: pointer;
+      }
+      [hidden] { display: none; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+        <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7c3aec" /><stop offset="1" stop-color="#4803bd" /></linearGradient></defs>
+        <rect width="32" height="32" rx="8" fill="url(#g)" />
+        <rect x="0.75" y="0.75" width="30.5" height="30.5" rx="7.25" fill="none" stroke="rgb(255 255 255 / 0.22)" stroke-width="1.5" />
+        <path d="M9 9.5h7.6l6.9 6.9a1.6 1.6 0 0 1 0 2.2l-4.9 4.9a1.6 1.6 0 0 1-2.2 0L9.5 16.6V9.5" fill="rgb(255 255 255 / 0.16)" stroke="#fff" stroke-width="2.2" stroke-linejoin="round" />
+        <circle cx="13.4" cy="13.4" r="1.6" fill="#fff" />
+      </svg>
+      <h1>Saver Option Business</h1>
+      <p id="status">Opening…</p>
+      <button id="retry" type="button" hidden>Try again</button>
+    </main>
+    <script>
+      // The app shows the live site; this page only covers the moment before it loads, or being offline.
+      const HOME = "https://www.saveroption.com/business/dashboard";
+      const status = document.getElementById("status");
+      const retry = document.getElementById("retry");
+      function open() {
+        if (navigator.onLine) {
+          status.textContent = "Opening…";
+          retry.hidden = true;
+          window.location.replace(HOME);
+        } else {
+          status.textContent = "You're offline. Saver Option Business needs an internet connection.";
+          retry.hidden = false;
+        }
+      }
+      retry.addEventListener("click", open);
+      window.addEventListener("online", open);
+      open();
+    </script>
+  </body>
+</html>

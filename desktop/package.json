@@ -1,0 +1,14 @@
+{
+  "name": "saver-option-business-desktop",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Saver Option Business for Mac (Tauri)",
+  "scripts": {
+    "tauri": "tauri",
+    "build": "tauri build",
+    "icons": "tauri icon icon-source.png --output src-tauri/icons"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.12.4"
+  }
+}
