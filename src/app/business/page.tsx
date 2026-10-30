@@ -280,7 +280,7 @@ export default async function BusinessLandingPage() {
           </div>
           {unavailable && <div className="mt-3">{unavailable}</div>}
           <ul className="so-rise mt-7 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[13px] text-faint" style={{ "--d": "800ms" } as CSSProperties}>
-            {["Google sign-in only — name, email and picture", "No bank or card connections", "Export or delete any time"].map((t) => (
+            {["Google sign-in only", "No bank or card connections", "Export or delete any time"].map((t) => (
               <li key={t} className="flex items-center gap-1.5">
                 <Icon name="check" size={13} className="text-accent-ink" />
                 {t}
