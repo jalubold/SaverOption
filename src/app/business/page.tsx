@@ -300,7 +300,6 @@ export default async function BusinessLandingPage() {
               </PointerTilt>
             </div>
           </div>
-          <p className="relative mt-5 text-center text-[12px] text-faint">Shown with example data.</p>
           <div aria-hidden="true" className="lx-horizon bottom-12 sm:bottom-16" />
         </Container>
       </PointerLight>

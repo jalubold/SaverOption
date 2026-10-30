@@ -228,7 +228,6 @@ export default async function DownloadPage() {
               </li>
             ))}
           </ul>
-          <p className="relative mt-3 text-center text-[12px] text-faint">Shown with example data.</p>
         </Container>
       </PointerLight>
 
