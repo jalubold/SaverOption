@@ -116,6 +116,12 @@ function Header() {
         <Icon name="search" size={13} className="shrink-0" />
         <span className="truncate">Search software, vendors, people…</span>
       </span>
+      {/* The quick jump button (QuickJump in shell-client.tsx). */}
+      <span className="hidden h-7 shrink-0 items-center gap-1.5 rounded-lg border border-line bg-surface px-2 text-[11.5px] text-faint md:inline-flex">
+        <Icon name="arrow-up-right" size={12} />
+        Jump to…
+        <kbd className="rounded border border-line bg-subtle px-1 font-sans text-[10px] text-faint">⌘K</kbd>
+      </span>
       <span className="ml-auto flex items-center gap-2">
         <span className="relative flex size-7 items-center justify-center text-muted">
           <Icon name="bell" size={16} />
