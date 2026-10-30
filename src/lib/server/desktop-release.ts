@@ -1,8 +1,9 @@
 /**
  * The latest Saver Option Business for Mac build, read from the repository's
  * GitHub releases (published by .github/workflows/desktop.yml), for the version
- * and size on the download page. Cached for 15 minutes. The download itself
- * never depends on this lookup: MAC_LATEST_URL always serves the newest file.
+ * and size on the download page and for the app's update check. Cached for 15 minutes,
+ * and refreshed straight away when a release is published (POST /api/desktop/refresh).
+ * The download itself never depends on this lookup: MAC_LATEST_URL always serves the newest file.
  */
 
 const REPO = "jalubold/SaverOption";
@@ -12,6 +13,8 @@ export const MAC_ASSET = "Saver-Option-Business-mac.dmg";
 export const MAC_DOWNLOAD_PATH = "/business/download/mac";
 /** GitHub's direct link to that file in the newest release (only desktop releases are published). */
 export const MAC_LATEST_URL = `https://github.com/${REPO}/releases/latest/download/${MAC_ASSET}`;
+/** Cache tag on the lookup, so a new release can refresh every page that shows it. */
+export const DESKTOP_RELEASE_TAG = "desktop-release";
 
 export interface MacRelease {
   version: string;
@@ -30,13 +33,14 @@ interface GhRelease {
   assets?: { name?: string; size?: number; browser_download_url?: string }[];
 }
 
-export async function latestMacRelease(): Promise<MacReleaseLookup> {
+/** `fresh` skips the cache (to check whether it is out of date). */
+export async function latestMacRelease({ fresh = false } = {}): Promise<MacReleaseLookup> {
   // Overridable for local testing against a mock.
   const api = (process.env.DESKTOP_RELEASE_API_URL || "https://api.github.com").replace(/\/$/, "");
   try {
     const res = await fetch(`${api}/repos/${REPO}/releases?per_page=20`, {
       headers: { Accept: "application/vnd.github+json", "User-Agent": "saveroption.com" },
-      next: { revalidate: 900 },
+      ...(fresh ? { cache: "no-store" as const } : { next: { revalidate: 900, tags: [DESKTOP_RELEASE_TAG] } }),
       signal: AbortSignal.timeout(8_000),
     });
     if (!res.ok) return { state: "unknown" };

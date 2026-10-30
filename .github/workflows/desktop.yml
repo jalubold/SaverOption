@@ -6,7 +6,8 @@
 # (the fixed name the download page looks for) and a versioned copy.
 #
 # The app is signed ad hoc (no Apple Developer ID yet), so macOS asks people to allow it once in
-# System Settings → Privacy & Security; the download page explains that.
+# System Settings → Privacy & Security; the download page explains that. After publishing, the last
+# step asks saveroption.com to show the new version at once (POST /api/desktop/refresh).
 
 name: Desktop app (macOS)
 
@@ -89,3 +90,16 @@ jobs:
           else
             gh release create "$TAG" out/*.dmg out/SHA256SUMS.txt --title "Saver Option Business for Mac $VERSION" --notes "$NOTES" --target "$GITHUB_SHA"
           fi
+
+      # The download page and the app's update check cache the release list for 15 minutes;
+      # this shows the new version on them straight away. Not fatal: they catch up on their own.
+      - name: Show the new version on saveroption.com
+        env:
+          VERSION: ${{ steps.package.outputs.version }}
+        run: |
+          for i in 1 2 3 4 5 6; do
+            GOT=$(curl -fsS -m 20 -X POST https://www.saveroption.com/api/desktop/refresh | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{console.log(JSON.parse(s).version??"")}catch{console.log("")}})' || true)
+            if [ "$GOT" = "$VERSION" ]; then echo "saveroption.com shows $VERSION"; exit 0; fi
+            echo "saveroption.com reports '${GOT}', waiting for $VERSION…"; sleep 20
+          done
+          echo "::warning::saveroption.com didn't confirm $VERSION yet; it picks it up within 15 minutes."

@@ -52,9 +52,11 @@ from the Actions tab). On a macOS runner it runs the Rust tests, builds a univer
 ad hoc, makes `Saver-Option-Business-mac.dmg` and publishes the GitHub release `desktop-v<version>`
 (the version in `desktop/src-tauri/tauri.conf.json`; bump it for a new release — rebuilding the
 same version replaces that release's files). `/business/download` reads the newest `desktop-v*`
-release from the GitHub API (cached 15 minutes) for the version and size. Every download goes
-through the site's own link, `/business/download/mac`, which redirects to that release's .dmg (or
-GitHub's newest-release link if the API can't be read), so visitors never land on GitHub. The
+release from the GitHub API for the version and size (cached 15 minutes; the workflow's last step
+calls `POST /api/desktop/refresh`, which clears that cache when the release list has really
+changed, so the page and the app's update check show a new version at once). Every download goes
+through the site's own link, `/business/download/mac`, which redirects to GitHub's newest-release
+link for the .dmg (no cached lookup in between), so visitors never land on GitHub. The
 header's "Download" (`?start=1`) starts the file straight away on a Mac while showing the install
 steps.
 
