@@ -1,6 +1,8 @@
 "use server";
 
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { isDesktopApp } from "@/lib/desktop";
 import { readClaimCookie } from "@/lib/server/claim";
 import { dbConfigured } from "@/lib/server/db";
 import { readFunnelSession } from "@/lib/server/funnel-session";
@@ -22,10 +24,13 @@ export async function signInWithGoogleAction(form: FormData): Promise<void> {
   const loginPage = next.startsWith("/business") ? `/business/login?next=${encodeURIComponent(next)}&` : "/login?";
   if (!authConfigured()) redirect(`${loginPage}error=unavailable`);
   const supabase = await supabaseServer();
+  // From the Mac app, Google runs in the browser (it doesn't allow sign-in inside apps' web views);
+  // the callback then hands the code back to the app, which holds the PKCE verifier.
+  const desktop = isDesktopApp((await headers()).get("user-agent"));
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${await requestOrigin()}/auth/callback?next=${encodeURIComponent(next)}`,
+      redirectTo: `${await requestOrigin()}/auth/callback?next=${encodeURIComponent(next)}${desktop ? "&desktop=1" : ""}`,
       queryParams: { prompt: "select_account" },
     },
   });

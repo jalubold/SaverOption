@@ -26,6 +26,9 @@ export default function DocsLayout({ children }: { children: ReactNode }) {
             <Link href="/business" className="hover:text-fg">
               Saver Option Business
             </Link>
+            <Link href="/business/download" className="hover:text-fg">
+              Download for Mac
+            </Link>
             <Link href="/deals" className="hover:text-fg">
               Software deals
             </Link>

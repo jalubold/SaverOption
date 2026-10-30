@@ -36,6 +36,7 @@ type GlyphName =
   | "plus"
   | "building"
   | "download"
+  | "laptop"
   | "chevron-down"
   | "chevron-right"
   | "chevron-left"
@@ -294,6 +295,7 @@ const paths: Record<GlyphName, React.ReactNode> = {
     </>
   ),
   download: <path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M4.5 19.5h15" />,
+  laptop: <path d="M5.5 15.5V7a1.5 1.5 0 0 1 1.5-1.5h10A1.5 1.5 0 0 1 18.5 7v8.5m-15 0h17l-1 2.2a1.5 1.5 0 0 1-1.4.8H5.9a1.5 1.5 0 0 1-1.4-.8l-1-2.2Z" />,
   "chevron-down": <path d="m6 9 6 6 6-6" />,
   "chevron-right": <path d="m9 6 6 6-6 6" />,
   "chevron-left": <path d="m15 6-6 6 6 6" />,

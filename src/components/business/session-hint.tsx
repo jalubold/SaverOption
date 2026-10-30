@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore, type ReactNode } from "react";
 import { CopyField } from "@/components/business/copy-field";
+import { isDesktopApp } from "@/lib/desktop";
 
 /*
  * Browser-side hints that let the public Business pages (landing, AI & MCP) be
@@ -15,6 +16,16 @@ const subscribe = () => () => {};
 /** Whether this browser holds a Saver Option sign-in (the Supabase auth cookie). */
 export function useSignedInHint(): boolean {
   return useSyncExternalStore(subscribe, () => /(?:^|;\s*)sb-[^=]+-auth-token(?:\.0)?=/.test(document.cookie), () => false);
+}
+
+/** Whether this page is open in Saver Option Business for Mac (its user agent says so). */
+export function useDesktopApp(): boolean {
+  return useSyncExternalStore(subscribe, () => isDesktopApp(navigator.userAgent), () => false);
+}
+
+/** Hides its children inside the Mac app (e.g. "Download for Mac"). */
+export function HideInDesktopApp({ children }: { children: ReactNode }) {
+  return useDesktopApp() ? null : <>{children}</>;
 }
 
 /** Renders one of two server-rendered variants depending on the sign-in hint. */

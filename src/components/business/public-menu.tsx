@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { useSignedInHint } from "@/components/business/session-hint";
+import { useDesktopApp, useSignedInHint } from "@/components/business/session-hint";
 import { Icon } from "@/components/ui/icon";
 
 /** The public Business header's links on screens too narrow for the inline nav. */
 export function PublicMobileMenu({ links, signedIn: known }: { links: { href: string; label: string }[]; signedIn?: boolean }) {
   const hint = useSignedInHint();
   const signedIn = known ?? hint;
+  const inApp = useDesktopApp();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -23,7 +24,7 @@ export function PublicMobileMenu({ links, signedIn: known }: { links: { href: st
     };
   }, [open]);
   return (
-    <div ref={ref} className="relative lg:hidden">
+    <div ref={ref} className="relative 2xl:hidden">
       <button
         type="button"
         aria-expanded={open}
@@ -37,7 +38,7 @@ export function PublicMobileMenu({ links, signedIn: known }: { links: { href: st
       {open && (
         <nav id="business-public-menu" aria-label="Business" className="absolute right-0 top-full z-50 mt-2 w-[min(80vw,260px)] rounded-xl border border-line bg-surface p-1.5 shadow-[0_16px_40px_-12px_rgb(0_0_0/0.6)]">
           <ul>
-            {links.map((l) => (
+            {links.filter((l) => !(inApp && l.href === "/business/download")).map((l) => (
               <li key={l.href}>
                 <Link href={l.href} onClick={() => setOpen(false)} className="flex rounded-lg px-3 py-2.5 text-[14.5px] font-medium text-fg hover:bg-subtle">
                   {l.label}

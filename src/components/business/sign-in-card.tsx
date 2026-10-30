@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { CSSProperties } from "react";
@@ -8,6 +9,7 @@ import { BusinessPublicHeader } from "@/components/business/public-header";
 import { FormMessage } from "@/components/ui/form";
 import { Icon } from "@/components/ui/icon";
 import { Container } from "@/components/ui/primitives";
+import { isDesktopApp } from "@/lib/desktop";
 import { businessReady, getBizSession, safeBusinessNext } from "@/lib/server/business/context";
 import { googleSignInEnabled } from "@/lib/server/supabase";
 
@@ -26,6 +28,7 @@ export async function BusinessSignIn({ searchParams, mode }: { searchParams: Rec
   const ready = businessReady();
   const google = ready && (await googleSignInEnabled());
   const notice = typeof searchParams.error === "string" ? notices[searchParams.error] : undefined;
+  const desktop = isDesktopApp((await headers()).get("user-agent"));
 
   return (
     <>
@@ -57,6 +60,12 @@ export async function BusinessSignIn({ searchParams, mode }: { searchParams: Rec
                   <div className="so-shine-hover">
                     <GoogleButton next={next} disabled={!google} />
                   </div>
+                  {desktop && (
+                    <p className="flex gap-2 text-[12.5px] leading-relaxed text-muted" data-desktop-hint>
+                      <Icon name="arrow-up-right" size={14} className="mt-0.5 text-accent-ink" />
+                      <span>Google sign-in opens in your browser. When you&apos;re done there, it brings you back to the app.</span>
+                    </p>
+                  )}
                   <p className="flex gap-2 text-[12.5px] leading-relaxed text-faint">
                     <Icon name="lock" size={14} className="mt-0.5 text-accent-ink" />
                     <span>

@@ -1,17 +1,20 @@
 import Link from "next/link";
 import { BrandMark } from "@/components/brand/logo";
 import { PublicMobileMenu } from "@/components/business/public-menu";
-import { SignedInSwitch } from "@/components/business/session-hint";
+import { HideInDesktopApp, SignedInSwitch } from "@/components/business/session-hint";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, Container } from "@/components/ui/primitives";
 
-const links = [
+// `wide`: shown in the inline nav only from that breakpoint (landing-page sections, so the
+// header fits next to the full name); the menu button lists every link on narrower screens.
+const links: { href: string; label: string; wide?: string }[] = [
   { href: "/business#features", label: "Features" },
   { href: "/business/mcp", label: "AI & MCP" },
-  { href: "/business#how-it-works", label: "How it works" },
+  { href: "/business#how-it-works", label: "How it works", wide: "hidden 2xl:block" },
   { href: "/business#pricing", label: "Pricing" },
-  { href: "/business#faq", label: "FAQ" },
+  { href: "/business#faq", label: "FAQ", wide: "hidden xl:block" },
   { href: "/business/docs", label: "Docs" },
+  { href: "/business/download", label: "Download" },
   { href: "/deals", label: "Software deals" },
 ];
 
@@ -50,13 +53,17 @@ export function BusinessPublicHeader({ signedIn }: { signedIn?: boolean }) {
         </Link>
         <nav aria-label="Business" className="hidden lg:block">
           <ul className="flex items-center gap-1 text-sm font-medium">
-            {links.map((l) => (
-              <li key={l.href}>
-                <Link href={l.href} className="whitespace-nowrap rounded-md px-2.5 py-1.5 text-muted transition-colors hover:bg-subtle hover:text-fg">
-                  {l.label}
-                </Link>
-              </li>
-            ))}
+            {links.map((l) => {
+              const item = (
+                <li key={l.href} className={l.wide}>
+                  <Link href={l.href} className="whitespace-nowrap rounded-md px-2 py-1.5 text-muted transition-colors hover:bg-subtle hover:text-fg">
+                    {l.label}
+                  </Link>
+                </li>
+              );
+              // No point offering the Mac app inside the Mac app.
+              return l.href === "/business/download" ? <HideInDesktopApp key={l.href}>{item}</HideInDesktopApp> : item;
+            })}
           </ul>
         </nav>
         <div className="ml-auto flex shrink-0 items-center gap-2">

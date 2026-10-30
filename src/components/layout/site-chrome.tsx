@@ -11,7 +11,8 @@ import type { ReactNode } from "react";
 export function SiteChrome({ header, footer, children }: { header: ReactNode; footer: ReactNode; children: ReactNode }) {
   const path = usePathname() ?? "/";
   const business = path === "/business" || path.startsWith("/business/");
-  const businessPublic = path === "/business" || path === "/business/mcp" || path === "/business/login" || path === "/business/signup";
+  const businessPublic = ["/business", "/business/mcp", "/business/download", "/business/login", "/business/signup"].includes(path);
+  const dark = ["/business", "/business/mcp", "/business/download"].includes(path);
   // The business app shell renders its own <main>.
   if (business && !businessPublic) return <>{children}</>;
   return (
@@ -20,8 +21,8 @@ export function SiteChrome({ header, footer, children }: { header: ReactNode; fo
       <main id="main" className="flex-1">
         {children}
       </main>
-      {/* The Business landing and MCP pages are dark from top to bottom, footer included. */}
-      {path === "/business" || path === "/business/mcp" ? <div className="theme-dark">{footer}</div> : footer}
+      {/* The Business landing, MCP and download pages are dark from top to bottom, footer included. */}
+      {dark ? <div className="theme-dark">{footer}</div> : footer}
     </>
   );
 }
