@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import type { CSSProperties } from "react";
 import Link from "next/link";
-import { AutoDownload } from "@/components/business/auto-download";
 import { MacScene } from "@/components/business/download/mac-scene";
 import { Magnetic, PointerLight, PointerTilt, ScrollScrub } from "@/components/business/landing/luxe";
 import { IconTile, type TileTone } from "@/components/business/landing/sections";
@@ -166,7 +165,6 @@ export default async function DownloadPage() {
             {/* The version is in the badge above. */}
             <ReleaseMeta lookup={lookup} withVersion={false} />
           </div>
-          {lookup.state !== "none" && <AutoDownload href={MAC_DOWNLOAD_PATH} />}
         </Container>
 
         <Container className="relative mt-14 pb-20 sm:mt-20 sm:pb-28">

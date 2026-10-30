@@ -56,9 +56,8 @@ release from the GitHub API for the version and size (cached 15 minutes; the wor
 calls `POST /api/desktop/refresh`, which clears that cache when the release list has really
 changed, so the page and the app's update check show a new version at once). Every download goes
 through the site's own link, `/business/download/mac`, which redirects to GitHub's newest-release
-link for the .dmg (no cached lookup in between), so visitors never land on GitHub. The
-header's "Download" (`?start=1`) starts the file straight away on a Mac while showing the install
-steps.
+link for the .dmg (no cached lookup in between), so visitors never land on GitHub. The header's
+"Download" only opens the page; the file downloads when the "Download for Mac" button is clicked.
 
 Type-checking the Mac-only code on Linux works with a stub C compiler (`cargo check` doesn't
 link): `CC_aarch64_apple_darwin=<stub that writes empty objects> AR_aarch64_apple_darwin=ar cargo
