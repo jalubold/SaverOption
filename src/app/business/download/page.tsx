@@ -75,7 +75,7 @@ export default async function DownloadPage() {
                 </a>
               ) : lookup.state === "unknown" ? (
                 <a href={RELEASES_URL} className={buttonClass("primary", "lg", "w-full max-w-xs sm:w-64")} data-download-mac>
-                  <Icon name="download" size={16} /> Download from GitHub
+                  <Icon name="download" size={16} /> Download for Mac
                 </a>
               ) : (
                 <span className={buttonClass("secondary", "lg", "pointer-events-none w-full max-w-xs opacity-70 sm:w-64")} aria-disabled="true">
@@ -149,16 +149,6 @@ export default async function DownloadPage() {
           </ul>
           <p className="so-reveal mt-8 max-w-3xl text-[13px] leading-relaxed text-faint">
             Windows and Linux versions aren&apos;t available yet — Saver Option Business works in any modern browser there.
-            {release ? (
-              <>
-                {" "}
-                Release notes and earlier versions are on{" "}
-                <a href={release.notesUrl} className="text-accent-ink underline underline-offset-2">
-                  GitHub
-                </a>
-                .
-              </>
-            ) : null}
           </p>
         </Container>
       </section>

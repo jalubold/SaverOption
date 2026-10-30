@@ -15,7 +15,6 @@ export interface MacRelease {
   publishedAt: string;
   sizeBytes: number;
   url: string;
-  notesUrl: string;
 }
 
 export type MacReleaseLookup = { state: "ready"; release: MacRelease } | { state: "none" } | { state: "unknown" };
@@ -25,7 +24,6 @@ interface GhRelease {
   draft?: boolean;
   prerelease?: boolean;
   published_at?: string;
-  html_url?: string;
   assets?: { name?: string; size?: number; browser_download_url?: string }[];
 }
 
@@ -51,7 +49,6 @@ export async function latestMacRelease(): Promise<MacReleaseLookup> {
           publishedAt: r.published_at ?? "",
           sizeBytes: asset.size ?? 0,
           url: asset.browser_download_url,
-          notesUrl: r.html_url ?? RELEASES_URL,
         },
       };
     }
