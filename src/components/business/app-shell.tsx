@@ -9,7 +9,7 @@ import { displayName, type BizContext } from "@/lib/server/business/context";
 import { BrandMark } from "@/components/brand/logo";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, cn } from "@/components/ui/primitives";
-import { NavProgress } from "@/components/business/nav-progress";
+import { DesktopMenuLinks, NavProgress } from "@/components/business/nav-progress";
 import { MobileMenuButton, Popover, QuickJump, SidebarFrame, SidebarNav, type NavGroup, type QuickAction } from "@/components/business/shell-client";
 
 /**
@@ -237,7 +237,8 @@ export function AppShell({ ctx, unread, notice, plan, children }: { ctx: BizCont
   const name = displayName(ctx.user);
   return (
     <SidebarFrame sidebar={<Sidebar ctx={ctx} plan={plan} />} collapsedSidebar={<Sidebar ctx={ctx} plan={plan} collapsed />}>
-      <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b border-line bg-bg/95 px-3 backdrop-blur sm:px-5">
+      {/* data-tauri-drag-region: in the Mac app, the bar's empty space drags the window; on narrow windows it starts after the window buttons. */}
+      <header data-tauri-drag-region className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b border-line bg-bg/95 px-3 backdrop-blur sm:px-5 desktop-app:max-lg:pl-[84px]">
         <MobileMenuButton />
         <form action="/business/search" method="get" role="search" className="relative min-w-0 max-w-md flex-1">
           <Icon name="search" size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-faint" />
@@ -317,6 +318,7 @@ export function AppShell({ ctx, unread, notice, plan, children }: { ctx: BizCont
         </div>
       )}
       <NavProgress />
+      <DesktopMenuLinks />
       <main id="main" className="mx-auto w-full max-w-[1280px] flex-1 px-4 pb-16 pt-6 sm:px-6 lg:px-8">
         {children}
       </main>

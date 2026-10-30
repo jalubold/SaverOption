@@ -31,8 +31,8 @@ export default async function OnboardingPage(props: PageProps<"/business/onboard
 
   return (
     <div className="min-h-dvh bg-bg text-fg">
-      <header className="theme-dark border-b border-line bg-bg">
-        <div className="mx-auto flex h-14 max-w-4xl items-center gap-3 px-4 sm:px-6">
+      <header data-tauri-drag-region className="theme-dark border-b border-line bg-bg">
+        <div data-tauri-drag-region className="mx-auto flex h-14 max-w-4xl items-center gap-3 px-4 sm:px-6 desktop-app:max-xl:pl-[84px]">
           <BrandMark size={26} />
           <span className="text-[14px] font-semibold text-fg">
             Saver Option <span className="text-accent-ink">Business</span>

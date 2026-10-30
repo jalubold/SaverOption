@@ -68,7 +68,8 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   // Current prices for the promote popup; cached pages are rebuilt when Lemon Squeezy is (re)connected.
   const plans = await getListingPlans();
   return (
-    <html lang={siteConfig.locale} style={brandVars} className={`${GeistSans.variable} ${GeistMono.variable} ${instrumentSerif.variable}`}>
+    // suppressHydrationWarning: the Mac app adds a class to <html> before the page hydrates (desktop/src-tauri/src/lib.rs).
+    <html lang={siteConfig.locale} style={brandVars} className={`${GeistSans.variable} ${GeistMono.variable} ${instrumentSerif.variable}`} suppressHydrationWarning>
       <body className="flex min-h-dvh flex-col">
         <a
           href="#main"

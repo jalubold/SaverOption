@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 /*
@@ -54,4 +54,26 @@ export function NavProgress() {
   }, [phase]);
 
   return <div aria-hidden="true" className="so-nav-progress" data-phase={phase} data-nav-progress />;
+}
+
+/**
+ * Saver Option Business for Mac: its Go menu and ⌘1–⌘9 send `so:desktop-navigate` with a path,
+ * opened here like a sidebar click (the app loads the page itself when nothing takes the event).
+ */
+export function DesktopMenuLinks() {
+  const router = useRouter();
+  const path = usePathname();
+  useEffect(() => {
+    const go = (event: Event) => {
+      const href = (event as CustomEvent<unknown>).detail;
+      if (typeof href !== "string" || !href.startsWith("/business/")) return;
+      event.preventDefault();
+      if (href === path) return;
+      startNavigation();
+      router.push(href);
+    };
+    window.addEventListener("so:desktop-navigate", go);
+    return () => window.removeEventListener("so:desktop-navigate", go);
+  }, [router, path]);
+  return null;
 }

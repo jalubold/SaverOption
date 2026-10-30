@@ -41,8 +41,8 @@ export function BusinessPublicHeader({ signedIn }: { signedIn?: boolean }) {
   );
   return (
     // Inline background: .theme-dark sets an opaque one outside the utility layers.
-    <header className="theme-dark sticky top-0 z-40 border-b border-line backdrop-blur-md" style={{ backgroundColor: "color-mix(in oklab, var(--bg) 82%, transparent)" }}>
-      <Container className="flex h-16 items-center gap-6">
+    <header data-tauri-drag-region className="theme-dark sticky top-0 z-40 border-b border-line backdrop-blur-md" style={{ backgroundColor: "color-mix(in oklab, var(--bg) 82%, transparent)" }}>
+      <Container data-tauri-drag-region className="flex h-16 items-center gap-6 desktop-app:max-xl:pl-[84px]">
         <Link href="/business" className="flex min-w-0 shrink items-center gap-2.5" aria-label="Saver Option Business home">
           <BrandMark className="shrink-0 drop-shadow-[0_4px_14px_color-mix(in_oklab,var(--accent)_55%,transparent)]" />
           {/* Stacked on phones so the name never has to be cut off. */}

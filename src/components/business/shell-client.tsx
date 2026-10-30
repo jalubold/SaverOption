@@ -127,6 +127,8 @@ export function SidebarFrame({ sidebar, collapsedSidebar, children }: { sidebar:
     <div className="flex min-h-dvh">
       <div className={cn("theme-dark hidden shrink-0 border-r border-line bg-bg transition-[width] duration-150 lg:block", collapsed ? "w-[68px]" : "w-[248px]")}>
         <aside className="sticky top-0 flex h-dvh flex-col">
+          {/* In the Mac app: the window buttons sit here, and the strip drags the window. */}
+          <div aria-hidden="true" data-tauri-drag-region className="hidden h-14 shrink-0 desktop-app:block" />
           <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-3 pb-3 [&>*]:shrink-0">{collapsed ? collapsedSidebar : sidebar}</div>
           {/* A footer of its own, so the end of a long, scrolling list never runs into it. */}
           <div className="shrink-0 border-t border-line px-3 py-2.5">
@@ -140,7 +142,7 @@ export function SidebarFrame({ sidebar, collapsedSidebar, children }: { sidebar:
       {open && (
         <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="Navigation">
           <button type="button" aria-label="Close navigation" className="absolute inset-0 bg-black/50" onClick={() => setOpen(false)} />
-          <aside className="theme-dark absolute inset-y-0 left-0 flex w-[min(86vw,300px)] flex-col overflow-y-auto border-r border-line bg-bg px-3 pb-6 [&>*]:shrink-0">{sidebar}</aside>
+          <aside className="theme-dark absolute inset-y-0 left-0 flex w-[min(86vw,300px)] flex-col overflow-y-auto border-r border-line bg-bg px-3 pb-6 desktop-app:pt-14 [&>*]:shrink-0">{sidebar}</aside>
         </div>
       )}
       <div className="flex min-w-0 flex-1 flex-col">

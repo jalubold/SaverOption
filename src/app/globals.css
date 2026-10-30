@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Inside Saver Option Business for Mac (the app adds html.desktop-app): room for the window buttons. */
+@custom-variant desktop-app (&:where(html.desktop-app, html.desktop-app *));
+
 /*
  * Design tokens.
  *
