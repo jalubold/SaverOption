@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createContext, useCallback, useContext, useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { startNavigation } from "@/components/business/nav-progress";
 import { Icon, type IconProps } from "@/components/ui/icon";
 import { cn } from "@/components/ui/primitives";
 
@@ -33,7 +34,13 @@ function activeHref(path: string, items: NavItem[]): string | null {
 
 export function SidebarNav({ groups, collapsed }: { groups: NavGroup[]; collapsed?: boolean }) {
   const path = usePathname() ?? "";
-  const active = activeHref(path, groups.flatMap((g) => g.items));
+  // The clicked item is marked current straight away, until its page arrives (the path changes).
+  const [clicked, setClicked] = useState<{ href: string; from: string } | null>(null);
+  const active = (clicked?.from === path ? clicked.href : null) ?? activeHref(path, groups.flatMap((g) => g.items));
+  // A page is fetched in full once the pointer or focus reaches its item, so most clicks open it at once.
+  // (Not when items scroll into view: that would render every page of the app on each visit.)
+  const [warmed, setWarmed] = useState<ReadonlySet<string>>(() => new Set());
+  const warm = (href: string) => setWarmed((s) => (s.has(href) ? s : new Set(s).add(href)));
   return (
     <nav aria-label="Business app" className="flex flex-col gap-5">
       {groups.map((g, gi) => (
@@ -51,6 +58,13 @@ export function SidebarNav({ groups, collapsed }: { groups: NavGroup[]; collapse
                 <li key={it.href}>
                   <Link
                     href={it.href}
+                    prefetch={warmed.has(it.href)}
+                    onMouseEnter={() => warm(it.href)}
+                    onFocus={() => warm(it.href)}
+                    onTouchStart={() => warm(it.href)}
+                    onClick={(e) => {
+                      if (!e.metaKey && !e.ctrlKey && !e.shiftKey && it.href !== path) setClicked({ href: it.href, from: path });
+                    }}
                     aria-current={on ? "page" : undefined}
                     title={collapsed ? it.label : undefined}
                     className={cn(
@@ -280,6 +294,7 @@ export function QuickJump({ items }: { items: QuickAction[] }) {
   const go = (it: QuickAction | undefined) => {
     if (!it) return;
     setOpen(false);
+    if (it.href !== path) startNavigation();
     router.push(it.href);
   };
 

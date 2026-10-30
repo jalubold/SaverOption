@@ -9,6 +9,7 @@ import { displayName, type BizContext } from "@/lib/server/business/context";
 import { BrandMark } from "@/components/brand/logo";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, cn } from "@/components/ui/primitives";
+import { NavProgress } from "@/components/business/nav-progress";
 import { MobileMenuButton, Popover, QuickJump, SidebarFrame, SidebarNav, type NavGroup, type QuickAction } from "@/components/business/shell-client";
 
 /**
@@ -315,6 +316,7 @@ export function AppShell({ ctx, unread, notice, plan, children }: { ctx: BizCont
           .
         </div>
       )}
+      <NavProgress />
       <main id="main" className="mx-auto w-full max-w-[1280px] flex-1 px-4 pb-16 pt-6 sm:px-6 lg:px-8">
         {children}
       </main>

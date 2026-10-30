@@ -44,7 +44,10 @@ export async function proxy(request: NextRequest) {
       },
     },
   });
-  await supabase.auth.getUser();
+  // Refresh only: getSession reads the cookie and calls Supabase just when the access token is
+  // about to expire (writing the new one back above). Pages verify the user with getUser, so a
+  // second Auth round trip here on every navigation and prefetch isn't needed.
+  await supabase.auth.getSession();
   return response;
 }
 

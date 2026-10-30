@@ -820,6 +820,34 @@
     z-index: 1;
   }
 
+  /* Page-to-page progress in the app (NavProgress): appears only after 150 ms, creeps towards
+     the end while waiting, then completes and fades as the next page lands. */
+  .so-nav-progress {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 70;
+    height: 2px;
+    pointer-events: none;
+    transform: scaleX(0);
+    transform-origin: left;
+    opacity: 0;
+    background: linear-gradient(90deg, var(--accent), color-mix(in oklab, var(--accent) 45%, #fff));
+    box-shadow: 0 0 10px color-mix(in oklab, var(--accent) 70%, transparent);
+  }
+  .so-nav-progress[data-phase="busy"] {
+    opacity: 1;
+    transform: scaleX(0.85);
+    transition:
+      transform 8s cubic-bezier(0.08, 0.7, 0.2, 1) 150ms,
+      opacity 0s linear 150ms;
+  }
+  .so-nav-progress[data-phase="done"] {
+    transform: scaleX(1);
+    transition:
+      transform 0.18s ease-out,
+      opacity 0.25s ease 0.15s;
+  }
+
   /* Loading placeholders with a travelling sheen. */
   .so-skeleton {
     background-color: var(--subtle);
