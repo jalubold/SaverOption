@@ -8,8 +8,8 @@ import { Icon, type IconProps } from "@/components/ui/icon";
 import { buttonClass, cn } from "@/components/ui/primitives";
 
 /**
- * The download page's picture of Saver Option Business for Mac, drawn as the app really
- * looks: a macOS window whose title bar is hidden, with the window buttons over the top of
+ * The hero picture on the Business landing and download pages: Saver Option Business as the
+ * Mac app really looks: a macOS window whose title bar is hidden, with the window buttons over the top of
  * the sidebar (titleBarStyle Overlay in desktop/src-tauri/src/lib.rs), the app's own sidebar
  * (src/components/business/app-shell.tsx) and the Overview page with example data.
  */

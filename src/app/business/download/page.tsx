@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import type { CSSProperties, ReactNode } from "react";
 import Link from "next/link";
-import { MacAppPreview } from "@/components/business/download/mac-app-preview";
+import { MacAppPreview } from "@/components/business/landing/mac-app-preview";
 import { LicensesVisual, RenewalsVisual, SavingsVisual, SpendVisual } from "@/components/business/landing/feature-visuals";
 import { Magnetic, PointerLight, PointerTilt, ScrollScrub } from "@/components/business/landing/luxe";
 import { IconTile, type TileTone } from "@/components/business/landing/sections";
