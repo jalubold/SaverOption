@@ -14,7 +14,8 @@ const links: { href: string; label: string; wide?: string }[] = [
   { href: "/business#pricing", label: "Pricing" },
   { href: "/business#faq", label: "FAQ", wide: "hidden xl:block" },
   { href: "/business/docs", label: "Docs" },
-  { href: "/business/download", label: "Download" },
+  // ?start=1: on a Mac the file starts downloading as the page (with the install steps) opens.
+  { href: "/business/download?start=1", label: "Download" },
   { href: "/deals", label: "Software deals" },
 ];
 
@@ -62,7 +63,7 @@ export function BusinessPublicHeader({ signedIn }: { signedIn?: boolean }) {
                 </li>
               );
               // No point offering the Mac app inside the Mac app.
-              return l.href === "/business/download" ? <HideInDesktopApp key={l.href}>{item}</HideInDesktopApp> : item;
+              return l.href.startsWith("/business/download") ? <HideInDesktopApp key={l.href}>{item}</HideInDesktopApp> : item;
             })}
           </ul>
         </nav>

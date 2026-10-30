@@ -17,7 +17,7 @@ export async function proxy(request: NextRequest) {
     to.pathname = "/stats/view";
     return NextResponse.redirect(to, 308);
   }
-  // The public Business pages (landing, AI & MCP, docs) are prerendered and need no session:
+  // The public Business pages (landing, AI & MCP, download, docs) are prerendered and need no session:
   // skipping the Supabase round trip keeps navigating to them instant.
   if (PUBLIC_BUSINESS.test(request.nextUrl.pathname)) return NextResponse.next();
   // Business pages read the requested path to send signed-out visitors back after sign-in.
@@ -52,7 +52,7 @@ export async function proxy(request: NextRequest) {
 }
 
 const STATS_PARAMS = ["range", ...Object.values(DIMENSIONS).map((d) => d.param)];
-const PUBLIC_BUSINESS = /^\/business(?:\/mcp|\/docs(?:\/[^/]+)*)?\/?$/;
+const PUBLIC_BUSINESS = /^\/business(?:\/mcp|\/download(?:\/mac)?|\/docs(?:\/[^/]+)*)?\/?$/;
 
 export const config = {
   matcher: ["/stats", "/dashboard/:path*", "/admin/:path*", "/claim", "/login", "/signup", "/promote/:path*", "/business/:path*"],

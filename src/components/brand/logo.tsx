@@ -16,7 +16,7 @@ export function BrandMark({ size = 32, className }: { size?: number; className?:
       <rect width="32" height="32" rx="8" fill="url(#brand-mark-fill)" />
       <rect x="0.75" y="0.75" width="30.5" height="30.5" rx="7.25" fill="none" stroke="rgb(255 255 255 / 0.22)" strokeWidth="1.5" />
       <path
-        d="M9 9.5h7.6l6.9 6.9a1.6 1.6 0 0 1 0 2.2l-4.9 4.9a1.6 1.6 0 0 1-2.2 0L9.5 16.6V9.5"
+        d="M9.5 9.5h7.1l6.9 6.9a1.6 1.6 0 0 1 0 2.2l-4.9 4.9a1.6 1.6 0 0 1-2.2 0L9.5 16.6Z"
         fill="rgb(255 255 255 / 0.16)"
         style={{ stroke: "var(--accent-contrast)" }}
         strokeWidth="2.2"

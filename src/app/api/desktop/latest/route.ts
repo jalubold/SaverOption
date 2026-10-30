@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { latestMacRelease } from "@/lib/server/desktop-release";
+import { latestMacRelease, MAC_DOWNLOAD_PATH } from "@/lib/server/desktop-release";
 import { absoluteUrl } from "@/lib/seo";
 
 /**
@@ -14,6 +14,6 @@ export async function GET() {
   return NextResponse.json({
     version: release?.version ?? null,
     page: absoluteUrl("/business/download"),
-    url: release?.url ?? null,
+    url: release ? absoluteUrl(MAC_DOWNLOAD_PATH) : null,
   });
 }

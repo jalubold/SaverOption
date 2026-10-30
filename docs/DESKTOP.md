@@ -52,7 +52,11 @@ from the Actions tab). On a macOS runner it runs the Rust tests, builds a univer
 ad hoc, makes `Saver-Option-Business-mac.dmg` and publishes the GitHub release `desktop-v<version>`
 (the version in `desktop/src-tauri/tauri.conf.json`; bump it for a new release — rebuilding the
 same version replaces that release's files). `/business/download` reads the newest `desktop-v*`
-release from the GitHub API (cached 15 minutes).
+release from the GitHub API (cached 15 minutes) for the version and size. Every download goes
+through the site's own link, `/business/download/mac`, which redirects to that release's .dmg (or
+GitHub's newest-release link if the API can't be read), so visitors never land on GitHub. The
+header's "Download" (`?start=1`) starts the file straight away on a Mac while showing the install
+steps.
 
 Type-checking the Mac-only code on Linux works with a stub C compiler (`cargo check` doesn't
 link): `CC_aarch64_apple_darwin=<stub that writes empty objects> AR_aarch64_apple_darwin=ar cargo

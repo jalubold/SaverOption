@@ -77,7 +77,7 @@ function quickActions(ctx: BizContext): QuickAction[] {
     { label: "Plan & billing", href: "/business/settings/billing", icon: "credit-card", group: "Settings", keywords: "upgrade subscribe trial pro business invoice" },
     { label: "Notifications", href: "/business/notifications", icon: "bell", group: "Account", keywords: "reminders alerts" },
     { label: "Help & docs", href: "/business/docs", icon: "info", group: "Help", keywords: "documentation guide support" },
-    { label: "Download for Mac", href: "/business/download", icon: "laptop", group: "Help", keywords: "desktop app macos install dock" },
+    { label: "Download for Mac", href: "/business/download?start=1", icon: "laptop", group: "Help", keywords: "desktop app macos install dock" },
   ];
   return [...pages, ...actions];
 }

@@ -6,7 +6,8 @@ import { Aurora, RevealOnScroll } from "@/components/business/motion";
 import { BusinessPublicHeader } from "@/components/business/public-header";
 import { Icon, type IconProps } from "@/components/ui/icon";
 import { buttonClass, Container, Eyebrow, SectionHeading } from "@/components/ui/primitives";
-import { latestMacRelease, RELEASES_URL } from "@/lib/server/desktop-release";
+import { AutoDownload } from "@/components/business/auto-download";
+import { latestMacRelease, MAC_DOWNLOAD_PATH } from "@/lib/server/desktop-release";
 import { pageMetadata } from "@/lib/seo";
 
 const description =
@@ -50,6 +51,8 @@ const fmtDate = (iso: string) => (iso ? new Intl.DateTimeFormat("en-US", { dateS
 export default async function DownloadPage() {
   const lookup = await latestMacRelease();
   const release = lookup.state === "ready" ? lookup.release : null;
+  // The site's own download link: it starts the newest .dmg straight away.
+  const href = MAC_DOWNLOAD_PATH;
   const meta = release ? [`Version ${release.version}`, fmtSize(release.sizeBytes), fmtDate(release.publishedAt)].filter(Boolean).join(" · ") : null;
 
   return (
@@ -69,23 +72,20 @@ export default async function DownloadPage() {
               Subscriptions, renewals, seats and savings in a window of their own — the same workspace as on the web, one click from your Dock.
             </p>
             <div className="so-rise mt-8 flex flex-wrap items-center gap-3" style={{ "--d": "380ms" } as CSSProperties}>
-              {release ? (
-                <a href={release.url} className={buttonClass("primary", "lg", "w-full max-w-xs sm:w-64")} data-download-mac>
-                  <Icon name="download" size={16} /> Download for Mac
-                </a>
-              ) : lookup.state === "unknown" ? (
-                <a href={RELEASES_URL} className={buttonClass("primary", "lg", "w-full max-w-xs sm:w-64")} data-download-mac>
-                  <Icon name="download" size={16} /> Download for Mac
-                </a>
-              ) : (
+              {lookup.state === "none" ? (
                 <span className={buttonClass("secondary", "lg", "pointer-events-none w-full max-w-xs opacity-70 sm:w-64")} aria-disabled="true">
                   The first build is on its way
                 </span>
+              ) : (
+                <a href={href} className={buttonClass("primary", "lg", "w-full max-w-xs sm:w-64")} data-download-mac>
+                  <Icon name="download" size={16} /> Download for Mac
+                </a>
               )}
               <Link href="/business" className={buttonClass("secondary", "lg", "w-full max-w-xs sm:w-64")}>
                 Use it in the browser
               </Link>
             </div>
+            {lookup.state !== "none" && <AutoDownload href={href} />}
             <p className="so-rise mt-4 text-[13px] text-faint" style={{ "--d": "460ms" } as CSSProperties}>
               Free download · Apple silicon and Intel · macOS 12 Monterey or later
               {meta ? <span className="block sm:inline"> · {meta}</span> : null}

@@ -1,14 +1,17 @@
 /**
  * The latest Saver Option Business for Mac build, read from the repository's
- * GitHub releases (published by .github/workflows/desktop.yml). Cached for 15
- * minutes; the download page falls back to the releases list if GitHub can't
- * be reached.
+ * GitHub releases (published by .github/workflows/desktop.yml), for the version
+ * and size on the download page. Cached for 15 minutes. The download itself
+ * never depends on this lookup: MAC_LATEST_URL always serves the newest file.
  */
 
 const REPO = "jalubold/SaverOption";
 /** The fixed-name copy of the universal .dmg that every desktop release carries. */
 export const MAC_ASSET = "Saver-Option-Business-mac.dmg";
-export const RELEASES_URL = `https://github.com/${REPO}/releases`;
+/** Where /business/download/mac sends the download (the site's own link for it is MAC_DOWNLOAD_PATH). */
+export const MAC_DOWNLOAD_PATH = "/business/download/mac";
+/** GitHub's direct link to that file in the newest release (only desktop releases are published). */
+export const MAC_LATEST_URL = `https://github.com/${REPO}/releases/latest/download/${MAC_ASSET}`;
 
 export interface MacRelease {
   version: string;
