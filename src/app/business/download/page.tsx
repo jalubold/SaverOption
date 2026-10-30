@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { CSSProperties } from "react";
 import Link from "next/link";
+import { HeroFloaters } from "@/components/business/landing/hero-floaters";
 import { MacAppPreview } from "@/components/business/landing/mac-app-preview";
 import { LicensesVisual, RenewalsVisual, SavingsVisual, SpendVisual } from "@/components/business/landing/feature-visuals";
 import { FeatureStory, Magnetic, PointerLight, PointerTilt, ScrollScrub, type StoryItem } from "@/components/business/landing/luxe";
@@ -215,6 +216,7 @@ export default async function DownloadPage() {
             <div className="so-tilt">
               <PointerTilt max={2}>
                 <MacAppPreview />
+                <HeroFloaters />
               </PointerTilt>
             </div>
           </div>

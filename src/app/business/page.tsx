@@ -4,6 +4,7 @@ import Link from "next/link";
 import { GoogleButton } from "@/components/auth/auth-forms";
 import { trackable } from "@/components/business/landing/example-data";
 import { LicensesVisual, RenewalsVisual, ReportsVisual, SavingsVisual, SpendVisual } from "@/components/business/landing/feature-visuals";
+import { HeroFloaters } from "@/components/business/landing/hero-floaters";
 import { MacAppPreview } from "@/components/business/landing/mac-app-preview";
 import { McpChatPreview } from "@/components/business/landing/mcp-chat-preview";
 import { PricingSwitch } from "@/components/business/pricing-switch";
@@ -295,6 +296,7 @@ export default async function BusinessLandingPage() {
             <div className="so-tilt">
               <PointerTilt max={2}>
                 <MacAppPreview />
+                <HeroFloaters />
               </PointerTilt>
             </div>
           </div>
