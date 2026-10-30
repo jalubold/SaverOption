@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import Link from "next/link";
-import { MacScene } from "@/components/business/download/mac-scene";
+import { MacAppPreview } from "@/components/business/download/mac-app-preview";
+import { LicensesVisual, RenewalsVisual, SavingsVisual, SpendVisual } from "@/components/business/landing/feature-visuals";
 import { Magnetic, PointerLight, PointerTilt, ScrollScrub } from "@/components/business/landing/luxe";
 import { IconTile, type TileTone } from "@/components/business/landing/sections";
 import { Aurora, RevealOnScroll, SpotlightGroup } from "@/components/business/motion";
@@ -12,7 +13,7 @@ import { latestMacRelease, MAC_DOWNLOAD_PATH, type MacReleaseLookup } from "@/li
 import { pageMetadata } from "@/lib/seo";
 
 const description =
-  "Saver Option Business for Mac: your software subscriptions, renewals and savings in their own window, with a Dock icon. Free download for Apple silicon and Intel Macs.";
+  "Saver Option Business for Mac: track subscriptions, manage licenses and find savings across your business, in an app of its own. Free download for Apple silicon and Intel Macs.";
 
 export const metadata: Metadata = {
   ...pageMetadata({ title: "Saver Option Business for Mac", description, path: "/business/download" }),
@@ -26,21 +27,54 @@ export const revalidate = 900;
 
 const APP_ICON = "/business/mac-app-icon.png";
 
-const shortcuts: { keys: string[]; label: string }[] = [
-  { keys: ["⌘", "1–9"], label: "Jump to any page" },
-  { keys: ["⌘", "K"], label: "Quick jump" },
-  { keys: ["⌘", "["], label: "Back" },
-  { keys: ["⌘", "]"], label: "Forward" },
-  { keys: ["⌘", ","], label: "Settings" },
-  { keys: ["⌘", "R"], label: "Reload" },
+/** What the Mac app adds, as it's implemented in desktop/src-tauri (shown under the screenshot). */
+const desktop: { icon: IconProps["name"]; text: string }[] = [
+  { icon: "laptop", text: "Its own window, Dock icon and ⌘-Tab" },
+  { icon: "grid", text: "Menu bar and shortcuts, ⌘1–⌘9 for pages" },
+  { icon: "clock", text: "Reopens on the page you left" },
 ];
 
-const native: { icon: IconProps["name"]; tone: TileTone; title: string; body: string }[] = [
-  { icon: "clock", tone: "blue", title: "Picks up where you left off", body: "Opens on the page you last had open, in the same size and place." },
-  { icon: "arrow-left", tone: "aqua", title: "Swipe back and forward", body: "Two fingers on the trackpad, just like you'd expect on a Mac." },
-  { icon: "lock", tone: "orange", title: "Sign in once", body: "Google sign-in opens in your browser and hands you straight back to the app." },
-  { icon: "refresh", tone: "pink", title: "Always current", body: "New features arrive without reinstalling, and the app tells you when a new version is out." },
-  { icon: "download", tone: "indigo", title: "Files and payments", body: "Exports save to Downloads; checkout and outside links open in your default browser." },
+const benefits: { title: ReactNode; body: string; visual: ReactNode; glow: string }[] = [
+  {
+    title: (
+      <>
+        Know where your money <em className="accent">goes.</em>
+      </>
+    ),
+    body: "See all your software spending in one place. Understand monthly costs, annual commitments, and spending by category.",
+    visual: <SpendVisual />,
+    glow: "rgb(124 58 236 / 0.26)",
+  },
+  {
+    title: (
+      <>
+        Never miss a <em className="accent">renewal.</em>
+      </>
+    ),
+    body: "Track upcoming renewals, billing dates, and cancellation deadlines before they cost you another month.",
+    visual: <RenewalsVisual />,
+    glow: "rgb(42 120 214 / 0.24)",
+  },
+  {
+    title: (
+      <>
+        Manage licenses and <em className="accent">seats.</em>
+      </>
+    ),
+    body: "Know who's using your software, track assigned seats, and identify unused licenses.",
+    visual: <LicensesVisual />,
+    glow: "rgb(235 104 52 / 0.2)",
+  },
+  {
+    title: (
+      <>
+        Find opportunities to <em className="accent">save.</em>
+      </>
+    ),
+    body: "Discover potential savings, unnecessary subscriptions, and opportunities to reduce software costs.",
+    visual: <SavingsVisual />,
+    glow: "rgb(27 175 122 / 0.2)",
+  },
 ];
 
 const steps: { icon: IconProps["name"]; tone: TileTone; title: string; body: string }[] = [
@@ -96,18 +130,6 @@ function DownloadButton({ lookup, mark, className }: { lookup: MacReleaseLookup;
   );
 }
 
-function Keys({ keys }: { keys: string[] }) {
-  return (
-    <span className="flex shrink-0 gap-1">
-      {keys.map((k) => (
-        <kbd key={k} className="dl-key">
-          {k}
-        </kbd>
-      ))}
-    </span>
-  );
-}
-
 export default async function DownloadPage() {
   const lookup = await latestMacRelease();
   const version = lookup.state === "ready" ? lookup.release.version : null;
@@ -123,36 +145,31 @@ export default async function DownloadPage() {
         <div aria-hidden="true" className="lx-dots" />
         <div aria-hidden="true" className="lx-dots-lit" />
         <div aria-hidden="true" className="lx-light" />
-        <Container className="relative flex flex-col items-center pt-12 text-center sm:pt-20">
-          <div className="so-rise relative">
-            <div aria-hidden="true" className="pointer-events-none absolute inset-[8%] rounded-[32%] bg-accent/55 blur-[46px]" />
-            <span className="so-float block">
-              {/* eslint-disable-next-line @next/next/no-img-element -- a fixed 512 px PNG, no optimization needed */}
-              <img src={APP_ICON} alt="Saver Option Business app icon" width={128} height={128} className="relative size-[104px] drop-shadow-[0_24px_40px_rgb(0_0_0/0.5)] sm:size-[128px]" />
-            </span>
-          </div>
-          <span
-            className="so-rise mt-7 inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.04] py-1 pl-1 pr-3.5 text-[12.5px] text-muted shadow-[inset_0_1px_0_rgb(255_255_255/0.06)] backdrop-blur-md"
-            style={{ "--d": "120ms" } as CSSProperties}
-          >
+        <Container className="relative flex flex-col items-center pt-14 text-center sm:pt-20">
+          <span className="so-rise inline-flex items-center gap-2.5 rounded-full border border-white/12 bg-white/[0.04] py-1 pl-1 pr-3.5 text-[12.5px] text-muted shadow-[inset_0_1px_0_rgb(255_255_255/0.06)] backdrop-blur-md">
+            {/* eslint-disable-next-line @next/next/no-img-element -- a fixed 512 px PNG, no optimization needed */}
+            <img src={APP_ICON} alt="" width={24} height={24} className="size-6 rounded-[6px]" />
+            <span className="font-medium text-fg">Saver Option Business for Mac</span>
             <span className="rounded-full bg-accent px-2 py-0.5 text-[11px] font-semibold text-white shadow-[0_0_18px_rgb(124_58_236/0.7)]">{version ? `v${version}` : "New"}</span>
-            Saver Option Business for Mac
           </span>
-          <h1 className="display mt-7 max-w-5xl text-[3.1rem] leading-[0.95] sm:text-[5rem] lg:text-[6.2rem]">
-            <span className="so-rise-blur" style={{ "--d": "180ms" } as CSSProperties}>
+          <h1 className="display mt-8 max-w-4xl text-[2.9rem] leading-[0.98] sm:text-[4.4rem] lg:text-[5.2rem]">
+            <span className="so-rise-blur block" style={{ "--d": "100ms" } as CSSProperties}>
               Your software spend,
             </span>{" "}
             {/* Entrance and sheen on separate elements, no filter around the sheen (Safari can't clip text to a
                 gradient inside a filtered element); the glow is a blurred shape behind the words. */}
-            <span className="so-rise-soft relative isolate inline-block" style={{ "--d": "360ms" } as CSSProperties}>
+            <span className="so-rise-soft relative isolate inline-block" style={{ "--d": "240ms" } as CSSProperties}>
               <span aria-hidden="true" className="pointer-events-none absolute -inset-x-[3%] inset-y-[22%] -z-10 rounded-full bg-accent/30 blur-2xl" />
-              <em className="accent lx-sheen">in your Dock.</em>
+              <em className="accent lx-sheen">under control.</em>
+            </span>{" "}
+            <span className="so-rise mt-4 block font-sans text-[1.15rem] font-medium leading-snug tracking-normal text-heading/90 sm:mt-5 sm:text-[1.45rem]" style={{ "--d": "380ms" } as CSSProperties}>
+              Now on your Mac.
             </span>
           </h1>
-          <p className="so-rise mt-6 max-w-xl text-[17px] leading-relaxed text-muted sm:text-[19px]" style={{ "--d": "520ms" } as CSSProperties}>
-            The whole workspace in a Mac app of its own — native window, menus and shortcuts.
+          <p className="so-rise mt-5 max-w-xl text-[16.5px] leading-relaxed text-muted sm:text-[18px]" style={{ "--d": "480ms" } as CSSProperties}>
+            Track subscriptions, manage licenses, and find savings across your business — all from one place.
           </p>
-          <div className="so-rise mt-9 flex w-full flex-wrap items-center justify-center gap-3" style={{ "--d": "640ms" } as CSSProperties}>
+          <div className="so-rise mt-9 flex w-full flex-wrap items-center justify-center gap-3" style={{ "--d": "600ms" } as CSSProperties}>
             {/* Both buttons share one width, side by side or stacked. */}
             <Magnetic className="w-full max-w-xs">
               <DownloadButton lookup={lookup} mark />
@@ -161,65 +178,64 @@ export default async function DownloadPage() {
               Use it in the browser
             </Link>
           </div>
-          <div className="so-rise mt-5" style={{ "--d": "760ms" } as CSSProperties}>
+          <div className="so-rise mt-5" style={{ "--d": "720ms" } as CSSProperties}>
             {/* The version is in the badge above. */}
             <ReleaseMeta lookup={lookup} withVersion={false} />
           </div>
         </Container>
 
-        <Container className="relative mt-14 pb-20 sm:mt-20 sm:pb-28">
-          <div aria-hidden="true" className="pointer-events-none absolute inset-x-[6%] top-[4%] h-[62%] rounded-full bg-accent/30 blur-[120px]" />
-          <div className="so-rise relative" style={{ "--d": "780ms" } as CSSProperties}>
+        <Container className="relative mt-14 pb-16 sm:mt-20 sm:pb-20">
+          <div aria-hidden="true" className="pointer-events-none absolute inset-x-[8%] top-[6%] h-[60%] rounded-full bg-accent/30 blur-[120px]" />
+          <div className="so-rise relative mx-auto max-w-[1080px]" style={{ "--d": "760ms" } as CSSProperties}>
             <div className="so-tilt">
-              <PointerTilt max={3}>
-                <MacScene />
+              <PointerTilt max={2}>
+                <MacAppPreview />
               </PointerTilt>
             </div>
           </div>
-          <div aria-hidden="true" className="lx-horizon bottom-10 sm:bottom-14" />
+          <ul className="so-rise relative mx-auto mt-10 flex max-w-4xl flex-wrap items-center justify-center gap-x-7 gap-y-3 text-[13.5px] text-muted" style={{ "--d": "900ms" } as CSSProperties}>
+            {desktop.map((d) => (
+              <li key={d.text} className="flex items-center gap-2">
+                <Icon name={d.icon} size={15} className="text-accent-ink" />
+                {d.text}
+              </li>
+            ))}
+          </ul>
+          <p className="relative mt-3 text-center text-[12px] text-faint">Shown with example data.</p>
         </Container>
       </PointerLight>
 
-      {/* ── Made for the Mac ─────────────────────────────────────── */}
+      {/* ── What it does ─────────────────────────────────────────── */}
       <section className="relative border-b border-line">
         <Container className="py-20 sm:py-28">
           <div className="so-reveal">
             <SectionHeading
               title={
                 <>
-                  Made for the <em className="accent">Mac.</em>
+                  One workspace for every <em className="accent">software decision.</em>
                 </>
               }
-              description="Everything Saver Option Business does on the web, with what a Mac app does better."
+              description="The same Saver Option Business you use in the browser — now in an app of its own."
             />
           </div>
-          <SpotlightGroup>
-            <ul className="mt-10 grid gap-4 lg:grid-cols-3">
-              <li className="so-reveal so-spot lx-glass relative overflow-hidden rounded-3xl p-6 sm:p-8 lg:col-span-2 lg:row-span-2">
-                <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full bg-accent/25 blur-[90px]" />
-                <IconTile icon="grid" tone="violet" size={46} />
-                <h3 className="display mt-6 text-[2rem] leading-[1.05] text-heading sm:text-[2.5rem]">
-                  Keyboard <em className="accent">first.</em>
-                </h3>
-                <p className="mt-3 max-w-md text-[15px] leading-relaxed text-muted">Every page is a shortcut away, from the menu bar or straight from the keys.</p>
-                <ul className="relative mt-8 grid gap-x-8 gap-y-4 sm:grid-cols-2">
-                  {shortcuts.map((s) => (
-                    <li key={s.label} className="flex items-center gap-4">
-                      <Keys keys={s.keys} />
-                      <span className="text-[14.5px] text-fg">{s.label}</span>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-              {native.map((n, i) => (
-                <li key={n.title} className="so-reveal so-spot lx-glass rounded-3xl p-6" style={{ "--d": `${(i + 1) * 70}ms` } as CSSProperties}>
-                  <IconTile icon={n.icon} tone={n.tone} size={42} />
-                  <h3 className="mt-5 text-[16px] font-semibold text-heading">{n.title}</h3>
-                  <p className="mt-1.5 text-[14px] leading-relaxed text-muted">{n.body}</p>
-                </li>
-              ))}
-            </ul>
-          </SpotlightGroup>
+          <div className="mt-14 space-y-20 sm:mt-20 sm:space-y-28">
+            {benefits.map((b, i) => (
+              <article key={i} className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+                <div className={cn("so-reveal min-w-0", i % 2 === 1 && "lg:order-2")}>
+                  <p className="flex items-center gap-3 text-accent-ink">
+                    <span className="display text-[1.35rem] leading-none">{String(i + 1).padStart(2, "0")}</span>
+                    <span aria-hidden="true" className="h-px w-12 bg-linear-to-r from-accent to-transparent" />
+                  </p>
+                  <h3 className="display mt-5 text-[2.2rem] leading-[1.02] sm:text-[2.9rem]">{b.title}</h3>
+                  <p className="mt-4 max-w-md text-[16px] leading-relaxed text-muted">{b.body}</p>
+                </div>
+                <div className={cn("so-reveal so-scroll-viz relative isolate min-w-0", i % 2 === 1 && "lg:order-1")}>
+                  <div aria-hidden="true" className="pointer-events-none absolute inset-x-6 inset-y-10 -z-10 rounded-full blur-3xl" style={{ background: b.glow }} />
+                  {b.visual}
+                </div>
+              </article>
+            ))}
+          </div>
         </Container>
       </section>
 
@@ -274,7 +290,7 @@ export default async function DownloadPage() {
             <img src={APP_ICON} alt="" width={88} height={88} className="size-[88px] drop-shadow-[0_20px_36px_rgb(0_0_0/0.5)]" />
           </span>
           <h2 className="display mt-8 max-w-3xl text-[2.7rem] leading-[0.98] sm:text-[4.2rem]">
-            Your workspace, <em className="accent lx-sheen">one click away.</em>
+            Your software spend, <em className="accent lx-sheen">one click away.</em>
           </h2>
           <p className="mt-5 max-w-md text-[16px] leading-relaxed text-muted">Download once — new features arrive without reinstalling.</p>
           <div className="mt-9 flex w-full flex-col items-center gap-4">
