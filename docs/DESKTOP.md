@@ -24,7 +24,24 @@ Download page: https://www.saveroption.com/business/download
   The Supabase Auth redirect allow-list must accept `/auth/callback` with query parameters (it
   already does for web sign-in; `&desktop=1` is one more parameter).
 - **Downloads** (CSV/JSON exports) are saved to the Downloads folder.
-- The window remembers its size and position. The site's pages get no Tauri APIs.
+- **Mac window and menus** (0.2.0):
+  - No separate title bar: the traffic lights sit in a 56 px strip at the top of the sidebar
+    (as tall as the top bar). The app adds `html.desktop-app` to every page before it's drawn;
+    the site's `desktop-app:` Tailwind variant leaves that room (sidebar strip, drawer, and the
+    top bar or public header on narrower windows). Elements with `data-tauri-drag-region`
+    drag the window.
+  - The window opens hidden on a dark background and shows once its first page is drawn, so
+    there's no white flash. It remembers its size and position, and reopens on the last page.
+  - Menu bar: Edit (copy/paste), View → Reload (⌘R) and full screen, Go → Back/Forward (⌘[ / ⌘],
+    and a two-finger swipe) and the main pages on ⌘1–⌘9, ⌘, for Settings, Help → docs, and
+    Check for Updates…. Go-menu pages are opened in-app through a `so:desktop-navigate` event the
+    app shell handles (`DesktopMenuLinks`), falling back to loading the page.
+  - **Updates:** on launch (at most once a day) and from Check for Updates…, the app reads
+    `/api/desktop/latest` and, when a newer version is out, offers to open the download page.
+    Installing stays a normal download; automatic installs would need a separate update-signing
+    key kept as a GitHub Actions secret.
+- **Permissions:** the site's pages get exactly two Tauri permissions — start dragging the window
+  and double-click to zoom (`capabilities/remote-window-drag.json`). Nothing else.
 - Inside the app, the site hides "Download" in the Business header and shows a note on the
   sign-in page that Google opens in the browser.
 
@@ -36,6 +53,10 @@ ad hoc, makes `Saver-Option-Business-mac.dmg` and publishes the GitHub release `
 (the version in `desktop/src-tauri/tauri.conf.json`; bump it for a new release — rebuilding the
 same version replaces that release's files). `/business/download` reads the newest `desktop-v*`
 release from the GitHub API (cached 15 minutes).
+
+Type-checking the Mac-only code on Linux works with a stub C compiler (`cargo check` doesn't
+link): `CC_aarch64_apple_darwin=<stub that writes empty objects> AR_aarch64_apple_darwin=ar cargo
+check --target aarch64-apple-darwin`.
 
 Locally on a Mac: `cd desktop && npm ci && npx tauri build --bundles app` (Rust and Xcode command
 line tools needed). App icons are generated from `desktop/icon-source.svg` → `icon-source.png`

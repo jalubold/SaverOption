@@ -1,0 +1,8 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "remote-window-drag",
+  "description": "The only thing saveroption.com's pages may ask of the app: dragging the window by its top area (data-tauri-drag-region), and double-clicking it to zoom.",
+  "windows": ["main"],
+  "remote": { "urls": ["https://www.saveroption.com/*", "https://saveroption.com/*"] },
+  "permissions": ["core:window:allow-start-dragging", "core:window:allow-internal-toggle-maximize"]
+}

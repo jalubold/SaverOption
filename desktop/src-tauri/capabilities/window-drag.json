@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "window-drag",
+  "description": "Dragging the window by the app's top area (data-tauri-drag-region) on the local start page. Nothing else.",
+  "windows": ["main"],
+  "permissions": ["core:window:allow-start-dragging", "core:window:allow-internal-toggle-maximize"]
+}
