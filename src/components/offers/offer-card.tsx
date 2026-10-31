@@ -5,6 +5,7 @@ import { Icon } from "@/components/ui/icon";
 import { cn } from "@/components/ui/primitives";
 import { headlineValue, summarizePrice } from "@/lib/format";
 import { outboundHref, outboundRel } from "@/lib/outbound";
+import { dealPath, type DealsBase } from "@/lib/deals-paths";
 import type { OfferView } from "@/lib/types";
 
 /**
@@ -12,11 +13,11 @@ import type { OfferView } from "@/lib/types";
  * link on the title); the "View deal" pill goes straight to the provider.
  * Colors come from tokens, so the card works on dark and light sections.
  */
-export function OfferCard({ offer, headingLevel = "h3" }: { offer: OfferView; headingLevel?: "h2" | "h3" }) {
+export function OfferCard({ offer, headingLevel = "h3", base = "/deals" }: { offer: OfferView; headingLevel?: "h2" | "h3"; base?: DealsBase }) {
   const Heading = headingLevel;
   const value = headlineValue(offer);
   const price = summarizePrice(offer.pricing);
-  const detailHref = `/deals/${offer.slug}`;
+  const detailHref = dealPath(offer.slug, base);
 
   return (
     <article
@@ -100,9 +101,12 @@ export function OfferGrid({
   offers,
   headingLevel,
   withSidebar = false,
+  base = "/deals",
 }: {
   offers: OfferView[];
   headingLevel?: "h2" | "h3";
+  /** Where the cards' detail pages live (the site's /deals, or the Business copies). */
+  base?: DealsBase;
   /** Next to a filter sidebar the grid has less room, so the third column waits for wider screens. */
   withSidebar?: boolean;
 }) {
@@ -110,7 +114,7 @@ export function OfferGrid({
     <ul className={cn("grid grid-cols-1 gap-5 sm:grid-cols-2", withSidebar ? "xl:grid-cols-3" : "lg:grid-cols-3")}>
       {offers.map((offer) => (
         <li key={offer.id}>
-          <OfferCard offer={offer} headingLevel={headingLevel} />
+          <OfferCard offer={offer} headingLevel={headingLevel} base={base} />
         </li>
       ))}
     </ul>

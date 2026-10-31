@@ -54,7 +54,7 @@ export default async function BusinessDealsPage(props: { searchParams: Promise<R
         crumbs={[{ label: "Overview", href: "/business/dashboard" }, { label: "Deals for your stack" }]}
         description="Live listings from the Saver Option deals catalog that match the software your workspace records — first for the same products, then for other products that do the same job. Terms, prices and end dates are shown only as each listing states them."
         actions={
-          <LinkButton href="/deals" icon="tag">
+          <LinkButton href="/business/software-deals" icon="tag">
             Browse all deals
           </LinkButton>
         }

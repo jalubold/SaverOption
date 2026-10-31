@@ -3,7 +3,7 @@ import { Icon } from "@/components/ui/icon";
 import { cn } from "@/components/ui/primitives";
 
 /**
- * Keyword search that submits to /deals as a plain GET form — works without
+ * Keyword search that submits to /deals (or `action`) as a plain GET form — works without
  * JavaScript, and `next/form` upgrades it to a client-side navigation.
  */
 export function SearchBox({
@@ -13,6 +13,7 @@ export function SearchBox({
   autoFocus,
   hidden,
   className,
+  action = "/deals",
 }: {
   defaultValue?: string;
   size?: "md" | "lg";
@@ -21,10 +22,12 @@ export function SearchBox({
   /** Extra params to keep when searching (e.g. the current category). */
   hidden?: Record<string, string | undefined>;
   className?: string;
+  /** The deals list to search (the site's /deals, or Saver Option Business's copy). */
+  action?: string;
 }) {
   const lg = size === "lg";
   return (
-    <Form action="/deals" role="search" className={cn("relative w-full", className)}>
+    <Form action={action} role="search" className={cn("relative w-full", className)}>
       <label htmlFor={lg ? "search-lg" : "search-md"} className="sr-only">
         Search deals
       </label>

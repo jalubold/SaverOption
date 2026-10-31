@@ -51,6 +51,8 @@ interface FiltersProps {
   resultCount: number;
   children: ReactNode; // results
   toolbar: ReactNode; // rendered left of the sort control
+  /** The list the filters navigate (the site's /deals, or Saver Option Business's copy). */
+  base?: string;
 }
 
 export function DealsFilters(props: FiltersProps) {
@@ -70,14 +72,15 @@ export function DealsFilters(props: FiltersProps) {
       sp.set(key, v);
     }
     const qs = sp.toString();
-    startTransition(() => router.push(qs ? `/deals?${qs}` : "/deals", { scroll: false }));
+    const base = props.base ?? "/deals";
+    startTransition(() => router.push(qs ? `${base}?${qs}` : base, { scroll: false }));
   }
 
   return (
     <PendingContext.Provider value={pending}>
       <form
         ref={formRef}
-        action="/deals"
+        action={props.base ?? "/deals"}
         method="get"
         onChange={navigate}
         onSubmit={(e) => {

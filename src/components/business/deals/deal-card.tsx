@@ -16,7 +16,7 @@ export function DealCard({ d, reason, className }: { d: DealSummary; reason?: st
             {d.product.name} · {d.providerName}
           </p>
           <h3 className="mt-0.5 text-[14.5px] font-semibold leading-snug text-fg">
-            <Link href={`/deals/${d.slug}`} className="hover:underline underline-offset-2">
+            <Link href={`/business/software-deals/${d.slug}`} className="hover:underline underline-offset-2">
               {d.title}
             </Link>
           </h3>
@@ -52,7 +52,7 @@ export function DealCard({ d, reason, className }: { d: DealSummary; reason?: st
         <a href={`/go/${d.slug}`} rel={d.sponsored ? "sponsored nofollow noopener" : "nofollow noopener"} className={buttonClass("primary", "sm")}>
           View deal <Icon name="arrow-up-right" size={13} />
         </a>
-        <Link href={`/deals/${d.slug}`} className={buttonClass("ghost", "sm")}>
+        <Link href={`/business/software-deals/${d.slug}`} className={buttonClass("ghost", "sm")}>
           Terms & eligibility
         </Link>
       </div>

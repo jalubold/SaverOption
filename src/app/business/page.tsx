@@ -388,7 +388,7 @@ export default async function BusinessLandingPage() {
               <Icon name="tag" size={18} className="mt-0.5 text-accent-ink" />
               <p className="min-w-0 flex-1 text-[14px] leading-relaxed text-muted">
                 Savings opportunities link to matching listings in the{" "}
-                <Link href="/deals" className="text-accent-ink underline underline-offset-2">
+                <Link href="/business/software-deals" className="text-accent-ink underline underline-offset-2">
                   Saver Option deals catalog
                 </Link>{" "}
                 — discounts, credits and alternatives from the providers&apos; own pages.

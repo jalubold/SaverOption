@@ -166,7 +166,7 @@ export function SavingsVisual() {
           <p className="text-[13px] font-semibold text-fg">Saver Option deals for tools you use</p>
           <p className="text-[12px] text-muted">Discounts, credits and startup programs from the deals catalog. Eligibility varies, so no amount is estimated.</p>
         </div>
-        <Link href="/deals" className="inline-flex items-center gap-1 text-[12.5px] font-semibold text-accent-ink hover:underline underline-offset-2">
+        <Link href="/business/software-deals" className="inline-flex items-center gap-1 text-[12.5px] font-semibold text-accent-ink hover:underline underline-offset-2">
           Browse deals <Icon name="arrow-right" size={13} />
         </Link>
       </div>

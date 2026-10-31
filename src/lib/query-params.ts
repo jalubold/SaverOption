@@ -37,6 +37,7 @@ export function parseDealsParams(raw: RawSearchParams): DealsParams {
 export function dealsHref(
   params: Partial<DealsParams>,
   overrides: Partial<Record<keyof DealsParams, string | number | boolean | undefined>> = {},
+  base = "/deals",
 ) {
   const merged = { ...params, ...overrides } as Record<string, string | number | boolean | undefined>;
   const sp = new URLSearchParams();
@@ -46,7 +47,7 @@ export function dealsHref(
     sp.set(key === "noCard" ? "nocard" : key, value === true ? "1" : String(value));
   }
   const qs = sp.toString();
-  return qs ? `/deals?${qs}` : "/deals";
+  return qs ? `${base}?${qs}` : base;
 }
 
 export function hasActiveFilters(p: DealsParams): boolean {

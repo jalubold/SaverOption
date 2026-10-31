@@ -29,7 +29,7 @@ export default function DocsLayout({ children }: { children: ReactNode }) {
             <Link href="/business/download" className="hover:text-fg">
               Download for Mac
             </Link>
-            <Link href="/deals" className="hover:text-fg">
+            <Link href="/business/software-deals" className="hover:text-fg">
               Software deals
             </Link>
             <Link href="/privacy" className="hover:text-fg">

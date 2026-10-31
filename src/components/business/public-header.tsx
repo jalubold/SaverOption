@@ -15,7 +15,7 @@ const links: { href: string; label: string; wide?: string }[] = [
   { href: "/business#faq", label: "FAQ", wide: "hidden xl:block" },
   { href: "/business/docs", label: "Docs" },
   { href: "/business/download", label: "Download" },
-  { href: "/deals", label: "Software deals" },
+  { href: "/business/software-deals", label: "Software deals" },
 ];
 
 /**

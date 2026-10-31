@@ -293,7 +293,7 @@ export function AppShell({ ctx, unread, notice, plan, children }: { ctx: BizCont
               <Link href="/business/settings/billing" className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-[13px] text-muted hover:bg-subtle hover:text-fg">
                 <Icon name="credit-card" size={14} /> Plan &amp; billing
               </Link>
-              <Link href="/deals" className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-[13px] text-muted hover:bg-subtle hover:text-fg">
+              <Link href="/business/software-deals" className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-[13px] text-muted hover:bg-subtle hover:text-fg">
                 <Icon name="tag" size={14} /> Saver Option deals
               </Link>
               <form action="/auth/sign-out" method="post">

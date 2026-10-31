@@ -77,7 +77,7 @@ export async function BusinessSignIn({ searchParams, mode }: { searchParams: Rec
               </div>
               <p className="mt-5 text-center text-[13px] text-muted">
                 Looking for software deals instead?{" "}
-                <Link href="/deals" className="text-accent-ink underline underline-offset-2">
+                <Link href="/business/software-deals" className="text-accent-ink underline underline-offset-2">
                   Browse all deals
                 </Link>
               </p>

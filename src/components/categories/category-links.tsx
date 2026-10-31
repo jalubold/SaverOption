@@ -2,18 +2,19 @@ import Link from "next/link";
 import { CollectionGrid } from "@/components/categories/collection-tile";
 import { Icon } from "@/components/ui/icon";
 import { cn } from "@/components/ui/primitives";
+import { categoryPath, type DealsBase } from "@/lib/deals-paths";
 import type { Category, Product } from "@/lib/types";
 
 type CategoryWithCount = Category & { count: number; products: Product[] };
 
 /** Compact pill links for quick access (hero, empty states). */
-export function CategoryChips({ categories, className }: { categories: Category[]; className?: string }) {
+export function CategoryChips({ categories, className, base = "/deals" }: { categories: Category[]; className?: string; base?: DealsBase }) {
   return (
     <ul className={cn("flex flex-wrap gap-2", className)}>
       {categories.map((c) => (
         <li key={c.slug}>
           <Link
-            href={`/categories/${c.slug}`}
+            href={categoryPath(c.slug, base)}
             className="inline-flex items-center gap-1.5 rounded-full border border-line bg-subtle px-3 py-1.5 text-[13px] font-medium text-muted transition-colors hover:border-line-strong hover:text-fg"
           >
             <Icon name={c.icon} size={14} className="text-accent-ink" />

@@ -335,7 +335,7 @@ export default async function SavingsPage(props: { searchParams: Promise<Raw> })
           </li>
           <li>
             <strong className="text-fg">Saver Option deals</strong> — live listings on{" "}
-            <Link href="/deals" className="text-accent-ink underline underline-offset-2">
+            <Link href="/business/software-deals" className="text-accent-ink underline underline-offset-2">
               /deals
             </Link>{" "}
             for software you use or are evaluating — discounts, credits, startup programs, lifetime licences and free plans, at most {DEALS_PER_SOFTWARE} per tool (student offers and trials are left out). Whether you qualify depends on the listing&apos;s eligibility, so no amount is estimated.
@@ -461,7 +461,7 @@ function OpportunityCard({
 
       <div className="mt-3 flex flex-wrap items-center gap-2">
         {o.dealSlug && (
-          <LinkButton href={`/deals/${o.dealSlug}`} icon="tag">
+          <LinkButton href={`/business/software-deals/${o.dealSlug}`} icon="tag">
             View deal
           </LinkButton>
         )}

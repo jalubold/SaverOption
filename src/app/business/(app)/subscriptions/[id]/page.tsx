@@ -471,7 +471,7 @@ export default async function SubscriptionPage(props: { params: Promise<{ id: st
                   <li key={o.slug} className="flex gap-3 py-2.5 first:pt-0 last:pb-0">
                     <SoftwareLogo name={o.product.name} src={o.product.logo?.src ?? sub.logoSrc} size={32} className="mt-0.5" />
                     <div className="min-w-0">
-                      <Link href={`/deals/${o.slug}`} className="text-[13.5px] font-medium text-fg hover:underline underline-offset-2">
+                      <Link href={`/business/software-deals/${o.slug}`} className="text-[13.5px] font-medium text-fg hover:underline underline-offset-2">
                         {o.title}
                       </Link>
                       <p className="mt-1 flex flex-wrap items-center gap-1.5 text-[12px] text-muted">
