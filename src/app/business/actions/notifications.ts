@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { isUuid, type FormState } from "@/lib/business/form";
+import { setCalendarToken } from "@/lib/server/business/calendar";
 import { runAction } from "@/lib/server/business/context";
 import { markNotificationsRead } from "@/lib/server/business/savings-sync";
 
@@ -22,4 +23,18 @@ export async function markAllNotificationsReadAction(_prev: FormState, form: For
     revalidatePath("/business", "layout");
     return { ok: true, message: "All notifications marked as read." };
   });
+}
+
+/** Creates the member's own calendar link, or replaces it with a new one ("intent" = reset). */
+export async function calendarLinkAction(_prev: FormState, form: FormData): Promise<FormState> {
+  return runAction(
+    form,
+    async (ctx) => {
+      const reset = form.get("intent") === "reset";
+      await setCalendarToken(ctx, { reset });
+      revalidatePath("/business/settings/notifications");
+      return { ok: true, message: reset ? "New calendar link created. The old one no longer works." : "Your calendar link is ready." };
+    },
+    { billing: "open" },
+  );
 }

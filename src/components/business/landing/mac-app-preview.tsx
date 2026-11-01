@@ -140,7 +140,7 @@ function Overview() {
       {/* The Overview's dark summary card. */}
       <section className="biz-card biz-hero theme-dark grid gap-4 px-4 py-4 text-fg sm:px-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,260px)] lg:items-end">
         <div className="relative z-10 min-w-0">
-          <p className="text-[11px] font-medium text-faint">Northwind Studio · Example data</p>
+          <p className="text-[11px] font-medium text-faint">Northwind Studio</p>
           <p className="mt-0.5 text-[19px] font-semibold leading-tight tracking-tight text-heading">Overview</p>
           <p className="mt-3.5 text-[11px] font-medium text-muted">Monthly software spend</p>
           <p className="so-ink tabular w-fit text-[1.85rem] font-semibold leading-[1.1] tracking-tight">{usd(monthlyTotal)}</p>

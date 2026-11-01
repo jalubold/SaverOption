@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { calendarLinkAction } from "@/app/business/actions/notifications";
 import { deleteWorkspaceAction, resetDemoAction, updateCompanyAction, updateNotificationsAction, updatePreferencesAction } from "@/app/business/actions/workspace";
 import { formatIsoDate, MONTH_NAMES } from "@/lib/business/calc";
 import { COMMON_CURRENCIES, COMPANY_SIZES, DATE_FORMATS } from "@/lib/business/constants";
@@ -159,6 +160,22 @@ export function DeleteWorkspaceForm({ workspaceId, name }: { workspaceId: string
       <Submit variant="secondary" size="sm" pendingLabel="Deleting…" className={typed.trim() === name ? "!border-danger !text-danger" : undefined}>
         Delete workspace permanently
       </Submit>
+    </ActionForm>
+  );
+}
+
+/** "Create my calendar link", or "Reset link" once there is one. */
+export function CalendarLinkForm({ workspaceId, hasLink }: { workspaceId: string; hasLink: boolean }) {
+  return (
+    <ActionForm action={calendarLinkAction} workspaceId={workspaceId} className="space-y-3">
+      <input type="hidden" name="intent" value={hasLink ? "reset" : "create"} />
+      {hasLink ? (
+        <Submit variant="secondary" size="sm" pendingLabel="Resetting…">
+          Reset link
+        </Submit>
+      ) : (
+        <Submit pendingLabel="Creating…">Create my calendar link</Submit>
+      )}
     </ActionForm>
   );
 }

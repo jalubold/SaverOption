@@ -68,7 +68,7 @@ const baseFaq = [
   },
   {
     q: "Does it remind us about renewals?",
-    a: "Yes, as in-app notifications 30, 14 and 7 days before each renewal by default, or the windows you choose. Email reminders aren't available yet.",
+    a: "Yes, as in-app notifications 30, 14 and 7 days before each renewal by default, or the windows you choose, and in your own calendar: every member gets a personal calendar link for Google Calendar, Outlook or Apple Calendar. Email reminders aren't available yet.",
   },
   {
     q: "Can we export or delete our data?",
