@@ -249,8 +249,8 @@ function WorkspaceSwitcher({ ctx, collapsed }: { ctx: BizContext; collapsed?: bo
       {!collapsed && (
         <>
           <span className="min-w-0 flex-1">
-            <span className="block truncate text-[13px] font-semibold text-fg">{ctx.workspace.name}</span>
-            <span className="block text-[11.5px] text-faint">{roleLabels[ctx.role]}</span>
+            <span className="block truncate text-[13px] leading-5 font-semibold text-fg">{ctx.workspace.name}</span>
+            <span className="block text-[11.5px] leading-[17px] text-faint">{roleLabels[ctx.role]}</span>
           </span>
           <Icon name="chevron-down" size={14} className="text-faint" />
         </>

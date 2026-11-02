@@ -50,7 +50,7 @@ export function SidebarNav({ groups, collapsed }: { groups: NavGroup[]; collapse
             (collapsed ? (
               gi > 0 && <span aria-hidden="true" className="mx-auto mb-2 hidden h-px w-6 bg-line lg:block" />
             ) : (
-              <p className="mb-1 px-2.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-faint">{g.label}</p>
+              <p className="mb-1 px-2.5 text-[11px] leading-4 font-semibold uppercase tracking-[0.08em] text-faint">{g.label}</p>
             ))}
           <ul className="flex flex-col gap-0.5">
             {g.items.map((it) => {
