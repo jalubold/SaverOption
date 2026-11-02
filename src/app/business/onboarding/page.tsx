@@ -21,6 +21,7 @@ import { calendarClientLabels, calendarStatus } from "@/lib/server/business/cale
 import { getBizSession, requireBizUser, type BizContext } from "@/lib/server/business/context";
 import { getDepartments, getInvitationsForEmail, getOpenInvitations, getPeople, getSoftwareList, getSubscriptions } from "@/lib/server/business/data";
 import { requestOrigin } from "@/lib/server/origin";
+import { regionDefaults } from "@/lib/server/business/visitor-region";
 
 export const metadata = { title: "Set up Saver Option Business", robots: { index: false, follow: false } };
 
@@ -102,7 +103,7 @@ export default async function OnboardingPage(props: PageProps<"/business/onboard
                   : `It starts with a ${TRIAL_DAYS}-day free trial with everything included — no card needed. After that, choose a paid plan to keep going.`}
               </p>
               <div className="mt-6">
-                <CreateWorkspaceForm />
+                <CreateWorkspaceForm suggested={await regionDefaults()} />
               </div>
             </section>
             {ctx && (
