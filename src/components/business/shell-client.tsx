@@ -421,11 +421,14 @@ export function MobileNav({ tabs, morePaths, more, children }: { tabs: TabItem[]
   const all = [...tabs, ...morePaths.map((href) => ({ label: "", href, icon: "grid" as const }))];
   const current = (clicked?.from === path ? clicked.href : null) ?? activeHref(path, all);
   const inMore = current !== null && !tabs.some((t) => t.href === current);
+  // Forms (add, edit, import) take the whole screen, with their own buttons at the bottom, as a pushed screen does.
+  const form = /^\/business\/(subscriptions|software)\/(new|import|[^/]+\/edit)\/?$/.test(path);
   const warm = (href: string) => setWarmed((s) => (s.has(href) ? s : new Set(s).add(href)));
   return (
     <MoreSheetContext.Provider value={() => setOpen(true)}>
       {children}
-      <nav aria-label="Tabs" className="tab-bar fixed inset-x-0 bottom-0 z-40 select-none border-t border-line bg-bg/85 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl backdrop-saturate-150 lg:hidden desktop-app:hidden" data-tab-bar>
+      {form && <span hidden data-no-tabbar />}
+      <nav aria-label="Tabs" hidden={form} className="tab-bar fixed inset-x-0 bottom-0 z-40 select-none border-t border-line bg-bg/85 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl backdrop-saturate-150 lg:hidden desktop-app:hidden" data-tab-bar>
         <ul className="mx-auto grid h-[60px] max-w-xl grid-cols-5 px-1">
           {tabs.map((t) => {
             const on = !open && t.href === current;

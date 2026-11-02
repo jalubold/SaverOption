@@ -202,7 +202,21 @@ function WizardBody({
       <input type="hidden" name="softwareMode" value={mode} />
       <input type="hidden" name="after" value={after} />
       {softwareOnly && <input type="hidden" name="softwareOnly" value="on" />}
-      <ol className="flex overflow-x-auto border-b border-line bg-subtle/60 px-2 text-[12.5px]">
+      {/* Phones: which step of how many, and a progress bar. */}
+      <div className="border-b border-line bg-subtle/60 px-4 py-3 sm:hidden" data-wizard-progress>
+        <div className="flex items-baseline justify-between gap-2">
+          <p className="text-[15px] font-semibold text-fg">{steps[step]}</p>
+          <p className="text-[12.5px] text-faint">
+            Step {pos + 1} of {visibleSteps.length}
+          </p>
+        </div>
+        <div className="mt-2 flex gap-1.5" aria-hidden="true">
+          {visibleSteps.map((s, i) => (
+            <span key={s} className={cn("h-1 flex-1 rounded-full transition-colors", i <= pos ? "bg-accent" : "bg-line")} />
+          ))}
+        </div>
+      </div>
+      <ol className="hidden overflow-x-auto border-b border-line bg-subtle/60 px-2 text-[12.5px] sm:flex">
         {visibleSteps.map((s, i) => (
           <li key={s}>
             <button
@@ -223,7 +237,7 @@ function WizardBody({
       <div className="p-4 sm:p-6">
         {/* Step 1: software */}
         <div hidden={step !== 0} className="space-y-4">
-          <div className="seg" role="tablist" aria-label="Software">
+          <div className="seg max-sm:flex max-sm:w-full max-sm:[&>.seg-item]:flex-1" role="tablist" aria-label="Software">
             <button type="button" role="tab" aria-selected={mode === "existing"} className="seg-item" onClick={() => setMode("existing")} disabled={software.length === 0}>
               From inventory
             </button>
@@ -238,7 +252,7 @@ function WizardBody({
               </label>
               <input id="wiz-search" type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Name or vendor" className="mt-1.5 h-10 w-full rounded-[10px] border border-line-strong bg-bg px-3 text-[14px] outline-none focus:border-accent focus:ring-4 focus:ring-accent/20" />
               <input type="hidden" name="softwareId" value={softwareId} />
-              <ul className="mt-2 max-h-64 overflow-y-auto rounded-xl border border-line" role="listbox" aria-label="Software">
+              <ul className="mt-2 max-h-64 overflow-y-auto rounded-xl border border-line max-sm:max-h-[45vh]" role="listbox" aria-label="Software">
                 {filtered.length === 0 && <li className="px-3 py-3 text-[13px] text-faint">No matches. Create it as new software instead.</li>}
                 {filtered.map((s) => (
                   <li key={s.id}>
@@ -247,13 +261,13 @@ function WizardBody({
                       role="option"
                       aria-selected={s.id === softwareId}
                       onClick={() => setSoftwareId(s.id)}
-                      className={cn("flex w-full items-center justify-between gap-2 border-b border-line px-3 py-2.5 text-left text-[13.5px] last:border-0", s.id === softwareId ? "bg-accent-soft" : "hover:bg-subtle")}
+                      className={cn("flex w-full items-center justify-between gap-2 border-b border-line px-3 py-2.5 text-left text-[13.5px] last:border-0 max-sm:min-h-14 max-sm:text-[15px]", s.id === softwareId ? "bg-accent-soft" : "hover:bg-subtle")}
                     >
                       <span className="flex min-w-0 items-center gap-2.5">
                         <SoftwareLogo name={s.name} src={s.logoSrc} size={28} />
                         <span className="min-w-0">
-                          <span className="font-medium">{s.name}</span>
-                          <span className="ml-2 text-faint">{[s.vendorName, categoryLabels[s.category]].filter(Boolean).join(" · ")}</span>
+                          <span className="font-medium max-sm:block max-sm:truncate">{s.name}</span>
+                          <span className="text-faint max-sm:block max-sm:truncate max-sm:text-[12.5px] sm:ml-2">{[s.vendorName, categoryLabels[s.category]].filter(Boolean).join(" · ")}</span>
                         </span>
                       </span>
                       {s.id === softwareId && <Icon name="check" size={15} className="text-accent-ink" />}
@@ -418,9 +432,9 @@ function WizardBody({
           </p>
         )}
 
-        {/* On phones the step buttons stay in reach, just above the tab bar. */}
-        <div className="mt-6 flex items-center justify-between gap-3 border-t border-line pt-4 max-sm:sticky max-sm:bottom-[var(--tabbar,0px)] max-sm:z-10 max-sm:-mx-4 max-sm:bg-surface/95 max-sm:px-4 max-sm:pb-3 max-sm:backdrop-blur" data-wizard-actions>
-          <button type="button" onClick={back} disabled={pos === 0} className={buttonClass("secondary", "md")}>
+        {/* On phones the step buttons sit in a bar at the bottom of the screen. */}
+        <div className="form-actions mt-6 flex items-center justify-between gap-3 border-t border-line pt-4" data-wizard-actions>
+          <button type="button" onClick={back} disabled={pos === 0} className={buttonClass("secondary", "md", pos === 0 ? "max-sm:hidden" : undefined)}>
             <Icon name="arrow-left" size={14} /> Back
           </button>
           {step === 4 ? (

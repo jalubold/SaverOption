@@ -1369,3 +1369,39 @@
   font-size: 15px;
   font-weight: 500;
 }
+
+/* Forms on phones: no tab bar (it's a pushed screen), and the form's buttons in a bar at the bottom. */
+@media (max-width: 1023.98px) {
+  html:not(.desktop-app) .biz-shell:has([data-no-tabbar]) {
+    --tabbar: 0px;
+  }
+}
+@media (max-width: 639.98px) {
+  html:not(.desktop-app) .biz-shell .form-actions {
+    position: fixed;
+    inset: auto 0 var(--tabbar, 0px) 0;
+    z-index: 40;
+    margin: 0;
+    flex-wrap: nowrap;
+    padding: 12px 16px max(12px, env(safe-area-inset-bottom));
+    border-top: 1px solid var(--line);
+    background: color-mix(in oklab, var(--bg) 90%, transparent);
+    -webkit-backdrop-filter: blur(18px) saturate(1.5);
+    backdrop-filter: blur(18px) saturate(1.5);
+  }
+  html:not(.desktop-app) .biz-shell .form-actions > * {
+    flex: 1 1 0;
+    min-height: 48px;
+    justify-content: center;
+    font-size: 15px;
+  }
+  html:not(.desktop-app) .biz-shell:has(.form-actions) main {
+    padding-bottom: calc(104px + env(safe-area-inset-bottom) + var(--tabbar, 0px));
+  }
+}
+@media (max-width: 639.98px) {
+  /* Save on the right, Cancel on the left, as on a phone. */
+  html:not(.desktop-app) .biz-shell .form-actions:has(> a:last-child) {
+    flex-direction: row-reverse;
+  }
+}

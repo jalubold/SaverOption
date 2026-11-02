@@ -187,7 +187,7 @@ export function SubscriptionForm({
         <TextAreaField label="Notes" name="notes" optional defaultValue={v.notes ?? ""} maxLength={4000} className="sm:col-span-2" />
       </Section>
 
-      <div className="flex flex-wrap items-center gap-2 border-t border-line pt-4">
+      <div className="form-actions flex flex-wrap items-center gap-2 border-t border-line pt-4">
         <Submit pendingLabel="Saving…">Save changes</Submit>
         <LinkButton href={`/business/subscriptions/${v.id}`} size="md">
           Cancel

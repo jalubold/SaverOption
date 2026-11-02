@@ -59,7 +59,7 @@ export function SoftwareForm({
       <TextAreaField label="Business purpose" name="businessPurpose" optional defaultValue={v.businessPurpose ?? ""} maxLength={500} rows={2} className="sm:col-span-2" />
       <TextAreaField label="Description" name="description" optional defaultValue={v.description ?? ""} maxLength={1000} rows={2} className="sm:col-span-2" />
       <TextAreaField label="Notes" name="notes" optional defaultValue={v.notes ?? ""} maxLength={4000} className="sm:col-span-2" />
-      <div className="flex flex-wrap items-center gap-2 border-t border-line pt-4 sm:col-span-2">
+      <div className="form-actions flex flex-wrap items-center gap-2 border-t border-line pt-4 sm:col-span-2">
         <Submit pendingLabel="Saving…">Save changes</Submit>
         <LinkButton href={`/business/software/${v.id}`} size="md">
           Cancel

@@ -60,8 +60,9 @@ export function PageHeader({
         {l.label}
       </LinkButton>
     );
-  // On phones the tab bar is the way around; a page deeper than a tab gets a back link instead of the trail.
-  const back = crumbs && crumbs.length >= 3 ? crumbs.slice(0, -1).reverse().find((c) => c.href) : undefined;
+  // On phones the tab bar is the way around; a page below a tab (a detail, a form) gets a back link instead of the trail.
+  const parent = crumbs ? crumbs.slice(0, -1).reverse().find((c) => c.href) : undefined;
+  const back = parent && parent.href !== "/business/dashboard" ? parent : undefined;
   return (
     <div className="mb-6">
       {crumbs && crumbs.length > 0 && (
@@ -369,7 +370,7 @@ export function Pagination({ page, pageCount, href }: { page: number; pageCount:
 
 export function DefinitionList({ items, className }: { items: { label: string; value: ReactNode; hint?: string }[]; className?: string }) {
   return (
-    <dl className={cn("grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2", className)}>
+    <dl className={cn("grid grid-cols-2 gap-x-4 gap-y-3 sm:gap-x-6", className)}>
       {items.map((it) => (
         <div key={it.label} className="min-w-0">
           <dt className="text-[12px] text-faint">{it.label}</dt>
