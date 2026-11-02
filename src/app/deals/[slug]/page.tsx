@@ -1,13 +1,19 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { DealDetail } from "@/components/deals/deal-detail";
-import { getAllOfferSlugs, getOfferBySlug } from "@/lib/catalog";
+import { getOfferBySlug } from "@/lib/catalog";
 import { pageMetadata } from "@/lib/seo";
 
-export const revalidate = 3600;
+/**
+ * Pages are built on their first visit and then served from the cache, not all at build time:
+ * prerendering every one made each deployment hundreds of MB and filled the Hobby storage.
+ * The catalog only changes with a deploy; the 12-hour refresh keeps "ends in" and ended labels
+ * current without rewriting the cache every hour.
+ */
+export const revalidate = 43200;
 
 export async function generateStaticParams() {
-  return (await getAllOfferSlugs()).map((slug) => ({ slug }));
+  return [];
 }
 
 export async function generateMetadata(props: PageProps<"/deals/[slug]">): Promise<Metadata> {

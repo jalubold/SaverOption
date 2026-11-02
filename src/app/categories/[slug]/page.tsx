@@ -12,7 +12,7 @@ import { getCategories, getCategory, getSponsoredOffers, queryOffers } from "@/l
 import { categoryFaq } from "@/lib/faq";
 import { breadcrumbJsonLd, clampDescription, collectionJsonLd, faqJsonLd, freshnessLabel, pageMetadata } from "@/lib/seo";
 
-export const revalidate = 3600;
+export const revalidate = 43200;
 
 export async function generateStaticParams() {
   return (await getCategories()).map((c) => ({ slug: c.slug }));

@@ -10,7 +10,7 @@ import { Container } from "@/components/ui/primitives";
 import { getAudience, getAudiences, queryOffers } from "@/lib/catalog";
 import { breadcrumbJsonLd, clampDescription, collectionJsonLd, freshnessLabel, pageMetadata } from "@/lib/seo";
 
-export const revalidate = 3600;
+export const revalidate = 43200;
 
 export async function generateStaticParams() {
   return (await getAudiences()).map((a) => ({ slug: a.slug }));

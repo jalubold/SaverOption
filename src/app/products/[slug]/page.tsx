@@ -6,15 +6,21 @@ import { ProductLogo } from "@/components/offers/product-logo";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Icon } from "@/components/ui/icon";
 import { Badge, buttonClass, Container } from "@/components/ui/primitives";
-import { getAllProductSlugs, getOffersForProduct, getProductBySlug } from "@/lib/catalog";
+import { getOffersForProduct, getProductBySlug } from "@/lib/catalog";
 import { offerTypeLabels } from "@/lib/labels";
 import { hostname } from "@/lib/outbound";
 import { breadcrumbJsonLd, clampDescription, collectionJsonLd, freshnessLabel, pageMetadata } from "@/lib/seo";
 
-export const revalidate = 3600;
+/**
+ * Pages are built on their first visit and then served from the cache, not all at build time:
+ * prerendering every one made each deployment hundreds of MB and filled the Hobby storage.
+ * The catalog only changes with a deploy; the 12-hour refresh keeps "ends in" and ended labels
+ * current without rewriting the cache every hour.
+ */
+export const revalidate = 43200;
 
 export async function generateStaticParams() {
-  return (await getAllProductSlugs()).map((slug) => ({ slug }));
+  return [];
 }
 
 export async function generateMetadata(props: PageProps<"/products/[slug]">): Promise<Metadata> {
