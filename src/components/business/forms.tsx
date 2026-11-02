@@ -157,10 +157,11 @@ export function CheckboxField({ label, name, hint, className, ...input }: Compon
     <div className={cn("flex items-start gap-2.5", className)}>
       <input id={id} name={name} type="checkbox" className="mt-0.5 size-4 accent-[var(--accent)]" {...input} />
       <div>
-        <label htmlFor={id} className="text-[13.5px] font-medium text-fg">
+        {/* A block with its own 20px line: its first line shares the checkbox's centre (inline, it sat ~2px low). */}
+        <label htmlFor={id} className="block text-[13.5px] leading-5 font-medium text-fg">
           {label}
         </label>
-        {hint && <p className="text-[12px] text-faint">{hint}</p>}
+        {hint && <p className="mt-1 text-[12px] text-faint">{hint}</p>}
       </div>
     </div>
   );
