@@ -28,6 +28,7 @@ import { can } from "@/lib/business/permissions";
 import { buildSpendModel, type AttentionItem, type Group } from "@/lib/server/business/analytics";
 import { displayName, requireBizContext } from "@/lib/server/business/context";
 import { CalendarPrompt } from "@/components/business/calendar-connect";
+import { InfoTip } from "@/components/business/info-tip";
 import { asBilled, workspaceDisplay } from "@/lib/server/business/display-currency";
 import { getActivity, type Subscription } from "@/lib/server/business/data";
 import { logoFor } from "@/lib/server/business/logos";
@@ -151,7 +152,6 @@ export default async function DashboardPage() {
   const showDelta = model.historyReliable && delta !== 0;
   const otherMonthly = others(s.monthly, chartCurrency);
   const tools = topTools(model.subs, pref);
-  const vendorCount = model.byVendor.filter((g) => g.key !== "__none__").length;
 
   // Logos for vendor rows: the vendor's own mark when it's a known tool, or its only tool's logo.
   const vendorTools = new Map<string, Map<string, string | null>>();
@@ -221,123 +221,122 @@ export default async function DashboardPage() {
     const sub = converted.find((x) => x.id === t.id);
     if (sub && sub.priceMinor !== null) billedRenewing[sub.currency] = (billedRenewing[sub.currency] ?? 0) + sub.priceMinor;
   }
-  // A friendly opening: the time of day where the workspace is, and what's going on in one sentence.
+  const next = [...timeline].sort((x, y) => x.daysLeft - y.daysLeft || (x.kind === "deadline" ? -1 : 1))[0] ?? null;
+  // A friendly opening: the time of day where the workspace is.
   const hour = Number(new Intl.DateTimeFormat("en-US", { hour: "numeric", hourCycle: "h23", timeZone: ctx.workspace.timeZone }).format(new Date()));
   const greeting = hour >= 5 && hour < 12 ? "Good morning" : hour >= 12 && hour < 18 ? "Good afternoon" : "Good evening";
-  const soon = renewalsInWindow.filter((t) => t.daysLeft <= 30).length;
-  const daySummary =
-    s.activeCount === 0
-      ? "Nothing is active right now. Add the tools your team pays for and this page fills in."
-      : `You have ${s.activeCount} active subscription${s.activeCount === 1 ? "" : "s"}${
-          soon === 0 ? ", and nothing renews in the next 30 days." : `, and ${soon} renew${soon === 1 ? "s" : ""} in the next 30 days.`
-        }`;
   const listOf = (t: CurrencyTotals) => totalsList(t).filter((x) => x.amount !== 0).map((x) => formatMoney(x.amount, x.currency)).join(" + ");
   const rates = model.fx ? model.fx.rates.map((r) => formatRate(r.currency, pref, r.rate)).join(", ") : "";
   return (
     <>
-      {/* ── Hero: this month's run-rate at a glance ─────────────────────────── */}
-      <section className="biz-card biz-hero so-grain theme-dark so-rise px-5 py-6 text-fg sm:px-7 sm:py-7">
+      {/* ── Hero: one figure and the one thing coming up ─────────────────────── */}
+      <section className="biz-card biz-hero so-grain theme-dark so-rise px-5 py-6 text-fg sm:px-7 sm:py-7" data-dashboard-hero>
         <Aurora />
         <span aria-hidden="true" className="so-shine pointer-events-none absolute inset-0 rounded-[inherit]" />
-        <div className="relative z-10 grid gap-7 lg:grid-cols-[minmax(0,1fr)_minmax(0,380px)] lg:items-end">
+        <div className={cn("relative z-10 grid gap-7", model.historyReliable && "lg:grid-cols-[minmax(0,1fr)_minmax(0,360px)] lg:items-center")}>
           <div className="min-w-0">
-            <p className="text-[12.5px] font-medium text-faint">
-              {ctx.workspace.name} · As of {formatIsoDate(ctx.today, fmt)}
-            </p>
+            <p className="text-[12.5px] font-medium text-faint">{ctx.workspace.name}</p>
             <h1 className="mt-1 text-[26px] font-semibold leading-tight tracking-tight text-heading" data-greeting>
               {greeting}, {firstName}
             </h1>
-            <p className="mt-1.5 max-w-xl text-[14px] leading-relaxed text-muted" data-day-summary>
-              {daySummary}
-            </p>
-            <p className="mt-6 text-[12.5px] font-medium text-muted">Monthly software spend</p>
-            <div className="so-ink tabular mt-1 w-fit text-[2.35rem] font-semibold leading-[1.1] tracking-tight sm:text-[2.75rem]">
-              {heroMain ? formatMoney(heroMain.amount, heroMain.currency) : "—"}
+
+            <div className="relative mt-6 max-w-md">
+              <p className="flex items-center gap-1 text-[12.5px] font-medium text-muted">
+                Monthly software spend
+                <InfoTip label="Monthly software spend">
+                  What every active plan with a price costs per month — a yearly plan counts as a twelfth. It&apos;s today&apos;s run-rate, not cash already spent.
+                </InfoTip>
+              </p>
+              <div className="mt-1 flex items-baseline gap-1.5">
+                <span className="so-ink tabular w-fit text-[2.35rem] font-semibold leading-[1.1] tracking-tight sm:text-[2.75rem]">
+                  {heroMain ? formatMoney(heroMain.amount, heroMain.currency) : "—"}
+                </span>
+                {heroMain && <span className="text-[15px] text-faint">/mo</span>}
+              </div>
+              <div className="mt-2 flex flex-wrap items-center gap-2 text-[13px] text-muted">
+                <span data-annual>
+                  <Money totals={s.annualized} preferred={pref} className="!inline font-medium text-fg" /> a year
+                </span>
+                {showDelta && (
+                  <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[12.5px] font-medium", delta > 0 ? "bg-[#eb6834]/20 text-[#ffb08a]" : "bg-[#1baf7a]/20 text-[#7be0b6]")}>
+                    <Icon name="trending-up" size={13} className={delta < 0 ? "-scale-y-100" : undefined} />
+                    {delta > 0 ? "+" : "−"}
+                    {whole(Math.abs(delta), chartCurrency)} vs {formatMonth(model.runRate.at(-2)!.month)}
+                  </span>
+                )}
+                {s.missingPrice > 0 && (
+                  <Link href="/business/subscriptions?status=active" className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5 text-[12.5px] text-muted hover:text-fg">
+                    <Icon name="info" size={13} /> {s.missingPrice} without a price not included
+                  </Link>
+                )}
+              </div>
+              {model.fx && listOf(billed.monthly) && (
+                <p className="mt-1.5 text-[12px] text-faint">
+                  Includes <span className="tabular text-muted">{listOf(billed.monthly)}</span>/mo converted at the ECB reference rate of {formatIsoDate(model.fx.date, fmt)} ({rates})
+                </p>
+              )}
+              {heroRest.length > 0 && (
+                <p className="mt-1.5 text-[12px] text-faint">
+                  Plus <span className="tabular text-muted">{heroRest.map((t) => formatMoney(t.amount, t.currency)).join(" + ")}</span>/mo billed in{" "}
+                  {heroRest.map((t) => t.currency).join(" and ")}, not converted (no exchange rate right now)
+                </p>
+              )}
             </div>
-            {model.fx && listOf(billed.monthly) && (
-              <p className="mt-1.5 text-[12.5px] text-muted">
-                Includes <span className="tabular font-medium text-fg">{listOf(billed.monthly)}</span>/mo converted at the ECB reference rate of {formatIsoDate(model.fx.date, fmt)} (
-                {rates})
+
+            {/* The one thing coming up next, instead of more totals. */}
+            {next ? (
+              <Link
+                href={next.href}
+                className="mt-6 flex max-w-md items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.06] px-3.5 py-3 transition-colors hover:bg-white/[0.1]"
+                data-next-up
+              >
+                <span className="[&_.border-line]:border-white/15">
+                  <SoftwareLogo name={next.name} src={next.logo} size={34} />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[11.5px] font-medium uppercase tracking-[0.06em] text-faint">{next.kind === "deadline" ? "Next cancel-by date" : "Next renewal"}</span>
+                  <span className="block truncate text-[14px] font-medium text-heading">
+                    {next.name} · {next.dateLabel}
+                  </span>
+                </span>
+                <span className="shrink-0 text-right">
+                  <span className={cn("block text-[12.5px] font-medium", next.daysLeft <= 7 ? "text-[#ffcf8a]" : "text-muted")}>
+                    {next.daysLeft === 0 ? "Today" : `${next.daysLeft} day${next.daysLeft === 1 ? "" : "s"} left`}
+                  </span>
+                  {next.amount && <span className="tabular block text-[12px] text-faint">{next.amount}</span>}
+                </span>
+              </Link>
+            ) : (
+              <p className="mt-6 text-[13px] text-muted" data-next-up>
+                Nothing renews in the next {TIMELINE_DAYS} days.
               </p>
             )}
-            {heroRest.length > 0 && (
-              <p className="mt-1.5 text-[12.5px] text-muted">
-                Plus <span className="tabular font-medium text-fg">{heroRest.map((t) => formatMoney(t.amount, t.currency)).join(" + ")}</span>/mo billed in{" "}
-                {heroRest.map((t) => t.currency).join(" and ")} — no exchange rate available right now, so not converted
-              </p>
+
+            {canAdd && (
+              <div className="mt-6">
+                <LinkButton href="/business/subscriptions/new" variant="primary" icon="plus">
+                  Add software
+                </LinkButton>
+              </div>
             )}
-            <div className="mt-3 flex flex-wrap items-center gap-2 text-[12.5px]">
-              {showDelta && (
-                <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-medium", delta > 0 ? "bg-[#eb6834]/20 text-[#ffb08a]" : "bg-[#1baf7a]/20 text-[#7be0b6]")}>
-                  <Icon name="trending-up" size={13} className={delta < 0 ? "-scale-y-100" : undefined} />
-                  {delta > 0 ? "+" : "−"}
-                  {whole(Math.abs(delta), chartCurrency)} vs {formatMonth(model.runRate.at(-2)!.month)}
-                </span>
-              )}
-              {s.missingPrice > 0 && (
-                <Link href="/business/subscriptions?status=active" className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5 text-muted hover:text-fg">
-                  <Icon name="info" size={13} /> {s.missingPrice} without a price not included
-                </Link>
-              )}
-              {!showDelta && s.missingPrice === 0 && <span className="text-faint">Monthly equivalent of active plans</span>}
-            </div>
-            <dl className="mt-5 flex flex-wrap gap-x-8 gap-y-3 text-[13px]">
-              <div>
-                <dt className="text-faint">Annualized software spend</dt>
-                <dd className="tabular mt-0.5 text-[15px] font-semibold text-heading">
-                  <Money totals={s.annualized} preferred={pref} />
-                  {listOf(billed.annualized) && <span className="block text-[0.8em] font-normal opacity-65">incl. {listOf(billed.annualized)} converted</span>}
-                </dd>
-                <dd className="text-[11.5px] text-faint">At today&apos;s prices, not cash spent</dd>
-              </div>
-              <div>
-                <dt className="text-faint">Renewing in 9 weeks</dt>
-                <dd className="tabular mt-0.5 text-[15px] font-semibold text-heading">
-                  <Money totals={renewalTotals} preferred={pref} empty="Nothing" />
-                  {listOf(billedRenewing) && <span className="block text-[0.8em] font-normal opacity-65">incl. {listOf(billedRenewing)} converted</span>}
-                </dd>
-                <dd className="text-[11.5px] text-faint">
-                  {renewalsInWindow.length} renewal{renewalsInWindow.length === 1 ? "" : "s"}, list prices
-                </dd>
-              </div>
-            </dl>
           </div>
-          <div className="so-rise min-w-0 rounded-2xl border border-white/10 bg-white/[0.05] p-4 shadow-[inset_0_1px_0_rgb(255_255_255/0.08)] backdrop-blur-md" style={{ "--d": "250ms" } as CSSProperties}>
-            <div className="flex items-baseline justify-between gap-2 text-[12px]">
-              <span className="font-medium text-muted">12-month run-rate · {chartCurrency}</span>
-              <span className="tabular text-faint">{whole(cur, chartCurrency)}/mo now</span>
+
+          {/* The trend, once there's enough history for it to mean something. */}
+          {model.historyReliable && (
+            <div className="so-rise min-w-0 rounded-2xl border border-white/10 bg-white/[0.05] p-4 shadow-[inset_0_1px_0_rgb(255_255_255/0.08)] backdrop-blur-md" style={{ "--d": "250ms" } as CSSProperties}>
+              <div className="flex items-baseline justify-between gap-2 text-[12px]">
+                <span className="font-medium text-muted">Last 12 months</span>
+                <span className="tabular text-faint">{chartCurrency}</span>
+              </div>
+              <div className="mt-2">
+                <Sparkline values={model.runRate.map((p) => p.totals[chartCurrency] ?? 0)} label={`Monthly run-rate over the last 12 months, ${chartCurrency}`} tone="light" height={64} />
+              </div>
+              <div className="mt-1 flex justify-between text-[10.5px] text-faint">
+                <span>{formatMonth(model.runRate[0]!.month)}</span>
+                <span>{formatMonth(model.runRate.at(-1)!.month)}</span>
+              </div>
             </div>
-            <div className="mt-2">
-              <Sparkline values={model.runRate.map((p) => p.totals[chartCurrency] ?? 0)} label={`Monthly run-rate over the last 12 months, ${chartCurrency}`} tone="light" height={56} />
-            </div>
-            <div className="mt-1 flex justify-between text-[10.5px] text-faint">
-              <span>{formatMonth(model.runRate[0]!.month)}</span>
-              <span>{formatMonth(model.runRate.at(-1)!.month)}</span>
-            </div>
-            <div className="mt-4 flex items-center justify-between gap-3 border-t border-white/10 pt-3">
-              <span className="text-[12.5px] text-muted">
-                <strong className="font-semibold text-heading">{s.activeCount}</strong> active · <strong className="font-semibold text-heading">{vendorCount}</strong> vendor{vendorCount === 1 ? "" : "s"}
-              </span>
-              {tools.length > 0 && (
-                <span className="[&_.ring-surface]:ring-[#1a1530]">
-                  <LogoStack items={tools} max={6} size={26} />
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="relative z-10 mt-6 flex flex-wrap gap-2">
-          {canAdd && (
-            <LinkButton href="/business/subscriptions/new" variant="primary" icon="plus">
-              Add software
-            </LinkButton>
           )}
-          <LinkButton href="/business/reports" icon="chart">
-            Reports
-          </LinkButton>
-          <LinkButton href="/business/renewals" icon="calendar">
-            Renewals
-          </LinkButton>
         </div>
       </section>
 
