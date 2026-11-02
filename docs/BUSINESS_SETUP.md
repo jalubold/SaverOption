@@ -58,12 +58,26 @@ Saver Option asks Google only for the basic profile: name, email address and pro
 
 What's handled: starting OAuth (`signInWithGoogleAction`), the callback and session cookie (`/auth/callback`), session refresh on every `/business` request (`src/proxy.ts`), sign-out and "sign out everywhere" (`/auth/sign-out`, `scope=global`), cancelled consent (`?error=cancelled`), failed sign-in (`?error=google`), and expired sessions (pages redirect to sign-in; form submissions show "Your session has expired" and keep what was typed).
 
+### Our name and logo on Google's account chooser
+
+Google shows an app's name and logo on "Choose an account" only after it has verified the brand, and it shows the domain the sign-in returns to. With Supabase's default URL that domain is `<project-ref>.supabase.co`, which we can't verify. To show **Saver Option** and the logo:
+
+1. **Google Auth Platform → Branding**: app name `Saver Option`, the logo (square PNG, 120×120), support email, home page `https://www.saveroption.com`, privacy policy `https://www.saveroption.com/privacy`, terms `https://www.saveroption.com/terms`, and `saveroption.com` under Authorized domains.
+2. **Google Search Console**: verify ownership of `saveroption.com` with a Google account that is an owner or editor of the Cloud project.
+3. **Supabase custom domain** (a paid add-on), for example `auth.saveroption.com`: add it in the Supabase dashboard (or `supabase domains create --project-ref <project-ref> --custom-hostname auth.saveroption.com`), create the CNAME and TXT records it asks for, wait for the certificate, then activate it.
+4. **Before activating**, add `https://auth.saveroption.com/auth/v1/callback` to the OAuth client's Authorized redirect URIs (keep the `supabase.co` one).
+5. **Vercel**: set `NEXT_PUBLIC_SUPABASE_URL` to `https://auth.saveroption.com` and redeploy. People stay signed in: the session cookie keeps the project's name (`sb-<project-ref>-auth-token`), taken from the project ref inside the legacy anon key. If the app uses a new-style publishable key (`sb_publishable_…`), also set `SUPABASE_AUTH_COOKIE_NAME=sb-<project-ref>-auth-token`.
+6. **Google Auth Platform → Verification Center**: submit the brand for verification. The name and logo appear once Google approves it.
+
+`src/lib/supabase-config.ts` handles the cookie name; the end-to-end suite has a run against a custom auth domain (`biz-customdomain-e2e`).
+
 ## Environment variables
 
 Nothing new is required: Business uses `POSTGRES_URL`, `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`, which are already set.
 
 | Variable | Scope | Notes |
 | --- | --- | --- |
+| `SUPABASE_AUTH_COOKIE_NAME` | **server only** | Optional. The session cookie's name, for when Supabase Auth moves to a custom domain and the key doesn't carry the project ref (see "Our name and logo on Google's account chooser"). Leave it unset otherwise. |
 | `CRON_SECRET` | **server only** | Optional. Enables the daily reminder run: Vercel Cron calls `/api/cron/business-reminders` (see `vercel.json`) with `Authorization: Bearer <CRON_SECRET>`. Without it the route answers 503 and reminders are still created whenever someone opens the app. |
 | `ANTHROPIC_API_KEY` | **server only** | Optional. Enables the in-app AI Savings Assistant. Without it the assistant page says it isn't configured and nothing is sent to a model. |
 | `CREEM_API_KEY`, `CREEM_WEBHOOK_SECRET`, `CREEM_TEST_MODE`, `CREEM_PRODUCT_*` | **server only** | Paid plans through Creem. Without them the 7-day trial still runs, and Plan & billing shows list prices with a contact link instead of checkout. See `BILLING.md`. |

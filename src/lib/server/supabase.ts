@@ -2,6 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
+import { cookieOptionsFor, supabasePublicConfig } from "@/lib/supabase-config";
 
 /**
  * Supabase Auth (sessions in cookies) and Storage. Data queries go through
@@ -9,13 +10,7 @@ import { notFound, redirect } from "next/navigation";
  */
 
 function publicConfig() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
-  const key =
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
-    process.env.SUPABASE_ANON_KEY ||
-    process.env.SUPABASE_PUBLISHABLE_KEY;
-  return url && key ? { url, key } : null;
+  return supabasePublicConfig();
 }
 
 export function authConfigured(): boolean {
@@ -28,6 +23,7 @@ export async function supabaseServer(): Promise<SupabaseClient> {
   if (!cfg) throw new Error("Supabase is not configured");
   const store = await cookies();
   return createServerClient(cfg.url, cfg.key, {
+    ...cookieOptionsFor(cfg),
     cookies: {
       getAll: () => store.getAll(),
       setAll: (list) => {
