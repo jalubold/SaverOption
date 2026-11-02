@@ -120,6 +120,12 @@ function useGooglePopup(identity: GoogleIdentity | null, next: string, redirect:
           window.location.assign(body.next);
           return;
         }
+        // Our side couldn't finish (Google refused the code, Supabase refused the token, a setting is off):
+        // the redirect through Supabase still signs the person in. Too many tries is the one to wait out.
+        if (r.status !== 429) {
+          redirectRef.current();
+          return;
+        }
       } catch {}
       setError("Google sign-in didn't finish. Please try again.");
       setState("ready");
