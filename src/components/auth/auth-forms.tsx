@@ -165,7 +165,7 @@ function GoogleSubmit({ label, disabled, busy, onClick }: { label: string; disab
       onClick={onClick}
       disabled={working || disabled}
       aria-busy={working}
-      className="inline-flex h-12 w-full items-center justify-center gap-3 rounded-[14px] border border-[#dadce0] bg-white px-5 text-[15px] font-medium text-[#1f1f1f] shadow-sm transition-colors hover:bg-[#f8f9fa] disabled:cursor-not-allowed disabled:opacity-60"
+      className="inline-flex h-12 w-full cursor-pointer items-center justify-center gap-3 rounded-[14px] border border-[#dadce0] bg-white px-5 text-[15px] font-medium text-[#1f1f1f] shadow-sm transition-colors hover:bg-[#f8f9fa] disabled:cursor-not-allowed disabled:opacity-60"
     >
       {working ? (
         <>
