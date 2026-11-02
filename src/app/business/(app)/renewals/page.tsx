@@ -90,8 +90,10 @@ export default async function RenewalsPage(props: { searchParams: Promise<Search
                 )}{" "}
                 A subscription can set its own windows on its edit page.
               </p>
-              <p>They&apos;re created when someone opens the app, and daily by a scheduled job once CRON_SECRET is configured. Each reminder is created only once.</p>
-              <p>Email reminders aren&apos;t sent: no email provider is configured.</p>
+              <p>
+                They&apos;re checked whenever someone opens the app{process.env.CRON_SECRET ? ", and once a day automatically" : ""}. Each reminder is sent only once.
+                Email reminders aren&apos;t available yet.
+              </p>
               <Link href="/business/settings/notifications" className="inline-flex items-center gap-1 font-medium text-accent-ink hover:underline">
                 Notification settings <Icon name="arrow-right" size={13} />
               </Link>

@@ -25,7 +25,7 @@ function ago(date: Date, now = new Date()): string {
   return days === 1 ? "yesterday" : `${days} days ago`;
 }
 
-export async function CalendarConnect({ ctx, showLink = false }: { ctx: BizContext; showLink?: boolean }) {
+export async function CalendarConnect({ ctx }: { ctx: BizContext }) {
   const status = await ensureCalendarStatus(ctx);
   const links = calendarLinks(`${await requestOrigin()}${calendarFeedPath(status.token)}`);
   const connected = Boolean(status.fetchedAt && status.client);
@@ -72,7 +72,7 @@ export async function CalendarConnect({ ctx, showLink = false }: { ctx: BizConte
           ))}
         </ol>
       )}
-      <details className="group rounded-xl border border-line" open={showLink || undefined} data-calendar-manual>
+      <details className="group rounded-xl border border-line" data-calendar-manual>
         <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-2.5 text-[13px] font-medium text-fg [&::-webkit-details-marker]:hidden">
           Another calendar app, or Google didn&apos;t ask?
           <Icon name="chevron-down" size={15} className="shrink-0 text-faint transition-transform group-open:rotate-180" />

@@ -120,7 +120,7 @@ export function NotificationsForm({ workspaceId, reminderDays, notifyInApp }: { 
       </fieldset>
       <CustomDaysField value={custom} onChange={setCustom} />
       <CheckboxField label="In-app notifications" name="notifyInApp" defaultChecked={notifyInApp} hint="Reminders appear under the bell for every member of this workspace." />
-      <CheckboxField label="Email reminders" name="_notifyEmail" disabled hint="Not available: no email provider is configured, so nothing is emailed." />
+      <CheckboxField label="Email reminders" name="_notifyEmail" disabled hint="Not available yet." />
       <p className="text-[12.5px] text-faint">{combined ? `Reminders: ${combined} days before renewal.` : "No reminder windows selected — renewal reminders are off."}</p>
       <Submit pendingLabel="Saving…">Save notification settings</Submit>
     </ActionForm>
