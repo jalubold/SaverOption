@@ -822,6 +822,84 @@ export const providers: Provider[] = [
     "name": "Internxt",
     "website": "https://internxt.com",
     "about": "Internxt is a Spanish company making end-to-end encrypted cloud storage and privacy tools."
+  },
+  {
+    "id": "coursera",
+    "name": "Coursera",
+    "website": "https://www.coursera.org",
+    "about": "Coursera is an online learning platform offering courses, certificates and degrees from universities and companies."
+  },
+  {
+    "id": "wix",
+    "name": "Wix.com",
+    "website": "https://www.wix.com",
+    "about": "Wix makes a hosted website builder with templates, domains, ecommerce and business tools."
+  },
+  {
+    "id": "grammarly",
+    "name": "Grammarly",
+    "website": "https://www.grammarly.com",
+    "about": "Grammarly makes an AI writing assistant that checks grammar, clarity and tone across apps and browsers."
+  },
+  {
+    "id": "make",
+    "name": "Make (Celonis)",
+    "website": "https://www.make.com",
+    "about": "Make is a visual no-code automation platform for connecting apps and building workflows."
+  },
+  {
+    "id": "netlify",
+    "name": "Netlify",
+    "website": "https://www.netlify.com",
+    "about": "Netlify is a web development platform for building, deploying and hosting websites and web apps."
+  },
+  {
+    "id": "twilio",
+    "name": "Twilio",
+    "website": "https://www.twilio.com",
+    "about": "Twilio provides cloud communications APIs for SMS, voice, email (SendGrid) and verification."
+  },
+  {
+    "id": "resend",
+    "name": "Resend",
+    "website": "https://resend.com",
+    "about": "Resend is an email API for developers to send transactional and marketing email."
+  },
+  {
+    "id": "beehiiv",
+    "name": "beehiiv",
+    "website": "https://www.beehiiv.com",
+    "about": "beehiiv is a newsletter platform with publishing, growth and monetization tools."
+  },
+  {
+    "id": "replit",
+    "name": "Replit",
+    "website": "https://replit.com",
+    "about": "Replit is a browser-based development platform with an AI agent for building and publishing apps."
+  },
+  {
+    "id": "krea",
+    "name": "Krea",
+    "website": "https://www.krea.ai",
+    "about": "Krea makes AI image and video generation and editing tools."
+  },
+  {
+    "id": "supabase",
+    "name": "Supabase",
+    "website": "https://supabase.com",
+    "about": "Supabase is an open-source Postgres development platform with auth, storage, realtime and edge functions."
+  },
+  {
+    "id": "docker",
+    "name": "Docker",
+    "website": "https://www.docker.com",
+    "about": "Docker makes tools for building, sharing and running containerized applications, including Docker Desktop and Docker Hub."
+  },
+  {
+    "id": "obsidian",
+    "name": "Obsidian",
+    "website": "https://obsidian.md",
+    "about": "Obsidian makes a local-first, Markdown-based note-taking app with optional Sync and Publish services."
   }
 ];
 
@@ -1995,7 +2073,11 @@ export const products: Product[] = [
       "Multistreaming",
       "Video"
     ],
-    "brandColor": "#0E1C4E"
+    "brandColor": "#0E1C4E",
+    "logo": {
+      "src": "/logos/restream.svg",
+      "alt": "Restream logo"
+    }
   },
   {
     "id": "google-workspace",
@@ -2179,7 +2261,11 @@ export const products: Product[] = [
       "Marketing",
       "Analytics"
     ],
-    "brandColor": "#054ADA"
+    "brandColor": "#054ADA",
+    "logo": {
+      "src": "/logos/ahrefs.svg",
+      "alt": "Ahrefs logo"
+    }
   },
   {
     "id": "sublime-text",
@@ -2209,7 +2295,11 @@ export const products: Product[] = [
     "tags": [
       "Markdown",
       "Writing"
-    ]
+    ],
+    "logo": {
+      "src": "/logos/typora.svg",
+      "alt": "Typora logo"
+    }
   },
   {
     "id": "cleanshot-x",
@@ -2336,6 +2426,10 @@ export const products: Product[] = [
     "openSource": {
       "license": "AGPL-3.0",
       "repoUrl": "https://github.com/documenso/documenso"
+    },
+    "logo": {
+      "src": "/logos/documenso.svg",
+      "alt": "Documenso logo"
     }
   },
   {
@@ -2793,7 +2887,11 @@ export const products: Product[] = [
       "Kubernetes",
       "Databases"
     ],
-    "brandColor": "#0F62FE"
+    "brandColor": "#0F62FE",
+    "logo": {
+      "src": "/logos/ibm-cloud.svg",
+      "alt": "IBM Cloud logo"
+    }
   },
   {
     "id": "confluent-cloud",
@@ -2808,7 +2906,11 @@ export const products: Product[] = [
       "Kafka",
       "Cloud"
     ],
-    "brandColor": "#173361"
+    "brandColor": "#173361",
+    "logo": {
+      "src": "/logos/confluent-cloud.svg",
+      "alt": "Confluent Cloud logo"
+    }
   },
   {
     "id": "snowflake",
@@ -3039,7 +3141,11 @@ export const products: Product[] = [
       "AI",
       "Database"
     ],
-    "brandColor": "#000000"
+    "brandColor": "#000000",
+    "logo": {
+      "src": "/logos/pinecone.svg",
+      "alt": "Pinecone logo"
+    }
   },
   {
     "id": "aiven",
@@ -3358,7 +3464,11 @@ export const products: Product[] = [
       "Customer service",
       "Nonprofit CRM"
     ],
-    "brandColor": "#00A1E0"
+    "brandColor": "#00A1E0",
+    "logo": {
+      "src": "/logos/salesforce.svg",
+      "alt": "Salesforce logo"
+    }
   },
   {
     "id": "zoho-mail",
@@ -3373,7 +3483,11 @@ export const products: Product[] = [
       "Business email",
       "Custom domain email"
     ],
-    "brandColor": "#E42527"
+    "brandColor": "#E42527",
+    "logo": {
+      "src": "/logos/zoho-mail.svg",
+      "alt": "Zoho Mail logo"
+    }
   },
   {
     "id": "clickup",
@@ -3408,7 +3522,11 @@ export const products: Product[] = [
       "Contracts",
       "Document workflow"
     ],
-    "brandColor": "#4C00FF"
+    "brandColor": "#4C00FF",
+    "logo": {
+      "src": "/logos/docusign-esignature.svg",
+      "alt": "Docusign logo"
+    }
   },
   {
     "id": "quickbooks-online",
@@ -3489,7 +3607,11 @@ export const products: Product[] = [
       "Surveys",
       "Lead generation"
     ],
-    "brandColor": "#262627"
+    "brandColor": "#262627",
+    "logo": {
+      "src": "/logos/typeform.svg",
+      "alt": "Typeform logo"
+    }
   },
   {
     "id": "squarespace",
@@ -3715,7 +3837,11 @@ export const products: Product[] = [
       "Website builder",
       "Domains"
     ],
-    "brandColor": "#196BDE"
+    "brandColor": "#196BDE",
+    "logo": {
+      "src": "/logos/bluehost-web-hosting.svg",
+      "alt": "Bluehost logo"
+    }
   },
   {
     "id": "scalahosting-managed-cloud",
@@ -3748,6 +3874,375 @@ export const products: Product[] = [
       "Privacy",
       "VPN"
     ],
-    "brandColor": "#0066FF"
+    "brandColor": "#0066FF",
+    "logo": {
+      "src": "/logos/internxt.svg",
+      "alt": "Internxt logo"
+    }
+  },
+  {
+    "id": "coursera-plus",
+    "slug": "coursera-plus",
+    "name": "Coursera Plus",
+    "providerId": "coursera",
+    "tagline": "Subscription for unlimited access to most Coursera courses and certificates",
+    "description": "Coursera Plus is Coursera's subscription that gives unlimited access to thousands of courses, Specializations and Professional Certificates from universities and companies such as Google and IBM, billed monthly or yearly.",
+    "website": "https://www.coursera.org/courseraplus",
+    "tags": [
+      "Online learning",
+      "Courses",
+      "Certificates"
+    ],
+    "brandColor": "#0056D2",
+    "logo": {
+      "src": "/logos/coursera-plus.svg",
+      "alt": "Coursera Plus logo"
+    }
+  },
+  {
+    "id": "wix",
+    "slug": "wix",
+    "name": "Wix",
+    "providerId": "wix",
+    "tagline": "Website builder with hosting, domains and ecommerce",
+    "description": "Wix is a hosted website builder with drag-and-drop editing, templates, domains, online store and business tools, sold as monthly or yearly Premium plans.",
+    "website": "https://www.wix.com",
+    "tags": [
+      "Website builder",
+      "Hosting",
+      "Ecommerce"
+    ],
+    "brandColor": "#116DFF",
+    "logo": {
+      "src": "/logos/wix.svg",
+      "alt": "Wix logo"
+    }
+  },
+  {
+    "id": "microsoft-365-personal-family",
+    "slug": "microsoft-365-personal-family",
+    "name": "Microsoft 365 Personal, Family and Premium",
+    "providerId": "microsoft",
+    "tagline": "Word, Excel, PowerPoint, Outlook, OneDrive storage and Copilot for home users",
+    "description": "Microsoft 365 Personal, Family and Premium are Microsoft's consumer subscriptions with the Office apps, OneDrive cloud storage and Copilot AI features, for one person (Personal, Premium) or shared with up to six people (Family).",
+    "website": "https://www.microsoft.com/en-us/microsoft-365",
+    "tags": [
+      "Office suite",
+      "Cloud storage",
+      "AI assistant"
+    ],
+    "brandColor": "#0078D4",
+    "logo": {
+      "src": "/logos/microsoft-365-personal-family.svg",
+      "alt": "Microsoft 365 Personal, Family and Premium logo"
+    }
+  },
+  {
+    "id": "dropbox",
+    "slug": "dropbox",
+    "name": "Dropbox",
+    "providerId": "dropbox",
+    "tagline": "Cloud storage, file sharing and backup for individuals and teams",
+    "description": "Dropbox is a cloud storage and file-sharing service with sync, backup, file transfer and team admin tools, sold as individual and team plans.",
+    "website": "https://www.dropbox.com",
+    "tags": [
+      "Cloud storage",
+      "File sharing",
+      "Backup"
+    ],
+    "brandColor": "#0061FF",
+    "logo": {
+      "src": "/logos/dropbox.svg",
+      "alt": "Dropbox logo"
+    }
+  },
+  {
+    "id": "grammarly",
+    "slug": "grammarly",
+    "name": "Grammarly",
+    "providerId": "grammarly",
+    "tagline": "AI writing assistant for grammar, clarity and tone",
+    "description": "Grammarly checks spelling, grammar, clarity and tone and offers AI writing help across the web, desktop apps and mobile keyboards. Grammarly Pro adds advanced suggestions and more AI usage.",
+    "website": "https://www.grammarly.com",
+    "tags": [
+      "Writing assistant",
+      "AI writing",
+      "Grammar checker"
+    ],
+    "brandColor": "#15C39A",
+    "logo": {
+      "src": "/logos/grammarly.svg",
+      "alt": "Grammarly logo"
+    }
+  },
+  {
+    "id": "loom",
+    "slug": "loom",
+    "name": "Loom",
+    "providerId": "atlassian",
+    "tagline": "Async video messaging and screen recording",
+    "description": "Loom records your screen, camera and voice to share video messages, with AI features for titles, summaries and documents. Loom is part of Atlassian.",
+    "website": "https://www.loom.com",
+    "tags": [
+      "Screen recording",
+      "Video messaging",
+      "Collaboration"
+    ],
+    "brandColor": "#625DF5",
+    "logo": {
+      "src": "/logos/loom.svg",
+      "alt": "Loom logo"
+    }
+  },
+  {
+    "id": "make",
+    "slug": "make",
+    "name": "Make",
+    "providerId": "make",
+    "tagline": "Visual no-code workflow automation",
+    "description": "Make lets you design automated workflows (scenarios) that connect thousands of apps and AI services on a visual canvas, billed by credits used.",
+    "website": "https://www.make.com",
+    "tags": [
+      "Automation",
+      "No-code",
+      "Integrations"
+    ],
+    "brandColor": "#6D00CC",
+    "logo": {
+      "src": "/logos/make.svg",
+      "alt": "Make logo"
+    }
+  },
+  {
+    "id": "netlify",
+    "slug": "netlify",
+    "name": "Netlify",
+    "providerId": "netlify",
+    "tagline": "Platform for building, deploying and hosting web apps",
+    "description": "Netlify builds and deploys websites and web apps from Git, with global hosting, serverless and edge functions, forms and preview deploys, billed on credit-based plans.",
+    "website": "https://www.netlify.com",
+    "tags": [
+      "Web hosting",
+      "Deployment",
+      "Serverless"
+    ],
+    "brandColor": "#00C7B7",
+    "logo": {
+      "src": "/logos/netlify.svg",
+      "alt": "Netlify logo"
+    }
+  },
+  {
+    "id": "twilio",
+    "slug": "twilio",
+    "name": "Twilio",
+    "providerId": "twilio",
+    "tagline": "APIs for SMS, voice, email and verification",
+    "description": "Twilio's communications platform provides APIs for programmable messaging, voice calls, email, phone numbers and user verification.",
+    "website": "https://www.twilio.com",
+    "tags": [
+      "SMS API",
+      "Voice API",
+      "Communications"
+    ],
+    "brandColor": "#F22F46",
+    "logo": {
+      "src": "/logos/twilio.svg",
+      "alt": "Twilio logo"
+    }
+  },
+  {
+    "id": "sendgrid",
+    "slug": "sendgrid",
+    "name": "Twilio SendGrid",
+    "providerId": "twilio",
+    "tagline": "Email API and email marketing campaigns",
+    "description": "Twilio SendGrid is an email delivery platform with an Email API/SMTP relay for transactional email and a Marketing Campaigns product for newsletters and promotions.",
+    "website": "https://sendgrid.com",
+    "tags": [
+      "Email API",
+      "Transactional email",
+      "Email marketing"
+    ],
+    "brandColor": "#1A82E2",
+    "logo": {
+      "src": "/logos/sendgrid.svg",
+      "alt": "Twilio SendGrid logo"
+    }
+  },
+  {
+    "id": "resend",
+    "slug": "resend",
+    "name": "Resend",
+    "providerId": "resend",
+    "tagline": "Email API for developers",
+    "description": "Resend is an email API with SDKs for popular languages, React Email support, domain management, inbound email and marketing broadcasts.",
+    "website": "https://resend.com",
+    "tags": [
+      "Email API",
+      "Transactional email",
+      "Developer tools"
+    ],
+    "brandColor": "#000000",
+    "logo": {
+      "src": "/logos/resend.svg",
+      "alt": "Resend logo"
+    }
+  },
+  {
+    "id": "beehiiv",
+    "slug": "beehiiv",
+    "name": "beehiiv",
+    "providerId": "beehiiv",
+    "tagline": "Newsletter platform for writing, growing and monetizing",
+    "description": "beehiiv is a newsletter platform with an editor, website builder, podcast hosting, community features, growth tools and monetization such as ads and paid subscriptions.",
+    "website": "https://www.beehiiv.com",
+    "tags": [
+      "Newsletter",
+      "Email marketing",
+      "Creator tools"
+    ],
+    "brandColor": "#000000",
+    "logo": {
+      "src": "/logos/beehiiv.svg",
+      "alt": "beehiiv logo"
+    }
+  },
+  {
+    "id": "v0",
+    "slug": "v0",
+    "name": "v0",
+    "providerId": "vercel",
+    "tagline": "Vercel's AI app builder",
+    "description": "v0 is Vercel's AI agent that generates and edits web apps and UI from prompts, with one-click deploys to Vercel. Usage is billed in credits.",
+    "website": "https://v0.app",
+    "tags": [
+      "AI app builder",
+      "AI coding",
+      "Web development"
+    ],
+    "brandColor": "#000000",
+    "logo": {
+      "src": "/logos/v0.svg",
+      "alt": "v0 logo"
+    }
+  },
+  {
+    "id": "replit",
+    "slug": "replit",
+    "name": "Replit",
+    "providerId": "replit",
+    "tagline": "Build and publish apps in the browser with an AI agent",
+    "description": "Replit is a cloud development environment where you can code or ask Replit Agent to build apps, then publish them with hosting, databases and integrations.",
+    "website": "https://replit.com",
+    "tags": [
+      "AI app builder",
+      "Cloud IDE",
+      "Hosting"
+    ],
+    "brandColor": "#F26207",
+    "logo": {
+      "src": "/logos/replit.svg",
+      "alt": "Replit logo"
+    }
+  },
+  {
+    "id": "krea",
+    "slug": "krea",
+    "name": "Krea",
+    "providerId": "krea",
+    "tagline": "AI image and video generation and editing",
+    "description": "Krea offers real-time and high-quality AI image generation, editing, upscaling and video tools using its own Krea models and third-party models, billed in compute units.",
+    "website": "https://www.krea.ai",
+    "tags": [
+      "AI image generation",
+      "AI video",
+      "Creative tools"
+    ],
+    "brandColor": "#000000",
+    "logo": {
+      "src": "/logos/krea.svg",
+      "alt": "Krea logo"
+    }
+  },
+  {
+    "id": "firebase",
+    "slug": "firebase",
+    "name": "Firebase",
+    "providerId": "google",
+    "tagline": "Google's app development platform",
+    "description": "Firebase is Google's platform for building mobile and web apps, with Firestore and Realtime Database, Authentication, Hosting, Cloud Messaging, Crashlytics, AI Logic and more.",
+    "website": "https://firebase.google.com",
+    "tags": [
+      "Backend as a service",
+      "Database",
+      "Mobile development"
+    ],
+    "brandColor": "#FFCA28",
+    "logo": {
+      "src": "/logos/firebase.svg",
+      "alt": "Firebase logo"
+    }
+  },
+  {
+    "id": "supabase",
+    "slug": "supabase",
+    "name": "Supabase",
+    "providerId": "supabase",
+    "tagline": "Postgres development platform with auth, storage and APIs",
+    "description": "Supabase gives every project a dedicated Postgres database plus authentication, instant APIs, file storage, realtime subscriptions, edge functions and vector support. The platform is open source and offered as a hosted service.",
+    "website": "https://supabase.com",
+    "tags": [
+      "Database",
+      "Backend as a service",
+      "Postgres"
+    ],
+    "brandColor": "#3ECF8E",
+    "openSource": {
+      "license": "Apache-2.0",
+      "repoUrl": "https://github.com/supabase/supabase"
+    },
+    "logo": {
+      "src": "/logos/supabase.svg",
+      "alt": "Supabase logo"
+    }
+  },
+  {
+    "id": "docker",
+    "slug": "docker",
+    "name": "Docker",
+    "providerId": "docker",
+    "tagline": "Container development platform: Docker Desktop, Docker Hub and more",
+    "description": "Docker provides Docker Desktop for building and running containers locally, Docker Hub for sharing images, and tools such as Docker Scout and Docker Hardened Images, under Personal, Pro, Team and Business subscriptions.",
+    "website": "https://www.docker.com",
+    "tags": [
+      "Containers",
+      "DevOps",
+      "Developer tools"
+    ],
+    "brandColor": "#1D63ED",
+    "logo": {
+      "src": "/logos/docker.svg",
+      "alt": "Docker logo"
+    }
+  },
+  {
+    "id": "obsidian",
+    "slug": "obsidian",
+    "name": "Obsidian",
+    "providerId": "obsidian",
+    "tagline": "Private, local-first Markdown notes app",
+    "description": "Obsidian is a note-taking and knowledge-base app that stores notes as local Markdown files, with links, graph view and plugins. Obsidian Sync and Obsidian Publish are optional paid add-on services.",
+    "website": "https://obsidian.md",
+    "tags": [
+      "Note-taking",
+      "Knowledge base",
+      "Productivity"
+    ],
+    "brandColor": "#7F6DF2",
+    "logo": {
+      "src": "/logos/obsidian.svg",
+      "alt": "Obsidian logo"
+    }
   }
 ];

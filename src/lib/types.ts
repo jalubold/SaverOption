@@ -230,6 +230,11 @@ export interface Campaign {
   intro: string;
   color: { from: string; to: string };
   faq: { q: string; a: string }[];
+  /**
+   * Product ids from best known down: the sale's deals are listed in this order (others after, soonest
+   * end first), and the first of these with standing offers fill "Popular apps with deals right now".
+   */
+  popularity?: string[];
 }
 
 export interface Offer {

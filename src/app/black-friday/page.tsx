@@ -10,7 +10,7 @@ import { OfferGrid } from "@/components/offers/offer-card";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, Container } from "@/components/ui/primitives";
-import { getCampaign, getCampaignOffers, getCategories } from "@/lib/catalog";
+import { getCampaign, getCampaignOffers, getCategories, getPopularStandingOffers } from "@/lib/catalog";
 import { formatDate } from "@/lib/format";
 import { breadcrumbJsonLd, clampDescription, collectionJsonLd, faqJsonLd, pageMetadata } from "@/lib/seo";
 import type { CategorySlug, OfferView } from "@/lib/types";
@@ -30,22 +30,27 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
-/** Sections in this order; an offer sits in the first of these it belongs to. */
+/** An offer sits in the first of these categories it belongs to. */
 const ORDER: CategorySlug[] = ["ai-tools", "lifetime-deals", "saas-discounts", "software-deals", "free-credits", "free-trials", "startup-perks", "student-discounts", "open-source", "exclusive"];
 
+/**
+ * Groups the (already most-famous-first) offers by category. A section comes before another
+ * when it holds a better-known brand, so the biggest names are always near the top.
+ */
 function groupByCategory(offers: OfferView[]) {
   const groups = new Map<CategorySlug, OfferView[]>();
   for (const o of offers) {
     const home = ORDER.find((c) => o.categories.includes(c)) ?? o.categories[0];
     groups.set(home, [...(groups.get(home) ?? []), o]);
   }
-  return ORDER.filter((c) => groups.has(c)).map((c) => ({ slug: c, offers: groups.get(c)! }));
+  // Map keeps insertion order: each section first appears with its best-known offer.
+  return [...groups].map(([slug, list]) => ({ slug, offers: list }));
 }
 
 export default async function BlackFridayPage() {
   const campaign = getCampaign("black-friday");
   if (!campaign) notFound();
-  const [offers, categories] = await Promise.all([getCampaignOffers("black-friday"), getCategories()]);
+  const [offers, categories, popular] = await Promise.all([getCampaignOffers("black-friday"), getCategories(), getPopularStandingOffers("black-friday", 24)]);
   const names = new Map(categories.map((c) => [c.slug, c.name]));
   const groups = groupByCategory(offers);
   const ending = offers.filter((o) => o.daysLeft !== undefined);
@@ -142,6 +147,22 @@ export default async function BlackFridayPage() {
               </section>
             ))}
           </div>
+        )}
+
+        {/* ── Popular apps: standing offers, clearly not Black Friday sales ── */}
+        {popular.length > 0 && (
+          <section aria-labelledby="bf-popular" data-black-friday-popular>
+            <p className="text-[12px] font-semibold uppercase tracking-[0.12em] text-faint">While the big names get ready</p>
+            <h2 id="bf-popular" className="display mt-2 text-[2rem] text-heading sm:text-[2.5rem]">
+              Popular apps with <em>deals right now.</em>
+            </h2>
+            <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-muted">
+              These aren&apos;t {campaign.name} sales: they&apos;re standing offers from well-known apps (free credits, trials, discounts and student or startup plans) that you can use today. When one of these brands announces its {campaign.name} deal, it moves up to the list above.
+            </p>
+            <div className="mt-6">
+              <OfferGrid offers={popular} headingLevel="h3" />
+            </div>
+          </section>
         )}
 
         {/* ── How deals get here ───────────────────────────────────── */}

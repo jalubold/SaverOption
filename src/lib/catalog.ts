@@ -300,7 +300,37 @@ export function campaignShown(c: Campaign, now = new Date()): boolean {
   return day >= c.showFrom && day <= c.showUntil;
 }
 
-/** The campaign's current offers: those with an end date first (soonest first), then the rest. */
+/** Position in the campaign's popularity list (best known first); unlisted products come after. */
+function fame(c: Campaign | null, productId: string): number {
+  const i = c?.popularity?.indexOf(productId) ?? -1;
+  return i === -1 ? Number.MAX_SAFE_INTEGER : i;
+}
+
+/** The campaign's current offers, best-known brands first, then the soonest to end. */
 export async function getCampaignOffers(slug: CampaignSlug): Promise<OfferView[]> {
-  return (await queryOffers({ campaign: slug, sort: "ending-soon" })).offers;
+  const c = getCampaign(slug);
+  const { offers: list } = await queryOffers({ campaign: slug, sort: "ending-soon" });
+  // Array.sort is stable: equal fame keeps the ending-soon order.
+  return [...list].sort((a, b) => fame(c, a.productId) - fame(c, b.productId));
+}
+
+/** Which standing offer best represents a product: a saving first, then credits and trials, verified first. */
+const POPULAR_TYPE_ORDER: OfferType[] = ["discount", "lifetime", "free-credits", "free-trial", "student", "startup", "free-plan", "open-source"];
+
+/**
+ * One live offer from each of the campaign's well-known products that isn't part of the sale itself
+ * (credits, trials and discounts you can use now), in the campaign's order.
+ */
+export async function getPopularStandingOffers(slug: CampaignSlug, limit = 12): Promise<OfferView[]> {
+  const c = getCampaign(slug);
+  if (!c?.popularity?.length) return [];
+  const pool = publishedViews().filter((o) => !o.isExpired && !o.campaigns?.includes(slug));
+  const rank = (o: OfferView) => POPULAR_TYPE_ORDER.indexOf(o.type) * 2 + (o.verification.status === "verified" ? 0 : 1);
+  const picked: OfferView[] = [];
+  for (const id of c.popularity) {
+    const best = pool.filter((o) => o.productId === id).sort((a, b) => rank(a) - rank(b))[0];
+    if (best) picked.push(best);
+    if (picked.length >= limit) break;
+  }
+  return picked;
 }

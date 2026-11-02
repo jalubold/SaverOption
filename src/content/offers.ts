@@ -15589,5 +15589,2092 @@ export const offers: Offer[] = [
     "campaigns": [
       "black-friday"
     ]
+  },
+  {
+    "id": "o-coursera-plus-annual-20-off-december-2026",
+    "slug": "coursera-plus-annual-20-off-december-2026",
+    "productId": "coursera-plus",
+    "title": "Coursera Plus: 20% off a year of Coursera Plus (ends December 2, 2026)",
+    "summary": "Coursera is offering 20% off an annual Coursera Plus subscription, which gives a year of unlimited access to 10,000+ programs. Coursera says the offer ends December 2, 2026.",
+    "description": "Coursera's offers page advertises 20% off a year of Coursera Plus, Coursera's subscription that gives a full year of unlimited access to 10,000+ skill-building programs from Google, IBM and more. Coursera states that the offer ends on December 2, 2026.\n\nCoursera notes that discounted plans generally don't include the free trial that comes with a standard annual Coursera Plus subscription, and that eligibility for promotions is at Coursera's discretion. Check the price shown at checkout before paying.",
+    "type": "discount",
+    "categories": [
+      "saas-discounts",
+      "software-deals"
+    ],
+    "audiences": [
+      "students",
+      "office-tools"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "period": "year",
+      "durationMonths": 12,
+      "savingsLabel": "20% off a year of Coursera Plus"
+    },
+    "claim": {
+      "method": "link",
+      "note": "Start from Coursera's offers page; the discount shows on the annual Coursera Plus checkout."
+    },
+    "regions": {
+      "scope": "global",
+      "note": "Promotions and prices can vary by country; check the price shown for your account."
+    },
+    "eligibility": [
+      "Buying an annual Coursera Plus subscription while the offer runs",
+      "Eligibility is decided by Coursera"
+    ],
+    "redemption": [
+      "Go to Coursera's discounts and offers page",
+      "Choose the Coursera Plus annual offer",
+      "Check that 20% off is applied at checkout and complete the purchase"
+    ],
+    "terms": [
+      "Offer ends December 2, 2026",
+      "Discounted plans generally don't include the 7-day free trial of a standard annual subscription",
+      "Coursera can change or end promotions"
+    ],
+    "expiresAt": "2026-12-02",
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's official page(s); live page not checked",
+      "note": "The live page could not be fetched from the research environment (www.coursera.org is not reachable from this session), so facts and quotes come from search-engine extracts of the provider's own pages. Quotes are the wording as shown in those extracts (the search tool may condense wording in places); re-check them on the live page before marking this verified. The end date was shown on two coursera.org pages. No regular or discounted price was shown in the extracts, so prices are left out.",
+      "evidence": [
+        {
+          "claim": "Discount",
+          "quote": "20% off a year of Coursera Plus"
+        },
+        {
+          "claim": "What the plan includes",
+          "quote": "a full year of unlimited access to 10,000+ skill-building programs from Google, IBM, and more"
+        },
+        {
+          "claim": "End date",
+          "quote": "Offer ends December 2, 2026"
+        },
+        {
+          "claim": "No trial on discounted plans",
+          "quote": "Discounted plans typically do not include a trial period"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.coursera.org/explore/coursera-discounts-offers-and-promos",
+      "redeemUrl": "https://www.coursera.org/courseraplus"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-coursera-plus-monthly-40-off-3-months",
+    "slug": "coursera-plus-monthly-40-off-3-months",
+    "productId": "coursera-plus",
+    "title": "Coursera Plus monthly: 40% off your first 3 months",
+    "summary": "Coursera is offering 40% off 3 months of a Coursera Plus monthly subscription.",
+    "description": "Coursera's offers page lists 40% off 3 months of unlimited access with a Coursera Plus monthly subscription. After the 3 discounted months the subscription continues at the regular monthly price unless you cancel.\n\nCoursera's pages show different end dates for this offer: its main offers page says it ends February 12, 2027, while a separate Coursera Plus special-offer page shows a December 31, 2026 end date (and a price of $35.40 a month for 3 months, regularly $59). Because the dates conflict, no end date is listed here; check the offer page before signing up. Discounted plans generally don't include a free trial.",
+    "type": "discount",
+    "categories": [
+      "saas-discounts",
+      "software-deals"
+    ],
+    "audiences": [
+      "students",
+      "office-tools"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "period": "month",
+      "durationMonths": 3,
+      "savingsLabel": "40% off 3 months of Coursera Plus monthly"
+    },
+    "claim": {
+      "method": "link",
+      "note": "Start from Coursera's offers page and choose the monthly Coursera Plus offer."
+    },
+    "regions": {
+      "scope": "global",
+      "note": "Promotions and prices can vary by country; check the price shown for your account."
+    },
+    "eligibility": [
+      "Buying a Coursera Plus monthly subscription while the offer runs",
+      "Eligibility is decided by Coursera"
+    ],
+    "redemption": [
+      "Go to Coursera's discounts and offers page",
+      "Choose the Coursera Plus monthly offer",
+      "Check that 40% off is applied at checkout and complete the purchase"
+    ],
+    "terms": [
+      "Discount covers the first 3 monthly payments",
+      "Coursera's pages state different end dates (December 31, 2026 and February 12, 2027)",
+      "Discounted plans generally don't include a free trial",
+      "Coursera can change or end promotions"
+    ],
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's official page(s); live page not checked",
+      "note": "The live page could not be fetched from the research environment (www.coursera.org is not reachable from this session), so facts and quotes come from search-engine extracts of the provider's own pages. Quotes are the wording as shown in those extracts (the search tool may condense wording in places); re-check them on the live page before marking this verified. The two coursera.org pages give different end dates, so expiresAt is left unset; the $35.40/$59 figures were only on the special-offer page (coursera.org/courseraplus/special/40-monthly-crm-2026), which may be aimed at email recipients, so they are kept out of the pricing fields.",
+      "evidence": [
+        {
+          "claim": "Discount and duration (offers page)",
+          "quote": "40% on 3 months of unlimited access with a Coursera Plus monthly subscription. Offer ends February 12, 2027."
+        },
+        {
+          "claim": "Price and different end date (special-offer page)",
+          "quote": "$35.40 USD per month, for 3 consecutive months (regularly $59 USD per month), and that offer ends December 31, 2026"
+        },
+        {
+          "claim": "No trial on discounted plans",
+          "quote": "Discounted plans typically do not include a trial period"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.coursera.org/explore/coursera-discounts-offers-and-promos",
+      "redeemUrl": "https://www.coursera.org/courseraplus"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-hubspot-starter-customer-platform-65-off",
+    "slug": "hubspot-starter-customer-platform-65-off",
+    "productId": "hubspot",
+    "title": "HubSpot Starter Customer Platform: 65% off with annual commitment, 50% off monthly",
+    "summary": "For a limited time, new HubSpot customers can buy the Starter Customer Platform for $7 per seat per month with an annual commitment (65% off the base price) or $10 per seat per month paying monthly (50% off).",
+    "description": "HubSpot is running a limited-time offer on the Starter Customer Platform, its bundle of Starter-tier hubs, for new customers.\n\nWith upfront payment and an annual commitment, Starter is $7 per seat per month, which HubSpot describes as 65% off the base price. Paying monthly with no annual commitment, it's $10 per seat per month, or 50% off the base price.\n\nHubSpot doesn't state an end date. Confirm the price and renewal terms on the order form before buying.",
+    "type": "discount",
+    "categories": [
+      "saas-discounts",
+      "software-deals"
+    ],
+    "audiences": [
+      "businesses",
+      "startups",
+      "marketing-tools"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 7,
+      "period": "month",
+      "savingsLabel": "Save 65% off the base price for Starter (annual commitment); 50% off paying monthly"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Buy the Starter Customer Platform from HubSpot's Starter page; the discounted price is shown at checkout."
+    },
+    "requirements": {
+      "newCustomersOnly": true
+    },
+    "eligibility": [
+      "New HubSpot customers",
+      "Buying the Starter Customer Platform"
+    ],
+    "redemption": [
+      "Go to HubSpot's Starter Customer Platform page",
+      "Choose annual (upfront, annual commitment) or monthly payment",
+      "Check the per-seat price on the order form and complete the purchase"
+    ],
+    "terms": [
+      "Limited-time offer; no end date stated",
+      "$7/month per seat requires upfront payment and an annual commitment",
+      "$10/month per seat is billed monthly with no annual commitment",
+      "Prices are per seat"
+    ],
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's official page(s); live page not checked",
+      "note": "The live page could not be fetched from the research environment (www.hubspot.com is not reachable from this session), so facts and quotes come from search-engine extracts of the provider's own pages. Quotes are the wording as shown in those extracts (the search tool may condense wording in places); re-check them on the live page before marking this verified. The extracts came from hubspot.com pages of different ages (roughly 39 and 271 days old in the search index), so the figures may have changed. Renewal terms were not stated on the main Starter pages. The base price is not quoted, so regularPrice is left out.",
+      "evidence": [
+        {
+          "claim": "Annual price and saving",
+          "quote": "Pay Annually: Buy Starter for $7/month per seat, with upfront payment and annual commitment. Save 65% off the base price for Starter."
+        },
+        {
+          "claim": "Monthly price and saving",
+          "quote": "Pay Monthly: Buy Starter for $10/month per seat, with monthly payment and no annual commitment. Save 50% off the base price for Starter."
+        },
+        {
+          "claim": "New customers, limited time",
+          "quote": "up to 65% off for new customers, for a limited time"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.hubspot.com/products/crm/starter"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-wix-take10-10-off-yearly-premium-plan",
+    "slug": "wix-take10-10-off-yearly-premium-plan",
+    "productId": "wix",
+    "title": "Wix: 10% off your first year of a yearly Premium plan with code TAKE10",
+    "summary": "Wix's promo-code page offers 10% off yearly Premium plans with code TAKE10, for first-time upgrades and the first year only. Wix Studio plans are excluded.",
+    "description": "Wix lists the code TAKE10 on its official promo-code page for 10% off a yearly Premium plan. The code is for first-time upgrades and applies to the first year only; renewals are charged at the plan's regular price. Wix Studio plans are excluded. Most yearly Premium plans also come with a free domain for a year.\n\nWix doesn't state an end date for the code. Enter it at checkout and check that the discount is applied before paying.",
+    "type": "discount",
+    "categories": [
+      "saas-discounts",
+      "software-deals"
+    ],
+    "audiences": [
+      "businesses",
+      "freelancers",
+      "creators"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "period": "year",
+      "durationMonths": 12,
+      "savingsLabel": "10% off yearly Premium plans"
+    },
+    "claim": {
+      "method": "code",
+      "code": "TAKE10",
+      "note": "Enter TAKE10 at checkout when upgrading a site to a yearly Premium plan."
+    },
+    "requirements": {
+      "newCustomersOnly": true
+    },
+    "eligibility": [
+      "First-time upgrade to a Wix Premium plan",
+      "Yearly plans only; Wix Studio plans excluded"
+    ],
+    "redemption": [
+      "Build or open your site in Wix",
+      "Click Upgrade and choose a yearly Premium plan",
+      "Enter TAKE10 as the promo code at checkout"
+    ],
+    "terms": [
+      "Valid for first-time upgrades and the first year only",
+      "Wix Studio plans are excluded",
+      "Monthly plans aren't eligible",
+      "Renewals are charged at the regular plan price"
+    ],
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's official page(s); live page not checked",
+      "note": "The live page could not be fetched from the research environment (www.wix.com is not reachable from this session), so facts and quotes come from search-engine extracts of the provider's own pages. Quotes are the wording as shown in those extracts (the search tool may condense wording in places); re-check them on the live page before marking this verified. Wix's promo page also mentions a separate limited-time code (SMART) without an end date; it is not listed here.",
+      "evidence": [
+        {
+          "claim": "Code and discount",
+          "quote": "The TAKE10 code saves 10% on yearly Premium plans, excluding Wix Studio plans, and is valid for first-time upgrades and the first year only."
+        },
+        {
+          "claim": "Free domain",
+          "quote": "10% off yearly Premium plans, including a free domain for a year"
+        },
+        {
+          "claim": "Renewals at full price",
+          "quote": "The discounted price is valid for the first year/month only, and all subsequent renewals are charged at the original price of the plan."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.wix.com/promo-code/coupons",
+      "redeemUrl": "https://www.wix.com/plans"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-squarespace-gimme10-10-off-annual-website-plan",
+    "slug": "squarespace-gimme10-10-off-annual-website-plan",
+    "productId": "squarespace",
+    "title": "Squarespace: 10% off your first annual website plan with code GIMME10",
+    "summary": "Squarespace's official promo-code page lists GIMME10 for 10% off an annual website plan on your first purchase. Annual plans also include a free custom domain for the first year.",
+    "description": "Squarespace's promo codes page lists the code GIMME10 for 10% off an annual website plan, valid on your first purchase only. Squarespace says offer codes apply to the total price of the plan.\n\nSites on an annual billing cycle also include one free custom domain for the first year (new domain registrations only); the domain then renews at Squarespace's standard rate. You can build the site during Squarespace's free trial and apply the code when you subscribe.",
+    "type": "discount",
+    "categories": [
+      "saas-discounts",
+      "software-deals"
+    ],
+    "audiences": [
+      "businesses",
+      "freelancers",
+      "creators"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "period": "year",
+      "durationMonths": 12,
+      "savingsLabel": "10% off an annual website plan"
+    },
+    "claim": {
+      "method": "code",
+      "code": "GIMME10",
+      "note": "Enter GIMME10 at checkout when buying an annual website plan."
+    },
+    "requirements": {
+      "newCustomersOnly": true
+    },
+    "eligibility": [
+      "First Squarespace website plan purchase",
+      "Annual billing"
+    ],
+    "redemption": [
+      "Start a Squarespace site (a free trial is available)",
+      "Choose an annual website plan at checkout",
+      "Enter GIMME10 in the offer code field"
+    ],
+    "terms": [
+      "Valid for your first purchase only",
+      "Applies to annual website plans",
+      "The free domain is for new domain registrations and renews at the standard rate after the first year"
+    ],
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's official page(s); live page not checked",
+      "note": "The live page could not be fetched from the research environment (www.squarespace.com is not reachable from this session), so facts and quotes come from search-engine extracts of the provider's own pages. Quotes are the wording as shown in those extracts (the search tool may condense wording in places); re-check them on the live page before marking this verified. The search tool paraphrased the coupon page in places; no end date was shown.",
+      "evidence": [
+        {
+          "claim": "Code and discount",
+          "quote": "GIMME10 as the code for 10% off an annual website plan, valid for your first purchase only"
+        },
+        {
+          "claim": "Free domain",
+          "quote": "all Squarespace sites on an annual billing cycle include one free custom domain"
+        },
+        {
+          "claim": "Domain renewal",
+          "quote": "the domain will renew at our standard rate, plus applicable taxes, after the first year"
+        },
+        {
+          "claim": "Codes apply to plan total",
+          "quote": "any valid offer codes will apply to the total price of the plan"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.squarespace.com/coupons",
+      "redeemUrl": "https://www.squarespace.com/pricing"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-mailchimp-15-off-first-12-months-10000-contacts",
+    "slug": "mailchimp-15-off-first-12-months-10000-contacts",
+    "productId": "mailchimp",
+    "title": "Mailchimp: 15% off your first 12 months for businesses with 10,000+ contacts",
+    "summary": "For a limited time, new Mailchimp customers with 10,000 or more contacts can save 15% on their first 12 months of a Premium, Standard or Essentials monthly plan.",
+    "description": "Mailchimp's pricing page advertises 15% off the first 12 months for businesses with 10,000+ contacts. The discount applies to the monthly plan price and any add-on contact blocks.\n\nIt's for new Mailchimp customers, or existing Free plan customers within 90 days of creating their account, in selected countries, who buy a Premium, Standard or Essentials monthly plan with the Buy Now button. If you change plans you keep the 15% discount for the rest of the original 12 months. Afterwards you're charged the regular rate for your contacts and sends. Mailchimp describes it as available for a limited time and doesn't state an end date.",
+    "type": "discount",
+    "categories": [
+      "saas-discounts",
+      "software-deals"
+    ],
+    "audiences": [
+      "marketing-tools",
+      "businesses"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "period": "month",
+      "durationMonths": 12,
+      "savingsLabel": "Save 15% on your first 12 months"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Choose a Premium, Standard or Essentials monthly plan with the Buy Now button for 10,000+ contacts."
+    },
+    "requirements": {
+      "newCustomersOnly": true
+    },
+    "regions": {
+      "scope": "limited",
+      "note": "Available in select countries."
+    },
+    "eligibility": [
+      "New Mailchimp customers, or Free plan customers within 90 days of account creation",
+      "10,000 or more contacts",
+      "Premium, Standard or Essentials monthly plan bought with the Buy Now button",
+      "Select countries only"
+    ],
+    "redemption": [
+      "Go to Mailchimp's marketing pricing page",
+      "Pick Premium, Standard or Essentials sized for 10,000 or more contacts",
+      "Click Buy Now (not a free trial) and complete checkout"
+    ],
+    "terms": [
+      "Discount applies to the monthly plan and add-on blocks for additional contacts",
+      "Changing plans keeps the discount for the rest of the original 12 months",
+      "After the discount ends you're charged the regular rate",
+      "Limited-time offer; no end date stated"
+    ],
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's official page(s); live page not checked",
+      "note": "The live page could not be fetched from the research environment (mailchimp.com is not reachable from this session), so facts and quotes come from search-engine extracts of the provider's own pages. Quotes are the wording as shown in those extracts (the search tool may condense wording in places); re-check them on the live page before marking this verified. Mailchimp's legal terms also list a separate 30% off for 3 months promotion, but its dates and eligibility weren't shown, so it is not included.",
+      "evidence": [
+        {
+          "claim": "Discount",
+          "quote": "Businesses with 10,000+ contacts can save 15% on their first 12 months."
+        },
+        {
+          "claim": "Scope and limited time",
+          "quote": "the discount applies to the monthly plan and the purchase of any add-on blocks for additional contacts, and the offer is available for a limited time only"
+        },
+        {
+          "claim": "Eligibility",
+          "quote": "new Mailchimp customer or existing Free plan customer within 90 days of account creation in select countries"
+        },
+        {
+          "claim": "Plans and checkout",
+          "quote": "sign up for the Premium, Standard or Essentials monthly plan using the \"Buy Now\" button"
+        },
+        {
+          "claim": "Plan changes",
+          "quote": "If you change plans you will retain the 15% discount for the remainder of the original 12 month period."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://mailchimp.com/pricing/marketing/",
+      "redeemUrl": "https://mailchimp.com/pricing/marketing/"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-microsoft-365-personal-family-premium-1-month-free-trial",
+    "slug": "microsoft-365-personal-family-premium-1-month-free-trial",
+    "productId": "microsoft-365-personal-family",
+    "title": "Microsoft 365 Personal, Family or Premium: 1 month free",
+    "summary": "Microsoft offers a one-month free trial of Microsoft 365 Personal, Family and Premium. After the trial the subscription renews automatically at the regular price unless you cancel in your Microsoft account.",
+    "description": "Microsoft lets you try its consumer Microsoft 365 plans free for one month: Personal (one person), Family (shared with up to six people) and Premium. The plans include the Office apps, OneDrive storage and Copilot AI features; AI features are only available to the subscription owner and usage limits apply.\n\nAfter the free month the subscription renews automatically at the regular price and term you chose unless you cancel it in your Microsoft account. Microsoft's US prices are $9.99/month or $99.99/year for Personal, $12.99/month or $129.99/year for Family, and $19.99/month or $199.99/year for Premium.",
+    "type": "free-trial",
+    "categories": [
+      "free-trials",
+      "software-deals",
+      "ai-tools"
+    ],
+    "audiences": [
+      "office-tools",
+      "students",
+      "freelancers"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "durationMonths": 1,
+      "savingsLabel": "1-month free trial"
+    },
+    "claim": {
+      "method": "link",
+      "note": "Start the trial from Microsoft's Try Microsoft 365 page or the plan comparison page."
+    },
+    "eligibility": [
+      "Microsoft account holder",
+      "Trial of Microsoft 365 Personal, Family or Premium"
+    ],
+    "redemption": [
+      "Go to microsoft.com/microsoft-365/try or the plan comparison page",
+      "Choose Try free for 1 month on Personal, Family or Premium",
+      "Sign in with your Microsoft account and confirm",
+      "Cancel in your Microsoft account before the month ends if you don't want to be charged"
+    ],
+    "terms": [
+      "Subscription automatically renews at the regular price and selected term unless cancelled in your Microsoft account",
+      "AI features are only available to the subscription owner and can't be shared; usage limits apply",
+      "Microsoft Store Terms of Sale apply"
+    ],
+    "verification": {
+      "status": "verified",
+      "checkedAt": "2026-11-02",
+      "method": "Checked against Microsoft's live Try Microsoft 365 and plan comparison pages",
+      "evidence": [
+        {
+          "claim": "Trial offer",
+          "quote": "Explore Microsoft 365 Family for free"
+        },
+        {
+          "claim": "Trial length",
+          "quote": "1-month free trial, then $ • • • • • •"
+        },
+        {
+          "claim": "Plans with trial",
+          "quote": "Microsoft 365 Personal: \"Try free for 1 month\"; Microsoft 365 Family: \"Try free for 1 month\"; Microsoft 365 Premium: \"Try free for 1 month\""
+        },
+        {
+          "claim": "Auto-renewal",
+          "quote": "Subscription automatically renews at the regular price and selected term, unless cancelled in Microsoft account."
+        },
+        {
+          "claim": "Prices",
+          "quote": "Personal: \"$9.99/month\" or \"$99.99/year\"; Family: \"$12.99/month\" or \"$129.99/year\"; Premium: \"$19.99/month\" or \"$199.99/year\""
+        },
+        {
+          "claim": "AI limits",
+          "quote": "AI features only available to subscription owner and cannot be shared; usage limits apply."
+        }
+      ],
+      "note": "The pages didn't say whether a payment method is required or whether the trial is for new subscribers only, so those flags are left out. The renewal price on the try page was masked; prices come from the comparison page (US)."
+    },
+    "links": {
+      "officialUrl": "https://www.microsoft.com/en-us/microsoft-365/try",
+      "redeemUrl": "https://www.microsoft.com/en-us/microsoft-365/buy/compare-all-microsoft-365-products"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-claude-max-ultra-team-monthly-api-credits",
+    "slug": "claude-max-ultra-team-monthly-api-credits",
+    "productId": "claude",
+    "title": "Claude Max, Ultra and Team plans include monthly Claude API credits",
+    "summary": "Claude Max subscribers get $100 a month and Ultra subscribers $200 a month in Claude Platform API credits; Team plans get $20 per Standard seat and $100 per Premium seat, pooled up to $500 a month.",
+    "description": "Anthropic now includes monthly credits for the Claude Platform with its Max, Ultra and Team plans, to build Claude into your own apps and agents. Max includes $100 a month and Ultra $200 a month. Team plans (including discounted Nonprofit and Scientists Team plans) get $20 per Standard seat and $100 per Premium seat, pooled into one balance capped at $500 a month. Free, Pro and Enterprise plans aren't eligible.\n\nYou claim the credits on claude.ai by linking one Claude Console organization; no card is needed on the Claude Platform. New subscribers can claim after seven days on an eligible plan. The credits work with the Claude API (Messages and Message Batches), the Console Playground, Claude Managed Agents and the Claude Agent SDK, but not with interactive Claude Code, extra usage in Claude, or Claude on Amazon Bedrock, Google Cloud Vertex AI or Microsoft Foundry.\n\nCredits refresh each billing cycle (monthly, even on annual plans), don't roll over, and are used before purchased credits. If they run out and the organization has no other credits, API requests stop until the next grant.",
+    "type": "free-credits",
+    "categories": [
+      "free-credits",
+      "ai-tools"
+    ],
+    "audiences": [
+      "ai-tools",
+      "developers",
+      "startups"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "creditValue": 100,
+      "period": "month",
+      "savingsLabel": "$100 a month in API credits on Max, $200 on Ultra, up to $500 pooled on Team"
+    },
+    "claim": {
+      "method": "link",
+      "note": "On claude.ai go to Settings > Billing (Max/Ultra) or Organization settings > Billing (Team owners), then Link organization in the API credits section."
+    },
+    "eligibility": [
+      "Active Max, Ultra or Team plan in good standing (including discounted Nonprofit and Scientists Team plans)",
+      "At least seven days on an eligible plan",
+      "Max/Ultra: the subscriber; Team: a Primary Owner or Owner",
+      "Owner, Admin or Billing role in the Console organization you link",
+      "Free, Pro and Enterprise plans aren't eligible"
+    ],
+    "redemption": [
+      "On claude.ai, open Settings > Billing (Max or Ultra) or Organization settings > Billing (Team)",
+      "In the API credits section, select Link organization",
+      "Choose or create the Claude Console organization to receive the credits",
+      "Review the Supplemental Credit Terms and link the organization"
+    ],
+    "terms": [
+      "No card is needed on the Claude Platform to claim or use the credits (the Claude plan itself is paid)",
+      "Only one Console organization can be linked, and each organization can receive credits from only one plan",
+      "Credits refresh each billing cycle and expire at the end of it; unused credits don't roll over",
+      "Monthly credits are spent before purchased credits",
+      "Not usable for interactive Claude Code, extra usage in Claude, or Claude on Bedrock, Vertex AI or Foundry",
+      "Team credits are pooled across seats and capped at $500 a month",
+      "Cancelling or downgrading stops new credits; existing credits stay usable until they expire",
+      "Anthropic's Supplemental Credit Terms apply"
+    ],
+    "verification": {
+      "status": "verified",
+      "checkedAt": "2026-11-02",
+      "method": "Checked against Anthropic's live Claude pricing page and Claude Help Center article",
+      "evidence": [
+        {
+          "claim": "Max amount (pricing page)",
+          "quote": "$100 a month in API credits to build on the Claude Platform"
+        },
+        {
+          "claim": "Ultra amount (pricing page)",
+          "quote": "$200 a month in API credits, up from $100 on Max"
+        },
+        {
+          "claim": "Plans and eligibility",
+          "quote": "Available on Max, Ultra, and Team plans, including discounted Team plans. Free, Pro, and Enterprise plans aren't eligible."
+        },
+        {
+          "claim": "Team pooling",
+          "quote": "On Team plans, credits for all seats are pooled into one monthly balance, capped at $500."
+        },
+        {
+          "claim": "Team per-seat amounts",
+          "quote": "Team (Standard seats) $20 per seat* Team (Premium seats) $100 per seat*"
+        },
+        {
+          "claim": "Seven-day wait",
+          "quote": "New subscribers can claim once they've been on an eligible plan for seven days."
+        },
+        {
+          "claim": "No card needed",
+          "quote": "No payment method needed. You don't need to add a card on Claude Platform to claim or use the credit."
+        },
+        {
+          "claim": "Exclusions",
+          "quote": "The credits don't apply to: Interactive Claude Code in the terminal, IDE, desktop, or web Extra usage in Claude, Claude Code, or Claude Cowork Claude on Amazon Bedrock, Google Cloud Vertex AI, or Microsoft Foundry"
+        },
+        {
+          "claim": "No rollover",
+          "quote": "Doesn't roll over. Unused credits expire at the end of each billing cycle."
+        },
+        {
+          "claim": "One organization",
+          "quote": "You can link only one Console organization, and each Console organization can receive credits from only one plan."
+        }
+      ],
+      "note": "Anthropic says it is rolling the credits out over a few days, so some eligible accounts may not see the offer immediately. No end date is stated."
+    },
+    "links": {
+      "officialUrl": "https://support.claude.com/en/articles/17154008-monthly-api-credits-for-max-ultra-and-team-plans",
+      "redeemUrl": "https://claude.com/pricing"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-dropbox-business-30-day-free-trial",
+    "slug": "dropbox-business-30-day-free-trial",
+    "productId": "dropbox",
+    "title": "Dropbox Business and Business Plus: 30-day free trial",
+    "summary": "Dropbox lets teams try its Business and Business Plus plans free for 30 days.",
+    "description": "Dropbox offers a 30-day free trial of its team plans, Business and Business Plus, from its official trial pages.\n\nIf a team trial ends without converting to a paid subscription, Dropbox may move the account to Dropbox Basic. The exact trial terms for your account are shown in the confirmation email and on the billing page of your account settings.",
+    "type": "free-trial",
+    "categories": [
+      "free-trials",
+      "software-deals"
+    ],
+    "audiences": [
+      "businesses",
+      "office-tools",
+      "startups"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "durationMonths": 1,
+      "savingsLabel": "Try free for 30 days"
+    },
+    "claim": {
+      "method": "link",
+      "note": "Start from Dropbox's team trial page and pick Business or Business Plus."
+    },
+    "eligibility": [
+      "Teams signing up for Dropbox Business or Business Plus"
+    ],
+    "redemption": [
+      "Go to dropbox.com/try/teams (choose Business or Business Plus)",
+      "Create the team and start the trial",
+      "Check the trial end date on the billing page of your account settings"
+    ],
+    "terms": [
+      "Trial length is 30 days unless cancelled earlier",
+      "A team trial that ends without converting may be moved to Dropbox Basic",
+      "Your account's trial terms are in the email from Dropbox and on the billing page"
+    ],
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's official page(s); live page not checked",
+      "note": "The live page could not be fetched from the research environment (www.dropbox.com is not reachable from this session), so facts and quotes come from search-engine extracts of the provider's own pages. Quotes are the wording as shown in those extracts (the search tool may condense wording in places); re-check them on the live page before marking this verified. The 30-day length for both Business and Business Plus comes from Dropbox's trial pages and a Dropbox reseller FAQ (assets.dropbox.com). Whether a payment method is needed was not shown.",
+      "evidence": [
+        {
+          "claim": "30-day trial",
+          "quote": "Try free for 30 days"
+        },
+        {
+          "claim": "Team trial length",
+          "quote": "team trials always last 30 days, unless canceled mid-period"
+        },
+        {
+          "claim": "Where terms are shown",
+          "quote": "the email from no-reply@dropbox.com with the terms of the trial subscription"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.dropbox.com/try/teams?sku=business-plus",
+      "redeemUrl": "https://www.dropbox.com/plans"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-grammarly-pro-50-off-students",
+    "slug": "grammarly-pro-50-off-students",
+    "productId": "grammarly",
+    "title": "Grammarly Pro: 50% off for verified students",
+    "summary": "Students who verify through SheerID can get 50% off Grammarly Pro for one subscription period.",
+    "description": "Grammarly offers eligible students 50% off Grammarly Pro. You verify your student status through SheerID (as part of the Grammarly for Students or Grammarly for Graduate Students groups); SheerID may ask for an official school document, and checks can take up to seven business days. Once approved you get a promo link by email.\n\nThe discount is valid for one subscription period and applies to the first seat only. Renewals are at the standard rate, and the offer can't be combined with other promotions. Grammarly says it doesn't issue coupon codes, so codes found elsewhere aren't official.",
+    "type": "student",
+    "categories": [
+      "student-discounts",
+      "saas-discounts",
+      "ai-tools"
+    ],
+    "audiences": [
+      "students",
+      "ai-tools"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "savingsLabel": "50% off Grammarly Pro"
+    },
+    "claim": {
+      "method": "verification",
+      "note": "Verify student status through SheerID from Grammarly's student offer; the promo link arrives by email."
+    },
+    "requirements": {
+      "studentVerification": true
+    },
+    "eligibility": [
+      "Students who can be verified by SheerID",
+      "Undergraduate and graduate students"
+    ],
+    "redemption": [
+      "Open Grammarly's student discount page",
+      "Verify your student status with SheerID (upload a school document if asked)",
+      "Use the promo link Grammarly emails you to buy Grammarly Pro"
+    ],
+    "terms": [
+      "Valid for one subscription period",
+      "Applies to the first seat only",
+      "Renews at the standard rate",
+      "Can't be combined with other promotions",
+      "Verification can take up to seven business days"
+    ],
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's official page(s); live page not checked",
+      "note": "The live page could not be fetched from the research environment (support.grammarly.com is not reachable from this session), so facts and quotes come from search-engine extracts of the provider's own pages. Quotes are the wording as shown in those extracts (the search tool may condense wording in places); re-check them on the live page before marking this verified. Regular Pro pricing shown in the extracts was $12 per member per month billed annually or $30 monthly; it isn't stated whether the 50% applies to annual or monthly billing, so prices are left out.",
+      "evidence": [
+        {
+          "claim": "Discount and verification",
+          "quote": "eligible students can get 50% off Grammarly Pro through SheerID verification"
+        },
+        {
+          "claim": "Groups",
+          "quote": "\"Grammarly for Students\" or \"Grammarly for Graduate Students\""
+        },
+        {
+          "claim": "One period, first seat",
+          "quote": "The promo is valid for one subscription period, and it applies only to the first seat."
+        },
+        {
+          "claim": "No codes",
+          "quote": "Grammarly says it does not provide discounts in the form of coupons or other codes"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://support.grammarly.com/hc/en-us/articles/38895500890125-Does-Grammarly-offer-discounts-for-students",
+      "redeemUrl": "https://www.grammarly.com/plans"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-loom-business-ai-14-day-free-trial",
+    "slug": "loom-business-ai-14-day-free-trial",
+    "productId": "loom",
+    "title": "Loom Business + AI: 14-day free trial",
+    "summary": "Loom lets you try its Business + AI plan free for 14 days; if you don't pay, the workspace returns to the free Starter plan.",
+    "description": "Loom (part of Atlassian) offers a 14-day free trial of Business + AI, which adds Loom's AI features on top of the Business plan. There's no user cap during the trial.\n\nIf you don't upgrade, the workspace is downgraded to Loom's free Starter plan, which has a 5-minute recording limit, a 25-video storage limit and up to 10 users. The trial isn't offered to Loom Education plans.",
+    "type": "free-trial",
+    "categories": [
+      "free-trials",
+      "software-deals",
+      "ai-tools"
+    ],
+    "audiences": [
+      "businesses",
+      "office-tools",
+      "creators"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "savingsLabel": "14-day Business + AI trial"
+    },
+    "claim": {
+      "method": "link",
+      "note": "Start the trial from Loom's pricing page."
+    },
+    "eligibility": [
+      "Loom workspaces not on an Education plan"
+    ],
+    "redemption": [
+      "Go to Loom's pricing page",
+      "Choose Try for free on Business + AI",
+      "Upgrade before the 14 days end to keep paid features"
+    ],
+    "terms": [
+      "Trial lasts 14 days",
+      "Not offered to Education plans",
+      "Workspaces that don't pay are downgraded to the free Starter plan"
+    ],
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's official page(s); live page not checked",
+      "note": "The live page could not be fetched from the research environment (support.atlassian.com / www.loom.com is not reachable from this session), so facts and quotes come from search-engine extracts of the provider's own pages. Quotes are the wording as shown in those extracts (the search tool may condense wording in places); re-check them on the live page before marking this verified. Atlassian's Loom FAQ and Loom's pricing page were only seen as search extracts; one older source says the account stays paid if a card was added during the trial.",
+      "evidence": [
+        {
+          "claim": "Trial length",
+          "quote": "the Business + AI plan can be tried free for 14 days"
+        },
+        {
+          "claim": "Education excluded",
+          "quote": "this trial is not provided to Education plans"
+        },
+        {
+          "claim": "After the trial",
+          "quote": "downgraded to Loom's Starter (free) version"
+        },
+        {
+          "claim": "Starter plan",
+          "quote": "individuals and teams can get started for free on our Starter plan"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://support.atlassian.com/loom/docs/loom-business-ai-trial-faq/",
+      "redeemUrl": "https://www.loom.com/pricing"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-make-free-plan-1000-credits",
+    "slug": "make-free-plan-1000-credits",
+    "productId": "make",
+    "title": "Make Free plan: 1,000 credits a month",
+    "summary": "Make's Free plan includes 1,000 credits a month for building automations, with no time limit.",
+    "description": "Make, the visual automation platform, has a Free plan with 1,000 credits a month that you can keep indefinitely. Most module actions use one credit; some AI features that use Make's AI provider can use more. Scenarios on the Free plan run at a minimum interval of 15 minutes.\n\nPaid plans start with Core, which Make prices lower when paid annually.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals",
+      "free-credits"
+    ],
+    "audiences": [
+      "businesses",
+      "startups",
+      "freelancers"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "period": "month",
+      "savingsLabel": "1,000 credits/month free"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Sign up at make.com; new accounts start on the Free plan."
+    },
+    "eligibility": [
+      "Anyone with a Make account"
+    ],
+    "redemption": [
+      "Sign up at make.com",
+      "Build scenarios on the Free plan",
+      "Upgrade to Core or higher if you need more credits or shorter intervals"
+    ],
+    "terms": [
+      "1,000 credits per month",
+      "15-minute minimum interval between scheduled runs",
+      "Most actions use 1 credit; some AI features use more"
+    ],
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's official page(s); live page not checked",
+      "note": "The live page could not be fetched from the research environment (www.make.com is not reachable from this session), so facts and quotes come from search-engine extracts of the provider's own pages. Quotes are the wording as shown in those extracts (the search tool may condense wording in places); re-check them on the live page before marking this verified. The 15-minute minimum interval and Core pricing were described in the extracts without verbatim wording.",
+      "evidence": [
+        {
+          "claim": "Free credits",
+          "quote": "1,000 credits/mo"
+        },
+        {
+          "claim": "No time limit",
+          "quote": "Free plan with 1,000 credits per month indefinitely"
+        },
+        {
+          "claim": "Credit use",
+          "quote": "most actions consume 1 credit, while some advanced features leveraging Make's AI Provider may use more"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.make.com/en/pricing"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-netlify-free-plan-300-credits",
+    "slug": "netlify-free-plan-300-credits",
+    "productId": "netlify",
+    "title": "Netlify Free plan: 300 credits a month",
+    "summary": "Netlify's Free plan includes 300 credits a month for deploys, compute, bandwidth, web requests and form submissions, with a hard limit and no surprise charges.",
+    "description": "On Netlify's credit-based pricing, the Free plan includes 300 credits a month. Credits cover production deploys, compute, form submissions, bandwidth and web requests; a successful production deploy costs 15 credits, while failed deploys and rollbacks don't use credits.\n\nThe Free plan has a hard limit with no auto-recharge, and you can't buy extra credits on it. When the credits run out, projects pause until the next billing cycle unless you upgrade.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals",
+      "free-credits"
+    ],
+    "audiences": [
+      "developers",
+      "startups",
+      "freelancers"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "period": "month",
+      "savingsLabel": "300 credits/month free"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Sign up at netlify.com; new accounts can use the Free plan."
+    },
+    "eligibility": [
+      "Anyone with a Netlify account"
+    ],
+    "redemption": [
+      "Sign up at netlify.com",
+      "Deploy a site from Git or by drag and drop",
+      "Track credit use in your team's billing settings"
+    ],
+    "terms": [
+      "300 credits per month with a hard limit and no auto-recharge",
+      "Extra credits can't be bought on the Free plan",
+      "Projects pause when credits run out until the next billing cycle",
+      "Successful production deploys cost 15 credits each"
+    ],
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's official page(s); live page not checked",
+      "note": "The live page could not be fetched from the research environment (www.netlify.com / docs.netlify.com is not reachable from this session), so facts and quotes come from search-engine extracts of the provider's own pages. Quotes are the wording as shown in those extracts (the search tool may condense wording in places); re-check them on the live page before marking this verified.",
+      "evidence": [
+        {
+          "claim": "Credits and hard limit",
+          "quote": "300 credits/month with a hard limit and no auto recharge option"
+        },
+        {
+          "claim": "No extra credits",
+          "quote": "you cannot buy extra credits on the free Credit-based plans"
+        },
+        {
+          "claim": "When credits run out",
+          "quote": "when credits run out, projects pause until the next billing cycle"
+        },
+        {
+          "claim": "What credits cover",
+          "quote": "usage credits for production deploys, compute, form submissions, bandwidth, and web requests"
+        },
+        {
+          "claim": "Deploy cost",
+          "quote": "Successful production deploys cost 15 credits each"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://docs.netlify.com/manage/accounts-and-billing/billing/billing-for-credit-based-plans/credit-based-pricing-plans/",
+      "redeemUrl": "https://www.netlify.com/pricing/"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-twilio-free-trial-free-units",
+    "slug": "twilio-free-trial-free-units",
+    "productId": "twilio",
+    "title": "Twilio free trial: free SMS, email and voice units for 30 days",
+    "summary": "Twilio trial accounts include product-specific free units, such as 100 SMS messages, 3,000 emails and 75 voice minutes, and expire after 30 days. Upgrading adds a fresh set of free units.",
+    "description": "Twilio's trial no longer uses a dollar balance. Instead, a trial account includes product-specific free units, such as 100 SMS messages, 3,000 emails and 75 voice minutes, to test Twilio's APIs. Trial accounts expire after 30 days and keep the usual trial restrictions.\n\nWhen you upgrade to a paid account, Twilio adds a fresh set of post-upgrade free units for eligible products.",
+    "type": "free-trial",
+    "categories": [
+      "free-trials",
+      "free-credits"
+    ],
+    "audiences": [
+      "developers",
+      "startups"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "durationMonths": 1,
+      "savingsLabel": "Free units such as 100 SMS, 3,000 emails and 75 voice minutes"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Sign up for a Twilio account; the trial units are added to the trial account."
+    },
+    "requirements": {
+      "newCustomersOnly": true
+    },
+    "eligibility": [
+      "New Twilio sign-ups"
+    ],
+    "redemption": [
+      "Sign up at twilio.com",
+      "Verify your contact details",
+      "Use the trial units in the Console; upgrade to remove trial restrictions"
+    ],
+    "terms": [
+      "Trial accounts expire after 30 days",
+      "Trial restrictions apply until you upgrade",
+      "Eligible products get a fresh set of free units after upgrading"
+    ],
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's official page(s); live page not checked",
+      "note": "The live page could not be fetched from the research environment (www.twilio.com is not reachable from this session), so facts and quotes come from search-engine extracts of the provider's own pages. Quotes are the wording as shown in those extracts (the search tool may condense wording in places); re-check them on the live page before marking this verified. Older Twilio pages still mention a $15 trial credit; the current Twilio trial docs describe free units instead, so the dollar figure is left out.",
+      "evidence": [
+        {
+          "claim": "Free units instead of balance",
+          "quote": "Instead of a dollar-based balance, your trial includes transparent, product-specific free units, such as 100 SMS messages, 3,000 emails, and 75 voice minutes."
+        },
+        {
+          "claim": "Trial length",
+          "quote": "Trial accounts expire after 30 days."
+        },
+        {
+          "claim": "Post-upgrade units",
+          "quote": "When you upgrade, you automatically receive a fresh set of post-upgrade free units for eligible products."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.twilio.com/docs/usage/trials"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-sendgrid-60-day-free-trial",
+    "slug": "sendgrid-60-day-free-trial",
+    "productId": "sendgrid",
+    "title": "Twilio SendGrid: 60-day free trial, 100 emails a day",
+    "summary": "New Twilio SendGrid accounts get a 60-day free trial with up to 100 emails a day and no credit card required.",
+    "description": "Twilio SendGrid's free trial lets new accounts send up to 100 emails a day for 60 days at no cost and without a credit card. The Email API and Marketing Campaigns each have their own trial with separate limits; Marketing Campaigns trials store up to 100 contacts.\n\nThe trial is available once. Upgrading ends it immediately and it can't be restarted. After 60 days you need a paid plan to keep sending.",
+    "type": "free-trial",
+    "categories": [
+      "free-trials",
+      "software-deals"
+    ],
+    "audiences": [
+      "developers",
+      "marketing-tools",
+      "startups"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "durationMonths": 2,
+      "savingsLabel": "$0 for 60 days, 100 emails a day"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Create a new SendGrid account; the 60-day trial starts automatically."
+    },
+    "requirements": {
+      "cardRequired": false,
+      "newCustomersOnly": true
+    },
+    "eligibility": [
+      "New SendGrid accounts"
+    ],
+    "redemption": [
+      "Sign up for Twilio SendGrid",
+      "Verify your sender identity",
+      "Send up to 100 emails a day during the 60-day trial"
+    ],
+    "terms": [
+      "100 emails per day during the trial",
+      "Marketing Campaigns trial is limited to 100 contacts",
+      "Available once; upgrading ends the trial and it can't be restarted",
+      "After 60 days you must upgrade to keep sending"
+    ],
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's official page(s); live page not checked",
+      "note": "The live page could not be fetched from the research environment (sendgrid.com / support.sendgrid.com is not reachable from this session), so facts and quotes come from search-engine extracts of the provider's own pages. Quotes are the wording as shown in those extracts (the search tool may condense wording in places); re-check them on the live page before marking this verified. The SendGrid pages in the search index were between about 168 and 587 days old, so re-check the live terms; no end date was stated.",
+      "evidence": [
+        {
+          "claim": "Trial terms",
+          "quote": "Twilio SendGrid's free trial runs $0 for 60 days and lets you send 100 emails a day — no credit card, no commitment."
+        },
+        {
+          "claim": "Separate trials",
+          "quote": "Both \"Email API\" and \"Marketing Campaigns\" have individual limitations"
+        },
+        {
+          "claim": "Once only",
+          "quote": "The free trial is only available once. Upgrading your plan will immediately terminate the trial, and you can't restart it."
+        },
+        {
+          "claim": "After 60 days",
+          "quote": "After the 60-day period, you'll need to upgrade your plans to continue sending emails"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://support.sendgrid.com/hc/en-us/articles/35270136965403-Overview-of-60-Day-Free-Trial-Plans-for-New-SendGrid-Accounts",
+      "redeemUrl": "https://www.twilio.com/en-us/products/email-api/pricing"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-resend-free-plan-3000-emails",
+    "slug": "resend-free-plan-3000-emails",
+    "productId": "resend",
+    "title": "Resend Free plan: 3,000 emails a month",
+    "summary": "Resend's Free plan includes 3,000 emails a month, up to 100 a day, at no cost.",
+    "description": "Resend, the email API for developers, has a Free plan at $0 a month with 3,000 emails per month and a limit of 100 emails per day. The daily quota resets at midnight UTC, and it counts both sent and received (inbound) emails; each To, CC or BCC recipient counts as a separate email.\n\nThere's no overage on the Free plan, so you wait for the quota to reset or upgrade. Pro starts at $20 a month for 50,000 emails and removes the daily limit.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals"
+    ],
+    "audiences": [
+      "developers",
+      "startups"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "period": "month",
+      "savingsLabel": "3,000 emails/month free"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Sign up at resend.com; new accounts start on the Free plan."
+    },
+    "eligibility": [
+      "Anyone with a Resend account"
+    ],
+    "redemption": [
+      "Sign up at resend.com",
+      "Add and verify a sending domain",
+      "Send with the API or SMTP"
+    ],
+    "terms": [
+      "100 emails per day; quota resets at midnight UTC",
+      "Quota includes both sent and received emails",
+      "Each recipient (To, CC, BCC) counts as a separate email",
+      "No overage on the Free plan"
+    ],
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's official page(s); live page not checked",
+      "note": "The live page could not be fetched from the research environment (resend.com is not reachable from this session), so facts and quotes come from search-engine extracts of the provider's own pages. Quotes are the wording as shown in those extracts (the search tool may condense wording in places); re-check them on the live page before marking this verified.",
+      "evidence": [
+        {
+          "claim": "Monthly and daily quota",
+          "quote": "3,000 emails per month and 100 emails per day"
+        },
+        {
+          "claim": "Daily limit",
+          "quote": "The Free plan is limited to 100 emails per day."
+        },
+        {
+          "claim": "Reset",
+          "quote": "The daily quota is a UTC calendar day (00:00–24:00 UTC) and resets at midnight UTC."
+        },
+        {
+          "claim": "Inbound counts",
+          "quote": "This quota includes both sent and received emails."
+        },
+        {
+          "claim": "Recipients",
+          "quote": "Multiple To, CC, or BCC recipients in sent emails count as separate emails towards this quota."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://resend.com/pricing",
+      "redeemUrl": "https://resend.com/docs/knowledge-base/account-quotas-and-limits"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-beehiiv-free-plan-2500-subscribers",
+    "slug": "beehiiv-free-plan-2500-subscribers",
+    "productId": "beehiiv",
+    "title": "beehiiv Free plan: up to 2,500 subscribers",
+    "summary": "beehiiv's Free plan (formerly Launch) supports up to 2,500 subscribers with a website, podcast and community features, free forever with no credit card.",
+    "description": "beehiiv renamed its plans in October 2026: Launch became Free, Scale became Lite and Max became Pro. The Free plan is free forever with no credit card required and supports up to 2,500 subscribers, including a newsletter website, podcast hosting and the new Community features.\n\nbeehiiv's help center also describes a 14-day free trial of Pro plan features for new accounts; during the trial the account stays capped at 2,500 active subscribers.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals",
+      "free-trials"
+    ],
+    "audiences": [
+      "creators",
+      "marketing-tools"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "savingsLabel": "Free forever up to 2,500 subscribers"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Sign up at beehiiv.com; no credit card required."
+    },
+    "requirements": {
+      "cardRequired": false
+    },
+    "eligibility": [
+      "Anyone creating a beehiiv publication"
+    ],
+    "redemption": [
+      "Sign up at beehiiv.com",
+      "Create your publication on the Free plan",
+      "Optionally start the Pro features trial from your account"
+    ],
+    "terms": [
+      "Up to 2,500 subscribers on the Free plan",
+      "Pro trial accounts stay capped at 2,500 active subscribers",
+      "Plan names changed in October 2026 (Launch is now Free)"
+    ],
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's official page(s); live page not checked",
+      "note": "The live page could not be fetched from the research environment (www.beehiiv.com is not reachable from this session), so facts and quotes come from search-engine extracts of the provider's own pages. Quotes are the wording as shown in those extracts (the search tool may condense wording in places); re-check them on the live page before marking this verified. An older beehiiv support article describes a trial of the old Scale/Max plans; the trial details here follow the newer Pro trial article. Some quotes were condensed by the search tool.",
+      "evidence": [
+        {
+          "claim": "Free forever, no card",
+          "quote": "Free is free forever, with no credit card required"
+        },
+        {
+          "claim": "Subscriber cap and features",
+          "quote": "still supports up to 2,500 subscribers and now includes Community, alongside your website and podcast"
+        },
+        {
+          "claim": "Pro trial",
+          "quote": "new accounts can start a 14-day free trial of Pro plan features"
+        },
+        {
+          "claim": "Plan rename",
+          "quote": "beehiiv renamed its plans in October 2026, with Launch becoming Free, Scale becoming Lite, and Max becoming Pro"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.beehiiv.com/pricing"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-v0-5-dollar-free-credit-new-users",
+    "slug": "v0-5-dollar-free-credit-new-users",
+    "productId": "v0",
+    "title": "v0 by Vercel: $5 free credit for new users",
+    "summary": "New v0 users on the Free plan get a one-time $5 credit to build with Vercel's AI app builder; existing Free users keep a $5 monthly allowance.",
+    "description": "Vercel's v0 docs say new users who sign up get a one-time Free credit of $5, once per user in each personal or team account; the one-time allowance doesn't renew. Free users who already had accounts keep their $5 monthly allowance.\n\nAfter the credit is used you can buy more credits or move to a paid plan; Plus and Business plans include $30 of monthly credits per user. The older Premium plan is being retired and isn't available to new users.",
+    "type": "free-credits",
+    "categories": [
+      "free-credits",
+      "ai-tools"
+    ],
+    "audiences": [
+      "ai-tools",
+      "developers",
+      "designers"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "creditValue": 5,
+      "period": "one-time",
+      "savingsLabel": "One-time $5 credit for new users"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Sign up at v0.app; the one-time credit is added to new Free accounts."
+    },
+    "requirements": {
+      "newCustomersOnly": true
+    },
+    "eligibility": [
+      "New v0 users on the Free plan",
+      "Once per user in each personal or team account"
+    ],
+    "redemption": [
+      "Sign up at v0.app",
+      "Use the $5 credit to generate and edit apps",
+      "Buy credits or upgrade when it runs out"
+    ],
+    "terms": [
+      "The one-time allowance does not renew",
+      "Existing Free users keep their $5 monthly allowance"
+    ],
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's official page(s); live page not checked",
+      "note": "The live page could not be fetched from the research environment (v0.app is not reachable from this session), so facts and quotes come from search-engine extracts of the provider's own pages. Quotes are the wording as shown in those extracts (the search tool may condense wording in places); re-check them on the live page before marking this verified. Older Vercel pages describe $5 of monthly credits for all Free users; this listing follows the current v0 docs.",
+      "evidence": [
+        {
+          "claim": "One-time credit",
+          "quote": "new users who sign up under the one-time Free credit offer receive $5 once per user in each personal or team account"
+        },
+        {
+          "claim": "No renewal",
+          "quote": "a one-time allowance does not renew"
+        },
+        {
+          "claim": "Existing users",
+          "quote": "Existing Free users keep their $5 monthly allowance."
+        },
+        {
+          "claim": "Premium sunset",
+          "quote": "The Premium plan is in the process of being sunsetted and is no longer available to new users."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://v0.app/docs/pricing",
+      "redeemUrl": "https://v0.app/pricing"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-replit-starter-free-daily-agent-credits",
+    "slug": "replit-starter-free-daily-agent-credits",
+    "productId": "replit",
+    "title": "Replit Starter: free plan with daily Agent credits",
+    "summary": "Replit's free Starter plan includes a daily Replit Agent allowance, limited monthly cloud credits and one published app, with no time limit.",
+    "description": "Replit doesn't run time-limited trials of its paid plans; instead, the free Starter plan lets you try Replit Agent with a daily allowance of free Agent credits, plus limited monthly cloud credits and one published app.\n\nReplit Core adds $20 of monthly credits that reset each billing cycle and don't roll over.",
+    "type": "free-plan",
+    "categories": [
+      "ai-tools",
+      "free-credits"
+    ],
+    "audiences": [
+      "ai-tools",
+      "developers",
+      "students"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "savingsLabel": "Free daily Agent credits"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Sign up at replit.com; new accounts start on Starter."
+    },
+    "eligibility": [
+      "Anyone with a Replit account"
+    ],
+    "redemption": [
+      "Sign up at replit.com",
+      "Start an app with Replit Agent",
+      "Publish one app on Starter"
+    ],
+    "terms": [
+      "Daily Agent allowance and limited monthly cloud credits",
+      "One published app on Starter",
+      "No time-limited free trial of paid plans"
+    ],
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's official page(s); live page not checked",
+      "note": "The live page could not be fetched from the research environment (replit.com / docs.replit.com is not reachable from this session), so facts and quotes come from search-engine extracts of the provider's own pages. Quotes are the wording as shown in those extracts (the search tool may condense wording in places); re-check them on the live page before marking this verified. The size of the daily allowance wasn't shown in the extracts.",
+      "evidence": [
+        {
+          "claim": "No paid trial",
+          "quote": "Replit doesn't offer a time-limited free trial for paid plans, but you have options to try Replit first."
+        },
+        {
+          "claim": "Starter allowance",
+          "quote": "daily Agent allowance and limited monthly cloud credits, plus one published app"
+        },
+        {
+          "claim": "Pricing page wording",
+          "quote": "free daily Agent credits"
+        },
+        {
+          "claim": "Core credits",
+          "quote": "Core includes $20 in monthly credits"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://docs.replit.com/help/pricing-and-plans",
+      "redeemUrl": "https://replit.com/pricing"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-krea-free-plan-100-daily-compute-units",
+    "slug": "krea-free-plan-100-daily-compute-units",
+    "productId": "krea",
+    "title": "Krea Free plan: 100 compute units a day",
+    "summary": "Krea's Free plan gives 100 compute units a day for AI image generation and editing with Krea's own models, with no credit card required.",
+    "description": "Krea says its Free plan costs $0 and gives 100 compute units a day for image generation and editing with Krea's in-house models; no credit card is required.\n\nThe free tier doesn't include video, the full third-party model library or a commercial license; those start with the Basic plan.",
+    "type": "free-plan",
+    "categories": [
+      "ai-tools",
+      "free-credits"
+    ],
+    "audiences": [
+      "ai-tools",
+      "creators",
+      "designers"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "savingsLabel": "100 compute units a day"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Sign up at krea.ai to use the free daily compute units."
+    },
+    "requirements": {
+      "cardRequired": false
+    },
+    "eligibility": [
+      "Anyone with a Krea account"
+    ],
+    "redemption": [
+      "Sign up at krea.ai",
+      "Generate or edit images with Krea's models",
+      "Units refresh daily"
+    ],
+    "terms": [
+      "100 compute units per day",
+      "No video, full model library or commercial license on Free"
+    ],
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's official page(s); live page not checked",
+      "note": "The live page could not be fetched from the research environment (www.krea.ai is not reachable from this session), so facts and quotes come from search-engine extracts of the provider's own pages. Quotes are the wording as shown in those extracts (the search tool may condense wording in places); re-check them on the live page before marking this verified. The figures come from Krea's own blog posts (2026); Krea's pricing page itself was not seen. Sources differ on which Krea model version the free tier uses.",
+      "evidence": [
+        {
+          "claim": "Free plan allowance",
+          "quote": "the Free plan is $0, gives 100 compute units a day"
+        },
+        {
+          "claim": "No card",
+          "quote": "no credit card required"
+        },
+        {
+          "claim": "Free tier limits",
+          "quote": "The free plan excludes video, the full third-party model library, and the commercial license."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.krea.ai/blog/midjourney-vs-krea",
+      "redeemUrl": "https://www.krea.ai/pricing"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-firebase-spark-no-cost-plan",
+    "slug": "firebase-spark-no-cost-plan",
+    "productId": "firebase",
+    "title": "Firebase Spark plan: no-cost tier with free quotas",
+    "summary": "Firebase's Spark plan is free with no payment method, including no-cost quotas for Firestore, Realtime Database, Hosting and Authentication, and unlimited use of products like Crashlytics and Cloud Messaging.",
+    "description": "Firebase has two pricing plans: the no-cost Spark plan and the pay-as-you-go Blaze plan. Spark needs no payment method. Products such as A/B Testing, App Check, App Distribution, most Authentication options, Cloud Messaging, Crashlytics, In-App Messaging and Performance Monitoring have no charge at any usage level.\n\nMetered products have no-cost quotas, for example Cloud Firestore with 1 GiB stored, 50K reads, 20K writes and 20K deletes a day and 10 GiB a month of egress (one free database per project), Realtime Database with 1 GB stored and 10 GB a month of downloads, and Hosting with 10 GB storage and 360 MB a day of transfer.\n\nOn Spark, if a product exceeds its no-cost quota in a month, that product is shut off for the project until the next month. Cloud Storage buckets aren't available on Spark; the no-cost Cloud Storage usage applies on Blaze.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals",
+      "free-credits"
+    ],
+    "audiences": [
+      "developers",
+      "startups"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "savingsLabel": "No-cost Spark plan"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "New Firebase projects start on the Spark plan."
+    },
+    "requirements": {
+      "cardRequired": false
+    },
+    "eligibility": [
+      "Anyone with a Google account creating a Firebase project"
+    ],
+    "redemption": [
+      "Go to the Firebase console",
+      "Create a project (it starts on Spark)",
+      "Upgrade to Blaze only if you need more than the no-cost quotas"
+    ],
+    "terms": [
+      "Exceeding a product's no-cost quota shuts that product off for the rest of the month",
+      "Cloud Storage buckets aren't available on Spark",
+      "Phone-auth SMS is billed and only available on Blaze",
+      "Quotas and pricing can change (Remote Config pricing changed on September 1, 2026)"
+    ],
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's official page(s); live page not checked",
+      "note": "The live page could not be fetched from the research environment (firebase.google.com is not reachable from this session), so facts and quotes come from search-engine extracts of the provider's own pages. Quotes are the wording as shown in those extracts (the search tool may condense wording in places); re-check them on the live page before marking this verified. Some product quotas were summarized by the search tool; check each product's quota page before relying on exact numbers.",
+      "evidence": [
+        {
+          "claim": "Two plans",
+          "quote": "Firebase offers two different pricing plans, the no-cost Spark pricing plan and the pay-as-you-go Blaze pricing plan."
+        },
+        {
+          "claim": "Hard cutoff",
+          "quote": "if you exceed the no-cost quota limit in a calendar month for any product, your project's usage of that specific product will be shut off for the remainder of that month"
+        },
+        {
+          "claim": "Cloud Storage on Spark",
+          "quote": "If your Firebase project is on the Spark pricing plan, you won't have access to any Cloud Storage buckets (including default buckets)"
+        },
+        {
+          "claim": "Firestore quota",
+          "quote": "1 GiB stored, 50K reads/day, 20K writes/day, 20K deletes/day, and 10 GiB/month egress"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://firebase.google.com/docs/projects/billing/firebase-pricing-plans",
+      "redeemUrl": "https://firebase.google.com/pricing"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-supabase-free-plan",
+    "slug": "supabase-free-plan",
+    "productId": "supabase",
+    "title": "Supabase Free plan: 2 free projects with Postgres, auth and storage",
+    "summary": "Supabase's Free plan includes two active projects, each with a 500 MB Postgres database, 50,000 monthly active users, 1 GB file storage and unlimited API requests.",
+    "description": "Supabase's Free plan is for passion projects and simple websites. It includes unlimited API requests, 50,000 monthly active users, a 500 MB database on shared CPU with 500 MB RAM, 5 GB egress, 5 GB cached egress, 1 GB file storage and community support.\n\nYou can have two active free projects across all organizations where you're an Owner or Administrator; paused projects don't count. Free projects are paused after one week of inactivity. If you keep exceeding the Free plan quotas, Supabase may restrict service until you reduce usage or upgrade to Pro, which starts at $25 a month and includes $10 in compute credits.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals"
+    ],
+    "audiences": [
+      "developers",
+      "startups",
+      "students"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "period": "month",
+      "savingsLabel": "Free plan with 2 active projects"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Create a project at supabase.com/dashboard on the Free plan."
+    },
+    "eligibility": [
+      "Anyone with a Supabase account",
+      "Up to two active free projects across organizations where you're an Owner or Admin"
+    ],
+    "redemption": [
+      "Sign up at supabase.com",
+      "Create a new project and choose the Free plan",
+      "Keep projects active (free projects pause after a week of inactivity)"
+    ],
+    "terms": [
+      "Free projects are paused after 1 week of inactivity",
+      "Limit of 2 active free projects; paused projects don't count",
+      "Plans can't be mixed within one organization",
+      "Continually exceeding Free plan quotas can lead to service restrictions"
+    ],
+    "verification": {
+      "status": "verified",
+      "checkedAt": "2026-11-02",
+      "method": "Checked against Supabase's official source repository (supabase/supabase: pricing-page plan data and billing docs, master branch, 2026-11-02)",
+      "evidence": [
+        {
+          "claim": "Plan description",
+          "quote": "Perfect for passion projects & simple websites."
+        },
+        {
+          "claim": "Included usage",
+          "quote": "'Unlimited API requests', '50,000 monthly active users', ['500 MB database size', 'Shared CPU • 500 MB RAM'], ['5 GB egress'], ['5 GB cached egress'], '1 GB file storage', 'Community support'"
+        },
+        {
+          "claim": "Pausing and project limit",
+          "quote": "Free projects are paused after 1 week of inactivity. Limit of 2 active projects."
+        },
+        {
+          "claim": "Two free projects across orgs",
+          "quote": "You are granted two free projects. The project limit applies across all organizations where you are an Owner or Administrator."
+        },
+        {
+          "claim": "Paused projects don't count",
+          "quote": "Paused projects do not count towards your free project limit."
+        },
+        {
+          "claim": "Pro compute credits",
+          "quote": "Each paid organization comes with <Price price=\"10\" /> in Compute Credits to cover one project on the default compute size."
+        }
+      ],
+      "note": "supabase.com could not be fetched from the research environment; the plan data was read from packages/shared-data/plans.ts (which feeds supabase.com/pricing) and apps/docs/content/guides/platform/billing-on-supabase.mdx and billing-faq.mdx in the supabase/supabase repository."
+    },
+    "links": {
+      "officialUrl": "https://supabase.com/pricing",
+      "redeemUrl": "https://supabase.com/dashboard/new?plan=free"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-docker-desktop-free-small-business-personal-education",
+    "slug": "docker-desktop-free-small-business-personal-education",
+    "productId": "docker",
+    "title": "Docker Desktop: free for small businesses, personal use, education and open source",
+    "summary": "Docker Desktop is free for small businesses (fewer than 250 employees and under $10 million in annual revenue), personal use, education and non-commercial open-source projects.",
+    "description": "Under the Docker Subscription Service Agreement, Docker Desktop is free for small businesses with fewer than 250 employees and less than $10 million in annual revenue, for personal use, for education and for non-commercial open-source projects.\n\nProfessional use in larger organizations, government entities and commercial use beyond the free-tier limits require a paid Docker Pro, Team or Business subscription. The Docker Engine and Moby open-source projects keep their own open-source licences.",
+    "type": "free-plan",
+    "categories": [
+      "software-deals"
+    ],
+    "audiences": [
+      "developers",
+      "startups",
+      "students"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "savingsLabel": "Free for small businesses, personal use and education"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Download Docker Desktop and accept the Docker Subscription Service Agreement; no paid plan needed if you qualify."
+    },
+    "eligibility": [
+      "Small businesses with fewer than 250 employees AND less than $10 million in annual revenue",
+      "Personal use",
+      "Education",
+      "Non-commercial open-source projects"
+    ],
+    "redemption": [
+      "Download Docker Desktop from docker.com",
+      "Sign in with a free Docker Personal account",
+      "Accept the Docker Subscription Service Agreement"
+    ],
+    "terms": [
+      "Larger organizations, government entities and commercial use beyond the free tier need a paid Pro, Team or Business subscription",
+      "Both thresholds (employees and revenue) must be met for the small-business exemption"
+    ],
+    "verification": {
+      "status": "verified",
+      "checkedAt": "2026-11-02",
+      "method": "Checked against Docker's official documentation source (docker/docs repository, commit 53581df, 2026-10-30) and Docker's live pricing page",
+      "evidence": [
+        {
+          "claim": "Free uses",
+          "quote": "Docker Desktop is free for: Small businesses (fewer than 250 employees AND less than $10 million in annual revenue) Personal use Education Non-commercial open source projects"
+        },
+        {
+          "claim": "Paid uses",
+          "quote": "Docker Desktop requires a paid subscription for: Professional use in larger organizations Government entities Commercial use beyond the free tier limits"
+        },
+        {
+          "claim": "Paid plans",
+          "quote": "Paid subscriptions that include Docker Desktop: Docker Pro, Team, and Business subscriptions"
+        },
+        {
+          "claim": "Docker Personal (pricing page)",
+          "quote": "Docker Personal: \"$0\" ... \"For individual developers who need the essential tools to build and deploy containers.\""
+        }
+      ],
+      "note": "docs.docker.com could not be fetched directly; the license page text was read from content/manuals/subscription-billing/desktop-license.md in docker/docs, and the Personal plan from the live www.docker.com/pricing page."
+    },
+    "links": {
+      "officialUrl": "https://docs.docker.com/subscription-billing/desktop-license/",
+      "redeemUrl": "https://www.docker.com/products/docker-desktop/"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-docker-sponsored-open-source-program",
+    "slug": "docker-sponsored-open-source-program",
+    "productId": "docker",
+    "title": "Docker-Sponsored Open Source program: free Docker Team for core contributors and no pull limits",
+    "summary": "Non-commercial open-source projects on Docker Hub can apply for Docker's DSOS program: a verified badge, no rate limits on their public images, Docker Scout on up to 100 repos, and a free one-year Docker Team subscription for core contributors.",
+    "description": "The Docker-Sponsored Open Source (DSOS) program supports non-commercial open-source projects that publish images on Docker Hub. Approved projects get a Docker-Sponsored Open Source badge, insights and analytics, repository logos, Docker Scout on up to 100 repositories, and removal of rate limits: program members and everyone pulling the project's public images get unlimited pulls and egress. Core contributors get a free one-year Docker Team subscription.\n\nTo qualify, the project must be shared in public Docker Hub repositories with public source code, meet the Open Source Initiative definition, be in active development (image or dependency updates within the past 6 months) and have no pathway to commercialization; accepting donations is allowed. Benefits last one year and can be renewed if the project still qualifies.",
+    "type": "open-source",
+    "categories": [
+      "open-source",
+      "software-deals"
+    ],
+    "audiences": [
+      "developers"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "durationMonths": 12,
+      "savingsLabel": "Free one-year Docker Team for core contributors, plus unlimited pulls"
+    },
+    "claim": {
+      "method": "application",
+      "note": "Apply through the form linked from Docker's DSOS application page."
+    },
+    "requirements": {
+      "approvalRequired": true
+    },
+    "eligibility": [
+      "Project shared in public Docker Hub repositories with publicly accessible source code",
+      "Meets the Open Source Initiative definition",
+      "Active development: image or dependency updates within the past 6 months",
+      "No pathway to commercialization (donations are allowed)"
+    ],
+    "redemption": [
+      "Go to docker.com/community/open-source/application",
+      "Click Apply here and complete the application form",
+      "After approval, set up the badge, Scout and Team seats for core contributors"
+    ],
+    "terms": [
+      "Benefits are valid for one year and can be renewed if the project still qualifies",
+      "Benefits are only for project leads and core committers",
+      "Benefits may be used only for developing non-commercial open-source projects",
+      "Docker licences can't be shared with third parties"
+    ],
+    "verification": {
+      "status": "verified",
+      "checkedAt": "2026-11-02",
+      "method": "Checked against Docker's live DSOS application page and Docker's documentation source (docker/docs repository, commit 53581df, 2026-10-30)",
+      "evidence": [
+        {
+          "claim": "Free Team subscription",
+          "quote": "Your project's core contributors get a free, one-year Docker Team subscription, with access to Docker Desktop, 15 concurrent autobuilds, unlimited vulnerability scans, role-based access control, audit logs, and more.."
+        },
+        {
+          "claim": "No rate limits",
+          "quote": "Neither you nor developers pulling your public images will be affected by Docker Hub's rate limits."
+        },
+        {
+          "claim": "Unlimited pulls (docs)",
+          "quote": "Program members and all users pulling public images from the project namespace get access to unlimited pulls and unlimited egress."
+        },
+        {
+          "claim": "Docker Scout (docs)",
+          "quote": "DSOS projects can enable Docker Scout on up to 100 repositories for free."
+        },
+        {
+          "claim": "No commercialization",
+          "quote": "Not having a pathway to commercialization. Your organization must not seek to make a profit through services or by charging for higher tiers. Accepting donations to sustain your efforts is permissible."
+        },
+        {
+          "claim": "Active development",
+          "quote": "Be in active development on Docker Hub, which means image updates are pushed regularly within the past 6 months or dependencies are updated regularly, even if the project source code is stable."
+        },
+        {
+          "claim": "Validity",
+          "quote": "Program status and benefits are valid for one year and can be renewed if your project still meets the program requirements."
+        }
+      ],
+      "note": "The application page doesn't state whether applications are currently open or give a review timeline, but it shows active Apply buttons."
+    },
+    "links": {
+      "officialUrl": "https://www.docker.com/community/open-source/application/",
+      "redeemUrl": "https://docs.docker.com/docker-hub/repos/manage/trusted-content/dsos-program/"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-obsidian-sync-publish-40-off-education-nonprofit",
+    "slug": "obsidian-sync-publish-40-off-education-nonprofit",
+    "productId": "obsidian",
+    "title": "Obsidian Sync and Publish: 40% off for students, educators and nonprofits",
+    "summary": "Obsidian gives students and faculty of education organizations, and people at nonprofits, 40% off its Obsidian Sync and Obsidian Publish add-on services.",
+    "description": "Obsidian offers two discounts, education and non-profit, each giving 40% off its paid add-on services Obsidian Sync and Obsidian Publish. Students and faculty of education organizations such as universities and high schools generally qualify for the education discount; people who run or work at a non-profit generally qualify for the non-profit discount.\n\nYou apply from your Obsidian account's Billing page with your school or organization email (not your account email) and verify it; some applications are approved instantly, others are reviewed within 3 business days. The discount has an expiry date shown in your account, and Obsidian emails a reminder a week before so you can renew if you still qualify. The discounts don't stack with early-bird pricing.",
+    "type": "discount",
+    "categories": [
+      "student-discounts",
+      "saas-discounts"
+    ],
+    "audiences": [
+      "students",
+      "office-tools"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "savingsLabel": "40% off Obsidian Sync and Obsidian Publish"
+    },
+    "claim": {
+      "method": "verification",
+      "note": "Apply under Billing > Discount in your Obsidian account and verify your school or organization email."
+    },
+    "requirements": {
+      "approvalRequired": true
+    },
+    "eligibility": [
+      "Students or faculty of an education organization such as a university or high school",
+      "People who run or work at a non-profit organization",
+      "A school or organization email address (or other proof sent to support)"
+    ],
+    "redemption": [
+      "Go to obsidian.md/account/billing",
+      "Under Billing, find Discount and click Apply",
+      "Choose education or non-profit and enter your school or organization email",
+      "Verify the email and wait for approval (instant or within 3 business days)",
+      "Buy Obsidian Sync or Publish with the discount applied"
+    ],
+    "terms": [
+      "Discount applies to Obsidian Sync and Obsidian Publish",
+      "The discount expires; renew it from your account if you still qualify",
+      "Doesn't stack with early-bird pricing"
+    ],
+    "verification": {
+      "status": "verified",
+      "checkedAt": "2026-11-02",
+      "method": "Checked against Obsidian's official help source (obsidianmd/obsidian-help repository, commit 4aa30a3, 2026-10-28)",
+      "evidence": [
+        {
+          "claim": "Discount",
+          "quote": "Obsidian currently offers two types of discounts: education and non-profit. They both give you 40% off our add-on services Obsidian Sync and Obsidian Publish."
+        },
+        {
+          "claim": "Education eligibility",
+          "quote": "If you are a student or faculty member of an education organization like a university or a high school, you generally qualify for education discount."
+        },
+        {
+          "claim": "Non-profit eligibility",
+          "quote": "If you run or work at a non-profit organization, you generally qualify for non-profit discount."
+        },
+        {
+          "claim": "Email to use",
+          "quote": "fill out your educational or organization email (not your account email)"
+        },
+        {
+          "claim": "Review time",
+          "quote": "If your application isn't approved instantly after verifying your email, our team will review it. It will take up to 3 business days."
+        },
+        {
+          "claim": "No stacking with early bird",
+          "quote": "None of these discounts stack with the early bird pricing"
+        }
+      ],
+      "note": "help.obsidian.md could not be fetched directly; the page text was read from 'en/Licenses and payment/Education and non-profit discount.md' (permalink 'discounts') in the official obsidian-help repository."
+    },
+    "links": {
+      "officialUrl": "https://help.obsidian.md/discounts",
+      "redeemUrl": "https://obsidian.md/account/billing"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-notion-business-30-day-free-trial-with-ai",
+    "slug": "notion-business-30-day-free-trial-with-ai",
+    "productId": "notion",
+    "title": "Notion Business plan: 30-day free trial with Notion AI",
+    "summary": "Teams on a professional email domain can try Notion's Business plan free for 30 days, including Notion AI, AI Meeting Notes, Research Mode, SAML SSO and private teamspaces.",
+    "description": "Notion offers a 30-day trial of its Business plan to teams using a professional email domain that aren't already on Business or Enterprise. The trial includes Notion AI, AI Meeting Notes, Research Mode and AI connectors, along with verified pages, private teamspaces, SAML SSO and integrations; the model picker may not be available during the trial.\n\nPersonal and educational email domains aren't eligible, and the trial has to be started from the web or desktop app. If you cancel, the workspace moves to the Free plan at the end of the trial.",
+    "type": "free-trial",
+    "categories": [
+      "free-trials",
+      "software-deals",
+      "ai-tools"
+    ],
+    "audiences": [
+      "businesses",
+      "office-tools",
+      "startups"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "dealPrice": 0,
+      "durationMonths": 1,
+      "savingsLabel": "30-day Business plan trial"
+    },
+    "claim": {
+      "method": "link",
+      "note": "Start the Business trial from Notion's web or desktop app."
+    },
+    "eligibility": [
+      "Teams using a professional email domain",
+      "Workspaces not already on a Business or Enterprise plan",
+      "Personal and educational domains aren't eligible"
+    ],
+    "redemption": [
+      "Open Notion on the web or desktop (not mobile)",
+      "Choose Upgrade and start the Business plan trial",
+      "Cancel before 30 days to move to the Free plan instead of paying"
+    ],
+    "terms": [
+      "Trial lasts 30 days",
+      "Must be started from web or desktop",
+      "Business trials may not include the model picker",
+      "Cancelled trials move to the Free plan at the end of the trial"
+    ],
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's official page(s); live page not checked",
+      "note": "The live page could not be fetched from the research environment (www.notion.com is not reachable from this session), so facts and quotes come from search-engine extracts of the provider's own pages. Quotes are the wording as shown in those extracts (the search tool may condense wording in places); re-check them on the live page before marking this verified. Some wording was condensed by the search tool.",
+      "evidence": [
+        {
+          "claim": "Length and AI features",
+          "quote": "the Business Plan trial lasts 30 days and includes Notion AI, AI Meeting Notes, Research Mode, and connectors"
+        },
+        {
+          "claim": "Eligibility",
+          "quote": "Business Plan trials are available only to teams who use a professional domain and aren't already on a Business or Enterprise Plan."
+        },
+        {
+          "claim": "After cancelling",
+          "quote": "If you cancel, you will be placed onto our Free Plan at the end of your trial period."
+        },
+        {
+          "claim": "Model picker",
+          "quote": "Business trials may not have access to the model picker."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.notion.com/help/paid-plan-trials",
+      "redeemUrl": "https://www.notion.com/pricing"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-perplexity-education-pro-student-discount",
+    "slug": "perplexity-education-pro-student-discount",
+    "productId": "perplexity",
+    "title": "Perplexity Education Pro: discounted Pro for verified students and educators",
+    "summary": "Perplexity offers Education Pro, its Pro plan at a discount for students and educators verified through SheerID, with learning-focused features.",
+    "description": "Perplexity's Education Pro is offered to verified students and educators at a discount. It includes everything in Perplexity Pro, including Perplexity Computer, Learn Mode, unlimited Pro Searches and premium models, plus education-specific tips.\n\nTo get it, choose the Education plan when upgrading in the Perplexity app and verify your status through SheerID; the email you verify with doesn't need to match your Perplexity login. If checkout shows the full Pro price, Perplexity's help center says not to pay it and to contact support; an earlier past-due subscription can block the discount.",
+    "type": "student",
+    "categories": [
+      "student-discounts",
+      "ai-tools"
+    ],
+    "audiences": [
+      "students",
+      "ai-tools"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "savingsLabel": "Pro at a discount for verified students and educators"
+    },
+    "claim": {
+      "method": "verification",
+      "note": "Upgrade in the app, toggle to the Education plan and click Verify as student (SheerID)."
+    },
+    "requirements": {
+      "studentVerification": true
+    },
+    "eligibility": [
+      "Students and educators who can be verified through SheerID"
+    ],
+    "redemption": [
+      "In Perplexity, click Upgrade (bottom left)",
+      "Toggle to the Education plan and click Verify as student",
+      "Complete SheerID verification and check the discounted price before paying"
+    ],
+    "terms": [
+      "Verification is handled by SheerID",
+      "Don't pay the full Pro price if the discount doesn't show; contact support",
+      "A past-due earlier subscription can block the discount"
+    ],
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's official page(s); live page not checked",
+      "note": "The live page could not be fetched from the research environment (www.perplexity.ai is not reachable from this session), so facts and quotes come from search-engine extracts of the provider's own pages. Quotes are the wording as shown in those extracts (the search tool may condense wording in places); re-check them on the live page before marking this verified. A Perplexity plan-comparison page showed \"($10/mo with verification from SheerID)\" but the extract didn't make clear which plan the figure belongs to, so no price is listed. Perplexity's separate Comet student offers showed conflicting lengths (12 months vs one month free) and are not included.",
+      "evidence": [
+        {
+          "claim": "Discount for verified users",
+          "quote": "Education Pro is offered to verified students and educators at a discount"
+        },
+        {
+          "claim": "Verification flow",
+          "quote": "click upgrade in the bottom left corner of the app, toggle to the Education plan, and click \"Verify as student.\""
+        },
+        {
+          "claim": "Checkout issue",
+          "quote": "don't pay the full-price amount"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.perplexity.ai/help-center/en/articles/12590157-what-is-education-pro",
+      "redeemUrl": "https://www.perplexity.ai/hub/pricing"
+    },
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
   }
 ];
