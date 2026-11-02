@@ -81,21 +81,15 @@ export default async function SoftwarePage(props: { params: Promise<{ id: string
           </>
         }
         crumbs={[{ label: "Software Inventory", href: "/business/software" }, { label: sw.name }]}
-        actions={
-          <>
-            {can(ctx.role, "records.manage") && !archived && (
-              <LinkButton href={`/business/subscriptions/new?software=${id}`} icon="plus">
-                Add subscription
-              </LinkButton>
-            )}
-            {canEdit && !archived && (
-              <LinkButton href={`/business/software/${id}/edit`} icon="pen" variant="primary">
-                Edit
-              </LinkButton>
-            )}
-            {canEdit && <ArchiveSoftwareButton workspaceId={ws} id={id} archived={archived} name={sw.name} />}
-          </>
+        primary={
+          canEdit && !archived ? (
+            <LinkButton href={`/business/software/${id}/edit`} icon="pen" variant="primary">
+              Edit
+            </LinkButton>
+          ) : undefined
         }
+        more={can(ctx.role, "records.manage") && !archived ? [{ label: "Add subscription", href: `/business/subscriptions/new?software=${id}`, icon: "plus" }] : []}
+        menuExtra={canEdit ? <ArchiveSoftwareButton workspaceId={ws} id={id} archived={archived} name={sw.name} /> : undefined}
       />
 
       <div className="space-y-3">

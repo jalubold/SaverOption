@@ -112,7 +112,7 @@ export default async function SoftwareInventoryPage(props: { searchParams: Promi
           </>
         }
         crumbs={[{ label: "Overview", href: "/business/dashboard" }, { label: "Software Inventory" }]}
-        actions={
+        primary={
           canAdd ? (
             <LinkButton href="/business/software/new" variant="primary" icon="plus">
               Add software

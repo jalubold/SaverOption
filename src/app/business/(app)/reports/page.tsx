@@ -97,7 +97,7 @@ export default async function ReportsPage(props: { searchParams: Promise<Raw> })
           <FxNoteLine note={model.fx} dateFormat={fmt} className="mt-1.5" />
         </>
       }
-      actions={exportLink("summary")}
+      more={canExport ? [{ label: "Download CSV", href: `/business/reports/export?report=summary&${q}`, icon: "download", download: true }] : []}
     />
   );
 

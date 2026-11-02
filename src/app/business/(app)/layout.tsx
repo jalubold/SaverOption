@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
 import { AppShell } from "@/components/business/app-shell";
 import { billingNotice, trialBadge } from "@/lib/business/billing";
@@ -11,6 +11,15 @@ import { syncReminders } from "@/lib/server/business/reminders";
 export const metadata: Metadata = {
   title: { default: "Saver Option Business", template: "%s · Saver Option Business" },
   robots: { index: false, follow: false },
+};
+
+/**
+ * The app's light title bar runs into the phone's browser bar (theme color), and the page may use
+ * the whole screen (viewport-fit) so the tab bar sits on the home indicator's safe area.
+ */
+export const viewport: Viewport = {
+  themeColor: "#fafaf7",
+  viewportFit: "cover",
 };
 
 /** Signed-in business app: requires a session and a workspace membership on every page. */

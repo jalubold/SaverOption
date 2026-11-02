@@ -279,7 +279,7 @@ export function AssistantChat({ workspaceId, suggestions, canWrite }: { workspac
       </div>
 
       <form
-        className="sticky bottom-0 mt-5 border-t border-line bg-bg/95 pb-1 pt-3 backdrop-blur"
+        className="sticky bottom-[var(--tabbar,0px)] mt-5 border-t border-line bg-bg/95 pb-1 pt-3 backdrop-blur"
         onSubmit={(e) => {
           e.preventDefault();
           void ask(input);

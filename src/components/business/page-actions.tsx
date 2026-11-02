@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Icon } from "@/components/ui/icon";
+import Link from "next/link";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { BottomSheet, usePhone } from "@/components/business/sheet";
+import { Icon, type IconProps } from "@/components/ui/icon";
 import { buttonClass, cn } from "@/components/ui/primitives";
 
 /**
@@ -12,29 +14,203 @@ import { buttonClass, cn } from "@/components/ui/primitives";
  */
 export function PageActions({ title, workspace, tone = "light" }: { title: string; workspace: string; tone?: "light" | "dark" }) {
   const [open, setOpen] = useState(false);
-  const [busy, setBusy] = useState<null | "pdf" | "png">(null);
-  const [note, setNote] = useState<string | null>(null);
+  const { busy, note, share, save } = usePageExport({ title, workspace });
   const menuRef = useRef<HTMLDivElement>(null);
+  const phone = usePhone();
+  useDismiss(open && !phone, menuRef, () => setOpen(false));
 
+  const pick = (kind: "pdf" | "png") => {
+    setOpen(false);
+    void save(kind);
+  };
+  const dark = tone === "dark";
+  const btn = dark ? "inline-flex h-8 items-center gap-1.5 rounded-[9px] border border-white/15 bg-white/10 px-2.5 text-[12.5px] font-medium text-fg hover:bg-white/15" : buttonClass("secondary", "sm");
+  return (
+    <div className="relative flex items-center gap-2" data-export-hide data-page-actions>
+      <button type="button" onClick={share} className={btn} data-share>
+        <ShareIcon /> Share
+      </button>
+      <div ref={menuRef} className="relative">
+        <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-haspopup="menu" disabled={busy !== null} className={btn} data-save>
+          {busy ? <Icon name="refresh" size={14} className="animate-spin" /> : <Icon name="download" size={14} />}
+          {busy === "pdf" ? "Making PDF…" : busy === "png" ? "Making image…" : "Save"}
+          {!busy && <Icon name="chevron-down" size={13} className="opacity-60" />}
+        </button>
+        {open && phone && (
+          <BottomSheet open onClose={() => setOpen(false)} title={`Save ${title}`}>
+            <div className="space-y-2 px-1 pb-2">
+              <SheetRow onClick={() => pick("pdf")} badge="PDF" label="Save as PDF" hint="A4 pages, ready to send or print" data-save-pdf />
+              <SheetRow onClick={() => pick("png")} badge="PNG" label="Save as image" hint="One picture of the whole page" data-save-png />
+            </div>
+          </BottomSheet>
+        )}
+        {open && !phone && (
+          <div role="menu" className={menuPanel}>
+            <button type="button" role="menuitem" onClick={() => pick("pdf")} className={menuRow} data-save-pdf>
+              <FileBadge label="PDF" /> Save as PDF
+            </button>
+            <button type="button" role="menuitem" onClick={() => pick("png")} className={menuRow} data-save-png>
+              <FileBadge label="PNG" /> Save as image (PNG)
+            </button>
+          </div>
+        )}
+      </div>
+      <ExportNote note={note} dark={dark} />
+    </div>
+  );
+}
+
+/** A link in a page's More menu. */
+export interface MenuLink {
+  label: string;
+  href: string;
+  icon?: IconProps["name"];
+  /** A file to download (CSV), not a page. */
+  download?: boolean;
+}
+
+/**
+ * A page's secondary actions behind one More button, so the header shows at most two buttons:
+ * links (Export CSV, Import CSV, View software), anything passed as children (an Archive form,
+ * which keeps its own confirmation), and Share / Save as PDF / Save as image when the page can be
+ * exported. A menu under the button on bigger screens, a bottom sheet on phones.
+ */
+export function MoreMenu({ links = [], children, exportAs }: { links?: MenuLink[]; children?: ReactNode; exportAs?: { title: string; workspace: string } }) {
+  const [open, setOpen] = useState(false);
+  const phone = usePhone();
+  const ref = useRef<HTMLDivElement>(null);
+  const { busy, note, share, save } = usePageExport(exportAs ?? { title: "", workspace: "" });
+  useDismiss(open && !phone, ref, () => setOpen(false));
+  const close = () => setOpen(false);
+  const run = (fn: () => void) => () => {
+    setOpen(false);
+    fn();
+  };
+
+  const desktop = (
+    <div role="menu" className={cn(menuPanel, "w-60")} onSubmitCapture={() => setTimeout(close, 0)}>
+      {links.map((l) => (
+        <MenuLinkRow key={l.href} link={l} className={menuRow} onClick={close} />
+      ))}
+      {children && <div className="menu-slot">{children}</div>}
+      {exportAs && (
+        <>
+          {(links.length > 0 || Boolean(children)) && <div role="separator" className="my-1 h-px bg-line" />}
+          <button type="button" role="menuitem" onClick={run(share)} className={menuRow} data-share>
+            <span className="flex w-8 justify-center text-muted">
+              <ShareIcon />
+            </span>
+            Share link
+          </button>
+          <button type="button" role="menuitem" onClick={run(() => void save("pdf"))} className={menuRow} data-save-pdf>
+            <FileBadge label="PDF" /> Save as PDF
+          </button>
+          <button type="button" role="menuitem" onClick={run(() => void save("png"))} className={menuRow} data-save-png>
+            <FileBadge label="PNG" /> Save as image
+          </button>
+        </>
+      )}
+    </div>
+  );
+
+  const sheet = (
+    <BottomSheet open onClose={close} title="More" data-more-actions-sheet>
+      <div className="space-y-2 px-1 pb-2" onSubmitCapture={() => setTimeout(close, 0)}>
+        {links.map((l) => (
+          <MenuLinkRow key={l.href} link={l} className={sheetRow} onClick={close} />
+        ))}
+        {children && <div className="menu-slot space-y-2">{children}</div>}
+        {exportAs && (
+          <>
+            <SheetRow onClick={run(share)} icon={<ShareIcon />} label="Share link" hint="People with access to this workspace can open it" data-share />
+            <SheetRow onClick={run(() => void save("pdf"))} badge="PDF" label="Save as PDF" hint="A4 pages, ready to send or print" data-save-pdf />
+            <SheetRow onClick={run(() => void save("png"))} badge="PNG" label="Save as image" hint="One picture of the whole page" data-save-png />
+          </>
+        )}
+      </div>
+    </BottomSheet>
+  );
+
+  return (
+    <div ref={ref} className="relative" data-export-hide data-page-actions={exportAs ? "" : undefined} data-more-actions>
+      <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-haspopup="menu" disabled={busy !== null} className={buttonClass("secondary", "sm")} data-more-button>
+        {busy ? <Icon name="refresh" size={14} className="animate-spin" /> : <Icon name="more" size={16} />}
+        {busy === "pdf" ? "Making PDF…" : busy === "png" ? "Making image…" : "More"}
+      </button>
+      {open && (phone ? sheet : desktop)}
+      <ExportNote note={note} />
+    </div>
+  );
+}
+
+function MenuLinkRow({ link, className, onClick }: { link: MenuLink; className: string; onClick: () => void }) {
+  const inner = (
+    <>
+      <span className="flex w-8 shrink-0 justify-center text-muted">{link.icon && <Icon name={link.icon} size={15} />}</span>
+      {link.label}
+    </>
+  );
+  return link.download ? (
+    <a href={link.href} download role="menuitem" className={className} onClick={onClick}>
+      {inner}
+    </a>
+  ) : (
+    <Link href={link.href} role="menuitem" className={className} onClick={onClick}>
+      {inner}
+    </Link>
+  );
+}
+
+/** Closes a menu on a click outside it or Escape. */
+function useDismiss(active: boolean, ref: React.RefObject<HTMLElement | null>, close: () => void) {
+  const closeRef = useRef(close);
   useEffect(() => {
-    if (!open) return;
+    closeRef.current = close;
+  });
+  useEffect(() => {
+    if (!active) return;
     const onDown = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setOpen(false);
+      const t = e.target as Node;
+      // A confirmation dialog opened from the menu counts as inside it.
+      if (ref.current?.contains(t) || (t instanceof Element && t.closest("dialog[open]"))) return;
+      closeRef.current();
     };
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && !document.querySelector("dialog[open]")) closeRef.current();
+    };
     document.addEventListener("mousedown", onDown);
     document.addEventListener("keydown", onKey);
     return () => {
       document.removeEventListener("mousedown", onDown);
       document.removeEventListener("keydown", onKey);
     };
-  }, [open]);
+  }, [active, ref]);
+}
 
+const menuPanel = "absolute right-0 top-full z-40 mt-1.5 w-52 rounded-xl border border-line bg-surface p-1 text-fg shadow-[0_16px_40px_-16px_rgb(0_0_0/0.35)]";
+const menuRow = "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[13px] hover:bg-subtle";
+const sheetRow = "flex min-h-14 w-full items-center gap-3 rounded-2xl border border-line px-3.5 text-left text-[15px] font-medium active:bg-subtle";
+
+function SheetRow({ onClick, badge, icon, label, hint, ...rest }: { onClick: () => void; badge?: string; icon?: ReactNode; label: string; hint: string } & { [data: `data-${string}`]: boolean | string | undefined }) {
+  return (
+    <button type="button" onClick={onClick} className="flex min-h-14 w-full items-center gap-3 rounded-2xl border border-line px-3.5 text-left text-[15px] active:bg-subtle" {...rest}>
+      {badge ? <FileBadge label={badge} /> : <span className="flex w-8 shrink-0 justify-center text-muted">{icon}</span>}
+      <span className="flex-1 py-2">
+        <span className="block font-medium">{label}</span>
+        <span className="block text-[12.5px] text-faint">{hint}</span>
+      </span>
+    </button>
+  );
+}
+
+/** Share, and Save as PDF or image, for a page: what the Share and Save buttons and the More menu run. */
+function usePageExport({ title, workspace }: { title: string; workspace: string }) {
+  const [busy, setBusy] = useState<null | "pdf" | "png">(null);
+  const [note, setNote] = useState<string | null>(null);
   const flash = (text: string) => {
     setNote(text);
     window.setTimeout(() => setNote(null), 3500);
   };
-
   const share = async () => {
     const url = window.location.href;
     const data = { title: `${title} · ${workspace} — Saver Option Business`, url };
@@ -50,9 +226,7 @@ export function PageActions({ title, workspace, tone = "light" }: { title: strin
       window.prompt("Copy this link", url);
     }
   };
-
   const save = async (kind: "pdf" | "png") => {
-    setOpen(false);
     setBusy(kind);
     try {
       const canvas = await capture({ title, workspace });
@@ -92,37 +266,23 @@ export function PageActions({ title, workspace, tone = "light" }: { title: strin
       setBusy(null);
     }
   };
+  return { busy, note, share, save };
+}
 
-  const dark = tone === "dark";
-  const btn = dark ? "inline-flex h-8 items-center gap-1.5 rounded-[9px] border border-white/15 bg-white/10 px-2.5 text-[12.5px] font-medium text-fg hover:bg-white/15" : buttonClass("secondary", "sm");
+/** The note after Share or Save ("Link copied", "PDF saved"): under the buttons, or a toast above the tab bar on phones. */
+function ExportNote({ note, dark }: { note: string | null; dark?: boolean }) {
+  if (!note) return null;
   return (
-    <div className="relative flex items-center gap-2" data-export-hide data-page-actions>
-      <button type="button" onClick={share} className={btn} data-share>
-        <ShareIcon /> Share
-      </button>
-      <div ref={menuRef} className="relative">
-        <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-haspopup="menu" disabled={busy !== null} className={btn} data-save>
-          {busy ? <Icon name="refresh" size={14} className="animate-spin" /> : <Icon name="download" size={14} />}
-          {busy === "pdf" ? "Making PDF…" : busy === "png" ? "Making image…" : "Save"}
-          {!busy && <Icon name="chevron-down" size={13} className="opacity-60" />}
-        </button>
-        {open && (
-          <div role="menu" className="absolute right-0 top-full z-40 mt-1.5 w-52 rounded-xl border border-line bg-surface p-1 text-fg shadow-[0_16px_40px_-16px_rgb(0_0_0/0.35)]">
-            <button type="button" role="menuitem" onClick={() => save("pdf")} className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[13px] hover:bg-subtle" data-save-pdf>
-              <FileBadge label="PDF" /> Save as PDF
-            </button>
-            <button type="button" role="menuitem" onClick={() => save("png")} className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[13px] hover:bg-subtle" data-save-png>
-              <FileBadge label="PNG" /> Save as image (PNG)
-            </button>
-          </div>
-        )}
-      </div>
-      {note && (
-        <p role="status" className={cn("absolute right-0 top-full z-40 mt-1.5 w-64 rounded-xl border px-3 py-2 text-[12.5px] shadow-lg", dark ? "border-white/15 bg-[#1a1530] text-fg" : "border-line bg-surface text-muted")} data-page-actions-note>
-          {note}
-        </p>
+    <p
+      role="status"
+      className={cn(
+        "absolute right-0 top-full z-40 mt-1.5 w-64 rounded-xl border px-3 py-2 text-[12.5px] shadow-lg max-sm:fixed max-sm:inset-x-4 max-sm:bottom-[calc(var(--tabbar,0px)+12px)] max-sm:top-auto max-sm:z-[95] max-sm:w-auto max-sm:rounded-2xl max-sm:px-4 max-sm:py-3 max-sm:text-[14px]",
+        dark ? "border-white/15 bg-[#1a1530] text-fg" : "border-line bg-surface text-muted",
       )}
-    </div>
+      data-page-actions-note
+    >
+      {note}
+    </p>
   );
 }
 
@@ -186,5 +346,5 @@ function ShareIcon() {
 }
 
 function FileBadge({ label }: { label: string }) {
-  return <span className="flex h-6 w-8 items-center justify-center rounded-md bg-subtle text-[9.5px] font-bold tracking-wide text-muted">{label}</span>;
+  return <span className="flex h-6 w-8 shrink-0 items-center justify-center rounded-md bg-subtle text-[9.5px] font-bold tracking-wide text-muted">{label}</span>;
 }

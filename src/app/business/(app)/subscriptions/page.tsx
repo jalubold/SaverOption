@@ -5,7 +5,6 @@ import { cookies } from "next/headers";
 import { FilterBar } from "@/components/business/filter-bar";
 import { ViewToggle } from "@/components/business/view-toggle";
 import { Card, EmptyState, FxNoteLine, LinkButton, Money, PageHeader, Pagination, Tabs } from "@/components/business/ui";
-import { buttonClass } from "@/components/ui/primitives";
 import { daysBetween, formatIsoDate, formatMoney, isRecurring, monthlyEquivalent, periodSuffix, seatSummary, summarizeSpend } from "@/lib/business/calc";
 import { billingIntervalLabels, BILLING_INTERVALS, categoryLabels, SOFTWARE_CATEGORIES, SUBSCRIPTION_STATUSES, subscriptionStatusLabels } from "@/lib/business/constants";
 import { pickView, viewCookie } from "@/lib/business/list-view";
@@ -104,25 +103,17 @@ export default async function SubscriptionsPage(props: { searchParams: Promise<R
           </>
         }
         crumbs={[{ label: "Overview", href: "/business/dashboard" }, { label: "Subscriptions" }]}
-        actions={
-          <>
-            {can(ctx.role, "data.export") && all.length > 0 && (
-              <a href={`/business/subscriptions/export${filtersQuery(f, { page: null })}`} className={buttonClass("secondary", "sm")} download>
-                Export CSV
-              </a>
-            )}
-            {canManage && (
-              <LinkButton href="/business/subscriptions/import" icon="download">
-                Import CSV
-              </LinkButton>
-            )}
-            {canManage && (
-              <LinkButton href="/business/subscriptions/new" variant="primary" icon="plus">
-                Add software
-              </LinkButton>
-            )}
-          </>
+        primary={
+          canManage ? (
+            <LinkButton href="/business/subscriptions/new" variant="primary" icon="plus">
+              Add software
+            </LinkButton>
+          ) : undefined
         }
+        more={[
+          ...(can(ctx.role, "data.export") && all.length > 0 ? [{ label: "Export CSV", href: `/business/subscriptions/export${filtersQuery(f, { page: null })}`, icon: "download" as const, download: true }] : []),
+          ...(canManage ? [{ label: "Import CSV", href: "/business/subscriptions/import", icon: "file" as const }] : []),
+        ]}
       />
 
       {all.length === 0 ? (

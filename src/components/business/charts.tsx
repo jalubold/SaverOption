@@ -358,24 +358,37 @@ export function DonutChart({ segments, caption, centerLabel, centerValue, otherL
   }
   const total = parts.reduce((t, s) => t + s.value, 0);
   if (total <= 0) return <p className="text-[13px] text-faint">No priced active subscriptions yet.</p>;
-  const R = 70;
-  const r = 50;
+  const R = 72;
+  const r = 52;
   const C = 90;
-  const gap = parts.length > 1 ? 0.012 : 0; // fraction of the circle left as a surface gap between segments
-  const starts = parts.map((_, i) => -0.25 + parts.slice(0, i).reduce((t, q) => t + q.value / total, 0));
+  // The gap between segments has the same width all the way across the ring (parallel edges),
+  // so each side's angle is worked out at its own radius: wider in angle on the inner edge.
+  const GAP = parts.length > 1 ? 3 : 0;
+  const ends = parts.reduce<number[]>((acc, p) => [...acc, (acc.at(-1) ?? 0) + p.value / total], []);
   const arcs = parts.map((p, i) => {
     const frac = p.value / total;
-    const start = starts[i];
-    const a0 = (start + gap / 2) * 2 * Math.PI;
-    const a1 = (start + frac - gap / 2) * 2 * Math.PI;
-    const large = a1 - a0 > Math.PI ? 1 : 0;
-    const pt = (rad: number, ang: number) => `${(C + rad * Math.cos(ang)).toFixed(2)},${(C + rad * Math.sin(ang)).toFixed(2)}`;
-    const d = frac >= 0.999 ? `M${C - R},${C} a${R},${R} 0 1,0 ${R * 2},0 a${R},${R} 0 1,0 -${R * 2},0 M${C - r},${C} a${r},${r} 0 1,1 ${r * 2},0 a${r},${r} 0 1,1 -${r * 2},0` : `M${pt(R, a0)} A${R},${R} 0 ${large} 1 ${pt(R, a1)} L${pt(r, a1)} A${r},${r} 0 ${large} 0 ${pt(r, a0)} Z`;
+    const from = ((i === 0 ? 0 : ends[i - 1]) - 0.25) * 2 * Math.PI;
+    const to = (ends[i] - 0.25) * 2 * Math.PI;
+    const pt = (rad: number, ang: number) => `${(C + rad * Math.cos(ang)).toFixed(3)},${(C + rad * Math.sin(ang)).toFixed(3)}`;
+    if (frac >= 0.999 || GAP === 0) {
+      const d = `M${C - R},${C} a${R},${R} 0 1,0 ${R * 2},0 a${R},${R} 0 1,0 -${R * 2},0 M${C - r},${C} a${r},${r} 0 1,1 ${r * 2},0 a${r},${r} 0 1,1 -${r * 2},0`;
+      return { ...p, d, i };
+    }
+    const outer = GAP / 2 / R;
+    const inner = GAP / 2 / r;
+    const o0 = from + outer;
+    const o1 = to - outer;
+    const i0 = from + inner;
+    const i1 = to - inner;
+    if (i1 <= i0) return { ...p, d: "", i }; // too small to draw with a gap
+    const largeO = o1 - o0 > Math.PI ? 1 : 0;
+    const largeI = i1 - i0 > Math.PI ? 1 : 0;
+    const d = `M${pt(R, o0)} A${R},${R} 0 ${largeO} 1 ${pt(R, o1)} L${pt(r, i1)} A${r},${r} 0 ${largeI} 0 ${pt(r, i0)} Z`;
     return { ...p, d, i };
   });
   const active = hover !== null ? parts[hover] : null;
   return (
-    <div style={vizVars} className="@container">
+    <div style={vizVars} className="@container" data-donut>
       <div className="flex flex-col items-center gap-4 @md:flex-row">
         <div className="relative shrink-0">
           <svg viewBox="0 0 180 180" width="180" height="180" className="viz-sweep" role="img" aria-label={`${caption}: ${parts.map((p) => `${p.label} ${Math.round((p.value / total) * 100)}%`).join(", ")}`}>

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition, type ReactNode } from "react";
 import { Icon } from "@/components/ui/icon";
 import { cn } from "@/components/ui/primitives";
+import { BottomSheet, usePhone } from "@/components/business/sheet";
 
 export interface FilterOption {
   value: string;
@@ -64,6 +65,8 @@ export function FilterBar({
   const propsKey = JSON.stringify(fromProps());
   const [values, setValues] = useState(fromProps);
   const [open, setOpen] = useState(false);
+  // On phones the filters open in a bottom sheet; on bigger screens, in a panel under the row.
+  const phone = usePhone();
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // A chip, "Clear all" or the tabs change the URL: show what it now says.
@@ -107,6 +110,25 @@ export function FilterBar({
     go(next);
   };
   const labelOf = (f: FilterField) => f.options?.find((o) => o.value === f.value)?.label ?? f.value;
+  const fieldControls = more
+    .filter((f) => !hidden(f.name, values))
+    .map((f) => (
+      <label key={f.name} className="min-w-0 text-[12px] font-medium text-muted max-sm:text-[13px]">
+        <span className="mb-1 block">{f.label}</span>
+        {f.type === "date" ? (
+          <input type="date" name={phone ? undefined : f.name} value={values[f.name] ?? ""} onChange={(e) => set(f.name, e.target.value)} className="biz-select w-full pr-2 max-sm:h-11" />
+        ) : (
+          <select name={phone ? undefined : f.name} value={values[f.name] ?? ""} onChange={(e) => set(f.name, e.target.value)} className="biz-select w-full max-sm:h-11">
+            {f.allLabel !== undefined && <option value="">{f.allLabel}</option>}
+            {f.options?.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
+          </select>
+        )}
+      </label>
+    ));
 
   return (
     <form
@@ -167,29 +189,9 @@ export function FilterBar({
         {trailing && <div className="ml-auto flex shrink-0 items-center">{trailing}</div>}
       </div>
 
-      {more.length > 0 && (
+      {more.length > 0 && !phone && (
         <div id="filter-panel" hidden={!open} className="rounded-xl border border-line bg-surface p-3.5 shadow-[0_8px_24px_-16px_rgb(0_0_0/0.25)] sm:p-4" data-filter-panel>
-          <div className="grid grid-cols-1 gap-3 min-[520px]:grid-cols-2 lg:grid-cols-4">
-            {more
-              .filter((f) => !hidden(f.name, values))
-              .map((f) => (
-                <label key={f.name} className="min-w-0 text-[12px] font-medium text-muted">
-                  <span className="mb-1 block">{f.label}</span>
-                  {f.type === "date" ? (
-                    <input type="date" name={f.name} value={values[f.name] ?? ""} onChange={(e) => set(f.name, e.target.value)} className="biz-select w-full pr-2" />
-                  ) : (
-                    <select name={f.name} value={values[f.name] ?? ""} onChange={(e) => set(f.name, e.target.value)} className="biz-select w-full">
-                      {f.allLabel !== undefined && <option value="">{f.allLabel}</option>}
-                      {f.options?.map((o) => (
-                        <option key={o.value} value={o.value}>
-                          {o.label}
-                        </option>
-                      ))}
-                    </select>
-                  )}
-                </label>
-              ))}
-          </div>
+          <div className="grid grid-cols-1 gap-3 min-[520px]:grid-cols-2 lg:grid-cols-4">{fieldControls}</div>
           <div className="mt-3.5 flex items-center justify-between gap-3 border-t border-line pt-3">
             <span className="text-[12px] text-faint">Results update as you choose.</span>
             <button type="submit" className="inline-flex h-8 items-center rounded-[8px] bg-fg px-3 text-[12.5px] font-semibold text-bg hover:opacity-90">
@@ -197,6 +199,28 @@ export function FilterBar({
             </button>
           </div>
         </div>
+      )}
+      {more.length > 0 && phone && (
+        <BottomSheet
+          open={open}
+          onClose={() => setOpen(false)}
+          title="Filters"
+          data-filter-panel
+          footer={
+            <div className="flex items-center gap-2">
+              {activeMore.length > 0 && (
+                <button type="button" onClick={clearAll} className="h-12 flex-1 rounded-[14px] border border-line text-[15px] font-medium text-fg active:bg-subtle">
+                  Clear all
+                </button>
+              )}
+              <button type="button" onClick={() => setOpen(false)} className="h-12 flex-[2] rounded-[14px] bg-fg text-[15px] font-semibold text-bg active:opacity-80">
+                {pending ? "Updating…" : "Show results"}
+              </button>
+            </div>
+          }
+        >
+          <div className="grid grid-cols-1 gap-4 px-1.5 pb-2">{fieldControls}</div>
+        </BottomSheet>
       )}
 
       {anyActive && (

@@ -134,7 +134,7 @@ export default async function SavingsPage(props: { searchParams: Promise<Raw> })
         }
         crumbs={[{ label: "Overview", href: "/business/dashboard" }, { label: "Savings opportunities" }]}
         description="Rule-based checks of your own subscription, seat and renewal records, plus matching Saver Option listings. Every estimate comes from prices your team entered, and no product usage is assumed — Saver Option has no usage data, so seats count as used when they're assigned or reported. Potential savings aren't realized until someone confirms them."
-        actions={<LinkButton href="/business/reports">Reports</LinkButton>}
+        more={[{ label: "Reports", href: "/business/reports", icon: "chart" }]}
       />
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">

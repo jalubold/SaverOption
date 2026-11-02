@@ -418,7 +418,8 @@ function WizardBody({
           </p>
         )}
 
-        <div className="mt-6 flex items-center justify-between gap-3 border-t border-line pt-4">
+        {/* On phones the step buttons stay in reach, just above the tab bar. */}
+        <div className="mt-6 flex items-center justify-between gap-3 border-t border-line pt-4 max-sm:sticky max-sm:bottom-[var(--tabbar,0px)] max-sm:z-10 max-sm:-mx-4 max-sm:bg-surface/95 max-sm:px-4 max-sm:pb-3 max-sm:backdrop-blur" data-wizard-actions>
           <button type="button" onClick={back} disabled={pos === 0} className={buttonClass("secondary", "md")}>
             <Icon name="arrow-left" size={14} /> Back
           </button>

@@ -145,11 +145,7 @@ export default async function AnalyticsPage(props: { searchParams: Promise<Raw> 
             <FxNoteLine note={model.fx} dateFormat={fmt} className="mt-1.5" />
           </>
         }
-        actions={
-          <LinkButton href={reportsHref} icon="chart">
-            Reports & CSV
-          </LinkButton>
-        }
+        more={[{ label: "Reports & CSV", href: reportsHref, icon: "chart" }]}
       />
 
       <FilterBar

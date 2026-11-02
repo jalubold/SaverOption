@@ -3,7 +3,7 @@ import type { CSSProperties, ReactNode } from "react";
 import { formatIsoDate, formatMoney, totalsList, type CurrencyTotals } from "@/lib/business/calc";
 import { formatRate, type FxNote, type OriginalMoney } from "@/lib/business/fx";
 import { InfoTip } from "@/components/business/info-tip";
-import { PageActions } from "@/components/business/page-actions";
+import { MoreMenu, PageActions, type MenuLink } from "@/components/business/page-actions";
 import { Icon, type IconProps } from "@/components/ui/icon";
 import { buttonClass, cn } from "@/components/ui/primitives";
 
@@ -14,24 +14,58 @@ export interface Crumb {
   href?: string;
 }
 
+/**
+ * A page's title, trail and actions. The header shows at most two buttons: with three or more
+ * actions, the primary one stays (Add software, Edit) and the rest — links, extra forms such as
+ * Archive, and Share / Save — move into one More menu. Two or fewer stay as plain buttons.
+ */
 export function PageHeader({
   title,
   description,
   crumbs,
   actions,
+  primary,
+  more = [],
+  menuExtra,
   exportAs,
 }: {
   title: ReactNode;
   description?: ReactNode;
   crumbs?: Crumb[];
+  /** A custom control kept as it is (a Mark all as read form). Counts as one button. */
   actions?: ReactNode;
+  /** The main action, always shown as a button. */
+  primary?: ReactNode;
+  /** Secondary links: buttons when there's room, otherwise items in More. */
+  more?: MenuLink[];
+  /** A secondary control that isn't a link (an Archive form): a button when there's room, otherwise in More. */
+  menuExtra?: ReactNode;
   /** Adds Share and Save (PDF, PNG) for the page, named after this title and workspace. */
   exportAs?: { title: string; workspace: string };
 }) {
+  const count = (primary ? 1 : 0) + (actions ? 1 : 0) + more.length + (menuExtra ? 1 : 0) + (exportAs ? 2 : 0);
+  const collapse = count > 2;
+  // What stays out of the menu: the primary action, or the custom control, or else the first link.
+  const lead = primary ?? actions ?? null;
+  const visibleLink = collapse && !lead ? more[0] : undefined;
+  const menuLinks = collapse ? (visibleLink ? more.slice(1) : more) : [];
+  const linkButton = (l: MenuLink) =>
+    l.download ? (
+      <a key={l.href} href={l.href} download className={buttonClass("secondary", "sm")}>
+        {l.icon && <Icon name={l.icon} size={14} />}
+        {l.label}
+      </a>
+    ) : (
+      <LinkButton key={l.href} href={l.href} icon={l.icon}>
+        {l.label}
+      </LinkButton>
+    );
+  // On phones the tab bar is the way around; a page deeper than a tab gets a back link instead of the trail.
+  const back = crumbs && crumbs.length >= 3 ? crumbs.slice(0, -1).reverse().find((c) => c.href) : undefined;
   return (
     <div className="mb-6">
       {crumbs && crumbs.length > 0 && (
-        <nav aria-label="Breadcrumb" className="mb-2">
+        <nav aria-label="Breadcrumb" className="mb-2 max-sm:hidden">
           <ol className="flex flex-wrap items-center gap-1 text-[12.5px] text-faint">
             {crumbs.map((c, i) => (
               <li key={i} className="flex items-center gap-1">
@@ -50,15 +84,41 @@ export function PageHeader({
           </ol>
         </nav>
       )}
+      {back?.href && (
+        <Link href={back.href} className="-ml-1.5 mb-1.5 inline-flex h-8 items-center gap-0.5 pr-2 text-[15px] font-medium text-accent-ink sm:hidden" data-back-link>
+          <Icon name="chevron-left" size={18} />
+          {back.label}
+        </Link>
+      )}
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
-          <h1 className="text-[22px] font-semibold leading-tight tracking-tight text-heading">{title}</h1>
+          <h1 className="text-[22px] font-semibold leading-tight tracking-tight text-heading max-sm:text-[27px] max-sm:font-bold">{title}</h1>
           {description && <div className="mt-1 max-w-3xl text-[14px] text-muted">{description}</div>}
         </div>
-        {(actions || exportAs) && (
-          <div className="flex flex-wrap items-center gap-2" data-export-hide>
-            {actions}
-            {exportAs && <PageActions title={exportAs.title} workspace={exportAs.workspace} />}
+        {count > 0 && (
+          <div className="flex flex-wrap items-center gap-2 [&>*]:shrink-0" data-export-hide data-header-actions>
+            {collapse ? (
+              <>
+                {visibleLink && linkButton(visibleLink)}
+                {lead}
+                <MoreMenu links={menuLinks} exportAs={exportAs}>
+                  {(primary && actions) || menuExtra ? (
+                    <>
+                      {primary && actions}
+                      {menuExtra}
+                    </>
+                  ) : undefined}
+                </MoreMenu>
+              </>
+            ) : (
+              <>
+                {more.map(linkButton)}
+                {menuExtra}
+                {actions}
+                {primary}
+                {exportAs && <PageActions title={exportAs.title} workspace={exportAs.workspace} />}
+              </>
+            )}
           </div>
         )}
       </div>

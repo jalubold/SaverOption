@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { createContext, useCallback, useContext, useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { startNavigation } from "@/components/business/nav-progress";
+import { BottomSheet } from "@/components/business/sheet";
 import { Icon, type IconProps } from "@/components/ui/icon";
 import { cn } from "@/components/ui/primitives";
 
@@ -124,7 +125,7 @@ export function SidebarFrame({ sidebar, collapsedSidebar, children }: { sidebar:
     });
   };
   return (
-    <div className="flex min-h-dvh">
+    <div className="biz-shell flex min-h-dvh">
       <div className={cn("theme-dark hidden shrink-0 border-r border-line bg-bg transition-[width] duration-150 lg:block", collapsed ? "w-[68px]" : "w-[248px]")}>
         <aside className="sticky top-0 flex h-dvh flex-col">
           {/* In the Mac app: the window buttons sit here, and the strip drags the window. */}
@@ -157,7 +158,7 @@ const MobileMenuButtonContext = createContext<() => void>(() => {});
 export function MobileMenuButton() {
   const open = useContext(MobileMenuButtonContext);
   return (
-    <button type="button" onClick={open} className="inline-flex size-9 items-center justify-center rounded-lg text-muted hover:bg-subtle hover:text-fg lg:hidden">
+    <button type="button" onClick={open} className="hidden size-9 items-center justify-center rounded-lg text-muted hover:bg-subtle hover:text-fg desktop-app:inline-flex desktop-app:lg:hidden">
       <Icon name="menu" size={19} />
       <span className="sr-only">Open navigation</span>
     </button>
@@ -313,11 +314,20 @@ export function QuickJump({ items }: { items: QuickAction[] }) {
         Jump to…
         <kbd className="rounded border border-line bg-subtle px-1 font-sans text-[11px] text-faint">⌘K</kbd>
       </button>
+      <button
+        type="button"
+        onClick={() => show(true)}
+        className="inline-flex size-9 shrink-0 items-center justify-center rounded-full text-muted hover:bg-subtle hover:text-fg md:hidden desktop-app:hidden"
+        aria-label="Search and go to"
+        data-mobile-search
+      >
+        <Icon name="search" size={19} />
+      </button>
       {open &&
         createPortal(
-          <div className="fixed inset-0 z-[80] flex items-start justify-center px-4 pt-[12vh]" role="dialog" aria-modal="true" aria-label="Quick jump">
-            <button type="button" aria-label="Close" className="absolute inset-0 bg-black/45" onClick={() => setOpen(false)} />
-            <div className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-line bg-surface text-fg shadow-[0_24px_60px_-20px_rgb(0_0_0/0.5)]">
+          <div className="fixed inset-0 z-[80] flex items-start justify-center px-4 pt-[12vh] max-sm:p-0" role="dialog" aria-modal="true" aria-label="Quick jump">
+            <button type="button" aria-label="Close" className="absolute inset-0 bg-black/45 max-sm:hidden" onClick={() => setOpen(false)} />
+            <div className="relative flex w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-line bg-surface text-fg shadow-[0_24px_60px_-20px_rgb(0_0_0/0.5)] max-sm:h-dvh max-sm:max-w-none max-sm:rounded-none max-sm:border-0 max-sm:pt-[env(safe-area-inset-top)] max-sm:animate-[sheet-up_.22s_cubic-bezier(.2,.8,.2,1)]">
               <div className="flex items-center gap-2 border-b border-line px-3.5">
                 <Icon name="search" size={16} className="text-faint" />
                 <input
@@ -347,11 +357,14 @@ export function QuickJump({ items }: { items: QuickAction[] }) {
                   aria-activedescendant={results[sel] ? `qj-${sel}` : undefined}
                   role="combobox"
                   aria-expanded="true"
-                  className="h-12 min-w-0 flex-1 bg-transparent text-[15px] outline-none placeholder:text-faint"
+                  className="h-12 min-w-0 flex-1 bg-transparent text-[15px] outline-none placeholder:text-faint max-sm:h-14 max-sm:text-[16px]"
                 />
-                <kbd className="rounded border border-line bg-subtle px-1.5 text-[11px] text-faint">Esc</kbd>
+                <kbd className="rounded border border-line bg-subtle px-1.5 text-[11px] text-faint max-sm:hidden">Esc</kbd>
+                <button type="button" onClick={() => setOpen(false)} className="shrink-0 px-1 text-[15px] font-medium text-accent-ink sm:hidden">
+                  Cancel
+                </button>
               </div>
-              <ul id="quick-jump-results" role="listbox" aria-label="Pages and actions" className="max-h-[min(60vh,420px)] overflow-y-auto p-1.5">
+              <ul id="quick-jump-results" role="listbox" aria-label="Pages and actions" className="max-h-[min(60vh,420px)] overflow-y-auto p-1.5 max-sm:max-h-none max-sm:flex-1 max-sm:pb-[max(12px,env(safe-area-inset-bottom))]">
                 {results.length === 0 && <li className="px-3 py-6 text-center text-[13px] text-faint">Nothing matches.</li>}
                 {results.map((it, i) => (
                   <li key={`${it.group}-${it.href}`} id={`qj-${i}`} role="option" aria-selected={i === sel}>
@@ -359,7 +372,7 @@ export function QuickJump({ items }: { items: QuickAction[] }) {
                       type="button"
                       onMouseMove={() => setSel(i)}
                       onClick={() => go(it)}
-                      className={cn("flex w-full items-center gap-3 rounded-lg px-2.5 py-2 text-left text-[13.5px]", i === sel ? "bg-accent-soft text-fg" : "text-muted")}
+                      className={cn("flex w-full items-center gap-3 rounded-lg px-2.5 py-2 text-left text-[13.5px] max-sm:py-3 max-sm:text-[15px]", i === sel ? "bg-accent-soft text-fg" : "text-muted")}
                     >
                       <Icon name={it.icon} size={16} className={i === sel ? "text-accent-ink" : "text-faint"} />
                       <span className="min-w-0 flex-1 truncate">{it.label}</span>
@@ -368,11 +381,157 @@ export function QuickJump({ items }: { items: QuickAction[] }) {
                   </li>
                 ))}
               </ul>
-              <p className="border-t border-line px-3.5 py-2 text-[11.5px] text-faint">↑↓ to move · Enter to open · ⌘K / Ctrl+K anywhere</p>
+              <p className="border-t border-line px-3.5 py-2 text-[11.5px] text-faint max-sm:hidden">↑↓ to move · Enter to open · ⌘K / Ctrl+K anywhere</p>
             </div>
           </div>,
           document.body,
         )}
     </>
+  );
+}
+
+/* ——— Phones and tablets: a tab bar at the bottom, a More sheet, and a title bar ——— */
+
+export interface TabItem {
+  label: string;
+  href: string;
+  icon: IconProps["name"];
+  /** The raised button in the middle (Add software). */
+  primary?: boolean;
+}
+
+const MoreSheetContext = createContext<() => void>(() => {});
+
+/**
+ * What a phone app has at the bottom: four or five tabs for the places people go most, and More,
+ * which opens a sheet with every other page and the account. From the laptop size up (and in the
+ * Mac app) the sidebar does this job, so none of it shows there.
+ */
+export function MobileNav({ tabs, morePaths, more, children }: { tabs: TabItem[]; morePaths: string[]; more: ReactNode; children: ReactNode }) {
+  const path = usePathname() ?? "";
+  const [open, setOpen] = useState(false);
+  const [lastPath, setLastPath] = useState(path);
+  const [clicked, setClicked] = useState<{ href: string; from: string } | null>(null);
+  const [warmed, setWarmed] = useState<ReadonlySet<string>>(() => new Set());
+  if (path !== lastPath) {
+    setLastPath(path);
+    setOpen(false);
+  }
+  const close = useCallback(() => setOpen(false), []);
+  const all = [...tabs, ...morePaths.map((href) => ({ label: "", href, icon: "grid" as const }))];
+  const current = (clicked?.from === path ? clicked.href : null) ?? activeHref(path, all);
+  const inMore = current !== null && !tabs.some((t) => t.href === current);
+  const warm = (href: string) => setWarmed((s) => (s.has(href) ? s : new Set(s).add(href)));
+  return (
+    <MoreSheetContext.Provider value={() => setOpen(true)}>
+      {children}
+      <nav aria-label="Tabs" className="tab-bar fixed inset-x-0 bottom-0 z-40 select-none border-t border-line bg-bg/85 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl backdrop-saturate-150 lg:hidden desktop-app:hidden" data-tab-bar>
+        <ul className="mx-auto grid h-[60px] max-w-xl grid-cols-5 px-1">
+          {tabs.map((t) => {
+            const on = !open && t.href === current;
+            return (
+              <li key={t.href} className="flex">
+                <Link
+                  href={t.href}
+                  prefetch={warmed.has(t.href)}
+                  onTouchStart={() => warm(t.href)}
+                  onMouseEnter={() => warm(t.href)}
+                  onClick={(e) => {
+                    if (!e.metaKey && !e.ctrlKey && !e.shiftKey && t.href !== path) setClicked({ href: t.href, from: path });
+                  }}
+                  aria-current={on ? "page" : undefined}
+                  aria-label={t.primary ? t.label : undefined}
+                  className={cn("tab-item flex flex-1 flex-col items-center justify-center gap-0.5 text-[10.5px] font-medium tracking-tight", on ? "text-accent-ink" : "text-faint")}
+                  data-tab={t.href}
+                >
+                  {t.primary ? (
+                    <span className="flex size-[42px] items-center justify-center rounded-[14px] bg-accent text-accent-fg shadow-[0_10px_22px_-10px_var(--accent)]">
+                      <Icon name={t.icon} size={22} />
+                    </span>
+                  ) : (
+                    <>
+                      <span className={cn("flex h-7 w-12 items-center justify-center rounded-full transition-colors duration-200", on && "bg-accent-soft")}>
+                        <Icon name={t.icon} size={20} />
+                      </span>
+                      <span className="max-w-full truncate px-0.5">{t.label}</span>
+                    </>
+                  )}
+                </Link>
+              </li>
+            );
+          })}
+          <li className="flex">
+            <button
+              type="button"
+              onClick={() => setOpen(true)}
+              aria-expanded={open}
+              aria-haspopup="dialog"
+              className={cn("tab-item flex flex-1 flex-col items-center justify-center gap-0.5 text-[10.5px] font-medium tracking-tight", open || inMore ? "text-accent-ink" : "text-faint")}
+              data-tab-more
+            >
+              <span className={cn("flex h-7 w-12 items-center justify-center rounded-full transition-colors duration-200", (open || inMore) && "bg-accent-soft")}>
+                <Icon name="grid" size={20} />
+              </span>
+              <span>More</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
+      <BottomSheet open={open} onClose={close} title="More" data-more-sheet>
+        <div
+          onClickCapture={(e) => {
+            // A link to the page that's already open doesn't change the path: close here too.
+            if ((e.target as HTMLElement).closest("a")) setOpen(false);
+          }}
+          onSubmitCapture={() => setTimeout(() => setOpen(false), 0)}
+        >
+          {more}
+        </div>
+      </BottomSheet>
+    </MoreSheetContext.Provider>
+  );
+}
+
+/** The profile picture in the title bar on phones and tablets: opens the More sheet (account, pages, sign out). */
+export function MobileAccountButton({ children, label }: { children: ReactNode; label: string }) {
+  const open = useContext(MoreSheetContext);
+  return (
+    <button type="button" onClick={open} aria-label={label} className="flex size-9 items-center justify-center rounded-full lg:hidden desktop-app:hidden" data-mobile-account>
+      {children}
+    </button>
+  );
+}
+
+/**
+ * The left of the title bar on phones: the workspace at the top of a page, and the page's own
+ * name once its big heading has scrolled away, the way phone apps do it.
+ */
+export function MobileTitle({ workspace, titles }: { workspace: string; titles: { href: string; label: string }[] }) {
+  const path = usePathname() ?? "";
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 56);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [path]);
+  const href = activeHref(path, titles.map((t) => ({ ...t, icon: "grid" as const })));
+  const title = titles.find((t) => t.href === href)?.label ?? null;
+  const showTitle = scrolled && title !== null;
+  return (
+    <div className="relative h-9 min-w-0 flex-1 md:hidden desktop-app:hidden" data-mobile-title>
+      <Link
+        href="/business/dashboard"
+        className={cn("absolute inset-0 flex items-center gap-2 transition-all duration-200", showTitle ? "pointer-events-none -translate-y-1 opacity-0" : "opacity-100")}
+        aria-hidden={showTitle || undefined}
+        tabIndex={showTitle ? -1 : undefined}
+      >
+        <span className="flex size-8 shrink-0 items-center justify-center rounded-[10px] bg-[linear-gradient(160deg,var(--accent),color-mix(in_oklab,var(--accent)_60%,#000))] text-[13px] font-semibold text-white">{workspace.slice(0, 1).toUpperCase()}</span>
+        <span className="min-w-0 truncate text-[16px] font-semibold tracking-tight text-fg">{workspace}</span>
+      </Link>
+      <p aria-hidden={!showTitle || undefined} className={cn("absolute inset-0 flex items-center truncate text-[16px] font-semibold tracking-tight text-fg transition-all duration-200", showTitle ? "opacity-100" : "pointer-events-none translate-y-1 opacity-0")}>
+        {title}
+      </p>
+    </div>
   );
 }

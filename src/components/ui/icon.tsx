@@ -45,7 +45,8 @@ type GlyphName =
   | "trending-up"
   | "trash"
   | "copy"
-  | "piggy";
+  | "piggy"
+  | "more";
 
 /** 24×24, 1.75 stroke line icons. Inline so there's no icon dependency. */
 const paths: Record<GlyphName, React.ReactNode> = {
@@ -323,6 +324,13 @@ const paths: Record<GlyphName, React.ReactNode> = {
     <>
       <path d="M19 11.5c0-3.6-3.4-6.5-7.5-6.5S4 7.9 4 11.5c0 2 1 3.7 2.6 4.9L7 20h3l.5-1.6c.3 0 .7.1 1 .1s.7 0 1-.1L13 20h3l.6-3.2a6.3 6.3 0 0 0 1.4-1.3H20v-4h-1Z" />
       <path d="M9.5 8.5h3.5M15.5 11h.01" />
+    </>
+  ),
+  more: (
+    <>
+      <circle cx="5.5" cy="12" r="1.4" fill="currentColor" stroke="none" />
+      <circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none" />
+      <circle cx="18.5" cy="12" r="1.4" fill="currentColor" stroke="none" />
     </>
   ),
 };

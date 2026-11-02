@@ -137,18 +137,18 @@ export default async function SubscriptionPage(props: { params: Promise<{ id: st
           </span>
         }
         crumbs={[{ label: "Subscriptions", href: "/business/subscriptions" }, { label: sub.softwareName }]}
-        actions={
-          <>
-            {software && <LinkButton href={`/business/software/${software.id}`} icon="box">View software</LinkButton>}
-            {!sub.archived && <LinkButton href={`/business/licenses/${id}`} icon="key">Manage seats</LinkButton>}
-            {canEdit && !sub.archived && (
-              <LinkButton href={`/business/subscriptions/${id}/edit`} icon="pen" variant="primary">
-                Edit
-              </LinkButton>
-            )}
-            {canEdit && <ArchiveSubscriptionButton workspaceId={ws} id={id} archived={sub.archived} name={sub.softwareName} />}
-          </>
+        primary={
+          canEdit && !sub.archived ? (
+            <LinkButton href={`/business/subscriptions/${id}/edit`} icon="pen" variant="primary">
+              Edit
+            </LinkButton>
+          ) : undefined
         }
+        more={[
+          ...(software ? [{ label: "View software", href: `/business/software/${software.id}`, icon: "box" as const }] : []),
+          ...(!sub.archived ? [{ label: "Manage seats", href: `/business/licenses/${id}`, icon: "key" as const }] : []),
+        ]}
+        menuExtra={canEdit ? <ArchiveSubscriptionButton workspaceId={ws} id={id} archived={sub.archived} name={sub.softwareName} /> : undefined}
       />
 
       <div className="space-y-3">
