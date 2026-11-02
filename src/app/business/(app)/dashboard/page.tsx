@@ -29,6 +29,7 @@ import { buildSpendModel, type AttentionItem, type Group } from "@/lib/server/bu
 import { displayName, requireBizContext } from "@/lib/server/business/context";
 import { CalendarPrompt } from "@/components/business/calendar-connect";
 import { InfoTip } from "@/components/business/info-tip";
+import { PageActions } from "@/components/business/page-actions";
 import { asBilled, workspaceDisplay } from "@/lib/server/business/display-currency";
 import { getActivity, type Subscription } from "@/lib/server/business/data";
 import { logoFor } from "@/lib/server/business/logos";
@@ -235,7 +236,12 @@ export default async function DashboardPage() {
         <span aria-hidden="true" className="so-shine pointer-events-none absolute inset-0 rounded-[inherit]" />
         <div className="relative z-10 grid gap-7 lg:grid-cols-[minmax(0,1fr)_minmax(0,380px)] lg:items-center">
           <div className="min-w-0">
-            <p className="text-[12.5px] font-medium text-faint">{ctx.workspace.name}</p>
+            <div className="flex items-start justify-between gap-3">
+              <p className="text-[12.5px] font-medium text-faint">{ctx.workspace.name}</p>
+              <span className="lg:hidden">
+                <PageActions title="Overview" workspace={ctx.workspace.name} tone="dark" />
+              </span>
+            </div>
             <h1 className="mt-1 text-[26px] font-semibold leading-tight tracking-tight text-heading" data-greeting>
               {greeting}, {firstName}
             </h1>
@@ -313,7 +319,7 @@ export default async function DashboardPage() {
             )}
 
             {canAdd && (
-              <div className="mt-6">
+              <div className="mt-6" data-export-hide>
                 <LinkButton href="/business/subscriptions/new" variant="primary" icon="plus">
                   Add software
                 </LinkButton>
@@ -322,6 +328,10 @@ export default async function DashboardPage() {
           </div>
 
           {/* The trend over the last 12 months; with little history yet, it says so. */}
+          <div className="min-w-0">
+          <div className="mb-3 hidden justify-end lg:flex">
+            <PageActions title="Overview" workspace={ctx.workspace.name} tone="dark" />
+          </div>
           <div className="so-rise min-w-0 rounded-2xl border border-white/10 bg-white/[0.05] p-4 shadow-[inset_0_1px_0_rgb(255_255_255/0.08)] backdrop-blur-md" style={{ "--d": "250ms" } as CSSProperties}>
               <div className="flex items-baseline justify-between gap-2 text-[12px]">
                 <span className="font-medium text-muted">Last 12 months</span>
@@ -336,6 +346,7 @@ export default async function DashboardPage() {
               </div>
               {!model.historyReliable && <p className="mt-3 border-t border-white/10 pt-2.5 text-[12px] text-faint">The trend fills in as the months go by and prices change.</p>}
             </div>
+          </div>
         </div>
       </section>
 

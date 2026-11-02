@@ -87,6 +87,7 @@ export default async function ReportsPage(props: { searchParams: Promise<Raw> })
 
   const header = (
     <PageHeader
+        exportAs={{ title: "Reports", workspace: ctx.workspace.name }}
       title="Reports"
       crumbs={[{ label: "Overview", href: "/business/dashboard" }, { label: "Reports" }]}
       description={

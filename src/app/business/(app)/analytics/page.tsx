@@ -59,7 +59,8 @@ export default async function AnalyticsPage(props: { searchParams: Promise<Raw> 
   if (model.subs.length === 0) {
     return (
       <>
-        <PageHeader title="Analytics" crumbs={[{ label: "Overview", href: "/business/dashboard" }, { label: "Analytics" }]} />
+        <PageHeader
+        exportAs={{ title: "Analytics", workspace: ctx.workspace.name }} title="Analytics" crumbs={[{ label: "Overview", href: "/business/dashboard" }, { label: "Analytics" }]} />
         <Card>
           <EmptyState icon="chart" title="Nothing to analyse yet" action={<LinkButton href="/business/subscriptions/new" variant="primary" icon="plus" size="md">Add software</LinkButton>}>
             Analytics are built only from the subscriptions and payments your team records{params.category || params.department || params.vendor || params.currency ? " — and nothing matches these filters" : ""}.
@@ -134,6 +135,7 @@ export default async function AnalyticsPage(props: { searchParams: Promise<Raw> 
   return (
     <>
       <PageHeader
+        exportAs={{ title: "Analytics", workspace: ctx.workspace.name }}
         title="Analytics"
         crumbs={[{ label: "Overview", href: "/business/dashboard" }, { label: "Analytics" }]}
         description={

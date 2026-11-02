@@ -95,6 +95,7 @@ export default async function SubscriptionsPage(props: { searchParams: Promise<R
   return (
     <>
       <PageHeader
+        exportAs={{ title: "Subscriptions", workspace: ctx.workspace.name }}
         title="Subscriptions"
         description={
           <>

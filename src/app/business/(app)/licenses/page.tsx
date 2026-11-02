@@ -89,6 +89,7 @@ export default async function LicensesPage(props: { searchParams: Promise<Search
   return (
     <>
       <PageHeader
+        exportAs={{ title: "Licenses & seats", workspace: ctx.workspace.name }}
         title="Licenses & Seats"
         crumbs={[{ label: "Overview", href: "/business/dashboard" }, { label: "Licenses & Seats" }]}
         description={

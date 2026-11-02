@@ -55,6 +55,7 @@ export default async function RenewalsPage(props: { searchParams: Promise<Search
   return (
     <>
       <PageHeader
+        exportAs={{ title: "Renewals", workspace: ctx.workspace.name }}
         title="Renewals"
         crumbs={[{ label: "Overview", href: "/business/dashboard" }, { label: "Renewals" }]}
         description={

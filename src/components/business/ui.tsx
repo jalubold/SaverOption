@@ -3,6 +3,7 @@ import type { CSSProperties, ReactNode } from "react";
 import { formatIsoDate, formatMoney, totalsList, type CurrencyTotals } from "@/lib/business/calc";
 import { formatRate, type FxNote, type OriginalMoney } from "@/lib/business/fx";
 import { InfoTip } from "@/components/business/info-tip";
+import { PageActions } from "@/components/business/page-actions";
 import { Icon, type IconProps } from "@/components/ui/icon";
 import { buttonClass, cn } from "@/components/ui/primitives";
 
@@ -13,7 +14,20 @@ export interface Crumb {
   href?: string;
 }
 
-export function PageHeader({ title, description, crumbs, actions }: { title: ReactNode; description?: ReactNode; crumbs?: Crumb[]; actions?: ReactNode }) {
+export function PageHeader({
+  title,
+  description,
+  crumbs,
+  actions,
+  exportAs,
+}: {
+  title: ReactNode;
+  description?: ReactNode;
+  crumbs?: Crumb[];
+  actions?: ReactNode;
+  /** Adds Share and Save (PDF, PNG) for the page, named after this title and workspace. */
+  exportAs?: { title: string; workspace: string };
+}) {
   return (
     <div className="mb-6">
       {crumbs && crumbs.length > 0 && (
@@ -41,7 +55,12 @@ export function PageHeader({ title, description, crumbs, actions }: { title: Rea
           <h1 className="text-[22px] font-semibold leading-tight tracking-tight text-heading">{title}</h1>
           {description && <div className="mt-1 max-w-3xl text-[14px] text-muted">{description}</div>}
         </div>
-        {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
+        {(actions || exportAs) && (
+          <div className="flex flex-wrap items-center gap-2" data-export-hide>
+            {actions}
+            {exportAs && <PageActions title={exportAs.title} workspace={exportAs.workspace} />}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -103,6 +103,7 @@ export default async function SoftwareInventoryPage(props: { searchParams: Promi
   return (
     <>
       <PageHeader
+        exportAs={{ title: "Software", workspace: ctx.workspace.name }}
         title="Software inventory"
         description={
           <>

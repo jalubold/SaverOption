@@ -112,7 +112,7 @@ export async function CalendarPrompt({ ctx, className }: { ctx: BizContext; clas
   const status = await ensureCalendarStatus(ctx);
   const links = calendarLinks(`${await requestOrigin()}${calendarFeedPath(status.token)}`);
   return (
-    <section className={cn("biz-card flex flex-wrap items-center gap-x-4 gap-y-3 px-4 py-3.5 sm:px-5", className)} data-calendar-connect data-calendar-prompt>
+    <section className={cn("biz-card flex flex-wrap items-center gap-x-4 gap-y-3 px-4 py-3.5 sm:px-5", className)} data-calendar-connect data-calendar-prompt data-export-hide>
       <span aria-hidden="true" className="icon-tile size-10 shrink-0">
         <Icon name="calendar" size={18} />
       </span>
@@ -168,7 +168,7 @@ export async function CalendarSideCard({ ctx }: { ctx: BizContext }) {
   const status = await ensureCalendarStatus(ctx);
   const links = calendarLinks(`${await requestOrigin()}${calendarFeedPath(status.token)}`);
   return (
-    <section className="biz-card px-4 py-4" data-calendar-connect data-calendar-side="offer">
+    <section className="biz-card px-4 py-4" data-calendar-connect data-calendar-side="offer" data-export-hide>
       <div className="flex items-start gap-3">
         <span aria-hidden="true" className="icon-tile size-9 shrink-0">
           <Icon name="calendar" size={16} />

@@ -126,6 +126,7 @@ export default async function SavingsPage(props: { searchParams: Promise<Raw> })
   return (
     <>
       <PageHeader
+        exportAs={{ title: "Savings", workspace: ctx.workspace.name }}
         title={
           <span className="flex flex-wrap items-baseline gap-x-2">
             Spend Detective <span className="text-[15px] font-normal text-faint">· savings opportunities</span>

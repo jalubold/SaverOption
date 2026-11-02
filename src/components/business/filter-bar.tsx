@@ -122,6 +122,7 @@ export function FilterBar({
         setOpen(false);
       }}
       data-filter-bar
+      data-export-hide
     >
       {Object.entries(keep).map(([k, v]) => v && <input key={k} type="hidden" name={k} value={v} />)}
       <div className="flex flex-wrap items-center gap-2">
