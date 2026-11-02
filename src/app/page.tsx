@@ -21,6 +21,7 @@ import {
   getCategories,
   getFeaturedOffers,
   getPopularOffers,
+  getPopularStandingOffers,
   getRecentOffers,
   queryOffers,
 } from "@/lib/catalog";
@@ -58,7 +59,7 @@ const principles = [
 
 export default async function HomePage() {
   const blackFriday = getCampaign("black-friday");
-  const [stats, categories, audiences, featured, recent, popular, endingSoon, bfOffers] = await Promise.all([
+  const [stats, categories, audiences, featured, recent, popular, endingSoon, bfOffers, bfPopular] = await Promise.all([
     getCatalogStats(),
     getCategories(),
     getAudiences(),
@@ -67,6 +68,7 @@ export default async function HomePage() {
     getPopularOffers(6),
     queryOffers({ sort: "ending-soon" }),
     blackFriday ? getCampaignOffers("black-friday") : Promise.resolve([]),
+    blackFriday ? getPopularStandingOffers("black-friday") : Promise.resolve([]),
   ]);
   // Black Friday gets its own section through November (see content/campaigns.ts for the dates).
   const showBlackFriday = blackFriday !== null && campaignShown(blackFriday);
@@ -162,7 +164,7 @@ export default async function HomePage() {
         {/* ── Black Friday (November only) ─────────────────────────── */}
         {showBlackFriday && blackFriday && (
           <Container className="pt-14 sm:pt-20">
-            <BlackFridayBand campaign={blackFriday} offers={bfOffers} limit={6} />
+            <BlackFridayBand campaign={blackFriday} offers={bfOffers} popular={bfPopular} limit={6} />
           </Container>
         )}
 

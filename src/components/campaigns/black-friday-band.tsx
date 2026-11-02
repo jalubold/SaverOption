@@ -17,10 +17,30 @@ export const countdownLabels = (c: Campaign) => ({
 /**
  * The Black Friday band on the home page and the categories page: the countdown, a few of the deals
  * and a way to all of them. Before any deal is announced it says so instead of showing an empty grid.
+ * `popular` are the standing offers from well-known apps the Black Friday page also lists; they're
+ * counted in the copy and fill the logo row, but never shown as Black Friday deals.
  */
-export function BlackFridayBand({ campaign, offers, limit = 6, headingId = "black-friday-heading", compact = false }: { campaign: Campaign; offers: OfferView[]; limit?: number; headingId?: string; compact?: boolean }) {
+export function BlackFridayBand({
+  campaign,
+  offers,
+  popular = [],
+  limit = 6,
+  headingId = "black-friday-heading",
+  compact = false,
+}: {
+  campaign: Campaign;
+  offers: OfferView[];
+  popular?: OfferView[];
+  limit?: number;
+  headingId?: string;
+  compact?: boolean;
+}) {
   const shown = offers.slice(0, limit);
-  const logos = [...new Map(offers.map((o) => [o.product.id, o.product])).values()].slice(0, 6);
+  // Real brand logos first (Black Friday brands, then popular apps), lettered tiles only to fill up.
+  const brands = [...new Map([...offers, ...popular].map((o) => [o.product.id, o.product])).values()];
+  const logos = [...brands.filter((p) => p.logo), ...brands.filter((p) => !p.logo)].slice(0, 6);
+  const total = offers.length + popular.length;
+  const announced = `${offers.length} ${campaign.name} deal${offers.length === 1 ? "" : "s"} announced by the providers so far`;
   return (
     <section aria-labelledby={headingId} className="space-y-6" data-black-friday-band>
       <div
@@ -40,9 +60,11 @@ export function BlackFridayBand({ campaign, offers, limit = 6, headingId = "blac
               {campaign.name} <em>software deals.</em>
             </h2>
             <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-muted">
-              {offers.length > 0
-                ? `${offers.length} ${campaign.name} deal${offers.length === 1 ? "" : "s"} announced by the providers so far, each with its dates and terms. More arrive as companies publish theirs.`
-                : `Providers announce most ${campaign.name} deals during November. Each one is listed here as soon as its terms are published on the provider's own site.`}
+              {offers.length > 0 && popular.length > 0
+                ? `${announced}, plus deals from ${popular.length} popular apps you can use today. More arrive as companies publish theirs.`
+                : offers.length > 0
+                  ? `${announced}, each with its dates and terms. More arrive as companies publish theirs.`
+                  : `Providers announce most ${campaign.name} deals during November. Each one is listed here as soon as its terms are published on the provider's own site.`}
             </p>
             {logos.length > 0 && (
               <ul className="mt-4 flex -space-x-2" aria-label="Some of the brands with deals">
@@ -57,7 +79,7 @@ export function BlackFridayBand({ campaign, offers, limit = 6, headingId = "blac
           <div className="flex flex-col gap-4 lg:items-end">
             <Countdown startsAt={campaign.startsAt} endsAt={campaign.endsAt} renderedAt={new Date().getTime()} label={countdownLabels(campaign)} />
             <Link href="/black-friday" className={buttonClass("primary", "md", "w-full sm:w-auto")} data-black-friday-link>
-              {offers.length > 0 ? `See all ${offers.length} deals` : `${campaign.name} deals`}
+              {total > 0 ? "See all deals" : `${campaign.name} deals`}
               <Icon name="arrow-right" size={15} />
             </Link>
           </div>

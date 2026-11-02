@@ -50,7 +50,7 @@ function groupByCategory(offers: OfferView[]) {
 export default async function BlackFridayPage() {
   const campaign = getCampaign("black-friday");
   if (!campaign) notFound();
-  const [offers, categories, popular] = await Promise.all([getCampaignOffers("black-friday"), getCategories(), getPopularStandingOffers("black-friday", 24)]);
+  const [offers, categories, popular] = await Promise.all([getCampaignOffers("black-friday"), getCategories(), getPopularStandingOffers("black-friday")]);
   const names = new Map(categories.map((c) => [c.slug, c.name]));
   const groups = groupByCategory(offers);
   const ending = offers.filter((o) => o.daysLeft !== undefined);

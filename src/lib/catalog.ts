@@ -321,7 +321,10 @@ const POPULAR_TYPE_ORDER: OfferType[] = ["discount", "lifetime", "free-credits",
  * One live offer from each of the campaign's well-known products that isn't part of the sale itself
  * (credits, trials and discounts you can use now), in the campaign's order.
  */
-export async function getPopularStandingOffers(slug: CampaignSlug, limit = 12): Promise<OfferView[]> {
+/** How many popular apps the Black Friday page lists (and the bands count). */
+export const POPULAR_STANDING_LIMIT = 24;
+
+export async function getPopularStandingOffers(slug: CampaignSlug, limit = POPULAR_STANDING_LIMIT): Promise<OfferView[]> {
   const c = getCampaign(slug);
   if (!c?.popularity?.length) return [];
   const pool = publishedViews().filter((o) => !o.isExpired && !o.campaigns?.includes(slug));

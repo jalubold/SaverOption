@@ -3,7 +3,7 @@ import { BlackFridayBand } from "@/components/campaigns/black-friday-band";
 import { AudienceGrid } from "@/components/categories/audience-grid";
 import { CategoryGrid } from "@/components/categories/category-links";
 import { Container, Eyebrow, SectionHeading } from "@/components/ui/primitives";
-import { campaignShown, getAudiences, getCampaign, getCampaignOffers, getCatalogStats, getCategories } from "@/lib/catalog";
+import { campaignShown, getAudiences, getCampaign, getCampaignOffers, getCatalogStats, getCategories, getPopularStandingOffers } from "@/lib/catalog";
 import { pageMetadata } from "@/lib/seo";
 
 export const revalidate = 3600;
@@ -17,7 +17,13 @@ export const metadata = pageMetadata({
 
 export default async function CategoriesPage() {
   const blackFriday = getCampaign("black-friday");
-  const [categories, audiences, stats, bfOffers] = await Promise.all([getCategories(), getAudiences(), getCatalogStats(), blackFriday ? getCampaignOffers("black-friday") : Promise.resolve([])]);
+  const [categories, audiences, stats, bfOffers, bfPopular] = await Promise.all([
+    getCategories(),
+    getAudiences(),
+    getCatalogStats(),
+    blackFriday ? getCampaignOffers("black-friday") : Promise.resolve([]),
+    blackFriday ? getPopularStandingOffers("black-friday") : Promise.resolve([]),
+  ]);
   const live = categories.filter((c) => c.count > 0).length;
 
   return (
@@ -46,7 +52,7 @@ export default async function CategoriesPage() {
 
       <Container className="space-y-20 pb-24 pt-10 sm:space-y-24 sm:pt-14">
         {/* Seasonal: Black Friday through November. */}
-        {blackFriday && campaignShown(blackFriday) && <BlackFridayBand campaign={blackFriday} offers={bfOffers} limit={3} headingId="black-friday-categories" compact />}
+        {blackFriday && campaignShown(blackFriday) && <BlackFridayBand campaign={blackFriday} offers={bfOffers} popular={bfPopular} limit={3} headingId="black-friday-categories" compact />}
 
         <section aria-label="Categories">
           <CategoryGrid categories={categories} />
