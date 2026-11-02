@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { readClaimCookie } from "@/lib/server/claim";
 import { dbConfigured } from "@/lib/server/db";
+import { exchangeGoogleCode } from "@/lib/server/google-identity";
 import { readFunnelSession } from "@/lib/server/funnel-session";
 import { clientIp, rateLimit } from "@/lib/server/mcp/rate-limit";
 import { getSubmissionByClaim } from "@/lib/server/submissions";
@@ -9,9 +10,12 @@ import { recordFunnelEvent } from "@/lib/server/tracking";
 import { safeNext } from "@/lib/safe-next";
 
 /**
- * Finishes Google sign-in started with Google's button on our own page: the ID token Google gave
- * the page, with the nonce the page made, is checked by Supabase and becomes the session cookie.
- * Only our own pages may call this (another site can't sign a visitor in to someone else's account).
+ * Finishes Google sign-in started on our own page. Normally the page sends the one-time code from
+ * Google's popup, which is swapped at Google (with the client secret) for an ID token. Pages opened
+ * before that change may still send Google's ID token with the nonce they made. Either way Supabase
+ * checks the token and it becomes the session cookie. Only our own pages may call this (another site
+ * can't sign a visitor in to someone else's account): same-origin only, and the code path also needs
+ * the X-Requested-With header Google recommends, which other sites can't set without a CORS preflight.
  */
 export async function POST(req: NextRequest) {
   const no = (status: number, error: string) => NextResponse.json({ error }, { status, headers: { "Cache-Control": "no-store" } });
@@ -20,19 +24,31 @@ export async function POST(req: NextRequest) {
   const limit = await rateLimit(`google-signin:${clientIp(req.headers)}`, 20, 60);
   if (!limit.ok) return no(429, "slow_down");
 
-  let body: { credential?: unknown; nonce?: unknown; next?: unknown };
+  let body: { code?: unknown; credential?: unknown; nonce?: unknown; next?: unknown };
   try {
     body = await req.json();
   } catch {
     return no(400, "bad_request");
   }
-  const credential = typeof body.credential === "string" ? body.credential : "";
-  const nonce = typeof body.nonce === "string" ? body.nonce : "";
-  if (!/^[\w-]+\.[\w-]+\.[\w-]*$/.test(credential) || credential.length > 8192 || !/^[a-f0-9]{64}$/.test(nonce)) return no(400, "bad_request");
   const next = safeNext(body.next);
 
+  let token: string;
+  let nonce: string | undefined;
+  if (typeof body.code === "string") {
+    if (req.headers.get("x-requested-with") !== "XmlHttpRequest") return no(403, "forbidden");
+    if (!/^[\w/.-]{10,512}$/.test(body.code)) return no(400, "bad_request");
+    const idToken = await exchangeGoogleCode(body.code);
+    if (!idToken) return no(401, "google");
+    token = idToken;
+  } else {
+    const credential = typeof body.credential === "string" ? body.credential : "";
+    nonce = typeof body.nonce === "string" ? body.nonce : "";
+    if (!/^[\w-]+\.[\w-]+\.[\w-]*$/.test(credential) || credential.length > 8192 || !/^[a-f0-9]{64}$/.test(nonce)) return no(400, "bad_request");
+    token = credential;
+  }
+
   const supabase = await supabaseServer();
-  const { data, error } = await supabase.auth.signInWithIdToken({ provider: "google", token: credential, nonce });
+  const { data, error } = await supabase.auth.signInWithIdToken(nonce ? { provider: "google", token, nonce } : { provider: "google", token });
   if (error || !data.user) {
     console.error("[auth] google id token sign-in failed:", error?.code ?? error?.status ?? "no user");
     return no(401, "google");
