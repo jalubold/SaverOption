@@ -105,6 +105,7 @@ export function planFeatures(plan: PlanId, opts: { assistant: boolean }): string
   return [
     "Software inventory, subscriptions, licenses and seats",
     "Renewal calendar and reminders",
+    "Google Calendar, Apple Calendar and Outlook integration",
     "Spend analytics, reports and exports",
     "Savings opportunities and matching Saver Option deals",
     "CSV import",
