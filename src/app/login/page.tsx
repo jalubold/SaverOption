@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { GoogleButton } from "@/components/auth/auth-forms";
+import { googleIdentity } from "@/lib/server/google-identity";
 import { AuthShell, AuthUnavailable } from "@/components/auth/auth-shell";
 import { FormMessage } from "@/components/ui/form";
 import { authConfigured, getUser, googleSignInEnabled } from "@/lib/server/supabase";
@@ -47,7 +48,7 @@ export default async function LoginPage(props: PageProps<"/login">) {
               <FormMessage tone="error">Google sign-in isn&apos;t switched on yet. Please try again a little later.</FormMessage>
             </div>
           )}
-          <GoogleButton next={next} disabled={!google} />
+          <GoogleButton identity={googleIdentity()} next={next} disabled={!google} />
         </>
       )}
     </AuthShell>

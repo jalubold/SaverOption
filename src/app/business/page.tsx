@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { CSSProperties } from "react";
 import Link from "next/link";
 import { GoogleButton } from "@/components/auth/auth-forms";
+import { googleIdentity } from "@/lib/server/google-identity";
 import { trackable } from "@/components/business/landing/example-data";
 import { LicensesVisual, RenewalsVisual, ReportsVisual, SavingsVisual, SpendVisual } from "@/components/business/landing/feature-visuals";
 import { HeroFloaters } from "@/components/business/landing/hero-floaters";
@@ -111,7 +112,7 @@ export default async function BusinessLandingPage() {
       }
       signedOut={
         <div className="so-shine-hover w-full max-w-xs shadow-[0_10px_30px_-12px_rgb(124_58_236/0.55)]">
-          <GoogleButton next="/business/dashboard" disabled={!google} />
+          <GoogleButton identity={googleIdentity()} next="/business/dashboard" disabled={!google} />
         </div>
       }
     />

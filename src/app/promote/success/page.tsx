@@ -3,6 +3,7 @@ import { siteConfig } from "@/config/site";
 import { formatPlanRate, getPlan } from "@/config/listing-plans";
 import { TestModeBadge } from "@/components/advertiser/status-pill";
 import { GoogleButton } from "@/components/auth/auth-forms";
+import { googleIdentity } from "@/lib/server/google-identity";
 import { StatusPoller } from "@/components/promote/status-poller";
 import { providerNames } from "@/lib/server/listing-checkout";
 import { Icon } from "@/components/ui/icon";
@@ -113,7 +114,7 @@ function Status({ sub, owned, signedIn, google }: { sub: SafeSubmission; owned: 
             </a>
           ) : (
             <div className="w-full">
-              <GoogleButton next="/claim" disabled={!google} />
+              <GoogleButton identity={googleIdentity()} next="/claim" disabled={!google} />
               <p className="mt-2 text-center text-xs text-faint">
                 {google
                   ? "Creates your account, or signs you in if you already have one."

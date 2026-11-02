@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { CSSProperties } from "react";
 import Link from "next/link";
 import { GoogleButton } from "@/components/auth/auth-forms";
+import { googleIdentity } from "@/lib/server/google-identity";
 import { McpChatPreview } from "@/components/business/landing/mcp-chat-preview";
 import { FaqAccordion, IconTile, type TileTone } from "@/components/business/landing/sections";
 import { Aurora, RevealOnScroll, SpotlightGroup } from "@/components/business/motion";
@@ -119,7 +120,7 @@ export default async function McpLandingPage() {
       }
       signedOut={
         <div className="so-shine-hover w-full max-w-xs shadow-[0_10px_30px_-12px_rgb(124_58_236/0.55)] sm:w-64">
-          <GoogleButton next="/business/settings/mcp" disabled={!google} />
+          <GoogleButton identity={googleIdentity()} next="/business/settings/mcp" disabled={!google} />
         </div>
       }
     />

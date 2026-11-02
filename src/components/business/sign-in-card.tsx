@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { CSSProperties } from "react";
 import { GoogleButton } from "@/components/auth/auth-forms";
+import { googleIdentity } from "@/lib/server/google-identity";
 import { SignInAside } from "@/components/business/landing/sign-in-aside";
 import { Aurora } from "@/components/business/motion";
 import { BusinessPublicHeader } from "@/components/business/public-header";
@@ -58,7 +59,7 @@ export async function BusinessSignIn({ searchParams, mode }: { searchParams: Rec
                     <FormMessage tone="error">Google sign-in isn&apos;t switched on yet. Please try again a little later.</FormMessage>
                   ) : null}
                   <div className="so-shine-hover">
-                    <GoogleButton next={next} disabled={!google} />
+                    <GoogleButton identity={googleIdentity()} next={next} disabled={!google} />
                   </div>
                   {desktop && (
                     <p className="flex gap-2 text-[12.5px] leading-relaxed text-muted" data-desktop-hint>

@@ -60,16 +60,17 @@ What's handled: starting OAuth (`signInWithGoogleAction`), the callback and sess
 
 ### Our name and logo on Google's account chooser
 
-Google shows an app's name and logo on "Choose an account" only after it has verified the brand, and it shows the domain the sign-in returns to. With Supabase's default URL that domain is `<project-ref>.supabase.co`, which we can't verify. To show **Saver Option** and the logo:
+Google shows an app's name and logo on "Choose an account" only after it has verified the brand, and it names the domain the sign-in comes from. With the redirect through Supabase that is `<project-ref>.supabase.co`, which we can't verify. There are two ways to show **Saver Option** and the logo; both need steps 1–2 and 5.
+
+**Free: Google's button on our own domain (in the code, switched on by one variable).** The sign-in button becomes Google's own (Google Identity Services) on saveroption.com; the ID token it returns goes to `/auth/google`, which hands it to Supabase with a one-time nonce (`signInWithIdToken`). Accounts and sessions stay in Supabase. If Google's script can't load (an ad blocker), the old redirect button appears instead; the Mac app always uses the redirect, because Google doesn't allow sign-in inside apps' web views.
 
 1. **Google Auth Platform → Branding**: app name `Saver Option`, the logo (square PNG, 120×120), support email, home page `https://www.saveroption.com`, privacy policy `https://www.saveroption.com/privacy`, terms `https://www.saveroption.com/terms`, and `saveroption.com` under Authorized domains.
 2. **Google Search Console**: verify ownership of `saveroption.com` with a Google account that is an owner or editor of the Cloud project.
-3. **Supabase custom domain** (a paid add-on), for example `auth.saveroption.com`: add it in the Supabase dashboard (or `supabase domains create --project-ref <project-ref> --custom-hostname auth.saveroption.com`), create the CNAME and TXT records it asks for, wait for the certificate, then activate it.
-4. **Before activating**, add `https://auth.saveroption.com/auth/v1/callback` to the OAuth client's Authorized redirect URIs (keep the `supabase.co` one).
-5. **Vercel**: set `NEXT_PUBLIC_SUPABASE_URL` to `https://auth.saveroption.com` and redeploy. People stay signed in: the session cookie keeps the project's name (`sb-<project-ref>-auth-token`), taken from the project ref inside the legacy anon key. If the app uses a new-style publishable key (`sb_publishable_…`), also set `SUPABASE_AUTH_COOKIE_NAME=sb-<project-ref>-auth-token`.
-6. **Google Auth Platform → Verification Center**: submit the brand for verification. The name and logo appear once Google approves it.
+3. **Google Auth Platform → Clients → the web client Supabase uses**: add `https://www.saveroption.com` and `https://saveroption.com` under Authorized JavaScript origins. Keep the `supabase.co` redirect URI (the fallback and the Mac app use it).
+4. **Vercel**: set `NEXT_PUBLIC_GOOGLE_CLIENT_ID` to that client's ID and redeploy. **Supabase → Authentication → Sign In / Providers → Google**: the same ID must be in Client IDs, and "Skip nonce checks" must stay off.
+5. **Google Auth Platform → Verification Center**: submit the brand for verification. The name and logo appear once Google approves it.
 
-`src/lib/supabase-config.ts` handles the cookie name; the end-to-end suite has a run against a custom auth domain (`biz-customdomain-e2e`).
+**Paid: a Supabase custom domain.** Keeps the redirect flow (Mac app included) but moves it to, for example, `auth.saveroption.com` (Supabase add-on, about $10 a month on a paid plan). Add the domain in Supabase (or `supabase domains create --project-ref <project-ref> --custom-hostname auth.saveroption.com`) with the CNAME and TXT records it asks for; before activating it, add `https://auth.saveroption.com/auth/v1/callback` to the client's redirect URIs; then set `NEXT_PUBLIC_SUPABASE_URL` to `https://auth.saveroption.com`. People stay signed in: the session cookie keeps the project's name (`sb-<project-ref>-auth-token`), taken from the project ref in the legacy anon key, or from `SUPABASE_AUTH_COOKIE_NAME` with a new-style publishable key. `src/lib/supabase-config.ts` handles this; `biz-customdomain-e2e` tests it.
 
 ## Environment variables
 
@@ -77,6 +78,7 @@ Nothing new is required: Business uses `POSTGRES_URL`, `NEXT_PUBLIC_SUPABASE_URL
 
 | Variable | Scope | Notes |
 | --- | --- | --- |
+| `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | public | Optional. The web OAuth client's ID: turns on Google's own sign-in button on our domain (see "Our name and logo on Google's account chooser"). Not a secret. Without it, sign-in redirects through Supabase. |
 | `SUPABASE_AUTH_COOKIE_NAME` | **server only** | Optional. The session cookie's name, for when Supabase Auth moves to a custom domain and the key doesn't carry the project ref (see "Our name and logo on Google's account chooser"). Leave it unset otherwise. |
 | `CRON_SECRET` | **server only** | Optional. Enables the daily reminder run: Vercel Cron calls `/api/cron/business-reminders` (see `vercel.json`) with `Authorization: Bearer <CRON_SECRET>`. Without it the route answers 503 and reminders are still created whenever someone opens the app. |
 | `ANTHROPIC_API_KEY` | **server only** | Optional. Enables the in-app AI Savings Assistant. Without it the assistant page says it isn't configured and nothing is sent to a model. |
