@@ -194,33 +194,6 @@ export function ScrollWords({ text, accent = [], className }: { text: string; ac
   );
 }
 
-/** Nudges its child a few pixels towards the pointer while hovered. */
-export function Magnetic({ children, className, strength = 0.25 }: { children: ReactNode; className?: string; strength?: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || reduced() || !finePointer()) return;
-    const onMove = (e: PointerEvent) => {
-      const r = el.getBoundingClientRect();
-      const x = (e.clientX - (r.left + r.width / 2)) * strength;
-      const y = (e.clientY - (r.top + r.height / 2)) * strength;
-      el.style.transform = `translate3d(${Math.max(-10, Math.min(10, x))}px, ${Math.max(-8, Math.min(8, y))}px, 0)`;
-    };
-    const onLeave = () => (el.style.transform = "");
-    el.addEventListener("pointermove", onMove, { passive: true });
-    el.addEventListener("pointerleave", onLeave);
-    return () => {
-      el.removeEventListener("pointermove", onMove);
-      el.removeEventListener("pointerleave", onLeave);
-    };
-  }, [strength]);
-  return (
-    <div ref={ref} className={cn("lx-magnetic", className)}>
-      {children}
-    </div>
-  );
-}
-
 export interface StoryItem {
   id: string;
   icon: IconProps["name"];

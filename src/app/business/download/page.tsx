@@ -4,7 +4,7 @@ import Link from "next/link";
 import { HeroFloaters } from "@/components/business/landing/hero-floaters";
 import { MacAppPreview } from "@/components/business/landing/mac-app-preview";
 import { LicensesVisual, RenewalsVisual, SavingsVisual, SpendVisual } from "@/components/business/landing/feature-visuals";
-import { FeatureStory, Magnetic, PointerLight, PointerTilt, ScrollScrub, type StoryItem } from "@/components/business/landing/luxe";
+import { FeatureStory, PointerLight, PointerTilt, ScrollScrub, type StoryItem } from "@/components/business/landing/luxe";
 import { IconTile, type TileTone } from "@/components/business/landing/sections";
 import { Aurora, RevealOnScroll, SpotlightGroup } from "@/components/business/motion";
 import { BusinessPublicHeader } from "@/components/business/public-header";
@@ -197,9 +197,9 @@ export default async function DownloadPage() {
           </p>
           <div className="so-rise mt-9 flex w-full flex-wrap items-center justify-center gap-3" style={{ "--d": "600ms" } as CSSProperties}>
             {/* Both buttons share one width, side by side or stacked. */}
-            <Magnetic className="w-full max-w-xs">
+            <div className="w-full max-w-xs">
               <DownloadButton lookup={lookup} mark />
-            </Magnetic>
+            </div>
             <Link href="/business" className={buttonClass("secondary", "lg", "w-full max-w-xs")}>
               Use it in the browser
             </Link>
@@ -305,9 +305,9 @@ export default async function DownloadPage() {
           </h2>
           <p className="mt-5 max-w-md text-[16px] leading-relaxed text-muted">Download once — new features arrive without reinstalling.</p>
           <div className="mt-9 flex w-full flex-col items-center gap-4">
-            <Magnetic className="w-full max-w-xs">
+            <div className="w-full max-w-xs">
               <DownloadButton lookup={lookup} />
-            </Magnetic>
+            </div>
             <ReleaseMeta lookup={lookup} />
           </div>
           <p className="mt-10 max-w-md text-[12.5px] leading-relaxed text-faint">

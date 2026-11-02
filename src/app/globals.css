@@ -1135,12 +1135,6 @@
     transform: translateY(calc((1 - var(--k)) * 22px));
   }
 
-  .lx-magnetic {
-    display: inline-block;
-    transition: transform 350ms var(--so-ease);
-    will-change: transform;
-  }
-
   /* The last call to action: a slowly turning colour orb and rings that ripple out. */
   .lx-orb {
     position: absolute;
@@ -1197,8 +1191,7 @@
       filter: none !important;
     }
     .lx-tilt,
-    .lx-tilt [data-depth],
-    .lx-magnetic {
+    .lx-tilt [data-depth] {
       transform: none !important;
     }
   }

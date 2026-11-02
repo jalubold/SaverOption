@@ -92,9 +92,7 @@ export default async function InvitePage(props: PageProps<"/business/invite/[id]
           {!user ? (
             <>
               {!google && <FormMessage tone="error">Google sign-in isn&apos;t switched on yet. Please try again a little later.</FormMessage>}
-              <div className="so-shine-hover">
-                <GoogleButton identity={googleIdentity()} next={here} disabled={!google} />
-              </div>
+              <GoogleButton identity={googleIdentity()} next={here} disabled={!google} />
               <Steps active={1} />
             </>
           ) : matches ? (

@@ -247,7 +247,8 @@ const paths: Record<GlyphName, React.ReactNode> = {
   ),
   home: (
     <>
-      <path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1Z" />
+      {/* One unit higher than the 24-grid centre: the pointed roof reads lighter, so this looks level with text. */}
+      <path d="M4 9.5 12 3l8 6.5V19a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1Z" />
     </>
   ),
   layers: (

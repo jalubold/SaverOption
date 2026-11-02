@@ -3,7 +3,7 @@ import type { CSSProperties, ReactNode } from "react";
 import { formatIsoDate, formatMoney, totalsList, type CurrencyTotals } from "@/lib/business/calc";
 import { formatRate, type FxNote, type OriginalMoney } from "@/lib/business/fx";
 import { InfoTip } from "@/components/business/info-tip";
-import { MoreMenu, PageActions, type MenuLink } from "@/components/business/page-actions";
+import { MoreMenu, PageActions, type ExportAs, type MenuLink } from "@/components/business/page-actions";
 import { Icon, type IconProps } from "@/components/ui/icon";
 import { buttonClass, cn } from "@/components/ui/primitives";
 
@@ -40,10 +40,10 @@ export function PageHeader({
   more?: MenuLink[];
   /** A secondary control that isn't a link (an Archive form): a button when there's room, otherwise in More. */
   menuExtra?: ReactNode;
-  /** Adds Share and Save (PDF, PNG) for the page, named after this title and workspace. */
-  exportAs?: { title: string; workspace: string };
+  /** Adds Share and Save (PDF, PNG) for the page, named after this title and workspace; `save: false` keeps Share only. */
+  exportAs?: ExportAs;
 }) {
-  const count = (primary ? 1 : 0) + (actions ? 1 : 0) + more.length + (menuExtra ? 1 : 0) + (exportAs ? 2 : 0);
+  const count = (primary ? 1 : 0) + (actions ? 1 : 0) + more.length + (menuExtra ? 1 : 0) + (exportAs ? (exportAs.save === false ? 1 : 2) : 0);
   const collapse = count > 2;
   // What stays out of the menu: the primary action, or the custom control, or else the first link.
   const lead = primary ?? actions ?? null;
@@ -117,7 +117,7 @@ export function PageHeader({
                 {menuExtra}
                 {actions}
                 {primary}
-                {exportAs && <PageActions title={exportAs.title} workspace={exportAs.workspace} />}
+                {exportAs && <PageActions title={exportAs.title} workspace={exportAs.workspace} save={exportAs.save !== false} />}
               </>
             )}
           </div>

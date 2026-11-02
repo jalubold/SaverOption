@@ -55,7 +55,7 @@ export default async function BusinessDealsPage(props: { searchParams: Promise<R
   return (
     <>
       <PageHeader
-        exportAs={{ title: "Deals", workspace: ctx.workspace.name }}
+        exportAs={{ title: "Deals", workspace: ctx.workspace.name, save: false }}
         title="Deals for your stack"
         crumbs={[{ label: "Overview", href: "/business/dashboard" }, { label: "Deals" }]}
         description="Discounts, credits and free plans for the software your team pays for, and for tools that do the same job. Terms, prices and end dates are only what each listing states."

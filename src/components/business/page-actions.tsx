@@ -12,7 +12,7 @@ import { buttonClass, cn } from "@/components/ui/primitives";
  * it is; the PDF lays that picture out on A4 pages. The libraries load only when they're used.
  * Share uses the device's share sheet where there is one, otherwise it copies the link.
  */
-export function PageActions({ title, workspace, tone = "light" }: { title: string; workspace: string; tone?: "light" | "dark" }) {
+export function PageActions({ title, workspace, tone = "light", save: canSave = true }: { title: string; workspace: string; tone?: "light" | "dark"; /** False: Share only (pages that aren't worth a file). */ save?: boolean }) {
   const [open, setOpen] = useState(false);
   const { busy, note, share, save } = usePageExport({ title, workspace });
   const menuRef = useRef<HTMLDivElement>(null);
@@ -30,34 +30,43 @@ export function PageActions({ title, workspace, tone = "light" }: { title: strin
       <button type="button" onClick={share} className={btn} data-share>
         <ShareIcon /> Share
       </button>
-      <div ref={menuRef} className="relative">
-        <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-haspopup="menu" disabled={busy !== null} className={btn} data-save>
-          {busy ? <Icon name="refresh" size={14} className="animate-spin" /> : <Icon name="download" size={14} />}
-          {busy === "pdf" ? "Making PDF…" : busy === "png" ? "Making image…" : "Save"}
-          {!busy && <Icon name="chevron-down" size={13} className="opacity-60" />}
-        </button>
-        {open && phone && (
-          <BottomSheet open onClose={() => setOpen(false)} title={`Save ${title}`}>
-            <div className="space-y-2 px-1 pb-2">
-              <SheetRow onClick={() => pick("pdf")} badge="PDF" label="Save as PDF" hint="A4 pages, ready to send or print" data-save-pdf />
-              <SheetRow onClick={() => pick("png")} badge="PNG" label="Save as image" hint="One picture of the whole page" data-save-png />
+      {canSave && (
+        <div ref={menuRef} className="relative">
+          <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-haspopup="menu" disabled={busy !== null} className={btn} data-save>
+            {busy ? <Icon name="refresh" size={14} className="animate-spin" /> : <Icon name="download" size={14} />}
+            {busy === "pdf" ? "Making PDF…" : busy === "png" ? "Making image…" : "Save"}
+            {!busy && <Icon name="chevron-down" size={13} className="opacity-60" />}
+          </button>
+          {open && phone && (
+            <BottomSheet open onClose={() => setOpen(false)} title={`Save ${title}`}>
+              <div className="space-y-2 px-1 pb-2">
+                <SheetRow onClick={() => pick("pdf")} badge="PDF" label="Save as PDF" hint="A4 pages, ready to send or print" data-save-pdf />
+                <SheetRow onClick={() => pick("png")} badge="PNG" label="Save as image" hint="One picture of the whole page" data-save-png />
+              </div>
+            </BottomSheet>
+          )}
+          {open && !phone && (
+            <div role="menu" className={menuPanel}>
+              <button type="button" role="menuitem" onClick={() => pick("pdf")} className={menuRow} data-save-pdf>
+                <FileBadge label="PDF" /> Save as PDF
+              </button>
+              <button type="button" role="menuitem" onClick={() => pick("png")} className={menuRow} data-save-png>
+                <FileBadge label="PNG" /> Save as image (PNG)
+              </button>
             </div>
-          </BottomSheet>
-        )}
-        {open && !phone && (
-          <div role="menu" className={menuPanel}>
-            <button type="button" role="menuitem" onClick={() => pick("pdf")} className={menuRow} data-save-pdf>
-              <FileBadge label="PDF" /> Save as PDF
-            </button>
-            <button type="button" role="menuitem" onClick={() => pick("png")} className={menuRow} data-save-png>
-              <FileBadge label="PNG" /> Save as image (PNG)
-            </button>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
       <ExportNote note={note} dark={dark} />
     </div>
   );
+}
+
+/** Makes a page shareable and, unless `save` is false, downloadable as PDF and PNG. */
+export interface ExportAs {
+  title: string;
+  workspace: string;
+  save?: boolean;
 }
 
 /** A link in a page's More menu. */
@@ -75,7 +84,8 @@ export interface MenuLink {
  * which keeps its own confirmation), and Share / Save as PDF / Save as image when the page can be
  * exported. A menu under the button on bigger screens, a bottom sheet on phones.
  */
-export function MoreMenu({ links = [], children, exportAs }: { links?: MenuLink[]; children?: ReactNode; exportAs?: { title: string; workspace: string } }) {
+export function MoreMenu({ links = [], children, exportAs }: { links?: MenuLink[]; children?: ReactNode; exportAs?: ExportAs }) {
+  const canSave = exportAs?.save !== false;
   const [open, setOpen] = useState(false);
   const phone = usePhone();
   const ref = useRef<HTMLDivElement>(null);
@@ -102,12 +112,16 @@ export function MoreMenu({ links = [], children, exportAs }: { links?: MenuLink[
             </span>
             Share link
           </button>
-          <button type="button" role="menuitem" onClick={run(() => void save("pdf"))} className={menuRow} data-save-pdf>
-            <FileBadge label="PDF" /> Save as PDF
-          </button>
-          <button type="button" role="menuitem" onClick={run(() => void save("png"))} className={menuRow} data-save-png>
-            <FileBadge label="PNG" /> Save as image
-          </button>
+          {canSave && (
+            <>
+              <button type="button" role="menuitem" onClick={run(() => void save("pdf"))} className={menuRow} data-save-pdf>
+                <FileBadge label="PDF" /> Save as PDF
+              </button>
+              <button type="button" role="menuitem" onClick={run(() => void save("png"))} className={menuRow} data-save-png>
+                <FileBadge label="PNG" /> Save as image
+              </button>
+            </>
+          )}
         </>
       )}
     </div>
@@ -123,8 +137,8 @@ export function MoreMenu({ links = [], children, exportAs }: { links?: MenuLink[
         {exportAs && (
           <>
             <SheetRow onClick={run(share)} icon={<ShareIcon />} label="Share link" hint="People with access to this workspace can open it" data-share />
-            <SheetRow onClick={run(() => void save("pdf"))} badge="PDF" label="Save as PDF" hint="A4 pages, ready to send or print" data-save-pdf />
-            <SheetRow onClick={run(() => void save("png"))} badge="PNG" label="Save as image" hint="One picture of the whole page" data-save-png />
+            {canSave && <SheetRow onClick={run(() => void save("pdf"))} badge="PDF" label="Save as PDF" hint="A4 pages, ready to send or print" data-save-pdf />}
+            {canSave && <SheetRow onClick={run(() => void save("png"))} badge="PNG" label="Save as image" hint="One picture of the whole page" data-save-png />}
           </>
         )}
       </div>

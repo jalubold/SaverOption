@@ -10,7 +10,7 @@ import { MacAppPreview } from "@/components/business/landing/mac-app-preview";
 import { McpChatPreview } from "@/components/business/landing/mcp-chat-preview";
 import { PricingSwitch } from "@/components/business/pricing-switch";
 import { LogoStrip } from "@/components/business/landing/logo-strip";
-import { FeatureStory, Magnetic, PointerLight, PointerTilt, ScrollScrub, ScrollWords, type StoryItem } from "@/components/business/landing/luxe";
+import { FeatureStory, PointerLight, PointerTilt, ScrollScrub, ScrollWords, type StoryItem } from "@/components/business/landing/luxe";
 import { FaqAccordion, IconTile, type TileTone } from "@/components/business/landing/sections";
 import { Aurora, RevealOnScroll, SpotlightGroup } from "@/components/business/motion";
 import { BusinessPublicHeader } from "@/components/business/public-header";
@@ -111,7 +111,7 @@ export default async function BusinessLandingPage() {
         </Link>
       }
       signedOut={
-        <div className="so-shine-hover w-full max-w-xs shadow-[0_10px_30px_-12px_rgb(124_58_236/0.55)]">
+        <div className="w-full max-w-xs rounded-[14px] shadow-[0_10px_30px_-12px_rgb(124_58_236/0.55)]">
           <GoogleButton identity={googleIdentity()} next="/business/dashboard" disabled={!google} />
         </div>
       }
@@ -274,7 +274,7 @@ export default async function BusinessLandingPage() {
           </p>
           <div className="so-rise mt-9 flex w-full flex-wrap items-center justify-center gap-3" style={{ "--d": "680ms" } as CSSProperties}>
             {/* Both buttons share one width, side by side or stacked. */}
-            <Magnetic className="w-full max-w-xs">{cta}</Magnetic>
+            <div className="w-full max-w-xs">{cta}</div>
             <Link href="#features" className={buttonClass("secondary", "lg", "w-full max-w-xs")}>
               Explore features
             </Link>
@@ -468,7 +468,7 @@ export default async function BusinessLandingPage() {
           </h2>
           <p className="mt-5 max-w-md text-[16px] leading-relaxed text-muted">Start with one subscription — the dashboard fills in from there.</p>
           <div className="mt-9 flex w-full flex-col items-center gap-3">
-            <Magnetic className="w-full max-w-xs sm:w-auto">{cta}</Magnetic>
+            <div className="w-full max-w-xs sm:w-auto">{cta}</div>
             {unavailable}
           </div>
         </Container>

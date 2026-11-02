@@ -119,7 +119,7 @@ export default async function McpLandingPage() {
         </Link>
       }
       signedOut={
-        <div className="so-shine-hover w-full max-w-xs shadow-[0_10px_30px_-12px_rgb(124_58_236/0.55)] sm:w-64">
+        <div className="w-full max-w-xs rounded-[14px] shadow-[0_10px_30px_-12px_rgb(124_58_236/0.55)] sm:w-64">
           <GoogleButton identity={googleIdentity()} next="/business/settings/mcp" disabled={!google} />
         </div>
       }
