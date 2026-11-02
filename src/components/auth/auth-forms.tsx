@@ -127,7 +127,11 @@ function GoogleIdentityButton({ identity, next, fallback }: { identity: GoogleId
   return (
     <div data-google-identity={mode}>
       <div className="relative flex min-h-12 items-center justify-center">
-        <div ref={box} className={mode === "ready" ? "flex w-full justify-center" : "pointer-events-none absolute inset-0 flex justify-center opacity-0"} data-gsi-button />
+        <div className={mode === "ready" ? "flex w-full justify-center" : "pointer-events-none absolute inset-0 flex justify-center opacity-0"}>
+          {/* Google draws its pill-shaped button in a rectangular white frame: clip the frame to the pill so no
+              white corners show on a dark card. */}
+          <div ref={box} className="isolate inline-flex transform-gpu overflow-hidden rounded-full" data-gsi-button />
+        </div>
         {mode !== "ready" && (
           <span className="inline-flex h-12 w-full items-center justify-center gap-3 rounded-[14px] border border-[#dadce0] bg-white px-5 text-[15px] font-medium text-[#1f1f1f]" aria-live="polite">
             <span aria-hidden="true" className="size-4 animate-spin rounded-full border-2 border-[#dadce0] border-t-[#1f1f1f]" />
