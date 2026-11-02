@@ -141,3 +141,57 @@ export async function CalendarPrompt({ ctx, className }: { ctx: BizContext; clas
     </section>
   );
 }
+
+/**
+ * A side card for pages about dates (Renewals): connected, or two clicks away from having these
+ * dates in the member's own calendar.
+ */
+export async function CalendarSideCard({ ctx }: { ctx: BizContext }) {
+  if (ctx.workspace.isDemo) return null;
+  const peek = await calendarStatus(ctx);
+  if (peek.fetchedAt && peek.client) {
+    return (
+      <section className="biz-card flex items-center gap-3 px-4 py-3.5" data-calendar-side="connected">
+        <span aria-hidden="true" className="flex size-8 shrink-0 items-center justify-center rounded-full bg-success text-white">
+          <Icon name="check" size={15} />
+        </span>
+        <p className="min-w-0 flex-1 text-[13px] leading-snug text-muted">
+          <span className="block font-semibold text-fg">{peek.client === "other" ? "In your calendar" : `In ${calendarClientLabels[peek.client]}`}</span>
+          These dates are in your calendar too.
+        </p>
+        <a href="/business/settings/notifications#calendar" className="shrink-0 text-[12.5px] font-medium text-accent-ink hover:underline">
+          Manage
+        </a>
+      </section>
+    );
+  }
+  const status = await ensureCalendarStatus(ctx);
+  const links = calendarLinks(`${await requestOrigin()}${calendarFeedPath(status.token)}`);
+  return (
+    <section className="biz-card px-4 py-4" data-calendar-connect data-calendar-side="offer">
+      <div className="flex items-start gap-3">
+        <span aria-hidden="true" className="icon-tile size-9 shrink-0">
+          <Icon name="calendar" size={16} />
+        </span>
+        <div className="min-w-0">
+          <p className="text-[14px] font-semibold text-heading">See these in your calendar</p>
+          <p className="mt-0.5 text-[12.5px] leading-relaxed text-muted">Every renewal and cancel-by date as an all-day event in your own calendar. Two clicks.</p>
+        </div>
+      </div>
+      <div className="mt-3.5 grid gap-2">
+        <a href={links.google} target="_blank" rel="noopener noreferrer" className={buttonClass("primary", "sm", "w-full")} data-calendar-add="google">
+          <span className="flex size-4 items-center justify-center rounded-full bg-white">
+            <GoogleLogo size={11} />
+          </span>
+          Add to Google Calendar
+        </a>
+        <a href={links.webcal} className={buttonClass("secondary", "sm", "w-full")} data-calendar-add="webcal">
+          Apple Calendar or Outlook
+        </a>
+      </div>
+      <div className="mt-2">
+        <CalendarWatch connected={false} compact />
+      </div>
+    </section>
+  );
+}

@@ -233,7 +233,7 @@ export default async function DashboardPage() {
       <section className="biz-card biz-hero so-grain theme-dark so-rise px-5 py-6 text-fg sm:px-7 sm:py-7" data-dashboard-hero>
         <Aurora />
         <span aria-hidden="true" className="so-shine pointer-events-none absolute inset-0 rounded-[inherit]" />
-        <div className={cn("relative z-10 grid gap-7", model.historyReliable && "lg:grid-cols-[minmax(0,1fr)_minmax(0,360px)] lg:items-center")}>
+        <div className="relative z-10 grid gap-7 lg:grid-cols-[minmax(0,1fr)_minmax(0,380px)] lg:items-center">
           <div className="min-w-0">
             <p className="text-[12.5px] font-medium text-faint">{ctx.workspace.name}</p>
             <h1 className="mt-1 text-[26px] font-semibold leading-tight tracking-tight text-heading" data-greeting>
@@ -321,9 +321,8 @@ export default async function DashboardPage() {
             )}
           </div>
 
-          {/* The trend, once there's enough history for it to mean something. */}
-          {model.historyReliable && (
-            <div className="so-rise min-w-0 rounded-2xl border border-white/10 bg-white/[0.05] p-4 shadow-[inset_0_1px_0_rgb(255_255_255/0.08)] backdrop-blur-md" style={{ "--d": "250ms" } as CSSProperties}>
+          {/* The trend over the last 12 months; with little history yet, it says so. */}
+          <div className="so-rise min-w-0 rounded-2xl border border-white/10 bg-white/[0.05] p-4 shadow-[inset_0_1px_0_rgb(255_255_255/0.08)] backdrop-blur-md" style={{ "--d": "250ms" } as CSSProperties}>
               <div className="flex items-baseline justify-between gap-2 text-[12px]">
                 <span className="font-medium text-muted">Last 12 months</span>
                 <span className="tabular text-faint">{chartCurrency}</span>
@@ -335,8 +334,8 @@ export default async function DashboardPage() {
                 <span>{formatMonth(model.runRate[0]!.month)}</span>
                 <span>{formatMonth(model.runRate.at(-1)!.month)}</span>
               </div>
+              {!model.historyReliable && <p className="mt-3 border-t border-white/10 pt-2.5 text-[12px] text-faint">The trend fills in as the months go by and prices change.</p>}
             </div>
-          )}
         </div>
       </section>
 

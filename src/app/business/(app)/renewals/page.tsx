@@ -4,6 +4,7 @@ import { RenewalTimeline, type TimelineItem } from "@/components/business/charts
 import { RecordRenewalForm, RenewalDecisionForm } from "@/components/business/record-forms";
 import { SoftwareLogo } from "@/components/business/software-logo";
 import { FilterBar } from "@/components/business/filter-bar";
+import { CalendarSideCard } from "@/components/business/calendar-connect";
 import { BilledAs, Card, EmptyState, FxNoteLine, InlineNote, LinkButton, Money, PageHeader, Pill, StatusPill, TableWrap, Tabs } from "@/components/business/ui";
 import { Icon } from "@/components/ui/icon";
 import { cn } from "@/components/ui/primitives";
@@ -79,6 +80,7 @@ export default async function RenewalsPage(props: { searchParams: Promise<Search
           {view === "history" && <History ctx={ctx} events={events} logos={new Map(subs.map((x) => [x.id, x.logoSrc]))} />}
         </div>
         <aside className="min-w-0 space-y-4">
+          {(view === "calendar" || view === "upcoming") && <CalendarSideCard ctx={ctx} />}
           <Card title="Reminders">
             <div className="space-y-2.5 text-[13px] text-muted">
               <p>
