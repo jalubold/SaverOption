@@ -81,12 +81,6 @@ export const guides: DocPage[] = [
           { type: "p", text: "New and returning users use the same **Continue with Google** button." },
         ],
       },
-      {
-        heading: "Try it with sample data",
-        blocks: [
-          { type: "p", text: "After signing in you can open a separate demo workspace, “Northwind Studio (demo)”, with a fictional company's departments, people, subscriptions, seats, renewals and payments. Prices are sample figures, not vendor quotes. Demo data never mixes with your own workspace, and you can reset it in Settings." },
-        ],
-      },
     ],
   },
   {
@@ -180,7 +174,7 @@ export const guides: DocPage[] = [
       {
         heading: "Finding records",
         blocks: [
-          { type: "p", text: "The [subscriptions list](/business/subscriptions) has a search box and filters for vendor, category, status, billing interval, department, owner, renewal window (next 30 days, next 90 days, overdue, no date), currency and payment method. Sort by name, cost, renewal date or newest." },
+          { type: "p", text: "The [subscriptions list](/business/subscriptions) has a search box, a sort (name, cost, renewal date or newest) and a **Filters** button for renewal window (next 30 days, next 90 days, overdue, no date), category, vendor, billing interval, department, owner, currency and payment method. Results update as you type or choose; active filters show as chips you can remove one by one, or all at once with Clear all. Every list in the app filters the same way." },
           { type: "p", text: "Select rows for bulk actions such as archiving or assigning a department or owner. **Export CSV** downloads the subscriptions you're allowed to see (roles with export access)." },
         ],
       },
@@ -194,7 +188,7 @@ export const guides: DocPage[] = [
       {
         heading: "Where a record came from",
         blocks: [
-          { type: "p", text: "Each subscription shows its source — entered in the app, imported from CSV (with a link to the import), added by an AI client over MCP, or demo data — and when it was last verified. Imported records show “Not verified since import” until someone edits them." },
+          { type: "p", text: "Each subscription shows its source — entered in the app, imported from CSV (with a link to the import), or added by an AI client over MCP — and when it was last verified. Imported records show “Not verified since import” until someone edits them." },
         ],
       },
     ],
@@ -307,7 +301,7 @@ export const guides: DocPage[] = [
       },
       {
         heading: "No data yet",
-        blocks: [{ type: "p", text: "A new workspace shows an empty state with **Add software** and the demo workspace — no sample figures are shown as if they were yours." }],
+        blocks: [{ type: "p", text: "A new workspace shows an empty state with **Add software** — no sample figures are shown as if they were yours." }],
       },
     ],
   },
@@ -539,7 +533,6 @@ export const guides: DocPage[] = [
               "A new workspace starts with a **7-day free trial** with everything included. No card is needed.",
               "There's one free trial per account. Signing out, using another device or creating another workspace doesn't start a new one.",
               "The time left and the exact end are shown at the top of every page and in [Settings → Plan & billing](/business/settings/billing).",
-              "The demo workspace (Northwind Studio) is sample data and isn't billed.",
             ],
           },
         ],

@@ -1,15 +1,15 @@
-import Link from "next/link";
 import { LogoStack } from "@/components/business/software-logo";
-import { SummaryStrip, StripStat } from "@/components/business/summary-strip";
+import { SummaryStrip } from "@/components/business/summary-strip";
 import { SubscriptionTable, type SubscriptionRowView } from "@/components/business/subscription-table";
-import { Card, EmptyState, LinkButton, Money, PageHeader, Pagination, Tabs } from "@/components/business/ui";
+import { FilterBar } from "@/components/business/filter-bar";
+import { Card, EmptyState, FxNoteLine, LinkButton, Money, PageHeader, Pagination, Tabs } from "@/components/business/ui";
 import { buttonClass } from "@/components/ui/primitives";
-import { daysBetween, formatIsoDate, formatMoney, isRecurring, monthlyEquivalent, periodSuffix, seatSummary, summarizeSpend, totalsList } from "@/lib/business/calc";
+import { daysBetween, formatIsoDate, formatMoney, isRecurring, monthlyEquivalent, periodSuffix, seatSummary, summarizeSpend } from "@/lib/business/calc";
 import { billingIntervalLabels, BILLING_INTERVALS, categoryLabels, SOFTWARE_CATEGORIES, SUBSCRIPTION_STATUSES, subscriptionStatusLabels } from "@/lib/business/constants";
 import { can } from "@/lib/business/permissions";
 import { requireBizContext } from "@/lib/server/business/context";
 import { getDepartments, getPeople, getSubscriptions, getVendors } from "@/lib/server/business/data";
-import { asBilled, SUB_MONEY, workspaceDisplay } from "@/lib/server/business/display-currency";
+import { SUB_MONEY, workspaceDisplay } from "@/lib/server/business/display-currency";
 import { applySubscriptionFilters, filtersQuery, hasActiveFilters, parseSubscriptionFilters, type SubscriptionFilters } from "@/lib/server/business/subscription-filters";
 
 export const metadata = { title: "Subscriptions" };
@@ -71,8 +71,6 @@ export default async function SubscriptionsPage(props: { searchParams: Promise<R
   // The tools in this view, highest monthly cost first (default currency first, as currencies aren't compared).
   const pref = ctx.workspace.defaultCurrency;
   // What the converted part of the totals is billed as, for the note under them.
-  const billedPart = summarizeSpend(rows.filter((s) => s.original).map(asBilled), ctx.today);
-  const partOf = (t: Record<string, number>) => totalsList(t).filter((x) => x.amount !== 0).map((x) => formatMoney(x.amount, x.currency)).join(" + ");
   const fxNote = display.note();
   const tools = new Map<string, { name: string; src: string | null; rank: [number, number] }>();
   for (const s of rows) {
@@ -84,13 +82,17 @@ export default async function SubscriptionsPage(props: { searchParams: Promise<R
   const topTools = [...tools.values()].sort((a, b) => a.rank[0] - b.rank[0] || a.rank[1] - b.rank[1] || a.name.localeCompare(b.name));
 
   const filtered = hasActiveFilters(f);
-  const withoutStatus = hasActiveFilters({ ...f, status: null });
 
   return (
     <>
       <PageHeader
         title="Subscriptions"
-        description="Every paid plan your company tracks, with its price, renewal and seats."
+        description={
+          <>
+            Every paid plan your company tracks, with its price, renewal and seats.
+            <FxNoteLine note={fxNote} dateFormat={fmt} className="mt-1.5" />
+          </>
+        }
         crumbs={[{ label: "Overview", href: "/business/dashboard" }, { label: "Subscriptions" }]}
         actions={
           <>
@@ -144,82 +146,65 @@ export default async function SubscriptionsPage(props: { searchParams: Promise<R
             ]}
           />
 
-          <form method="get" className="mb-4 flex flex-wrap items-end gap-2" role="search" aria-label="Filter subscriptions">
-            {f.status && <input type="hidden" name="status" value={f.status} />}
-            <label className="text-[12px] text-muted">
-              <span className="block">Search</span>
-              <input
-                type="search"
-                name="q"
-                defaultValue={f.q}
-                placeholder="Software, plan or vendor"
-                className="mt-1 h-9 w-56 rounded-[9px] border border-line-strong bg-surface px-3 text-[13.5px] outline-none focus:border-accent focus:ring-4 focus:ring-accent/15"
-              />
-            </label>
-            <FilterSelect label="Vendor" name="vendor" value={f.vendor} options={[...vendors.map((v) => ({ value: v.id, label: v.name })), { value: "none", label: "No vendor" }]} />
-            <FilterSelect label="Category" name="category" value={f.category} options={SOFTWARE_CATEGORIES.map((c) => ({ value: c, label: categoryLabels[c] }))} />
-            <FilterSelect label="Billing" name="interval" value={f.interval} options={BILLING_INTERVALS.map((b) => ({ value: b, label: billingIntervalLabels[b] }))} />
-            <FilterSelect label="Department" name="department" value={f.department} options={[...departments.map((d) => ({ value: d.id, label: d.archivedAt ? `${d.name} (archived)` : d.name })), { value: "none", label: "No department" }]} />
-            <FilterSelect label="Owner" name="owner" value={f.owner} options={[...people.map((p) => ({ value: p.id, label: p.name })), { value: "none", label: "No owner" }]} />
-            <FilterSelect
-              label="Renewal"
-              name="renewal"
-              value={f.renewal}
-              options={[
+          <FilterBar
+            action="/business/subscriptions"
+            label="Filter subscriptions"
+            keep={{ status: f.status }}
+            search={{ value: f.q, placeholder: "Search software, plan or vendor" }}
+            inline={[
+              {
+                name: "sort",
+                label: "Sort",
+                value: f.sort,
+                options: [
+                  { value: "name", label: "Name" },
+                  { value: "cost", label: "Highest cost" },
+                  { value: "renewal", label: "Next renewal" },
+                  { value: "newest", label: "Newest" },
+                ],
+              },
+            ]}
+            more={[
+              { name: "renewal", label: "Renewal", value: f.renewal, allLabel: "Any time", options: [
                 { value: "next30", label: "Next 30 days" },
                 { value: "next90", label: "Next 90 days" },
                 { value: "overdue", label: "Date has passed" },
                 { value: "none", label: "No renewal date" },
-              ]}
-            />
-            {currencies.length > 1 && <FilterSelect label="Billed in" name="currency" value={f.currency} options={currencies.map((c) => ({ value: c, label: c }))} />}
-            {payments.length > 0 && <FilterSelect label="Payment method" name="payment" value={f.payment} options={[...payments.map((p) => ({ value: p, label: p })), { value: "none", label: "Not recorded" }]} />}
-            <label className="text-[12px] text-muted">
-              <span className="block">Sort</span>
-              <select name="sort" defaultValue={f.sort} className="biz-select mt-1">
-                <option value="name">Name</option>
-                <option value="cost">Highest cost</option>
-                <option value="renewal">Next renewal</option>
-                <option value="newest">Newest</option>
-              </select>
-            </label>
-            <button type="submit" className={buttonClass("secondary", "sm", "h-9")}>
-              Apply
-            </button>
-            {withoutStatus && (
-              <Link href={`/business/subscriptions${f.status ? `?status=${f.status}` : ""}`} className="self-center text-[13px] text-accent-ink underline underline-offset-2">
-                Clear filters
-              </Link>
-            )}
-          </form>
+              ] },
+              { name: "category", label: "Category", value: f.category, allLabel: "All categories", options: SOFTWARE_CATEGORIES.map((c) => ({ value: c, label: categoryLabels[c] })) },
+              { name: "vendor", label: "Vendor", value: f.vendor, allLabel: "All vendors", options: [...vendors.map((v) => ({ value: v.id, label: v.name })), { value: "none", label: "No vendor" }] },
+              { name: "interval", label: "Billing", value: f.interval, allLabel: "Any billing", options: BILLING_INTERVALS.map((b) => ({ value: b, label: billingIntervalLabels[b] })) },
+              { name: "department", label: "Department", value: f.department, allLabel: "All departments", options: [...departments.map((d) => ({ value: d.id, label: d.archivedAt ? `${d.name} (archived)` : d.name })), { value: "none", label: "No department" }] },
+              { name: "owner", label: "Owner", value: f.owner, allLabel: "Anyone", options: [...people.map((p) => ({ value: p.id, label: p.name })), { value: "none", label: "No owner" }] },
+              ...(currencies.length > 1 ? [{ name: "currency", label: "Billed in", value: f.currency, allLabel: "Any currency", options: currencies.map((c) => ({ value: c, label: c })) }] : []),
+              ...(payments.length > 0 ? [{ name: "payment", label: "Payment method", value: f.payment, allLabel: "Any method", options: [...payments.map((p) => ({ value: p, label: p })), { value: "none", label: "Not recorded" }] }] : []),
+            ]}
+          />
 
           {rows.length > 0 && f.status !== "archived" && (
             <SummaryStrip
               label="Summary of this view"
-              aside={
-                topTools.length > 0 && (
+              figure={{
+                label: "Monthly equivalent",
+                value: (
+                  <span className="inline-flex items-baseline gap-1">
+                    <Money totals={summary.monthly} preferred={pref} />
+                    <span className="text-[13px] font-normal text-faint">/mo</span>
+                  </span>
+                ),
+                sub: (
                   <>
-                    <LogoStack items={topTools} max={6} size={28} />
-                    <span className="text-[12px] text-faint">
-                      {topTools.length} tool{topTools.length === 1 ? "" : "s"}
-                    </span>
+                    <Money totals={summary.annualized} preferred={pref} className="!inline" /> a year
                   </>
-                )
-              }
-            >
-              <StripStat label="Active" value={summary.activeCount} sub={summary.trialCount ? `+ ${summary.trialCount} in trial` : undefined} />
-              <StripStat
-                label="Monthly equivalent"
-                value={<Money totals={summary.monthly} preferred={pref} />}
-                sub={partOf(billedPart.monthly) && fxNote ? `Incl. ${partOf(billedPart.monthly)} at the ECB rate of ${formatIsoDate(fxNote.date, fmt)}` : "Active, priced plans"}
-              />
-              <StripStat
-                label="Annualized"
-                value={<Money totals={summary.annualized} preferred={pref} />}
-                sub={partOf(billedPart.annualized) ? `Incl. ${partOf(billedPart.annualized)} converted` : "Run-rate × 12"}
-              />
-              <StripStat label="Renewing in 30 days" value={summary.upcomingRenewals} tone={summary.upcomingRenewals > 0 ? "accent" : undefined} />
-            </SummaryStrip>
+                ),
+              }}
+              counts={[
+                { value: summary.activeCount, label: "active" },
+                { value: summary.trialCount, label: "in trial", hideZero: true },
+                { value: summary.upcomingRenewals, label: "renewing in 30 days", tone: "accent", hideZero: true },
+              ]}
+              aside={topTools.length > 0 && <LogoStack items={topTools} max={6} size={28} />}
+            />
           )}
 
           <Card bodyClassName="px-4 pb-3 pt-0 sm:px-5">
@@ -251,21 +236,5 @@ export default async function SubscriptionsPage(props: { searchParams: Promise<R
         </>
       )}
     </>
-  );
-}
-
-function FilterSelect({ label, name, value, options }: { label: string; name: string; value: string | null; options: { value: string; label: string }[] }) {
-  return (
-    <label className="text-[12px] text-muted">
-      <span className="block">{label}</span>
-      <select name={name} defaultValue={value ?? ""} className="biz-select mt-1 max-w-48">
-        <option value="">All</option>
-        {options.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
-      </select>
-    </label>
   );
 }

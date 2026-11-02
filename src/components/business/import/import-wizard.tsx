@@ -219,7 +219,7 @@ export function ImportWizard({ workspaceId, defaults, dateFormat }: { workspaceI
     <div className="space-y-5">
       <section className="biz-card p-5">
         <div className="flex flex-wrap items-end justify-between gap-4">
-          <div className="min-w-0 flex-1">
+          <div className="min-w-[15rem] flex-1">
             <label htmlFor={fileInputId} className="block text-[13px] font-medium text-fg">
               CSV file
             </label>

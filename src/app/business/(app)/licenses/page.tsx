@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { RadialGauge } from "@/components/business/charts";
 import { SoftwareLogo } from "@/components/business/software-logo";
+import { FilterBar } from "@/components/business/filter-bar";
 import { Card, DefinitionList, EmptyState, FxNoteLine, InlineNote, Kpi, LinkButton, Meter, Money, PageHeader, Pill, TableWrap, Tabs } from "@/components/business/ui";
 import { formatMoney, formatMonth, isLive, lastMonths, licenseTotals, percent, seatSummary, totalsList } from "@/lib/business/calc";
 import { hasAssignmentHistory, utilizationByMonth } from "@/lib/business/utilization";
@@ -102,42 +103,17 @@ export default async function LicensesPage(props: { searchParams: Promise<Search
         />
       </div>
 
-      <form method="get" action="/business/licenses" className="mt-5 flex flex-wrap items-end gap-2">
-        {view !== "all" && <input type="hidden" name="view" value={view} />}
-        <label className="text-[12px] text-faint">
-          <span className="mb-1 block">Department</span>
-          <select name="department" defaultValue={department ?? ""} className="biz-select">
-            <option value="">All departments</option>
-            <option value="none">No department</option>
-            {departments
-              .filter((d) => !d.archivedAt)
-              .map((d) => (
-                <option key={d.id} value={d.id}>
-                  {d.name}
-                </option>
-              ))}
-          </select>
-        </label>
-        <label className="text-[12px] text-faint">
-          <span className="mb-1 block">Vendor</span>
-          <select name="vendor" defaultValue={vendor ?? ""} className="biz-select">
-            <option value="">All vendors</option>
-            {vendors.map((v) => (
-              <option key={v.id} value={v.id}>
-                {v.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <button type="submit" className="btn btn-secondary h-9 rounded-[9px] px-3 text-[13px]">
-          Apply
-        </button>
-        {(department || vendor) && (
-          <Link href={qs({ department: undefined, vendor: undefined })} className="h-9 px-2 text-[13px] leading-9 text-muted hover:text-fg">
-            Clear
-          </Link>
-        )}
-      </form>
+      <div className="mt-5">
+        <FilterBar
+          action="/business/licenses"
+          label="Filter licenses"
+          keep={{ view: view !== "all" ? view : null }}
+          inline={[
+            { name: "department", label: "Department", value: department ?? null, allLabel: "All", options: [{ value: "none", label: "No department" }, ...departments.filter((d) => !d.archivedAt).map((d) => ({ value: d.id, label: d.name }))] },
+            { name: "vendor", label: "Vendor", value: vendor ?? null, allLabel: "All", options: vendors.map((v) => ({ value: v.id, label: v.name })) },
+          ]}
+        />
+      </div>
 
       <div className="mt-5 grid gap-5 xl:grid-cols-3">
         <Card
@@ -162,7 +138,7 @@ export default async function LicensesPage(props: { searchParams: Promise<Search
             </EmptyState>
           ) : (
             <TableWrap>
-              <table className="biz-table">
+              <table className="biz-table stack">
                 <thead>
                   <tr>
                     <th>Software</th>
@@ -180,7 +156,7 @@ export default async function LicensesPage(props: { searchParams: Promise<Search
                 <tbody>
                   {rows.map(({ s, seats }) => (
                     <tr key={s.id}>
-                      <td className="min-w-44">
+                      <td className="max-sm:min-w-0 max-sm:flex-1 max-sm:basis-[60%] sm:min-w-44">
                         <span className="flex items-center gap-2.5">
                           <SoftwareLogo name={s.softwareName} src={s.logoSrc} size={30} />
                           <span className="min-w-0">
@@ -194,14 +170,16 @@ export default async function LicensesPage(props: { searchParams: Promise<Search
                           </span>
                         </span>
                       </td>
-                      <td className="num">{seats.purchased}</td>
-                      <td className="num">
+                      <td className="num max-sm:order-1 max-sm:pl-10" data-label="Purchased">
+                        {seats.purchased}
+                      </td>
+                      <td className="num max-sm:order-1" data-label="In use">
                         {seats.assigned}
-                        <span className="block text-[11.5px] text-faint">
+                        <span className="block text-[11.5px] text-faint max-sm:hidden">
                           {seats.assignedSource === "named" ? "named" : seats.assignedSource === "reported" ? "reported" : "none recorded"}
                         </span>
                       </td>
-                      <td className="num">
+                      <td className="num stack-hide" data-label="Free">
                         {seats.available}
                         {seats.overAssigned && (
                           <Pill tone="warn" className="ml-1">
@@ -209,16 +187,16 @@ export default async function LicensesPage(props: { searchParams: Promise<Search
                           </Pill>
                         )}
                       </td>
-                      <td>
+                      <td className="stack-hide">
                         <Meter value={seats.utilization} label={`${s.softwareName} utilization`} tone={seats.utilization !== null && seats.utilization < 60 ? "warn" : "accent"} />
                       </td>
-                      <td className="num">
+                      <td className="num stack-hide">
                         {seats.costPerSeatMonthly !== null ? formatMoney(Math.round(seats.costPerSeatMonthly), s.currency) : <span className="text-faint" title="Flat price or no price: no per-seat cost">—</span>}
                       </td>
-                      <td className="num">
+                      <td className="num max-sm:order-1" data-label="Unused">
                         {seats.unusedMonthly !== null ? (seats.unusedMonthly > 0 ? formatMoney(Math.round(seats.unusedMonthly), s.currency) : formatMoney(0, s.currency)) : <span className="text-faint">—</span>}
                       </td>
-                      <td>
+                      <td className="max-sm:-my-1 max-sm:self-start">
                         <LinkButton href={`/business/licenses/${s.id}`} variant="ghost">
                           Manage
                         </LinkButton>

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
-import { createDemoAction } from "@/app/business/actions/workspace";
 import { BarList, DonutChart, RadialGauge, RenewalTimeline, Sparkline, StackedBar, TrendChart, type TimelineItem } from "@/components/business/charts";
 import { Aurora, SpotlightGroup } from "@/components/business/motion";
 import { LogoStack, SoftwareLogo, SoftwareName } from "@/components/business/software-logo";
@@ -132,13 +131,6 @@ export default async function DashboardPage() {
                   <Link href="/business/subscriptions/new" className={buttonClass("primary", "md")}>
                     <Icon name="plus" size={15} /> Add software
                   </Link>
-                )}
-                {!ctx.memberships.some((m) => m.isDemo) && (
-                  <form action={createDemoAction}>
-                    <button type="submit" className={buttonClass("secondary", "md")}>
-                      Explore the demo workspace
-                    </button>
-                  </form>
                 )}
               </div>
             }

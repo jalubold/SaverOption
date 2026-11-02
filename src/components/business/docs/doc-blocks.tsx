@@ -13,10 +13,10 @@ import { neighbours } from "./nav-items";
 
 /** Rendering for the structured docs content (server components). */
 
-export function Table({ head, rows, caption }: { head: ReactNode[]; rows: ReactNode[][]; caption?: string }) {
+export function Table({ head, rows, caption, minWidth = "min-w-[520px]" }: { head: ReactNode[]; rows: ReactNode[][]; caption?: string; /** Below this width the table scrolls sideways rather than squeezing its columns. */ minWidth?: string }) {
   return (
     <div className="my-4 overflow-x-auto rounded-xl border border-line">
-      <table className="w-full min-w-[520px] border-collapse text-left text-[14px]">
+      <table className={cn("w-full border-collapse text-left text-[14px]", minWidth)}>
         {caption && <caption className="sr-only">{caption}</caption>}
         <thead className="bg-subtle">
           <tr>
@@ -82,6 +82,23 @@ function inputsOf(schema: ObjectSchema): ReactNode {
 export function ToolsTable() {
   return (
     <>
+      <ul className="my-4 divide-y divide-line rounded-xl border border-line sm:hidden" aria-label="MCP tools">
+        {tools.map((t) => (
+          <li key={t.name} className="space-y-1.5 px-3.5 py-3">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <code className="break-all font-mono text-[13px] font-medium text-fg">{t.name}</code>
+              {t.write && <span className="rounded bg-warn-soft px-1.5 text-[11px] font-semibold text-warn">Changes records</span>}
+            </div>
+            <p className="text-[14px] leading-relaxed text-muted">
+              <strong className="font-semibold text-fg">{t.title}.</strong> {t.description}
+            </p>
+            <div className="flex flex-wrap items-center gap-1.5 text-[12.5px] text-faint">
+              <span>Inputs:</span> {inputsOf(t.inputSchema)}
+            </div>
+          </li>
+        ))}
+      </ul>
+      <div className="hidden sm:block">
       <Table
         caption="MCP tools"
         head={["Tool", "What it does", "Inputs (* required)"]}
@@ -97,6 +114,7 @@ export function ToolsTable() {
           inputsOf(t.inputSchema),
         ])}
       />
+      </div>
       <p>Tools marked “Changes records” appear only on connections approved with read and change access.</p>
     </>
   );
@@ -106,6 +124,7 @@ export function ClientsTable() {
   return (
     <Table
       caption="AI client compatibility"
+      minWidth="min-w-[860px]"
       head={["Client", "Status", "Last verified", "Read tools", "Write tools", "What the vendor documents"]}
       rows={mcpClients.map((c) => [
         <Link key="n" href={`/business/docs/mcp/${c.id}`}>

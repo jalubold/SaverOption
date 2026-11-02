@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { createDemoAction, switchWorkspaceAction } from "@/app/business/actions/workspace";
+import { switchWorkspaceAction } from "@/app/business/actions/workspace";
 import type { BillingNotice, TrialBadge } from "@/lib/business/billing";
 import { roleLabels } from "@/lib/business/constants";
 import { can } from "@/lib/business/permissions";
@@ -99,7 +99,6 @@ function Avatar({ name, src, size = 28 }: { name: string; src: string | null; si
 }
 
 function WorkspaceSwitcher({ ctx, collapsed }: { ctx: BizContext; collapsed?: boolean }) {
-  const hasDemo = ctx.memberships.some((m) => m.isDemo);
   const trigger = (
     <span className={cn("flex w-full items-center gap-2.5 rounded-lg border border-line px-2 py-2 text-left hover:bg-subtle", collapsed && "justify-center border-0 px-0")}>
       <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-subtle text-[12px] font-semibold text-fg">{ctx.workspace.name.slice(0, 1).toUpperCase()}</span>
@@ -135,13 +134,6 @@ function WorkspaceSwitcher({ ctx, collapsed }: { ctx: BizContext; collapsed?: bo
         <Link href="/business/onboarding?new=1" className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-[13px] text-muted hover:bg-subtle hover:text-fg">
           <Icon name="plus" size={14} /> Create a workspace
         </Link>
-        {!hasDemo && (
-          <form action={createDemoAction}>
-            <button type="submit" className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-[13px] text-muted hover:bg-subtle hover:text-fg">
-              <Icon name="sparkles" size={14} /> Open a demo workspace
-            </button>
-          </form>
-        )}
       </div>
     </Popover>
   );
@@ -310,9 +302,10 @@ export function AppShell({ ctx, unread, notice, plan, children }: { ctx: BizCont
       {ctx.workspace.isDemo && (
         <div className="border-b border-warn/30 bg-warn-soft px-4 py-2 text-[12.5px] text-fg sm:px-6">
           <Icon name="info" size={13} className="mr-1.5 inline text-warn" />
-          <strong className="font-semibold">Demo workspace.</strong> Northwind Studio is a fictional company with sample prices — not real customer data or vendor quotes. Reset it any time in{" "}
+          <strong className="font-semibold">Demo workspace.</strong> Northwind Studio is a fictional company with sample prices — not real customer data or vendor quotes. Demos
+          aren&apos;t offered any more; you can delete this one under{" "}
           <Link href="/business/settings" className="underline underline-offset-2">
-            Settings
+            Settings → Danger zone
           </Link>
           .
         </div>

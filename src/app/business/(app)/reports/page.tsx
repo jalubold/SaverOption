@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { BarList, DonutChart, RadialGauge, StackedBar, TrendChart, type BarRow } from "@/components/business/charts";
 import { SoftwareLogo } from "@/components/business/software-logo";
 import { GenerateReportForm } from "@/components/business/report-forms";
+import { FilterBar } from "@/components/business/filter-bar";
 import { Card, EmptyState, FxNoteLine, InlineNote, Kpi, Meter, Money, PageHeader, Pill, StatusPill, TableWrap } from "@/components/business/ui";
 import { workspaceDisplay } from "@/lib/server/business/display-currency";
 import { listSavedReports } from "@/lib/server/business/savings-report";
@@ -67,72 +68,21 @@ export default async function ReportsPage(props: { searchParams: Promise<Raw> })
   const categoryTotal = categoryRows.reduce((t, r) => t + r.value, 0);
 
   const controls = (
-    <form method="get" action="/business/reports" className="biz-card mb-5 flex flex-wrap items-end gap-3 px-4 py-3">
-      <Control label="Date range">
-        <select name="range" defaultValue={params.preset} className="biz-select">
-          {RANGE_PRESETS.map((r) => (
-            <option key={r} value={r}>
-              {rangeLabels[r]}
-            </option>
-          ))}
-        </select>
-      </Control>
-      <Control label="From (custom)">
-        <input type="date" name="from" defaultValue={params.from} className="biz-select pr-2" />
-      </Control>
-      <Control label="To (custom)">
-        <input type="date" name="to" defaultValue={params.to} className="biz-select pr-2" />
-      </Control>
-      <Control label="Billed in">
-        <select name="currency" defaultValue={params.currency ?? ""} className="biz-select">
-          <option value="">Any currency</option>
-          {options.currencies.map((c) => (
-            <option key={c} value={c}>
-              {c}
-            </option>
-          ))}
-        </select>
-      </Control>
-      <Control label="Category">
-        <select name="category" defaultValue={params.category ?? ""} className="biz-select">
-          <option value="">All categories</option>
-          {SOFTWARE_CATEGORIES.map((c) => (
-            <option key={c} value={c}>
-              {categoryLabels[c]}
-            </option>
-          ))}
-        </select>
-      </Control>
-      <Control label="Department">
-        <select name="department" defaultValue={params.department ?? ""} className="biz-select">
-          <option value="">All departments</option>
-          <option value="none">No department</option>
-          {options.departments.map((d) => (
-            <option key={d.id} value={d.id}>
-              {d.name}
-            </option>
-          ))}
-        </select>
-      </Control>
-      <Control label="Vendor">
-        <select name="vendor" defaultValue={params.vendor ?? ""} className="biz-select max-w-48">
-          <option value="">All vendors</option>
-          {options.vendors.map((v) => (
-            <option key={v.id} value={v.id}>
-              {v.name}
-            </option>
-          ))}
-        </select>
-      </Control>
-      <div className="flex items-center gap-2">
-        <button type="submit" className={buttonClass("primary", "sm", "h-9")}>
-          Apply
-        </button>
-        <Link href="/business/reports" className={buttonClass("ghost", "sm", "h-9")}>
-          Reset
-        </Link>
-      </div>
-    </form>
+    <FilterBar
+      action="/business/reports"
+      label="Filter the report"
+      inline={[
+        { name: "range", label: "Dates", value: params.preset, options: RANGE_PRESETS.map((r) => ({ value: r, label: rangeLabels[r] })) },
+        { name: "from", label: "From", value: params.from, type: "date", showIf: { name: "range", value: "custom" } },
+        { name: "to", label: "To", value: params.to, type: "date", showIf: { name: "range", value: "custom" } },
+      ]}
+      more={[
+        { name: "currency", label: "Billed in", value: params.currency, allLabel: "Any currency", options: options.currencies.map((c) => ({ value: c, label: c })) },
+        { name: "category", label: "Category", value: params.category, allLabel: "All categories", options: SOFTWARE_CATEGORIES.map((c) => ({ value: c, label: categoryLabels[c] })) },
+        { name: "department", label: "Department", value: params.department, allLabel: "All departments", options: [{ value: "none", label: "No department" }, ...options.departments.map((d) => ({ value: d.id, label: d.name }))] },
+        { name: "vendor", label: "Vendor", value: params.vendor, allLabel: "All vendors", options: options.vendors.map((v) => ({ value: v.id, label: v.name })) },
+      ]}
+    />
   );
 
   const header = (
@@ -592,7 +542,7 @@ export default async function ReportsPage(props: { searchParams: Promise<Raw> })
           <p className="text-[13.5px] text-muted">No activity in this period.</p>
         ) : (
           <TableWrap>
-            <table className="biz-table">
+            <table className="biz-table stack">
               <thead>
                 <tr>
                   <th>Date</th>
@@ -603,12 +553,12 @@ export default async function ReportsPage(props: { searchParams: Promise<Raw> })
               <tbody>
                 {report.activity.map((a) => (
                   <tr key={a.id}>
-                    <td className="whitespace-nowrap">
+                    <td className="whitespace-nowrap max-sm:order-1 max-sm:text-[12px] max-sm:text-muted">
                       {formatIsoDate(a.createdAt.toISOString().slice(0, 10), fmt)}{" "}
                       <span className="text-faint">{a.createdAt.toISOString().slice(11, 16)} UTC</span>
                     </td>
-                    <td className="whitespace-nowrap">{a.actorName ?? "—"}</td>
-                    <td>{a.summary}</td>
+                    <td className="whitespace-nowrap max-sm:order-1 max-sm:text-[12px] max-sm:text-muted">{a.actorName ?? "—"}</td>
+                    <td className="stack-full max-sm:order-first">{a.summary}</td>
                   </tr>
                 ))}
               </tbody>
@@ -617,15 +567,6 @@ export default async function ReportsPage(props: { searchParams: Promise<Raw> })
         )}
       </Card>
     </>
-  );
-}
-
-function Control({ label, children }: { label: string; children: ReactNode }) {
-  return (
-    <label className="text-[12.5px] text-muted">
-      <span className="mb-1 block">{label}</span>
-      {children}
-    </label>
   );
 }
 

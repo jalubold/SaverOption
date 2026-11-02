@@ -72,16 +72,19 @@ export default async function NotificationsPage() {
                         {!n.readAt && <Pill tone="accent">Unread</Pill>}
                       </div>
                       {n.body && <p className="mt-0.5 text-[13px] text-muted">{n.body}</p>}
-                      <p className="mt-1 text-[12px] text-faint">{formatIsoDate(n.createdAt.toISOString().slice(0, 10), fmt)}</p>
+                      {/* The date and "Mark read" share a line under the text, so the text keeps the full width on phones. */}
+                      <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
+                        <p className="text-[12px] text-faint">{formatIsoDate(n.createdAt.toISOString().slice(0, 10), fmt)}</p>
+                        {!n.readAt && (
+                          <ActionForm action={markNotificationReadAction} workspaceId={ws} showMessages={false} className="inline">
+                            <input type="hidden" name="notificationId" value={n.id} />
+                            <Submit variant="ghost" size="sm" pendingLabel="…" className="-my-1 h-7 px-2 text-[12.5px]">
+                              Mark read
+                            </Submit>
+                          </ActionForm>
+                        )}
+                      </div>
                     </div>
-                    {!n.readAt && (
-                      <ActionForm action={markNotificationReadAction} workspaceId={ws} showMessages={false}>
-                        <input type="hidden" name="notificationId" value={n.id} />
-                        <Submit variant="ghost" size="sm" pendingLabel="…">
-                          Mark read
-                        </Submit>
-                      </ActionForm>
-                    )}
                   </li>
                 );
               })}
@@ -90,7 +93,7 @@ export default async function NotificationsPage() {
         </Card>
         <aside className="min-w-0">
           <InlineNote title="About notifications">
-            Renewal and cancellation-deadline reminders are delivered here, in the app. Email isn&apos;t sent — no email provider is configured.{" "}
+            Renewal and cancellation-deadline reminders show up here, in the app. Email reminders aren&apos;t available yet.{" "}
             <Link href="/business/settings/notifications" className="text-accent-ink underline underline-offset-2">
               Reminder settings
             </Link>

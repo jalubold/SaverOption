@@ -386,6 +386,51 @@
       padding-right: 0.55rem;
     }
   }
+  /* Tables marked "stack": on phones each row becomes a small card whose cells flow on wrapping
+     lines, instead of columns that scroll sideways (and hide the row's buttons off screen). A cell
+     can take a whole line (stack-full), go to the right (stack-end), be left out (stack-hide) or
+     carry its column's name (data-label). */
+  @media (max-width: 639px) {
+    .biz-table.stack,
+    .biz-table.stack tbody {
+      display: block;
+    }
+    .biz-table.stack thead {
+      display: none;
+    }
+    .biz-table.stack tr {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.4rem 0.75rem;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .biz-table.stack tbody tr:last-child {
+      border-bottom: 0;
+    }
+    .biz-table.stack td {
+      padding: 0;
+      border: 0;
+      background: none;
+      text-align: left;
+    }
+    .biz-table.stack .stack-full {
+      flex-basis: 100%;
+      min-width: 0;
+    }
+    .biz-table.stack .stack-end {
+      margin-left: auto;
+    }
+    .biz-table.stack .stack-hide {
+      display: none;
+    }
+    .biz-table.stack td[data-label]::before {
+      content: attr(data-label) " ";
+      color: var(--faint);
+      font-size: 12px;
+    }
+  }
   .biz-select {
     height: 2.25rem;
     border-radius: 9px;

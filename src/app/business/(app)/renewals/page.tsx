@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { RenewalTimeline, type TimelineItem } from "@/components/business/charts";
 import { RecordRenewalForm, RenewalDecisionForm } from "@/components/business/record-forms";
 import { SoftwareLogo } from "@/components/business/software-logo";
+import { FilterBar } from "@/components/business/filter-bar";
 import { BilledAs, Card, EmptyState, FxNoteLine, InlineNote, LinkButton, Money, PageHeader, Pill, StatusPill, TableWrap, Tabs } from "@/components/business/ui";
 import { Icon } from "@/components/ui/icon";
 import { cn } from "@/components/ui/primitives";
@@ -170,21 +171,12 @@ function Upcoming({ ctx, live, windowParam }: { ctx: BizContext; live: Subscript
         title={`Renewing in the next ${win === 365 ? "12 months" : `${win} days`}`}
         description="Expected amounts are each subscription's current price per billing period."
         action={
-          <form method="get" action="/business/renewals" className="flex items-center gap-2">
-            <label htmlFor="renewal-window" className="sr-only">
-              Window
-            </label>
-            <select id="renewal-window" name="window" defaultValue={String(win)} className="biz-select">
-              {WINDOWS.map((w) => (
-                <option key={w} value={w}>
-                  {w === 365 ? "Next 12 months" : `Next ${w} days`}
-                </option>
-              ))}
-            </select>
-            <button type="submit" className="btn btn-secondary h-9 rounded-[9px] px-3 text-[13px]">
-              Show
-            </button>
-          </form>
+          <FilterBar
+            action="/business/renewals"
+            label="Choose the renewal window"
+            className=""
+            inline={[{ name: "window", label: "Show", value: String(win), options: WINDOWS.map((w) => ({ value: String(w), label: w === 365 ? "Next 12 months" : `Next ${w} days` })) }]}
+          />
         }
       >
         {rows.length === 0 ? (
@@ -199,7 +191,7 @@ function Upcoming({ ctx, live, windowParam }: { ctx: BizContext; live: Subscript
               {unpriced > 0 && <span className="text-faint">· {unpriced} without a price</span>}
             </div>
             <TableWrap>
-              <table className="biz-table">
+              <table className="biz-table stack">
                 <thead>
                   <tr>
                     <th>Software</th>
@@ -220,7 +212,7 @@ function Upcoming({ ctx, live, windowParam }: { ctx: BizContext; live: Subscript
                     const deadlineDays = s.cancellationDeadline ? daysBetween(ctx.today, s.cancellationDeadline) : null;
                     return (
                       <tr key={s.id}>
-                        <td className="min-w-36 sm:min-w-44">
+                        <td className="max-sm:min-w-0 max-sm:flex-1 max-sm:basis-[55%] sm:min-w-44">
                           <span className="flex items-center gap-2.5">
                             <SoftwareLogo name={s.softwareName} src={s.logoSrc} size={30} />
                             <span className="min-w-0">
@@ -231,29 +223,29 @@ function Upcoming({ ctx, live, windowParam }: { ctx: BizContext; live: Subscript
                             </span>
                           </span>
                         </td>
-                        <td className="whitespace-nowrap">
+                        <td className="whitespace-nowrap max-sm:order-1 max-sm:pl-10 max-sm:text-[12.5px]">
                           {formatIsoDate(s.nextRenewalDate, fmt)}
-                          <span className={cn("block text-[12px]", days <= 7 ? "text-warn" : "text-faint")}>{days === 0 ? "Today" : `${days} day${days === 1 ? "" : "s"}`}</span>
+                          <span className={cn("block text-[12px] max-sm:ml-1.5 max-sm:inline", days <= 7 ? "text-warn" : "text-faint")}>{days === 0 ? "Today" : `${days} day${days === 1 ? "" : "s"}`}</span>
                         </td>
-                        <td className="num">
+                        <td className="num max-sm:self-start max-sm:font-semibold">
                           {s.priceMinor !== null ? formatMoney(s.priceMinor, s.currency) : <span className="text-faint">—</span>}
                           <BilledAs original={s.original} />
                         </td>
-                        <td className="whitespace-nowrap">{intervalLabel(s)}</td>
-                        <td>{s.autoRenew ? "Yes" : <Pill>Manual</Pill>}</td>
-                        <td className="whitespace-nowrap">
+                        <td className="stack-hide whitespace-nowrap">{intervalLabel(s)}</td>
+                        <td className="stack-hide">{s.autoRenew ? "Yes" : <Pill>Manual</Pill>}</td>
+                        <td className="stack-hide whitespace-nowrap">
                           {s.cancellationDeadline ? (
                             <span className={cn(deadlineDays !== null && deadlineDays >= 0 && deadlineDays <= 14 && "text-warn")}>{formatIsoDate(s.cancellationDeadline, fmt)}</span>
                           ) : (
                             <span className="text-faint">—</span>
                           )}
                         </td>
-                        <td className="whitespace-nowrap">{s.contractEndDate ? formatIsoDate(s.contractEndDate, fmt) : <span className="text-faint">—</span>}</td>
-                        <td className="whitespace-nowrap">{s.renewalOwnerName ?? s.ownerName ?? <span className="text-faint">—</span>}</td>
-                        <td>
+                        <td className="stack-hide whitespace-nowrap">{s.contractEndDate ? formatIsoDate(s.contractEndDate, fmt) : <span className="text-faint">—</span>}</td>
+                        <td className="stack-hide whitespace-nowrap">{s.renewalOwnerName ?? s.ownerName ?? <span className="text-faint">—</span>}</td>
+                        <td className="max-sm:order-1">
                           <Pill tone={s.renewalDecision === "undecided" ? "outline" : s.renewalDecision === "cancel" ? "warn" : "accent"}>{renewalDecisionLabels[s.renewalDecision]}</Pill>
                         </td>
-                        <td>
+                        <td className="stack-hide">
                           <StatusPill status={s.status} label={subscriptionStatusLabels[s.status]} />
                         </td>
                       </tr>
@@ -551,7 +543,7 @@ function History({ ctx, events, logos }: { ctx: BizContext; events: Awaited<Retu
         </EmptyState>
       ) : (
         <TableWrap>
-          <table className="biz-table">
+          <table className="biz-table stack">
             <thead>
               <tr>
                 <th>Renewal date</th>
@@ -565,8 +557,8 @@ function History({ ctx, events, logos }: { ctx: BizContext; events: Awaited<Retu
             <tbody>
               {events.map((e) => (
                 <tr key={e.id}>
-                  <td className="whitespace-nowrap">{formatIsoDate(e.renewalDate, fmt)}</td>
-                  <td className="min-w-40">
+                  <td className="whitespace-nowrap max-sm:order-1 max-sm:pl-9 max-sm:text-[12.5px] max-sm:text-muted">{formatIsoDate(e.renewalDate, fmt)}</td>
+                  <td className="stack-full max-sm:order-first sm:min-w-40">
                     <span className="flex items-center gap-2.5">
                       <SoftwareLogo name={e.softwareName} src={logos.get(e.subscriptionId) ?? null} size={26} />
                       <Link href={`/business/subscriptions/${e.subscriptionId}`} className="font-medium hover:underline">
@@ -574,15 +566,15 @@ function History({ ctx, events, logos }: { ctx: BizContext; events: Awaited<Retu
                       </Link>
                     </span>
                   </td>
-                  <td>
+                  <td className="max-sm:order-1">
                     <Pill tone={e.outcome === "cancelled" ? "outline" : e.outcome === "renegotiated" ? "accent" : "success"}>{outcomeLabels[e.outcome]}</Pill>
                   </td>
-                  <td className="num">
+                  <td className="num stack-end max-sm:order-2 max-sm:font-semibold">
                     {e.amountMinor !== null ? formatMoney(e.amountMinor, e.currency) : <span className="text-faint">—</span>}
                     <BilledAs original={e.original} field="amountMinor" />
                   </td>
-                  <td className="whitespace-nowrap">{e.newRenewalDate ? formatIsoDate(e.newRenewalDate, fmt) : <span className="text-faint">—</span>}</td>
-                  <td className="max-w-64 text-[12.5px] text-muted">{e.notes ?? "—"}</td>
+                  <td className="stack-hide whitespace-nowrap">{e.newRenewalDate ? formatIsoDate(e.newRenewalDate, fmt) : <span className="text-faint">—</span>}</td>
+                  <td className={cn("max-w-64 text-[12.5px] text-muted max-sm:order-3 max-sm:max-w-none max-sm:basis-full max-sm:pl-9", !e.notes && "max-sm:hidden")}>{e.notes ?? "—"}</td>
                 </tr>
               ))}
             </tbody>

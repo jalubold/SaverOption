@@ -3,6 +3,7 @@ import { deleteRealizedSavingAction, recordRealizedSavingAction, setOpportunityS
 import { BarList, type BarRow } from "@/components/business/charts";
 import { ActionForm, ConfirmSubmit, SelectField, Submit, TextAreaField, TextField } from "@/components/business/forms";
 import { SoftwareLogo } from "@/components/business/software-logo";
+import { FilterBar } from "@/components/business/filter-bar";
 import { BilledAs, Card, EmptyState, FxNoteLine, Kpi, LinkButton, Money, PageHeader, Pagination, Pill, StatusPill, TableWrap, Tabs } from "@/components/business/ui";
 import { Icon } from "@/components/ui/icon";
 import { firstYearValue, formatIsoDate, formatMoney, minorToInput, potentialSavings, realizedTotals, totalsList } from "@/lib/business/calc";
@@ -174,37 +175,15 @@ export default async function SavingsPage(props: { searchParams: Promise<Raw> })
 
       <div className="mt-6">
         <Tabs items={STATUS_VIEWS.map((v) => ({ label: viewLabels[v], href: query({ status: v }), active: v === view, count: opps.filter((o) => inView(o, v)).length }))} />
-        <form method="get" action="/business/savings" className="mb-4 flex flex-wrap items-end gap-2">
-          {view !== "open" && <input type="hidden" name="status" value={view} />}
-          <label className="text-[12.5px] text-muted">
-            <span className="mb-1 block">Type</span>
-            <select name="type" defaultValue={type ?? ""} className="biz-select">
-              <option value="">All types</option>
-              {OPPORTUNITY_TYPES.map((t) => (
-                <option key={t} value={t}>
-                  {opportunityTypeLabels[t]}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="text-[12.5px] text-muted">
-            <span className="mb-1 block">Confidence</span>
-            <select name="confidence" defaultValue={confidence ?? ""} className="biz-select">
-              <option value="">Any confidence</option>
-              <option value="high">High</option>
-              <option value="medium">Medium</option>
-              <option value="low">Low</option>
-            </select>
-          </label>
-          <button type="submit" className="btn btn-secondary h-9 rounded-[9px] px-3 text-[13px]">
-            Apply
-          </button>
-          {(type || confidence) && (
-            <Link href={query({ type: null, confidence: null })} className="h-9 px-2 text-[13px] leading-9 text-muted hover:text-fg">
-              Clear filters
-            </Link>
-          )}
-        </form>
+        <FilterBar
+          action="/business/savings"
+          label="Filter savings opportunities"
+          keep={{ status: view !== "open" ? view : null }}
+          inline={[
+            { name: "type", label: "Type", value: type, allLabel: "All", options: OPPORTUNITY_TYPES.map((t) => ({ value: t, label: opportunityTypeLabels[t] })) },
+            { name: "confidence", label: "Confidence", value: confidence, allLabel: "Any", options: [{ value: "high", label: "High" }, { value: "medium", label: "Medium" }, { value: "low", label: "Low" }] },
+          ]}
+        />
 
         {opps.length === 0 ? (
           <Card>
@@ -384,8 +363,8 @@ function OpportunityCard({
   const defaultCurrency = billedCurrency ?? subscription?.currency ?? ctx.pref;
   return (
     <li id={o.id} className="biz-card scroll-mt-24 px-4 py-4 sm:px-5">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="flex min-w-0 flex-1 items-start gap-3.5">
+      {/* On phones the estimate goes under the title; from sm up it sits on the right. */}
+      <div className="flex items-start gap-3 sm:gap-3.5">
           {logo ? (
             <SoftwareLogo name={logo.name} src={logo.src} size={44} className="mt-0.5" />
           ) : (
@@ -393,6 +372,7 @@ function OpportunityCard({
               <Icon name="piggy" size={20} />
             </span>
           )}
+        <div className="flex min-w-0 flex-1 flex-col gap-2.5 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
           <div className="min-w-0">
             <div className="mb-1.5 flex flex-wrap items-center gap-1.5">
               <Pill tone="outline">{opportunityTypeLabels[o.type]}</Pill>
@@ -419,9 +399,8 @@ function OpportunityCard({
               Last detected {formatIsoDate(o.lastDetectedAt.toISOString().slice(0, 10), ctx.fmt)}
             </p>
           </div>
-        </div>
-        <div className="text-right">
-          {estimate ? (
+          <div className="shrink-0 sm:text-right" data-opportunity-estimate>
+            {estimate ? (
             <>
               <p className="tabular text-[17px] font-semibold text-heading">
                 <Money totals={estimate.annual} /> <span className="text-[12.5px] font-normal text-faint">/yr</span>
@@ -431,8 +410,9 @@ function OpportunityCard({
               </p>
             </>
           ) : (
-            <p className="max-w-48 text-[12.5px] text-faint">No estimate — needs a manual comparison</p>
-          )}
+              <p className="text-[12.5px] text-faint sm:max-w-48">No estimate — needs a manual comparison</p>
+            )}
+          </div>
         </div>
       </div>
       <p className="mt-3 text-[13.5px] text-muted">{o.explanation}</p>

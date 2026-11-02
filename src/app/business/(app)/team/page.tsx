@@ -55,7 +55,7 @@ export default async function TeamPage(props: { searchParams: Promise<Record<str
       <div className="grid gap-5 xl:grid-cols-3">
         <Card title="Workspace members" description="People who sign in to this workspace, with their role." className="xl:col-span-2">
           <TableWrap>
-            <table className="biz-table">
+            <table className="biz-table stack">
               <thead>
                 <tr>
                   <th>Name</th>
@@ -73,14 +73,16 @@ export default async function TeamPage(props: { searchParams: Promise<Record<str
                   const options = grantable.some((o) => o.value === m.role) ? grantable : [{ value: m.role, label: roleLabels[m.role] }, ...grantable];
                   return (
                     <tr key={m.id}>
-                      <td>
+                      <td className="stack-full">
                         <span className="font-medium">{m.name ?? m.email ?? "Unknown"}</span>
                         {self && <span className="ml-1.5 text-[12px] text-faint">(you)</span>}
                         {m.email && <span className="block text-[12.5px] text-faint">{m.email}</span>}
                       </td>
                       <td>{manageable ? <RoleSelectForm workspaceId={ws} membershipId={m.id} role={m.role} options={options} /> : <Pill tone={roleTone[m.role]}>{roleLabels[m.role]}</Pill>}</td>
-                      <td className="whitespace-nowrap">{formatIsoDate(m.createdAt.toISOString().slice(0, 10), fmt)}</td>
-                      <td className="num">
+                      <td className="whitespace-nowrap text-[12.5px] sm:text-[13.5px]" data-label="Joined">
+                        {formatIsoDate(m.createdAt.toISOString().slice(0, 10), fmt)}
+                      </td>
+                      <td className="num stack-end">
                         {manageable && <RemoveMemberButton workspaceId={ws} membershipId={m.id} name={m.name ?? m.email ?? "this member"} self={false} />}
                         {self && m.role !== "owner" && <RemoveMemberButton workspaceId={ws} membershipId={m.id} name="you" self />}
                       </td>
@@ -128,7 +130,7 @@ export default async function TeamPage(props: { searchParams: Promise<Record<str
                   Invited, not joined yet <span className="font-normal text-faint">· {invitations.length}</span>
                 </h3>
                 <TableWrap>
-                  <table className="biz-table">
+                  <table className="biz-table stack">
                     <thead>
                       <tr>
                         <th>Email</th>
@@ -142,12 +144,14 @@ export default async function TeamPage(props: { searchParams: Promise<Record<str
                     <tbody>
                       {invitations.map((i) => (
                         <tr key={i.id}>
-                          <td className="font-medium">{i.email}</td>
+                          <td className="stack-full break-all font-medium">{i.email}</td>
                           <td>
                             <Pill tone={roleTone[i.role]}>{roleLabels[i.role]}</Pill>
                           </td>
-                          <td className="whitespace-nowrap">{formatIsoDate(i.createdAt.toISOString().slice(0, 10), fmt)}</td>
-                          <td className="num">
+                          <td className="whitespace-nowrap text-[12.5px] sm:text-[13.5px]" data-label="Added">
+                            {formatIsoDate(i.createdAt.toISOString().slice(0, 10), fmt)}
+                          </td>
+                          <td className="num stack-end">
                             <span className="inline-flex items-center gap-2">
                               <Link href={`/business/team?invited=${i.id}#invite`} className={buttonClass("secondary", "sm")} data-share-invite>
                                 <Icon name="copy" size={13} /> Share invite
@@ -194,7 +198,7 @@ export default async function TeamPage(props: { searchParams: Promise<Record<str
           </EmptyState>
         ) : (
           <TableWrap>
-            <table className="biz-table">
+            <table className="biz-table stack">
               <thead>
                 <tr>
                   <th>Name</th>
@@ -210,21 +214,25 @@ export default async function TeamPage(props: { searchParams: Promise<Record<str
               <tbody>
                 {people.map((p) => (
                   <tr key={p.id}>
-                    <td>
+                    <td className="stack-full">
                       <span className="font-medium">{p.name}</span>
                       {p.userId && <Pill tone="accent" className="ml-1.5">App access</Pill>}
                       {p.email && <span className="block text-[12.5px] text-faint">{p.email}</span>}
                     </td>
-                    <td>{p.title ?? <span className="text-faint">—</span>}</td>
-                    <td>{p.departmentName ?? <span className="text-faint">—</span>}</td>
-                    <td className="num">
+                    <td className="max-sm:text-[12.5px] max-sm:text-muted">{p.title ?? <span className="text-faint">—</span>}</td>
+                    <td className="max-sm:text-[12.5px] max-sm:text-muted">{p.departmentName ?? <span className="text-faint">—</span>}</td>
+                    <td className="num" data-label="Seats">
                       <span className="inline-flex items-center justify-end gap-2">
-                        {(seatTools.get(p.id)?.length ?? 0) > 0 && <LogoStack items={seatTools.get(p.id)!} max={4} size={22} />}
+                        {(seatTools.get(p.id)?.length ?? 0) > 0 && (
+                          <span className="max-sm:hidden">
+                            <LogoStack items={seatTools.get(p.id)!} max={4} size={22} />
+                          </span>
+                        )}
                         <span className="tabular">{seatCount.get(p.id) ?? 0}</span>
                       </span>
                     </td>
                     <td>{p.status === "active" ? <Pill tone="success">Active</Pill> : <Pill tone="outline">Inactive</Pill>}</td>
-                    <td className="num">
+                    <td className="num stack-end">
                       {manageDirectory && (
                         <Link href={`/business/team?edit=${p.id}#people`} className="text-[13px] text-accent-ink hover:underline">
                           Edit

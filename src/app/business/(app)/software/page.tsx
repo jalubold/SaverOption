@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { LogoStack, SoftwareLogo } from "@/components/business/software-logo";
-import { SummaryStrip, StripStat } from "@/components/business/summary-strip";
+import { SummaryStrip } from "@/components/business/summary-strip";
+import { FilterBar } from "@/components/business/filter-bar";
 import { Card, EmptyState, FxNoteLine, InlineNote, LinkButton, Money, PageHeader, StatusPill, Tabs } from "@/components/business/ui";
-import { buttonClass, cn } from "@/components/ui/primitives";
+import { cn } from "@/components/ui/primitives";
 import { addTo, groupMonthly, isLive, type CurrencyTotals } from "@/lib/business/calc";
 import { categoryLabels, SOFTWARE_CATEGORIES, SOFTWARE_STATUSES, softwareStatusLabels, type SoftwareCategory, type SoftwareStatus } from "@/lib/business/constants";
 import { findPotentialDuplicates } from "@/lib/business/duplicates";
@@ -103,7 +104,6 @@ export default async function SoftwareInventoryPage(props: { searchParams: Promi
   const cost = (s: Software) => monthly.get(s.id)?.[pref] ?? 0;
   const ranked = [...rows].sort((a, b) => cost(b) - cost(a) || Number(Boolean(monthly.get(b.id))) - Number(Boolean(monthly.get(a.id))) || a.name.localeCompare(b.name));
   const canAdd = can(ctx.role, "records.manage");
-  const filtered = Boolean(f.q || f.category || f.status || f.vendor || f.department || f.owner);
 
   return (
     <>
@@ -181,58 +181,50 @@ export default async function SoftwareInventoryPage(props: { searchParams: Promi
             ]}
           />
 
-          <form method="get" className="mb-4 flex flex-wrap items-end gap-2" role="search" aria-label="Filter software">
-            {f.view === "grid" && <input type="hidden" name="view" value="grid" />}
-            <label className="text-[12px] text-muted">
-              <span className="block">Search</span>
-              <input
-                type="search"
-                name="q"
-                defaultValue={f.q}
-                placeholder="Name, vendor or purpose"
-                className="mt-1 h-9 w-56 rounded-[9px] border border-line-strong bg-surface px-3 text-[13.5px] outline-none focus:border-accent focus:ring-4 focus:ring-accent/15"
-              />
-            </label>
-            <FilterSelect label="Category" name="category" value={f.category} options={SOFTWARE_CATEGORIES.map((c) => ({ value: c, label: categoryLabels[c] }))} />
-            <FilterSelect label="Status" name="status" value={f.status} all="Current (not archived)" options={SOFTWARE_STATUSES.map((s) => ({ value: s, label: softwareStatusLabels[s] }))} />
-            <FilterSelect label="Vendor" name="vendor" value={f.vendor} options={[...vendors.map((v) => ({ value: v.id, label: v.name })), { value: "none", label: "No vendor" }]} />
-            <FilterSelect label="Department" name="department" value={f.department} options={[...departments.map((d) => ({ value: d.id, label: d.archivedAt ? `${d.name} (archived)` : d.name })), { value: "none", label: "No department" }]} />
-            <FilterSelect label="Owner" name="owner" value={f.owner} options={[...people.map((p) => ({ value: p.id, label: p.name })), { value: "none", label: "No owner" }]} />
-            <FilterSelect label="Group by" name="group" value={f.group} all="No grouping" options={[{ value: "vendor", label: "Vendor" }, { value: "category", label: "Category" }]} />
-            <button type="submit" className={buttonClass("secondary", "sm", "h-9")}>
-              Apply
-            </button>
-            {(filtered || f.group) && (
-              <Link href={`/business/software${f.view === "grid" ? "?view=grid" : ""}`} className="self-center text-[13px] text-accent-ink underline underline-offset-2">
-                Clear filters
-              </Link>
-            )}
-          </form>
+          <FilterBar
+            action="/business/software"
+            label="Filter software"
+            keep={{ view: f.view === "grid" ? "grid" : null }}
+            search={{ value: f.q, placeholder: "Search name, vendor or purpose" }}
+            inline={[{ name: "group", label: "Group", value: f.group, allLabel: "None", options: [{ value: "vendor", label: "Vendor" }, { value: "category", label: "Category" }] }]}
+            more={[
+              { name: "status", label: "Status", value: f.status, allLabel: "Current (not archived)", options: SOFTWARE_STATUSES.map((s) => ({ value: s, label: softwareStatusLabels[s] })) },
+              { name: "category", label: "Category", value: f.category, allLabel: "All categories", options: SOFTWARE_CATEGORIES.map((c) => ({ value: c, label: categoryLabels[c] })) },
+              { name: "vendor", label: "Vendor", value: f.vendor, allLabel: "All vendors", options: [...vendors.map((v) => ({ value: v.id, label: v.name })), { value: "none", label: "No vendor" }] },
+              { name: "department", label: "Department", value: f.department, allLabel: "All departments", options: [...departments.map((d) => ({ value: d.id, label: d.archivedAt ? `${d.name} (archived)` : d.name })), { value: "none", label: "No department" }] },
+              { name: "owner", label: "Owner", value: f.owner, allLabel: "Anyone", options: [...people.map((p) => ({ value: p.id, label: p.name })), { value: "none", label: "No owner" }] },
+            ]}
+          />
 
           {rows.length > 0 && (
             <SummaryStrip
               label="Summary of this view"
-              aside={
-                <>
-                  <LogoStack items={ranked.map((s) => ({ name: s.name, src: s.logoSrc }))} max={7} size={28} />
-                  <span className="text-[12px] text-faint">
-                    {rows.length} record{rows.length === 1 ? "" : "s"}
-                  </span>
-                </>
+              figure={
+                f.status === "archived"
+                  ? undefined
+                  : {
+                      label: "Monthly equivalent",
+                      value: (
+                        <span className="inline-flex items-baseline gap-1">
+                          <Money totals={groupTotal(rows)} preferred={pref} />
+                          <span className="text-[13px] font-normal text-faint">/mo</span>
+                        </span>
+                      ),
+                      sub: "Active plans with a price",
+                    }
               }
-            >
-              {f.status === "archived" ? (
-                <StripStat label="Archived" value={rows.length} />
-              ) : (
-                <>
-                  <StripStat label="Active" value={statusCount("active")} />
-                  <StripStat label="Evaluating" value={statusCount("evaluating")} />
-                  <StripStat label="Deprecated" value={statusCount("deprecated")} tone={statusCount("deprecated") > 0 ? "warn" : undefined} />
-                  <StripStat label="No live plan" value={unpaid} sub="Free, unpaid or untracked" />
-                  <StripStat label="Monthly equivalent" value={<Money totals={groupTotal(rows)} preferred={pref} />} sub="Active, priced plans" />
-                </>
-              )}
-            </SummaryStrip>
+              counts={
+                f.status === "archived"
+                  ? [{ value: rows.length, label: "archived" }]
+                  : [
+                      { value: statusCount("active"), label: "active" },
+                      { value: statusCount("evaluating"), label: "evaluating", hideZero: true },
+                      { value: statusCount("deprecated"), label: "deprecated", tone: "warn", hideZero: true },
+                      { value: unpaid, label: "with no live plan", hideZero: true },
+                    ]
+              }
+              aside={<LogoStack items={ranked.map((s) => ({ name: s.name, src: s.logoSrc }))} max={7} size={28} />}
+            />
           )}
 
           {rows.length === 0 ? (
@@ -290,8 +282,8 @@ export default async function SoftwareInventoryPage(props: { searchParams: Promi
                     </ul>
                   ) : (
                     <Card bodyClassName="px-0 py-0">
-                      <div className="overflow-x-auto">
-                        <table className="biz-table">
+                      <div className="overflow-x-auto max-sm:-mx-4 max-sm:-my-4">
+                        <table className="biz-table stack">
                           <thead>
                             <tr>
                               <th>Software</th>
@@ -309,7 +301,7 @@ export default async function SoftwareInventoryPage(props: { searchParams: Promi
                               const c = counts.get(s.id) ?? { live: 0, total: 0 };
                               return (
                                 <tr key={s.id}>
-                                  <td className="min-w-48">
+                                  <td className="stack-full sm:min-w-48">
                                     <span className="flex items-center gap-2.5">
                                       <SoftwareLogo name={s.name} src={s.logoSrc} size={30} />
                                       <span className="min-w-0">
@@ -320,15 +312,15 @@ export default async function SoftwareInventoryPage(props: { searchParams: Promi
                                       </span>
                                     </span>
                                   </td>
-                                  <td className="whitespace-nowrap">{s.vendorName ?? <span className="text-faint">—</span>}</td>
-                                  <td className="whitespace-nowrap">{categoryLabels[s.category]}</td>
-                                  <td>
+                                  <td className="stack-hide whitespace-nowrap">{s.vendorName ?? <span className="text-faint">—</span>}</td>
+                                  <td className="stack-hide whitespace-nowrap">{categoryLabels[s.category]}</td>
+                                  <td className="max-sm:pl-10">
                                     <StatusPill status={s.status} label={softwareStatusLabels[s.status]} />
                                   </td>
-                                  <td className="whitespace-nowrap">{s.ownerName ?? <span className="text-faint">—</span>}</td>
-                                  <td className="whitespace-nowrap">{s.departmentName ?? <span className="text-faint">—</span>}</td>
-                                  <td className={cn("num", c.total === 0 && "text-faint")}>{c.total ? `${c.live} / ${c.total}` : "None"}</td>
-                                  <td className="num">
+                                  <td className="stack-hide whitespace-nowrap">{s.ownerName ?? <span className="text-faint">—</span>}</td>
+                                  <td className="stack-hide whitespace-nowrap">{s.departmentName ?? <span className="text-faint">—</span>}</td>
+                                  <td className={cn("num stack-hide", c.total === 0 && "text-faint")}>{c.total ? `${c.live} / ${c.total}` : "None"}</td>
+                                  <td className="num stack-end max-sm:font-semibold">
                                     <Money totals={monthly.get(s.id) ?? {}} preferred={pref} />
                                   </td>
                                 </tr>
@@ -347,21 +339,5 @@ export default async function SoftwareInventoryPage(props: { searchParams: Promi
         </>
       )}
     </>
-  );
-}
-
-function FilterSelect({ label, name, value, options, all = "All" }: { label: string; name: string; value: string | null; options: { value: string; label: string }[]; all?: string }) {
-  return (
-    <label className="text-[12px] text-muted">
-      <span className="block">{label}</span>
-      <select name={name} defaultValue={value ?? ""} className="biz-select mt-1 max-w-48">
-        <option value="">{all}</option>
-        {options.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
-      </select>
-    </label>
   );
 }

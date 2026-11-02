@@ -8,6 +8,7 @@ import { ActionForm, ConfirmSubmit, Submit } from "@/components/business/forms";
 import { SoftwareLogo } from "@/components/business/software-logo";
 import { Pill, StatusPill } from "@/components/business/ui";
 import { Icon } from "@/components/ui/icon";
+import { cn } from "@/components/ui/primitives";
 
 /** Display-ready subscription row (formatted on the server). */
 export interface SubscriptionRowView {
@@ -133,9 +134,10 @@ export function SubscriptionTable({
           )}
         </div>
       )}
+      {/* On phones each row is a two-line card (name and price, then status and renewal); the other columns show from sm up. */}
       <div className="-mx-4 overflow-x-auto sm:-mx-5">
-        <table className="biz-table">
-          <thead>
+        <table className="biz-table max-sm:block">
+          <thead className="max-sm:hidden">
             <tr>
               {selectable && (
                 <th className="w-8">
@@ -160,11 +162,17 @@ export function SubscriptionTable({
               <th>Department</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="max-sm:block">
             {rows.map((r) => (
-              <tr key={r.id} className={selected.includes(r.id) ? "[&>td]:bg-accent-soft/50" : undefined}>
+              <tr
+                key={r.id}
+                className={cn(
+                  "max-sm:grid max-sm:grid-cols-[auto_minmax(0,1fr)_auto] max-sm:items-center max-sm:gap-x-3 max-sm:gap-y-1.5 max-sm:border-b max-sm:border-line max-sm:px-4 max-sm:py-3 max-sm:last:border-b-0 max-sm:[&>td]:border-0 max-sm:[&>td]:p-0",
+                  selected.includes(r.id) && "[&>td]:bg-accent-soft/50 max-sm:bg-accent-soft/50",
+                )}
+              >
                 {selectable && (
-                  <td>
+                  <td className="max-sm:col-start-1 max-sm:row-span-2 max-sm:self-start max-sm:pt-2">
                     <input
                       type="checkbox"
                       aria-label={`Select ${r.softwareName}${r.planName ? ` ${r.planName}` : ""}`}
@@ -174,11 +182,11 @@ export function SubscriptionTable({
                     />
                   </td>
                 )}
-                <td className="min-w-40 sm:min-w-48">
+                <td className="max-sm:col-start-2 max-sm:row-start-1 max-sm:min-w-0 sm:min-w-48">
                   <span className="flex items-center gap-2.5">
                     <SoftwareLogo name={r.softwareName} src={r.logoSrc} size={30} />
                     <span className="min-w-0">
-                      <Link href={`/business/subscriptions/${r.id}`} className="font-medium text-fg hover:underline underline-offset-2">
+                      <Link href={`/business/subscriptions/${r.id}`} className="font-medium text-fg hover:underline underline-offset-2 max-sm:line-clamp-2">
                         {r.softwareName}
                       </Link>
                       {r.planName && <span className="block text-[12px] text-faint">{r.planName}</span>}
@@ -187,15 +195,15 @@ export function SubscriptionTable({
                 </td>
                 <td className="hidden whitespace-nowrap md:table-cell">{r.vendorName ?? <span className="text-faint">—</span>}</td>
                 <td className="hidden whitespace-nowrap md:table-cell">{r.categoryLabel}</td>
-                <td className="whitespace-nowrap">
+                <td className="whitespace-nowrap max-sm:col-start-2 max-sm:row-start-2 max-sm:pl-10">
                   {r.archived ? <Pill tone="outline">Archived</Pill> : <StatusPill status={r.status} label={r.statusLabel} />}
                 </td>
-                <td className="num">
+                <td className="num max-sm:col-start-3 max-sm:row-start-1 max-sm:font-semibold">
                   {r.price ?? <span className="text-faint">No price</span>}
                   {r.billed && <span className="block text-[11.5px] font-normal text-faint">billed {r.billed}</span>}
                 </td>
-                <td className="num">{r.monthly ?? <span className="text-faint">—</span>}</td>
-                <td className="whitespace-nowrap">
+                <td className="num max-sm:hidden">{r.monthly ?? <span className="text-faint">—</span>}</td>
+                <td className="whitespace-nowrap max-sm:col-start-3 max-sm:row-start-2 max-sm:text-right max-sm:text-[12px] max-sm:text-muted">
                   {r.renewal ? (
                     <>
                       {r.renewal}
@@ -211,9 +219,9 @@ export function SubscriptionTable({
                     <span className="text-faint">Not set</span>
                   )}
                 </td>
-                <td className="num">{r.seats ?? <span className="text-faint">—</span>}</td>
-                <td className="whitespace-nowrap">{r.owner ?? <span className="text-faint">—</span>}</td>
-                <td className="whitespace-nowrap">{r.department ?? <span className="text-faint">—</span>}</td>
+                <td className="num max-sm:hidden">{r.seats ?? <span className="text-faint">—</span>}</td>
+                <td className="whitespace-nowrap max-sm:hidden">{r.owner ?? <span className="text-faint">—</span>}</td>
+                <td className="whitespace-nowrap max-sm:hidden">{r.department ?? <span className="text-faint">—</span>}</td>
               </tr>
             ))}
           </tbody>

@@ -3,8 +3,8 @@ import type { ReactNode } from "react";
 import { BasisBadge, basisInfo } from "@/components/business/analytics/basis-badge";
 import { BarList, Sparkline, TrendChart, type BarRow } from "@/components/business/charts";
 import { SoftwareLogo, SoftwareName } from "@/components/business/software-logo";
+import { FilterBar } from "@/components/business/filter-bar";
 import { Card, EmptyState, FxNoteLine, Kpi, LinkButton, Meter, Money, PageHeader, Pill, TableWrap } from "@/components/business/ui";
-import { buttonClass } from "@/components/ui/primitives";
 import { addMonths, addTo, annualized, formatIsoDate, formatMonth, formatMoney, intervalLabel, isRecurring, monthlyEquivalent, seatSummary, totalsList, type CurrencyTotals } from "@/lib/business/calc";
 import type { InsightBasis } from "@/lib/business/insights-calc";
 import { categoryLabels, SOFTWARE_CATEGORIES } from "@/lib/business/constants";
@@ -150,66 +150,17 @@ export default async function AnalyticsPage(props: { searchParams: Promise<Raw> 
         }
       />
 
-      <form method="get" action="/business/analytics" className="biz-card mb-4 flex flex-wrap items-end gap-3 px-4 py-3">
-        <Control label="Period">
-          <select name="months" defaultValue={String(months)} className="biz-select">
-            {PERIODS.map((m) => (
-              <option key={m} value={m}>
-                Last {m} months
-              </option>
-            ))}
-          </select>
-        </Control>
-        <Control label="Billed in">
-          <select name="currency" defaultValue={params.currency ?? ""} className="biz-select">
-            <option value="">Any currency</option>
-            {options.currencies.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
-        </Control>
-        <Control label="Category">
-          <select name="category" defaultValue={params.category ?? ""} className="biz-select">
-            <option value="">All categories</option>
-            {SOFTWARE_CATEGORIES.map((c) => (
-              <option key={c} value={c}>
-                {categoryLabels[c]}
-              </option>
-            ))}
-          </select>
-        </Control>
-        <Control label="Department">
-          <select name="department" defaultValue={params.department ?? ""} className="biz-select">
-            <option value="">All departments</option>
-            <option value="none">No department</option>
-            {options.departments.map((d) => (
-              <option key={d.id} value={d.id}>
-                {d.name}
-              </option>
-            ))}
-          </select>
-        </Control>
-        <Control label="Vendor">
-          <select name="vendor" defaultValue={params.vendor ?? ""} className="biz-select max-w-48">
-            <option value="">All vendors</option>
-            {options.vendors.map((v) => (
-              <option key={v.id} value={v.id}>
-                {v.name}
-              </option>
-            ))}
-          </select>
-        </Control>
-        <div className="flex items-center gap-2">
-          <button type="submit" className={buttonClass("primary", "sm", "h-9")}>
-            Apply
-          </button>
-          <Link href="/business/analytics" className={buttonClass("ghost", "sm", "h-9")}>
-            Reset
-          </Link>
-        </div>
-      </form>
+      <FilterBar
+        action="/business/analytics"
+        label="Filter analytics"
+        inline={[{ name: "months", label: "Period", value: String(months), options: PERIODS.map((m) => ({ value: String(m), label: `Last ${m} months` })) }]}
+        more={[
+          { name: "currency", label: "Billed in", value: params.currency, allLabel: "Any currency", options: options.currencies.map((c) => ({ value: c, label: c })) },
+          { name: "category", label: "Category", value: params.category, allLabel: "All categories", options: SOFTWARE_CATEGORIES.map((c) => ({ value: c, label: categoryLabels[c] })) },
+          { name: "department", label: "Department", value: params.department, allLabel: "All departments", options: [{ value: "none", label: "No department" }, ...options.departments.map((d) => ({ value: d.id, label: d.name }))] },
+          { name: "vendor", label: "Vendor", value: params.vendor, allLabel: "All vendors", options: options.vendors.map((v) => ({ value: v.id, label: v.name })) },
+        ]}
+      />
 
       <ul className="mb-5 flex flex-wrap gap-x-5 gap-y-1.5 text-[12px] text-faint" aria-label="What the figures are based on">
         {(Object.keys(basisInfo) as InsightBasis[]).map((b) => (
@@ -497,11 +448,3 @@ function SectionTitle({ basis, children }: { basis: InsightBasis; children: Reac
   );
 }
 
-function Control({ label, children }: { label: string; children: ReactNode }) {
-  return (
-    <label className="text-[12.5px] text-muted">
-      <span className="mb-1 block">{label}</span>
-      {children}
-    </label>
-  );
-}

@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { calendarLinkAction } from "@/app/business/actions/notifications";
-import { deleteWorkspaceAction, resetDemoAction, updateCompanyAction, updateNotificationsAction, updatePreferencesAction } from "@/app/business/actions/workspace";
+import { deleteWorkspaceAction, updateCompanyAction, updateNotificationsAction, updatePreferencesAction } from "@/app/business/actions/workspace";
 import { formatIsoDate, MONTH_NAMES } from "@/lib/business/calc";
 import { COMMON_CURRENCIES, COMPANY_SIZES, DATE_FORMATS } from "@/lib/business/constants";
-import { ActionForm, CheckboxField, ConfirmSubmit, SelectField, Submit, TextField, useBizForm } from "@/components/business/forms";
+import { ActionForm, CheckboxField, SelectField, Submit, TextField, useBizForm } from "@/components/business/forms";
 
 export interface CompanyValues {
   name: string;
@@ -135,20 +135,6 @@ function CustomDaysField({ value, onChange }: { value: string; onChange: (v: str
       <TextField label="Custom days" name="_customDays" optional value={value} onChange={(e) => onChange(e.target.value)} placeholder="e.g. 60, 3" hint="Comma-separated, 1–365 days. Up to 6 windows in total." />
       {error && <p className="mt-1 text-[12px] text-danger">{error}</p>}
     </div>
-  );
-}
-
-export function ResetDemoForm({ workspaceId }: { workspaceId: string }) {
-  return (
-    <ActionForm action={resetDemoAction} workspaceId={workspaceId}>
-      <ConfirmSubmit
-        title="Reset the demo workspace?"
-        body="Everything you changed in the demo is replaced with the original fictional Northwind Studio sample data. Your real workspaces aren't touched."
-        confirmLabel="Reset demo"
-      >
-        Reset demo data
-      </ConfirmSubmit>
-    </ActionForm>
   );
 }
 
