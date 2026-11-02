@@ -4,7 +4,7 @@ import { acceptInvitationAction, completeOnboardingAction, createDemoAction } fr
 import { AddSoftwareWizard } from "@/components/business/add-software-wizard";
 import { CalendarConnect } from "@/components/business/calendar-connect";
 import { CreateWorkspaceForm } from "@/components/business/onboarding-forms";
-import { InviteForm, InviteSharePanel } from "@/components/business/team-forms";
+import { InviteForm, InviteSharePanel, InviteSteps } from "@/components/business/team-forms";
 import { LogoStack } from "@/components/business/software-logo";
 import { Money } from "@/components/business/ui";
 import { BrandMark } from "@/components/brand/logo";
@@ -218,16 +218,19 @@ async function TeamStep({ ctx, invitedId }: { ctx: BizContext; invitedId: string
         invite link.
       </StepHeader>
       <div className="mt-6 space-y-4">
-        {invited && (
+        <InviteForm workspaceId={ctx.workspace.id} roles={roles} after="onboarding" />
+        {invited ? (
           <InviteSharePanel
             email={invited.email}
             role={roleLabels[invited.role]}
             workspace={ctx.workspace.name}
             url={inviteLink(origin, invited.id)}
             message={inviteMessage(ctx.workspace.name, invited.email, inviteLink(origin, invited.id))}
+            doneHref="/business/onboarding?step=team"
           />
+        ) : (
+          <InviteSteps />
         )}
-        <InviteForm workspaceId={ctx.workspace.id} roles={roles} after="onboarding" />
         {others.length > 0 && (
           <p className="text-[12.5px] text-muted" data-onboarding-invited>
             Also waiting to sign in: {others.map((i) => i.email).join(", ")}. Their invite links are under Team Members.

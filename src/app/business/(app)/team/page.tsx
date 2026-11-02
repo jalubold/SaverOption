@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { LogoStack } from "@/components/business/software-logo";
-import { AddPersonForm, EditPersonForm, InviteForm, InviteSharePanel, RemoveMemberButton, RevokeInvitationButton, RoleSelectForm } from "@/components/business/team-forms";
+import { AddPersonForm, EditPersonForm, InviteForm, InviteSharePanel, InviteSteps, RemoveMemberButton, RevokeInvitationButton, RoleSelectForm } from "@/components/business/team-forms";
 import { Card, EmptyState, PageHeader, Pill, TableWrap } from "@/components/business/ui";
 import { FormMessage } from "@/components/ui/form";
 import { Icon } from "@/components/ui/icon";
@@ -108,6 +108,8 @@ export default async function TeamPage(props: { searchParams: Promise<Record<str
       {manageMembers && (
         <Card title="Give access by email" description="Add a colleague's work email and the role they should have." className="mt-5">
           <div className="space-y-4">
+            {/* The form first; under it, how it works — or, once someone is added, their invite to send. */}
+            {grantable.length > 0 ? <InviteForm workspaceId={ws} roles={grantable} /> : <p className="text-[13px] text-faint">Your role can&apos;t grant access.</p>}
             {invited ? (
               <InviteSharePanel
                 email={invited.email}
@@ -115,25 +117,11 @@ export default async function TeamPage(props: { searchParams: Promise<Record<str
                 workspace={ctx.workspace.name}
                 url={inviteUrl(invited.id)}
                 message={inviteMessage(ctx.workspace.name, invited.email, inviteUrl(invited.id))}
+                doneHref="/business/team"
               />
             ) : (
-              <ol className="grid gap-2 sm:grid-cols-3" aria-label="How giving access works" data-invite-steps>
-                {[
-                  ["Add their email and role", "Below. They get access as soon as they sign in."],
-                  ["Send them their invite link", "Saver Option doesn't email it: you send it from your email, WhatsApp or chat."],
-                  ["They sign in with Google", "Using exactly that address, then choose Join."],
-                ].map(([title, body], i) => (
-                  <li key={title} className="flex gap-2.5 rounded-xl border border-line bg-subtle/60 px-3.5 py-3">
-                    <span className="mt-px flex size-5 shrink-0 items-center justify-center rounded-full bg-accent-soft text-[11px] font-semibold text-accent-ink">{i + 1}</span>
-                    <span className="min-w-0">
-                      <span className="block text-[13px] font-semibold text-fg">{title}</span>
-                      <span className="block text-[12.5px] leading-snug text-muted">{body}</span>
-                    </span>
-                  </li>
-                ))}
-              </ol>
+              grantable.length > 0 && <InviteSteps />
             )}
-            {grantable.length > 0 ? <InviteForm workspaceId={ws} roles={grantable} /> : <p className="text-[13px] text-faint">Your role can&apos;t grant access.</p>}
             {invitations.length > 0 && (
               <div>
                 <h3 className="mb-2 text-[13px] font-semibold">Waiting for sign-in</h3>

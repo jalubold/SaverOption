@@ -1,19 +1,94 @@
 "use client";
 
-import { useState } from "react";
+import Link from "next/link";
+import { useState, type ReactNode } from "react";
 import { changeRoleAction, createPersonAction, inviteMemberAction, removeMemberAction, revokeInvitationAction, updatePersonAction } from "@/app/business/actions/team";
 import { ActionForm, ConfirmSubmit, SelectField, Submit, TextField } from "@/components/business/forms";
+import { GoogleLogo } from "@/components/brand/google-logo";
 import { Icon } from "@/components/ui/icon";
-import { buttonClass } from "@/components/ui/primitives";
+import { buttonClass, cn } from "@/components/ui/primitives";
 
 type Option = { value: string; label: string };
 
+type StepState = "done" | "active" | "next";
+
+/** A step's round marker: done (tick), the one to do now, or still to come. */
+function StepIcon({ state, children }: { state: StepState; children: ReactNode }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={cn(
+        "relative z-10 flex size-8 shrink-0 items-center justify-center rounded-full",
+        state === "done" && "bg-success text-white",
+        state === "active" && "bg-accent text-white shadow-[0_0_0_4px_color-mix(in_oklab,var(--accent)_16%,transparent)]",
+        state === "next" && "border border-line-strong bg-surface text-accent-ink",
+      )}
+    >
+      {children}
+    </span>
+  );
+}
+
+const googleMark = (
+  <span className="flex size-[18px] items-center justify-center">
+    <GoogleLogo size={15} />
+  </span>
+);
+
 /**
- * Shown on Team right after giving access (and from "Share invite"): the person's own invite
- * link and a ready-to-send message, with one-click ways to send it. Saver Option doesn't email
- * anyone; the inviter sends it from their own email, WhatsApp, Slack or Teams.
+ * How giving access works, under the form: the same three steps the share panel then walks
+ * through once someone has been added.
  */
-export function InviteSharePanel({ email, role, workspace, url, message }: { email: string; role: string; workspace: string; url: string; message: string }) {
+export function InviteSteps() {
+  const steps: { icon: ReactNode; title: string; body: string }[] = [
+    { icon: <Icon name="mail" size={15} />, title: "Add their email and role", body: "Above. They get access as soon as they sign in." },
+    { icon: <Icon name="link" size={15} />, title: "Send them their invite link", body: "From your email, WhatsApp or chat — Saver Option doesn't email it." },
+    { icon: googleMark, title: "They sign in with Google", body: "Using exactly that address, then they choose Join." },
+  ];
+  return (
+    <div className="rounded-2xl border border-line bg-subtle/50 px-4 py-4 sm:px-5">
+      <p className="mb-3.5 text-[11.5px] font-semibold uppercase tracking-[0.08em] text-faint">How it works</p>
+      <ol className="grid gap-4 sm:grid-cols-3 sm:gap-6" aria-label="How giving access works" data-invite-steps>
+        {steps.map((step, i) => (
+          <li key={step.title} className="relative flex gap-3 sm:flex-col sm:gap-2.5">
+            {/* The line to the next step: down on phones, across on wider screens. */}
+            {i < steps.length - 1 && (
+              <span aria-hidden="true" className="absolute bottom-[-16px] left-4 top-9 w-px bg-line-strong sm:bottom-auto sm:left-11 sm:right-[-16px] sm:top-4 sm:h-px sm:w-auto" />
+            )}
+            <StepIcon state="next">{step.icon}</StepIcon>
+            <span className="min-w-0">
+              <span className="block text-[13px] font-semibold text-fg">{step.title}</span>
+              <span className="mt-0.5 block text-[12.5px] leading-snug text-muted">{step.body}</span>
+            </span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+/**
+ * Shown under the form right after giving access (and from "Share invite"): the same three steps,
+ * now with the first one done. The person's own invite link and a ready-to-send message, with
+ * one-click ways to send it. Saver Option doesn't email anyone; the inviter sends it from their
+ * own email, WhatsApp, Slack or Teams.
+ */
+export function InviteSharePanel({
+  email,
+  role,
+  workspace,
+  url,
+  message,
+  doneHref,
+}: {
+  email: string;
+  role: string;
+  workspace: string;
+  url: string;
+  message: string;
+  /** Where "Done" goes: the same page without this invite open. */
+  doneHref: string;
+}) {
   const [copied, setCopied] = useState<"message" | "link" | null>(null);
   const copy = async (what: "message" | "link") => {
     const text = what === "message" ? message : url;
@@ -26,38 +101,46 @@ export function InviteSharePanel({ email, role, workspace, url, message }: { ema
     }
   };
   const subject = `Join ${workspace} on Saver Option Business`;
+  const line = <span aria-hidden="true" className="absolute bottom-0 left-4 top-9 w-px bg-line-strong" />;
   return (
-    <section id="invite" className="scroll-mt-24 rounded-2xl border border-accent/30 bg-accent-soft/50 p-4 sm:p-5" data-invite-share>
-      <p className="flex items-center gap-2 text-[15px] font-semibold text-fg">
-        <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-accent text-white">
-          <Icon name="check" size={14} />
-        </span>
-        Access added for {email} · {role}
-      </p>
-      <p className="mt-1 text-[13px] leading-relaxed text-muted">Now send them their invite — Saver Option doesn&apos;t email it. It takes a few seconds:</p>
-      <ol className="mt-4 space-y-4">
-        <li className="flex gap-3">
-          <StepNumber n={1} />
-          <div className="min-w-0 flex-1">
-            <p className="text-[13.5px] font-semibold text-fg">Copy the invite</p>
-            <div className="mt-2 whitespace-pre-line rounded-xl border border-line bg-surface px-3.5 py-3 text-[13px] leading-relaxed text-fg" data-invite-message>
+    <section id="invite" className="so-rise scroll-mt-24 rounded-2xl border border-accent/25 bg-accent-soft/40 p-4 sm:p-5" data-invite-share>
+      <ol>
+        <li className="relative flex gap-3.5 pb-5">
+          {line}
+          <StepIcon state="done">
+            <Icon name="check" size={15} />
+          </StepIcon>
+          <div className="flex min-w-0 flex-1 flex-wrap items-start justify-between gap-x-3 gap-y-1 pt-1">
+            <div className="min-w-0">
+              <p className="break-words text-[14.5px] font-semibold text-fg">
+                Access added for {email} · {role}
+              </p>
+              <p className="mt-0.5 text-[12.5px] text-muted">They get it as soon as they sign in. To add someone else, use the form above.</p>
+            </div>
+            <Link href={doneHref} scroll={false} className={buttonClass("ghost", "sm", "-mr-2 -mt-1")} data-invite-done>
+              Done
+            </Link>
+          </div>
+        </li>
+        <li className="relative flex gap-3.5 pb-5">
+          {line}
+          <StepIcon state="active">
+            <Icon name="link" size={15} />
+          </StepIcon>
+          <div className="min-w-0 flex-1 pt-1">
+            <p className="text-[14px] font-semibold text-fg">Now send them their invite</p>
+            <p className="mt-0.5 text-[12.5px] text-muted">Saver Option doesn&apos;t email it — send it yourself, it takes a few seconds.</p>
+            <div className="mt-3 whitespace-pre-line break-words rounded-xl border border-line bg-surface px-3.5 py-3 text-[13px] leading-relaxed text-fg shadow-[0_1px_2px_rgb(0_0_0/0.04)]" data-invite-message>
               {message}
             </div>
-            <div className="mt-2 flex flex-wrap gap-2">
+            <div className="mt-3 flex flex-wrap items-center gap-2">
               <button type="button" onClick={() => copy("message")} className={buttonClass("primary", "sm")} data-copy-invite>
                 <Icon name={copied === "message" ? "check" : "copy"} size={14} /> {copied === "message" ? "Copied" : "Copy message"}
               </button>
               <button type="button" onClick={() => copy("link")} className={buttonClass("secondary", "sm")}>
                 <Icon name={copied === "link" ? "check" : "link"} size={14} /> {copied === "link" ? "Copied" : "Copy link only"}
               </button>
-            </div>
-          </div>
-        </li>
-        <li className="flex gap-3">
-          <StepNumber n={2} />
-          <div className="min-w-0 flex-1">
-            <p className="text-[13.5px] font-semibold text-fg">Send it to {email}</p>
-            <div className="mt-2 flex flex-wrap gap-2">
+              <span aria-hidden="true" className="mx-1 hidden h-5 w-px bg-line-strong sm:block" />
               <a href={`mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`} className={buttonClass("secondary", "sm")}>
                 <Icon name="mail" size={14} /> Email from my account
               </a>
@@ -65,14 +148,14 @@ export function InviteSharePanel({ email, role, workspace, url, message }: { ema
                 <Icon name="external" size={14} /> WhatsApp
               </a>
             </div>
-            <p className="mt-1.5 text-[12.5px] text-faint">Or paste it in Slack, Teams or any chat.</p>
+            <p className="mt-2 text-[12.5px] text-faint">Or paste it in Slack, Teams or any chat.</p>
           </div>
         </li>
-        <li className="flex gap-3">
-          <StepNumber n={3} />
-          <div className="min-w-0 flex-1">
-            <p className="text-[13.5px] font-semibold text-fg">They sign in with Google as {email}</p>
-            <p className="mt-0.5 text-[13px] leading-relaxed text-muted">
+        <li className="relative flex gap-3.5">
+          <StepIcon state="next">{googleMark}</StepIcon>
+          <div className="min-w-0 flex-1 pt-1">
+            <p className="break-words text-[14px] font-semibold text-fg">They sign in with Google as {email}</p>
+            <p className="mt-0.5 text-[12.5px] leading-relaxed text-muted">
               The link shows them which account to use, then they choose <strong className="font-medium text-fg">Join</strong>. They&apos;ll appear under Members.
             </p>
           </div>
@@ -80,10 +163,6 @@ export function InviteSharePanel({ email, role, workspace, url, message }: { ema
       </ol>
     </section>
   );
-}
-
-function StepNumber({ n }: { n: number }) {
-  return <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full border border-accent/40 bg-surface text-[12px] font-semibold text-accent-ink">{n}</span>;
 }
 
 export function InviteForm({ workspaceId, roles, after }: { workspaceId: string; roles: Option[]; after?: "onboarding" }) {
