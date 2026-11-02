@@ -229,7 +229,7 @@ function usePageExport({ title, workspace }: { title: string; workspace: string 
   const save = async (kind: "pdf" | "png") => {
     setBusy(kind);
     try {
-      const canvas = await capture({ title, workspace });
+      const { canvas, breaks, ratio } = await capture({ title, workspace });
       const name = fileName(workspace, title, kind);
       if (kind === "png") {
         const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"));
@@ -237,24 +237,35 @@ function usePageExport({ title, workspace }: { title: string; workspace: string 
         download(blob, name);
       } else {
         const { jsPDF } = await import("jspdf");
-        const pdf = new jsPDF({ orientation: "portrait", unit: "pt", format: "a4", compress: true });
+        // Wide pages (a laptop screen) go on landscape A4, phone-width ones on portrait.
+        const landscape = canvas.width / ratio > 900;
+        const pdf = new jsPDF({ orientation: landscape ? "landscape" : "portrait", unit: "pt", format: "a4", compress: true });
         const pageW = pdf.internal.pageSize.getWidth();
         const pageH = pdf.internal.pageSize.getHeight();
         const margin = 24;
         const imgW = pageW - margin * 2;
-        const imgH = (canvas.height * imgW) / canvas.width;
-        const usable = pageH - margin * 2;
-        const image = canvas.toDataURL("image/jpeg", 0.92);
-        // One tall picture, shown a page-height at a time.
-        for (let y = 0, page = 0; y < imgH; y += usable, page++) {
+        const scale = imgW / canvas.width; // points per canvas pixel
+        const perPage = Math.floor((pageH - margin * 2 - 10) / scale);
+        let page = 0;
+        for (let y = 0; y < canvas.height; page++) {
+          let end = Math.min(canvas.height, y + perPage);
+          // End the page between rows and cards, not through them, when there's a break in its last 40%.
+          if (end < canvas.height) {
+            const fit = breaks.filter((b) => b > y + perPage * 0.6 && b <= end);
+            if (fit.length) end = Math.max(...fit);
+          }
+          const slice = document.createElement("canvas");
+          slice.width = canvas.width;
+          slice.height = end - y;
+          const g = slice.getContext("2d");
+          if (!g) throw new Error("no canvas");
+          g.drawImage(canvas, 0, y, canvas.width, end - y, 0, 0, canvas.width, end - y);
           if (page > 0) pdf.addPage();
-          pdf.addImage(image, "JPEG", margin, margin - y, imgW, imgH, undefined, "FAST");
-          pdf.setFillColor(255, 255, 255);
-          pdf.rect(0, 0, pageW, margin, "F");
-          pdf.rect(0, pageH - margin, pageW, margin, "F");
+          pdf.addImage(slice.toDataURL("image/jpeg", 0.92), "JPEG", margin, margin, imgW, (end - y) * scale, undefined, "FAST");
           pdf.setFontSize(8);
           pdf.setTextColor(150);
           pdf.text(`${page + 1}`, pageW - margin, pageH - 10, { align: "right" });
+          y = end;
         }
         download(pdf.output("blob"), name);
       }
@@ -286,39 +297,104 @@ function ExportNote({ note, dark }: { note: string | null; dark?: boolean }) {
   );
 }
 
-/** A picture of the page's content (#main without what's marked data-export-hide), with a header line. */
-async function capture({ title, workspace }: { title: string; workspace: string }): Promise<HTMLCanvasElement> {
+/**
+ * A picture of the page's content (#main without what's marked data-export-hide), with a header line.
+ * For the picture the page is laid out in full: anything that scrolls (a wide table, a long list) is
+ * opened up, and the page is widened by what a table hid sideways, so nothing is cut off. A cover
+ * hides that change while it happens. Also returns where rows and cards end, so a PDF page can end
+ * between them.
+ */
+async function capture({ title, workspace }: { title: string; workspace: string }): Promise<{ canvas: HTMLCanvasElement; breaks: number[]; ratio: number }> {
   const node = document.getElementById("main");
   if (!node) throw new Error("no main");
   const { toCanvas } = await import("html-to-image");
-  const bg = getComputedStyle(document.body).backgroundColor || "#ffffff";
-  // Large pages get a lower resolution so the picture stays within what browsers can draw.
-  const ratio = Math.max(1, Math.min(2, 14000 / Math.max(1, node.scrollHeight)));
-  const shot = await toCanvas(node, {
-    pixelRatio: ratio,
-    backgroundColor: bg,
-    cacheBust: true,
-    filter: (n) => !(n instanceof HTMLElement && (n.dataset.exportHide !== undefined || n.tagName === "DIALOG")),
-  });
-  const head = Math.round(44 * ratio);
-  const out = document.createElement("canvas");
-  out.width = shot.width;
-  out.height = shot.height + head;
-  const g = out.getContext("2d");
-  if (!g) throw new Error("no canvas");
-  g.fillStyle = bg;
-  g.fillRect(0, 0, out.width, out.height);
-  g.fillStyle = "#6d28d9";
-  g.font = `600 ${Math.round(13 * ratio)}px system-ui, -apple-system, Segoe UI, sans-serif`;
-  const pad = Math.round(24 * ratio);
-  g.fillText("Saver Option Business", pad, Math.round(28 * ratio));
-  const brandW = g.measureText("Saver Option Business").width;
-  g.fillStyle = "#6b6b76";
-  g.font = `400 ${Math.round(13 * ratio)}px system-ui, -apple-system, Segoe UI, sans-serif`;
-  const when = new Date().toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
-  g.fillText(`  ·  ${workspace}  ·  ${title}  ·  ${when}`, pad + brandW, Math.round(28 * ratio));
-  g.drawImage(shot, 0, head);
-  return out;
+  const cover = document.createElement("div");
+  cover.setAttribute("aria-hidden", "true");
+  cover.style.cssText = "position:fixed;inset:0;z-index:2147483646;background:var(--bg,#fafaf7);display:flex;align-items:center;justify-content:center;font:500 14px system-ui,sans-serif;color:#6b6b76";
+  cover.textContent = "Preparing your file…";
+  document.body.appendChild(cover);
+  const undo: (() => void)[] = [];
+  const set = (el: HTMLElement, prop: "overflow" | "maxHeight" | "width" | "maxWidth", value: string) => {
+    const before = el.style[prop];
+    el.style[prop] = value;
+    undo.push(() => {
+      el.style[prop] = before;
+    });
+  };
+  try {
+    let hidden = 0;
+    for (const el of node.querySelectorAll<HTMLElement>("*")) {
+      if (el.closest("[data-export-hide]")) continue;
+      const cs = getComputedStyle(el);
+      if (!/(auto|scroll)/.test(`${cs.overflowX} ${cs.overflowY}`)) continue;
+      hidden = Math.max(hidden, el.scrollWidth - el.clientWidth);
+      set(el, "overflow", "visible");
+      if (cs.maxHeight !== "none") set(el, "maxHeight", "none");
+    }
+    if (hidden > 0) {
+      set(node, "width", `${Math.ceil(node.getBoundingClientRect().width + hidden)}px`);
+      set(node, "maxWidth", "none");
+    }
+    // Let charts and tables settle into the new width.
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await new Promise((r) => setTimeout(r, 120));
+
+    const box = node.getBoundingClientRect();
+    const width = Math.ceil(node.scrollWidth);
+    const height = Math.ceil(node.scrollHeight);
+    const bg = getComputedStyle(document.body).backgroundColor || "#ffffff";
+    // Large pages get a lower resolution so the picture stays within what browsers can draw.
+    const ratio = Math.max(1, Math.min(2, 14000 / Math.max(1, height), 16000 / Math.max(1, width)));
+    const options = {
+      width,
+      height,
+      pixelRatio: ratio,
+      backgroundColor: bg,
+      cacheBust: true,
+      // An image that can't be read is left blank instead of failing the whole file.
+      imagePlaceholder: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+      // The copy sits at the picture's left edge (its centring margins would push it out of frame).
+      style: { margin: "0", maxWidth: "none" },
+      filter: (n: Node) => !(n instanceof HTMLElement && (n.dataset.exportHide !== undefined || n.tagName === "DIALOG")),
+    };
+    // Safari draws web fonts and images only from the second pass.
+    if (/^((?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent)) await toCanvas(node, options);
+    const shot = await toCanvas(node, options);
+
+    const head = Math.round(44 * ratio);
+    // Where a PDF page may end: under a row, card or section, or just above a card (so it moves whole).
+    const blocks = [...node.querySelectorAll<HTMLElement>(":scope > *, .biz-card, tr, li, [data-summary-strip], section")].filter((el) => !el.closest("[data-export-hide]"));
+    const breaks = blocks
+      .flatMap((el) => {
+        const r = el.getBoundingClientRect();
+        return el.classList.contains("biz-card") ? [r.bottom, r.top - 8] : [r.bottom];
+      })
+      .map((y) => Math.round((y - box.top) * ratio) + head)
+      .filter((b) => b > head)
+      .sort((a, b) => a - b);
+
+    const out = document.createElement("canvas");
+    out.width = shot.width;
+    out.height = shot.height + head;
+    const g = out.getContext("2d");
+    if (!g) throw new Error("no canvas");
+    g.fillStyle = bg;
+    g.fillRect(0, 0, out.width, out.height);
+    g.fillStyle = "#6d28d9";
+    g.font = `600 ${Math.round(13 * ratio)}px system-ui, -apple-system, Segoe UI, sans-serif`;
+    const pad = Math.round(24 * ratio);
+    g.fillText("Saver Option Business", pad, Math.round(28 * ratio));
+    const brandW = g.measureText("Saver Option Business").width;
+    g.fillStyle = "#6b6b76";
+    g.font = `400 ${Math.round(13 * ratio)}px system-ui, -apple-system, Segoe UI, sans-serif`;
+    const when = new Date().toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+    g.fillText(`  ·  ${workspace}  ·  ${title}  ·  ${when}`, pad + brandW, Math.round(28 * ratio));
+    g.drawImage(shot, 0, head);
+    return { canvas: out, breaks, ratio };
+  } finally {
+    for (const fn of undo.reverse()) fn();
+    cover.remove();
+  }
 }
 
 function fileName(workspace: string, title: string, ext: string): string {

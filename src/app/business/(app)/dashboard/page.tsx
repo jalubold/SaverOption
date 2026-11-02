@@ -227,7 +227,7 @@ export default async function DashboardPage() {
       <section className="biz-card biz-hero so-grain theme-dark so-rise px-5 py-6 text-fg sm:px-7 sm:py-7" data-dashboard-hero>
         <Aurora />
         <span aria-hidden="true" className="so-shine pointer-events-none absolute inset-0 rounded-[inherit]" />
-        <div className="relative z-10 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,400px)] lg:items-end">
+        <div className="relative z-10 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,400px)] lg:items-center">
           <div className="min-w-0">
             <div className="flex items-start justify-between gap-3">
               <p className="text-[12.5px] font-medium text-faint">{ctx.workspace.name}</p>
