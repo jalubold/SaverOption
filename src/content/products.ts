@@ -1,5 +1,5 @@
 /**
- * Providers and products — generated from research notes on 2026-10-17, 2026-10-19 and 2026-10-23.
+ * Providers and products — generated from research notes on 2026-10-17, 2026-10-19, 2026-10-23 and 2026-11-02.
  * Sources are the providers' own sites. `verification.status` says whether the
  * live page was checked ("verified") or the facts came from the provider's site
  * via search extracts only ("unverified"). Supporting quotes are kept in
@@ -516,6 +516,246 @@ export const providers: Provider[] = [
     "id": "stripe",
     "name": "Stripe",
     "website": "https://stripe.com"
+  },
+  {
+    "id": "akamai",
+    "name": "Akamai Technologies",
+    "website": "https://www.akamai.com",
+    "about": "Akamai runs content delivery, security and cloud computing services; its cloud computing business was formerly Linode."
+  },
+  {
+    "id": "vultr",
+    "name": "Vultr",
+    "website": "https://www.vultr.com",
+    "about": "Vultr is an independent cloud provider offering compute, GPU, storage and Kubernetes infrastructure."
+  },
+  {
+    "id": "confluent",
+    "name": "Confluent",
+    "website": "https://www.confluent.io",
+    "about": "Confluent provides a data streaming platform built on Apache Kafka."
+  },
+  {
+    "id": "snowflake",
+    "name": "Snowflake",
+    "website": "https://www.snowflake.com",
+    "about": "Snowflake runs the AI Data Cloud, a cloud platform for data warehousing, analytics and AI."
+  },
+  {
+    "id": "alibaba-cloud",
+    "name": "Alibaba Cloud",
+    "website": "https://www.alibabacloud.com",
+    "about": "Alibaba Cloud is the cloud computing business of Alibaba Group."
+  },
+  {
+    "id": "scaleway",
+    "name": "Scaleway",
+    "website": "https://www.scaleway.com",
+    "about": "Scaleway is a European cloud provider based in France."
+  },
+  {
+    "id": "ovhcloud",
+    "name": "OVHcloud",
+    "website": "https://www.ovhcloud.com",
+    "about": "OVHcloud is a European cloud provider headquartered in France."
+  },
+  {
+    "id": "civo",
+    "name": "Civo",
+    "website": "https://www.civo.com",
+    "about": "Civo is a cloud provider focused on managed Kubernetes, compute and GPU infrastructure."
+  },
+  {
+    "id": "cockroach-labs",
+    "name": "Cockroach Labs",
+    "website": "https://www.cockroachlabs.com",
+    "about": "Cockroach Labs makes CockroachDB, a distributed SQL database."
+  },
+  {
+    "id": "clickhouse",
+    "name": "ClickHouse",
+    "website": "https://clickhouse.com",
+    "about": "ClickHouse, Inc. develops the open-source ClickHouse analytical database and runs ClickHouse Cloud."
+  },
+  {
+    "id": "render",
+    "name": "Render",
+    "website": "https://render.com",
+    "about": "Render is a cloud platform for hosting web apps, services and databases."
+  },
+  {
+    "id": "fly-io",
+    "name": "Fly.io",
+    "website": "https://fly.io",
+    "about": "Fly.io runs applications on lightweight virtual machines in regions around the world."
+  },
+  {
+    "id": "temporal",
+    "name": "Temporal Technologies",
+    "website": "https://temporal.io",
+    "about": "Temporal makes an open-source durable execution platform and runs Temporal Cloud."
+  },
+  {
+    "id": "new-relic",
+    "name": "New Relic",
+    "website": "https://newrelic.com",
+    "about": "New Relic makes an observability platform for monitoring applications and infrastructure."
+  },
+  {
+    "id": "pinecone",
+    "name": "Pinecone",
+    "website": "https://www.pinecone.io",
+    "about": "Pinecone makes a managed vector database for AI applications."
+  },
+  {
+    "id": "aiven",
+    "name": "Aiven",
+    "website": "https://aiven.io",
+    "about": "Aiven runs managed open-source data services such as PostgreSQL, Apache Kafka and OpenSearch."
+  },
+  {
+    "id": "elastic",
+    "name": "Elastic",
+    "website": "https://www.elastic.co",
+    "about": "Elastic makes Elasticsearch and a platform for search, observability and security."
+  },
+  {
+    "id": "modal",
+    "name": "Modal Labs",
+    "website": "https://modal.com",
+    "about": "Modal is a serverless cloud platform for running AI inference, training and batch jobs on GPUs and CPUs."
+  },
+  {
+    "id": "groq",
+    "name": "Groq",
+    "website": "https://groq.com",
+    "about": "Groq builds the LPU inference chip and runs GroqCloud, an API platform for fast inference on open models."
+  },
+  {
+    "id": "qdrant",
+    "name": "Qdrant",
+    "website": "https://qdrant.tech",
+    "about": "Qdrant develops an open-source vector search engine and the managed Qdrant Cloud service."
+  },
+  {
+    "id": "runway",
+    "name": "Runway",
+    "website": "https://runwayml.com",
+    "about": "Runway makes generative AI tools and models for video and image creation."
+  },
+  {
+    "id": "suno",
+    "name": "Suno",
+    "website": "https://suno.com",
+    "about": "Suno makes an AI music generator that creates songs from text prompts."
+  },
+  {
+    "id": "deepgram",
+    "name": "Deepgram",
+    "website": "https://deepgram.com",
+    "about": "Deepgram provides speech-to-text, text-to-speech and voice agent APIs."
+  },
+  {
+    "id": "assemblyai",
+    "name": "AssemblyAI",
+    "website": "https://www.assemblyai.com",
+    "about": "AssemblyAI provides speech-to-text and speech understanding APIs."
+  },
+  {
+    "id": "langchain",
+    "name": "LangChain",
+    "website": "https://www.langchain.com",
+    "about": "LangChain makes open-source frameworks for building LLM agents and LangSmith, a platform for agent observability and evaluation."
+  },
+  {
+    "id": "together-ai",
+    "name": "Together AI",
+    "website": "https://www.together.ai",
+    "about": "Together AI is a cloud platform for running, fine-tuning and training open-source AI models."
+  },
+  {
+    "id": "tavily",
+    "name": "Tavily",
+    "website": "https://www.tavily.com",
+    "about": "Tavily provides a web search and extraction API built for AI agents."
+  },
+  {
+    "id": "weights-and-biases",
+    "name": "Weights & Biases",
+    "website": "https://wandb.ai",
+    "about": "Weights & Biases, now part of CoreWeave, makes tools for tracking machine-learning experiments and evaluating AI applications."
+  },
+  {
+    "id": "salesforce",
+    "name": "Salesforce",
+    "website": "https://www.salesforce.com",
+    "about": "Salesforce makes cloud CRM software for sales, service, marketing and nonprofit organizations."
+  },
+  {
+    "id": "clickup",
+    "name": "ClickUp",
+    "website": "https://clickup.com",
+    "about": "ClickUp makes a work-management app that combines tasks, docs and team collaboration."
+  },
+  {
+    "id": "docusign",
+    "name": "Docusign",
+    "website": "https://www.docusign.com",
+    "about": "Docusign makes electronic signature and agreement management software."
+  },
+  {
+    "id": "intuit",
+    "name": "Intuit",
+    "website": "https://www.intuit.com",
+    "about": "Intuit makes financial software, including QuickBooks accounting for small businesses."
+  },
+  {
+    "id": "freshbooks",
+    "name": "FreshBooks",
+    "website": "https://www.freshbooks.com",
+    "about": "FreshBooks makes cloud accounting and invoicing software for small businesses and self-employed professionals."
+  },
+  {
+    "id": "mailerlite",
+    "name": "MailerLite",
+    "website": "https://www.mailerlite.com",
+    "about": "MailerLite makes email marketing, newsletter and landing page software."
+  },
+  {
+    "id": "tally",
+    "name": "Tally",
+    "website": "https://tally.so",
+    "about": "Tally makes a no-code online form builder."
+  },
+  {
+    "id": "typeform",
+    "name": "Typeform",
+    "website": "https://www.typeform.com",
+    "about": "Typeform makes conversational online forms, surveys and quizzes."
+  },
+  {
+    "id": "squarespace",
+    "name": "Squarespace",
+    "website": "https://www.squarespace.com",
+    "about": "Squarespace makes a hosted website builder with domains, commerce and marketing tools."
+  },
+  {
+    "id": "box",
+    "name": "Box",
+    "website": "https://www.box.com",
+    "about": "Box makes cloud content management, file sharing and e-signature software for organizations."
+  },
+  {
+    "id": "bitwarden",
+    "name": "Bitwarden",
+    "website": "https://bitwarden.com",
+    "about": "Bitwarden makes an open-source password manager for individuals and businesses."
+  },
+  {
+    "id": "zapier",
+    "name": "Zapier",
+    "website": "https://zapier.com",
+    "about": "Zapier makes no-code automation software that connects web apps."
   }
 ];
 
@@ -2431,6 +2671,836 @@ export const products: Product[] = [
     "logo": {
       "src": "/logos/stripe-atlas.svg",
       "alt": "Stripe Atlas logo"
+    }
+  },
+  {
+    "id": "akamai-cloud",
+    "slug": "akamai-cloud",
+    "name": "Akamai Cloud",
+    "providerId": "akamai",
+    "tagline": "Cloud computing from Akamai, formerly Linode",
+    "description": "Akamai Cloud (formerly Linode) offers virtual machines, managed Kubernetes, object and block storage, managed databases and load balancers.",
+    "website": "https://www.akamai.com/cloud",
+    "tags": [
+      "Cloud",
+      "Compute",
+      "VPS",
+      "Kubernetes"
+    ],
+    "brandColor": "#0099CC",
+    "logo": {
+      "src": "/logos/akamai-cloud.svg",
+      "alt": "Akamai Cloud logo"
+    }
+  },
+  {
+    "id": "vultr",
+    "slug": "vultr",
+    "name": "Vultr",
+    "providerId": "vultr",
+    "tagline": "Independent cloud infrastructure",
+    "description": "Vultr provides cloud compute, bare metal, GPU instances, managed Kubernetes, storage and managed databases in data centres worldwide.",
+    "website": "https://www.vultr.com",
+    "tags": [
+      "Cloud",
+      "Compute",
+      "GPU",
+      "VPS"
+    ],
+    "brandColor": "#007BFC",
+    "logo": {
+      "src": "/logos/vultr.svg",
+      "alt": "Vultr logo"
+    }
+  },
+  {
+    "id": "ibm-cloud",
+    "slug": "ibm-cloud",
+    "name": "IBM Cloud",
+    "providerId": "ibm",
+    "tagline": "IBM's public cloud platform",
+    "description": "IBM Cloud offers compute, Kubernetes, storage, databases and AI services, including a set of always-free products.",
+    "website": "https://www.ibm.com/cloud",
+    "tags": [
+      "Cloud",
+      "Compute",
+      "Kubernetes",
+      "Databases"
+    ],
+    "brandColor": "#0F62FE"
+  },
+  {
+    "id": "confluent-cloud",
+    "slug": "confluent-cloud",
+    "name": "Confluent Cloud",
+    "providerId": "confluent",
+    "tagline": "Managed Apache Kafka and data streaming",
+    "description": "Confluent Cloud is a fully managed data streaming service built on Apache Kafka, available on AWS, Google Cloud and Microsoft Azure.",
+    "website": "https://www.confluent.io/confluent-cloud/",
+    "tags": [
+      "Data Streaming",
+      "Kafka",
+      "Cloud"
+    ],
+    "brandColor": "#173361"
+  },
+  {
+    "id": "snowflake",
+    "slug": "snowflake",
+    "name": "Snowflake",
+    "providerId": "snowflake",
+    "tagline": "The AI Data Cloud",
+    "description": "Snowflake is a cloud data platform for data warehousing, data engineering, analytics, applications and AI.",
+    "website": "https://www.snowflake.com",
+    "tags": [
+      "Data Warehouse",
+      "Analytics",
+      "Cloud",
+      "AI"
+    ],
+    "brandColor": "#29B5E8",
+    "logo": {
+      "src": "/logos/snowflake.svg",
+      "alt": "Snowflake logo"
+    }
+  },
+  {
+    "id": "alibaba-cloud",
+    "slug": "alibaba-cloud",
+    "name": "Alibaba Cloud",
+    "providerId": "alibaba-cloud",
+    "tagline": "Cloud computing and AI services from Alibaba Group",
+    "description": "Alibaba Cloud provides compute, storage, networking, databases and AI services, including the Model Studio platform for Qwen models.",
+    "website": "https://www.alibabacloud.com",
+    "tags": [
+      "Cloud",
+      "Compute",
+      "AI",
+      "LLM API"
+    ],
+    "brandColor": "#FF6A00",
+    "logo": {
+      "src": "/logos/alibaba-cloud.svg",
+      "alt": "Alibaba Cloud logo"
+    }
+  },
+  {
+    "id": "scaleway",
+    "slug": "scaleway",
+    "name": "Scaleway",
+    "providerId": "scaleway",
+    "tagline": "European cloud provider",
+    "description": "Scaleway offers compute instances, GPU, Kubernetes, object storage, managed databases and serverless products from European data centres.",
+    "website": "https://www.scaleway.com",
+    "tags": [
+      "Cloud",
+      "Compute",
+      "GPU",
+      "Kubernetes"
+    ],
+    "brandColor": "#4F0599",
+    "logo": {
+      "src": "/logos/scaleway.svg",
+      "alt": "Scaleway logo"
+    }
+  },
+  {
+    "id": "ovhcloud",
+    "slug": "ovhcloud",
+    "name": "OVHcloud",
+    "providerId": "ovhcloud",
+    "tagline": "European public and private cloud",
+    "description": "OVHcloud provides public cloud, hosted private cloud, bare-metal servers and web hosting.",
+    "website": "https://www.ovhcloud.com",
+    "tags": [
+      "Cloud",
+      "Compute",
+      "Bare Metal",
+      "Kubernetes"
+    ],
+    "brandColor": "#000E9C",
+    "logo": {
+      "src": "/logos/ovhcloud.svg",
+      "alt": "OVHcloud logo"
+    }
+  },
+  {
+    "id": "civo",
+    "slug": "civo",
+    "name": "Civo",
+    "providerId": "civo",
+    "tagline": "Cloud built around managed Kubernetes",
+    "description": "Civo is a cloud platform offering managed Kubernetes, compute instances, GPUs, object storage and databases.",
+    "website": "https://www.civo.com",
+    "tags": [
+      "Cloud",
+      "Kubernetes",
+      "Compute",
+      "GPU"
+    ],
+    "brandColor": "#239DFF",
+    "logo": {
+      "src": "/logos/civo.svg",
+      "alt": "Civo logo"
+    }
+  },
+  {
+    "id": "cockroachdb-cloud",
+    "slug": "cockroachdb-cloud",
+    "name": "CockroachDB Cloud",
+    "providerId": "cockroach-labs",
+    "tagline": "Managed distributed SQL",
+    "description": "CockroachDB Cloud is the fully managed version of CockroachDB, a distributed SQL database built for resilience and scale.",
+    "website": "https://www.cockroachlabs.com/product/cloud/",
+    "tags": [
+      "Database",
+      "SQL",
+      "Cloud"
+    ],
+    "brandColor": "#6933FF",
+    "logo": {
+      "src": "/logos/cockroachdb-cloud.svg",
+      "alt": "CockroachDB Cloud logo"
+    }
+  },
+  {
+    "id": "clickhouse-cloud",
+    "slug": "clickhouse-cloud",
+    "name": "ClickHouse Cloud",
+    "providerId": "clickhouse",
+    "tagline": "Managed ClickHouse for real-time analytics",
+    "description": "ClickHouse Cloud is the managed service for ClickHouse, an open-source column-oriented database for real-time analytics.",
+    "website": "https://clickhouse.com/cloud",
+    "tags": [
+      "Database",
+      "Analytics",
+      "Cloud"
+    ],
+    "brandColor": "#FAFF69",
+    "logo": {
+      "src": "/logos/clickhouse-cloud.svg",
+      "alt": "ClickHouse Cloud logo"
+    }
+  },
+  {
+    "id": "render",
+    "slug": "render",
+    "name": "Render",
+    "providerId": "render",
+    "tagline": "Cloud hosting for apps and databases",
+    "description": "Render hosts web services, static sites, background workers, cron jobs and managed Postgres with Git-based deploys.",
+    "website": "https://render.com",
+    "tags": [
+      "Hosting",
+      "PaaS",
+      "Cloud",
+      "Postgres"
+    ],
+    "brandColor": "#8A05FF",
+    "logo": {
+      "src": "/logos/render.svg",
+      "alt": "Render logo"
+    }
+  },
+  {
+    "id": "fly-io",
+    "slug": "fly-io",
+    "name": "Fly.io",
+    "providerId": "fly-io",
+    "tagline": "Run apps close to your users",
+    "description": "Fly.io runs applications in Fly Machines, lightweight virtual machines, across regions worldwide, with volumes and Managed Postgres.",
+    "website": "https://fly.io",
+    "tags": [
+      "Hosting",
+      "PaaS",
+      "Cloud",
+      "Compute"
+    ],
+    "brandColor": "#7B3BE2",
+    "logo": {
+      "src": "/logos/fly-io.svg",
+      "alt": "Fly.io logo"
+    }
+  },
+  {
+    "id": "temporal-cloud",
+    "slug": "temporal-cloud",
+    "name": "Temporal Cloud",
+    "providerId": "temporal",
+    "tagline": "Managed durable execution",
+    "description": "Temporal Cloud is the managed service for Temporal, an open-source platform for running reliable, durable workflows in code.",
+    "website": "https://temporal.io/cloud",
+    "tags": [
+      "Workflow Orchestration",
+      "Developer Tools",
+      "Cloud"
+    ],
+    "brandColor": "#141414",
+    "logo": {
+      "src": "/logos/temporal-cloud.svg",
+      "alt": "Temporal Cloud logo"
+    }
+  },
+  {
+    "id": "new-relic",
+    "slug": "new-relic",
+    "name": "New Relic",
+    "providerId": "new-relic",
+    "tagline": "Observability platform",
+    "description": "New Relic is an observability platform for application performance monitoring, infrastructure, logs and AI monitoring.",
+    "website": "https://newrelic.com",
+    "tags": [
+      "Observability",
+      "Monitoring",
+      "APM"
+    ],
+    "brandColor": "#1CE783",
+    "logo": {
+      "src": "/logos/new-relic.svg",
+      "alt": "New Relic logo"
+    }
+  },
+  {
+    "id": "pinecone",
+    "slug": "pinecone",
+    "name": "Pinecone",
+    "providerId": "pinecone",
+    "tagline": "Vector database for AI",
+    "description": "Pinecone is a fully managed vector database used for semantic search, retrieval-augmented generation and other AI applications.",
+    "website": "https://www.pinecone.io",
+    "tags": [
+      "Vector Database",
+      "AI",
+      "Database"
+    ],
+    "brandColor": "#000000"
+  },
+  {
+    "id": "aiven",
+    "slug": "aiven",
+    "name": "Aiven",
+    "providerId": "aiven",
+    "tagline": "Managed open-source data platform",
+    "description": "Aiven runs managed PostgreSQL, MySQL, Apache Kafka, OpenSearch, ClickHouse, Valkey and other open-source data services on major clouds.",
+    "website": "https://aiven.io",
+    "tags": [
+      "Database",
+      "Kafka",
+      "Postgres",
+      "Cloud"
+    ],
+    "brandColor": "#FF3554"
+  },
+  {
+    "id": "elastic-cloud",
+    "slug": "elastic-cloud",
+    "name": "Elastic Cloud",
+    "providerId": "elastic",
+    "tagline": "Managed Elasticsearch and Elastic Stack",
+    "description": "Elastic Cloud is Elastic's managed service for Elasticsearch and the Elastic Stack, available as Serverless or Hosted deployments.",
+    "website": "https://www.elastic.co/cloud",
+    "tags": [
+      "Search",
+      "Observability",
+      "Database",
+      "Cloud"
+    ],
+    "brandColor": "#00BFB3",
+    "logo": {
+      "src": "/logos/elastic-cloud.svg",
+      "alt": "Elastic Cloud logo"
+    }
+  },
+  {
+    "id": "claude-developer-platform",
+    "slug": "claude-developer-platform",
+    "name": "Claude Developer Platform",
+    "providerId": "anthropic",
+    "tagline": "Anthropic's API and console for building with Claude",
+    "description": "The Claude Developer Platform gives developers API access to Anthropic's Claude models, managed through the Claude Console.",
+    "website": "https://platform.claude.com",
+    "tags": [
+      "AI",
+      "LLM API",
+      "Developer Tools"
+    ],
+    "brandColor": "#D97757",
+    "logo": {
+      "src": "/logos/claude.svg",
+      "alt": "Claude Developer Platform logo"
+    }
+  },
+  {
+    "id": "modal",
+    "slug": "modal",
+    "name": "Modal",
+    "providerId": "modal",
+    "tagline": "Serverless GPUs and CPUs for AI workloads",
+    "description": "Modal runs Python code in the cloud on GPUs and CPUs, billed per second, for AI inference, fine-tuning, batch jobs and sandboxes.",
+    "website": "https://modal.com",
+    "tags": [
+      "AI",
+      "GPU Cloud",
+      "Serverless",
+      "Developer Tools"
+    ],
+    "brandColor": "#7FEE64",
+    "logo": {
+      "src": "/logos/modal.svg",
+      "alt": "Modal logo"
+    }
+  },
+  {
+    "id": "groqcloud",
+    "slug": "groqcloud",
+    "name": "GroqCloud",
+    "providerId": "groq",
+    "tagline": "Fast inference API for open models",
+    "description": "GroqCloud is Groq's API platform for running open large language, speech and vision models on Groq's LPU hardware.",
+    "website": "https://console.groq.com",
+    "tags": [
+      "AI",
+      "LLM API",
+      "Inference"
+    ],
+    "brandColor": "#F55036",
+    "logo": {
+      "src": "/logos/groqcloud.svg",
+      "alt": "GroqCloud logo"
+    }
+  },
+  {
+    "id": "qdrant-cloud",
+    "slug": "qdrant-cloud",
+    "name": "Qdrant Cloud",
+    "providerId": "qdrant",
+    "tagline": "Managed Qdrant vector search",
+    "description": "Qdrant Cloud is the managed service for Qdrant, an open-source vector search engine, running on AWS, Google Cloud and Azure.",
+    "website": "https://qdrant.tech/cloud/",
+    "tags": [
+      "AI",
+      "Vector Database",
+      "Search"
+    ],
+    "brandColor": "#DC244C",
+    "logo": {
+      "src": "/logos/qdrant-cloud.svg",
+      "alt": "Qdrant Cloud logo"
+    }
+  },
+  {
+    "id": "cloudflare-workers-ai",
+    "slug": "cloudflare-workers-ai",
+    "name": "Cloudflare Workers AI",
+    "providerId": "cloudflare",
+    "tagline": "Run AI models on Cloudflare's network",
+    "description": "Workers AI lets developers run open AI models on Cloudflare's GPUs from Workers, Pages or a REST API, billed in Neurons.",
+    "website": "https://developers.cloudflare.com/workers-ai/",
+    "tags": [
+      "AI",
+      "Inference",
+      "Serverless"
+    ],
+    "brandColor": "#F38020",
+    "logo": {
+      "src": "/logos/cloudflare.svg",
+      "alt": "Cloudflare Workers AI logo"
+    }
+  },
+  {
+    "id": "runway",
+    "slug": "runway",
+    "name": "Runway",
+    "providerId": "runway",
+    "tagline": "AI video and image generation",
+    "description": "Runway is a web and mobile app for generating and editing video and images with AI models.",
+    "website": "https://runwayml.com",
+    "tags": [
+      "AI",
+      "Video",
+      "Image Generation"
+    ],
+    "brandColor": "#000000",
+    "logo": {
+      "src": "/logos/runway.svg",
+      "alt": "Runway logo"
+    }
+  },
+  {
+    "id": "suno",
+    "slug": "suno",
+    "name": "Suno",
+    "providerId": "suno",
+    "tagline": "AI music generator",
+    "description": "Suno creates songs, with vocals and instrumentals, from text prompts and lyrics.",
+    "website": "https://suno.com",
+    "tags": [
+      "AI",
+      "Music",
+      "Audio"
+    ],
+    "brandColor": "#000000",
+    "logo": {
+      "src": "/logos/suno.svg",
+      "alt": "Suno logo"
+    }
+  },
+  {
+    "id": "deepgram",
+    "slug": "deepgram",
+    "name": "Deepgram",
+    "providerId": "deepgram",
+    "tagline": "Voice AI APIs for speech-to-text and text-to-speech",
+    "description": "Deepgram offers APIs for speech-to-text, text-to-speech and voice agents for developers and enterprises.",
+    "website": "https://deepgram.com",
+    "tags": [
+      "AI",
+      "Speech-to-Text",
+      "Voice API"
+    ],
+    "brandColor": "#13EF93",
+    "logo": {
+      "src": "/logos/deepgram.svg",
+      "alt": "Deepgram logo"
+    }
+  },
+  {
+    "id": "assemblyai",
+    "slug": "assemblyai",
+    "name": "AssemblyAI",
+    "providerId": "assemblyai",
+    "tagline": "Speech-to-text and speech understanding API",
+    "description": "AssemblyAI provides APIs for pre-recorded and real-time speech-to-text, plus speech understanding features and guardrails.",
+    "website": "https://www.assemblyai.com",
+    "tags": [
+      "AI",
+      "Speech-to-Text",
+      "Voice API"
+    ],
+    "brandColor": "#2545D3",
+    "logo": {
+      "src": "/logos/assemblyai.svg",
+      "alt": "AssemblyAI logo"
+    }
+  },
+  {
+    "id": "langsmith",
+    "slug": "langsmith",
+    "name": "LangSmith",
+    "providerId": "langchain",
+    "tagline": "Observability and evals for LLM agents",
+    "description": "LangSmith is LangChain's platform for tracing, monitoring, evaluating and deploying LLM applications and agents.",
+    "website": "https://www.langchain.com/langsmith",
+    "tags": [
+      "AI",
+      "Observability",
+      "LLM Ops"
+    ],
+    "brandColor": "#1C3C3C",
+    "logo": {
+      "src": "/logos/langsmith.svg",
+      "alt": "LangSmith logo"
+    }
+  },
+  {
+    "id": "together-ai",
+    "slug": "together-ai",
+    "name": "Together AI",
+    "providerId": "together-ai",
+    "tagline": "AI cloud for open-source models",
+    "description": "Together AI offers serverless inference, fine-tuning, dedicated endpoints and GPU clusters for open-source AI models.",
+    "website": "https://www.together.ai",
+    "tags": [
+      "AI",
+      "LLM API",
+      "GPU Cloud"
+    ],
+    "brandColor": "#0F6FFF",
+    "logo": {
+      "src": "/logos/together-ai.svg",
+      "alt": "Together AI logo"
+    }
+  },
+  {
+    "id": "tavily",
+    "slug": "tavily",
+    "name": "Tavily",
+    "providerId": "tavily",
+    "tagline": "Web search API for AI agents",
+    "description": "Tavily is a search, extract and crawl API that gives AI agents and LLM apps real-time web results.",
+    "website": "https://www.tavily.com",
+    "tags": [
+      "AI",
+      "Search API",
+      "Agents"
+    ],
+    "brandColor": "#468BFF",
+    "logo": {
+      "src": "/logos/tavily.svg",
+      "alt": "Tavily logo"
+    }
+  },
+  {
+    "id": "weights-and-biases",
+    "slug": "weights-and-biases",
+    "name": "Weights & Biases",
+    "providerId": "weights-and-biases",
+    "tagline": "Experiment tracking and LLM evaluation",
+    "description": "Weights & Biases (W&B) tracks machine-learning experiments, models and datasets, and its Weave toolkit evaluates and monitors LLM applications.",
+    "website": "https://wandb.ai",
+    "tags": [
+      "AI",
+      "MLOps",
+      "Experiment Tracking"
+    ],
+    "brandColor": "#FFBE00",
+    "logo": {
+      "src": "/logos/weights-and-biases.svg",
+      "alt": "Weights & Biases logo"
+    }
+  },
+  {
+    "id": "amazon-q-developer",
+    "slug": "amazon-q-developer",
+    "name": "Amazon Q Developer",
+    "providerId": "aws",
+    "tagline": "AWS's AI coding assistant",
+    "description": "Amazon Q Developer is an AI assistant for software development and AWS, available in IDEs, the command line and the AWS console.",
+    "website": "https://aws.amazon.com/q/developer/",
+    "tags": [
+      "AI",
+      "Coding Assistant",
+      "Developer Tools"
+    ],
+    "brandColor": "#232F3E",
+    "logo": {
+      "src": "/logos/aws.svg",
+      "alt": "Amazon Q Developer logo"
+    }
+  },
+  {
+    "id": "salesforce",
+    "slug": "salesforce",
+    "name": "Salesforce",
+    "providerId": "salesforce",
+    "tagline": "Cloud CRM for sales, service and nonprofits",
+    "description": "Salesforce is a cloud CRM platform. Its nonprofit edition, now called Agentforce Nonprofit (formerly Nonprofit Cloud), covers fundraising, programs and constituent management.",
+    "website": "https://www.salesforce.com",
+    "tags": [
+      "CRM",
+      "Sales",
+      "Customer service",
+      "Nonprofit CRM"
+    ],
+    "brandColor": "#00A1E0"
+  },
+  {
+    "id": "zoho-mail",
+    "slug": "zoho-mail",
+    "name": "Zoho Mail",
+    "providerId": "zoho",
+    "tagline": "Business email on your own domain",
+    "description": "Zoho Mail is Zoho's hosted business email service with custom-domain mailboxes, webmail and mobile apps.",
+    "website": "https://www.zoho.com/mail/",
+    "tags": [
+      "Email",
+      "Business email",
+      "Custom domain email"
+    ],
+    "brandColor": "#E42527"
+  },
+  {
+    "id": "clickup",
+    "slug": "clickup",
+    "name": "ClickUp",
+    "providerId": "clickup",
+    "tagline": "Tasks, docs and projects in one workspace",
+    "description": "ClickUp is a work-management app for tasks, projects, docs and team collaboration.",
+    "website": "https://clickup.com",
+    "tags": [
+      "Project management",
+      "Task management",
+      "Productivity",
+      "Collaboration"
+    ],
+    "brandColor": "#7B68EE",
+    "logo": {
+      "src": "/logos/clickup.svg",
+      "alt": "ClickUp logo"
+    }
+  },
+  {
+    "id": "docusign-esignature",
+    "slug": "docusign-esignature",
+    "name": "Docusign eSignature",
+    "providerId": "docusign",
+    "tagline": "Send and sign agreements electronically",
+    "description": "Docusign eSignature lets you prepare documents, send them for signature and track signed agreements online.",
+    "website": "https://www.docusign.com",
+    "tags": [
+      "E-signature",
+      "Contracts",
+      "Document workflow"
+    ],
+    "brandColor": "#4C00FF"
+  },
+  {
+    "id": "quickbooks-online",
+    "slug": "quickbooks-online",
+    "name": "QuickBooks Online",
+    "providerId": "intuit",
+    "tagline": "Cloud accounting for small businesses",
+    "description": "QuickBooks Online is Intuit's cloud accounting software for invoicing, expenses, bookkeeping and reporting.",
+    "website": "https://quickbooks.intuit.com",
+    "tags": [
+      "Accounting",
+      "Bookkeeping",
+      "Invoicing",
+      "Small business"
+    ],
+    "brandColor": "#2CA01C",
+    "logo": {
+      "src": "/logos/quickbooks-online.svg",
+      "alt": "QuickBooks Online logo"
+    }
+  },
+  {
+    "id": "freshbooks",
+    "slug": "freshbooks",
+    "name": "FreshBooks",
+    "providerId": "freshbooks",
+    "tagline": "Accounting and invoicing for small businesses",
+    "description": "FreshBooks is cloud accounting software for invoicing, expenses, time tracking and payments, aimed at small businesses and self-employed professionals.",
+    "website": "https://www.freshbooks.com",
+    "tags": [
+      "Accounting",
+      "Invoicing",
+      "Time tracking",
+      "Small business"
+    ],
+    "brandColor": "#0075DD"
+  },
+  {
+    "id": "mailerlite",
+    "slug": "mailerlite",
+    "name": "MailerLite",
+    "providerId": "mailerlite",
+    "tagline": "Email marketing and newsletters",
+    "description": "MailerLite is an email marketing platform for newsletters, automations, landing pages and signup forms.",
+    "website": "https://www.mailerlite.com",
+    "tags": [
+      "Email marketing",
+      "Newsletters",
+      "Marketing automation"
+    ],
+    "brandColor": "#09C269"
+  },
+  {
+    "id": "tally",
+    "slug": "tally",
+    "name": "Tally",
+    "providerId": "tally",
+    "tagline": "Free no-code form builder",
+    "description": "Tally is a no-code form builder for forms, surveys and quizzes that works like a text document.",
+    "website": "https://tally.so",
+    "tags": [
+      "Forms",
+      "Surveys",
+      "No-code"
+    ],
+    "brandColor": "#000000"
+  },
+  {
+    "id": "typeform",
+    "slug": "typeform",
+    "name": "Typeform",
+    "providerId": "typeform",
+    "tagline": "Conversational forms and surveys",
+    "description": "Typeform is an online form builder for conversational forms, surveys and quizzes, with integrations and response analytics.",
+    "website": "https://www.typeform.com",
+    "tags": [
+      "Forms",
+      "Surveys",
+      "Lead generation"
+    ],
+    "brandColor": "#262627"
+  },
+  {
+    "id": "squarespace",
+    "slug": "squarespace",
+    "name": "Squarespace",
+    "providerId": "squarespace",
+    "tagline": "Website builder with hosting and commerce",
+    "description": "Squarespace is a hosted website builder with templates, domains, online store and marketing tools.",
+    "website": "https://www.squarespace.com",
+    "tags": [
+      "Website builder",
+      "Hosting",
+      "Ecommerce"
+    ],
+    "brandColor": "#000000",
+    "logo": {
+      "src": "/logos/squarespace.svg",
+      "alt": "Squarespace logo"
+    }
+  },
+  {
+    "id": "box",
+    "slug": "box",
+    "name": "Box",
+    "providerId": "box",
+    "tagline": "Cloud content management and file sharing",
+    "description": "Box is a cloud content management platform for storing, sharing and collaborating on files, with e-signature and security controls.",
+    "website": "https://www.box.com",
+    "tags": [
+      "Cloud storage",
+      "File sharing",
+      "Collaboration",
+      "E-signature"
+    ],
+    "brandColor": "#0061D5",
+    "logo": {
+      "src": "/logos/box.svg",
+      "alt": "Box logo"
+    }
+  },
+  {
+    "id": "bitwarden",
+    "slug": "bitwarden",
+    "name": "Bitwarden Password Manager",
+    "providerId": "bitwarden",
+    "tagline": "Open-source password manager for teams",
+    "description": "Bitwarden Password Manager stores and shares passwords and other credentials, with Teams and Enterprise plans for organizations.",
+    "website": "https://bitwarden.com",
+    "tags": [
+      "Password manager",
+      "Security",
+      "Credential sharing"
+    ],
+    "brandColor": "#175DDC",
+    "logo": {
+      "src": "/logos/bitwarden.svg",
+      "alt": "Bitwarden Password Manager logo"
+    }
+  },
+  {
+    "id": "zapier",
+    "slug": "zapier",
+    "name": "Zapier",
+    "providerId": "zapier",
+    "tagline": "No-code automation between apps",
+    "description": "Zapier connects web apps and automates workflows between them without code.",
+    "website": "https://zapier.com",
+    "tags": [
+      "Automation",
+      "Integrations",
+      "No-code",
+      "Workflows"
+    ],
+    "brandColor": "#FF4F00",
+    "logo": {
+      "src": "/logos/zapier.svg",
+      "alt": "Zapier logo"
     }
   }
 ];
