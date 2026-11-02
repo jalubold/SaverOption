@@ -314,7 +314,7 @@ async function capture({ title, workspace }: { title: string; workspace: string 
   cover.textContent = "Preparing your file…";
   document.body.appendChild(cover);
   const undo: (() => void)[] = [];
-  const set = (el: HTMLElement, prop: "overflow" | "maxHeight" | "width" | "maxWidth", value: string) => {
+  const set = (el: HTMLElement, prop: "overflow" | "maxHeight" | "width" | "maxWidth" | "flexWrap" | "whiteSpace", value: string) => {
     const before = el.style[prop];
     el.style[prop] = value;
     undo.push(() => {
@@ -338,6 +338,35 @@ async function capture({ title, workspace }: { title: string; workspace: string 
     // Let charts and tables settle into the new width.
     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
     await new Promise((r) => setTimeout(r, 120));
+
+    // The copy is drawn with every element's measured width, and some browsers round those a hair
+    // differently: a row of chips or logos that just fits could then push its last item onto a new
+    // line (out of its card), or a one-line label onto two. Rows and labels that sit on one line on
+    // screen are kept on one line in the copy.
+    const rows: HTMLElement[] = [];
+    const labels: HTMLElement[] = [];
+    for (const el of node.querySelectorAll<HTMLElement>("*")) {
+      if (el.closest("[data-export-hide], svg")) continue;
+      const cs = getComputedStyle(el);
+      if (cs.display.includes("flex") && cs.flexWrap !== "nowrap" && cs.flexDirection.startsWith("row")) {
+        const kids = [...el.children].filter((k): k is HTMLElement => k instanceof HTMLElement && k.getClientRects().length > 0 && getComputedStyle(k).position !== "absolute");
+        const boxes = kids.map((k) => k.getBoundingClientRect());
+        if (kids.length > 1 && Math.max(...boxes.map((b) => b.top)) < Math.min(...boxes.map((b) => b.bottom))) rows.push(el);
+      }
+      // A shortened label ("…") that shows in full on screen stays in full.
+      if (cs.textOverflow === "ellipsis" && el.scrollWidth <= el.clientWidth) labels.push(el);
+      else if (cs.whiteSpace === "normal" && [...el.childNodes].some((n) => n.nodeType === Node.TEXT_NODE && n.textContent?.trim())) {
+        const box = el.getBoundingClientRect();
+        const content = box.height - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - parseFloat(cs.borderTopWidth) - parseFloat(cs.borderBottomWidth);
+        const line = parseFloat(cs.lineHeight) || parseFloat(cs.fontSize) * 1.25;
+        if (box.width > 0 && content < line * 1.5) labels.push(el);
+      }
+    }
+    for (const el of rows) set(el, "flexWrap", "nowrap");
+    for (const el of labels) {
+      set(el, "whiteSpace", "nowrap");
+      if (getComputedStyle(el).textOverflow === "ellipsis") set(el, "overflow", "visible");
+    }
 
     const box = node.getBoundingClientRect();
     const width = Math.ceil(node.scrollWidth);
