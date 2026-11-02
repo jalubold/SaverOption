@@ -48,7 +48,7 @@ export async function addSoftwareAction(_prev: FormState, form: FormData): Promi
       if (!r.ok) return stateFromErrors(r);
       const id = await db().begin((sql) => createSoftware(sql, ctx, newSoftware));
       refresh();
-      redirect(after === "onboarding" ? "/business/onboarding?step=done" : `/business/software/${id}?created=1`);
+      redirect(after === "onboarding" ? "/business/onboarding?step=calendar" : `/business/software/${id}?created=1`);
     }
 
     const input = readSubscriptionInput(r, { currency: ctx.workspace.defaultCurrency });
@@ -60,7 +60,7 @@ export async function addSoftwareAction(_prev: FormState, form: FormData): Promi
     if (!r.ok) return stateFromErrors(r);
     const res = await createSubscription(ctx, { softwareId, newSoftware, input, idempotencyKey: key, seatPersonIds });
     refresh();
-    redirect(after === "onboarding" ? "/business/onboarding?step=done" : `/business/subscriptions/${res.id}?created=1`);
+    redirect(after === "onboarding" ? "/business/onboarding?step=calendar" : `/business/subscriptions/${res.id}?created=1`);
   });
 }
 

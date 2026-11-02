@@ -28,6 +28,7 @@ import { formatRate } from "@/lib/business/fx";
 import { can } from "@/lib/business/permissions";
 import { buildSpendModel, type AttentionItem, type Group } from "@/lib/server/business/analytics";
 import { displayName, requireBizContext } from "@/lib/server/business/context";
+import { CalendarPrompt } from "@/components/business/calendar-connect";
 import { asBilled, workspaceDisplay } from "@/lib/server/business/display-currency";
 import { getActivity, type Subscription } from "@/lib/server/business/data";
 import { logoFor } from "@/lib/server/business/logos";
@@ -332,6 +333,9 @@ export default async function DashboardPage() {
           </LinkButton>
         </div>
       </section>
+
+      {/* Until the member's calendar has their renewals (or they choose Not now). */}
+      <CalendarPrompt ctx={ctx} className="so-rise mt-5" />
 
       {/* ── KPI tiles ───────────────────────────────────────────────────────── */}
       <SpotlightGroup className="mt-5 grid grid-cols-1 gap-3 min-[460px]:grid-cols-2 xl:grid-cols-4">

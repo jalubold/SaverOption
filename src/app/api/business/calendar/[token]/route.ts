@@ -4,11 +4,11 @@ import { dbConfigured } from "@/lib/server/db";
 /**
  * A member's calendar feed (/api/business/calendar/<token>.ics), fetched by Google Calendar,
  * Outlook or Apple Calendar. The token is the only credential, so an unknown one gets the
- * same plain 404 as a malformed one.
+ * same plain 404 as a malformed one. The user agent says which calendar app is fetching it.
  */
-export async function GET(_request: Request, ctx: RouteContext<"/api/business/calendar/[token]">) {
+export async function GET(request: Request, ctx: RouteContext<"/api/business/calendar/[token]">) {
   const { token } = await ctx.params;
-  const feed = dbConfigured() ? await calendarFeed(token.replace(/\.ics$/, "")) : null;
+  const feed = dbConfigured() ? await calendarFeed(token.replace(/\.ics$/, ""), { userAgent: request.headers.get("user-agent") }) : null;
   if (!feed) return new Response("Not found", { status: 404, headers: { "Cache-Control": "no-store" } });
   return new Response(feed, {
     headers: {

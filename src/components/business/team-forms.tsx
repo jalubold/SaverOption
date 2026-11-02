@@ -86,7 +86,7 @@ function StepNumber({ n }: { n: number }) {
   return <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full border border-accent/40 bg-surface text-[12px] font-semibold text-accent-ink">{n}</span>;
 }
 
-export function InviteForm({ workspaceId, roles }: { workspaceId: string; roles: Option[] }) {
+export function InviteForm({ workspaceId, roles, after }: { workspaceId: string; roles: Option[]; after?: "onboarding" }) {
   return (
     <ActionForm
       action={inviteMemberAction}
@@ -96,6 +96,7 @@ export function InviteForm({ workspaceId, roles }: { workspaceId: string; roles:
       onDone={(state) => state.ok && (document.getElementById("invite-form") as HTMLFormElement | null)?.reset()}
       className="grid gap-3 sm:grid-cols-[1fr_12rem_auto] sm:items-end"
     >
+      {after && <input type="hidden" name="after" value={after} />}
       <TextField label="Email address" name="email" type="email" required maxLength={254} placeholder="colleague@company.com" />
       <SelectField label="Role" name="role" defaultValue={roles.find((r) => r.value === "member")?.value ?? roles[0]?.value} options={roles} />
       <Submit size="md" pendingLabel="Adding…">

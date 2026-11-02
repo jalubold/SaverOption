@@ -2,8 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { isUuid, type FormState } from "@/lib/business/form";
-import { setCalendarToken } from "@/lib/server/business/calendar";
-import { runAction } from "@/lib/server/business/context";
+import { dismissCalendarPrompt, setCalendarToken } from "@/lib/server/business/calendar";
+import { getBizSession, runAction } from "@/lib/server/business/context";
 import { markNotificationsRead } from "@/lib/server/business/savings-sync";
 
 /** Marks one of the user's own notifications as read (scoped to their user and workspace). */
@@ -37,4 +37,11 @@ export async function calendarLinkAction(_prev: FormState, form: FormData): Prom
     },
     { billing: "open" },
   );
+}
+
+/** Hides the dashboard's "renewals in your calendar" suggestion for this member. */
+export async function dismissCalendarPromptAction(form: FormData): Promise<void> {
+  const { ctx } = await getBizSession();
+  if (ctx && form.get("workspaceId") === ctx.workspace.id) await dismissCalendarPrompt(ctx);
+  revalidatePath("/business/dashboard");
 }

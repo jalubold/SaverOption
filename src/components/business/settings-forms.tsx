@@ -164,18 +164,14 @@ export function DeleteWorkspaceForm({ workspaceId, name }: { workspaceId: string
   );
 }
 
-/** "Create my calendar link", or "Reset link" once there is one. */
-export function CalendarLinkForm({ workspaceId, hasLink }: { workspaceId: string; hasLink: boolean }) {
+/** Replaces the member's calendar link (the link itself is made the first time it's shown). */
+export function CalendarLinkForm({ workspaceId }: { workspaceId: string }) {
   return (
     <ActionForm action={calendarLinkAction} workspaceId={workspaceId} className="space-y-3">
-      <input type="hidden" name="intent" value={hasLink ? "reset" : "create"} />
-      {hasLink ? (
-        <Submit variant="secondary" size="sm" pendingLabel="Resetting…">
-          Reset link
-        </Submit>
-      ) : (
-        <Submit pendingLabel="Creating…">Create my calendar link</Submit>
-      )}
+      <input type="hidden" name="intent" value="reset" />
+      <Submit variant="secondary" size="sm" pendingLabel="Resetting…">
+        Reset link
+      </Submit>
     </ActionForm>
   );
 }

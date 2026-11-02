@@ -104,7 +104,9 @@ export const guides: DocPage[] = [
             items: [
               "**Create workspace**: company name (required), industry, company size and website (optional), default currency and time zone.",
               "**Add your first subscription**: or skip this step and add software later.",
-              "**Open the dashboard**.",
+              "**Put renewals in your calendar**: Add to Google Calendar (or Apple Calendar / Outlook) in two clicks, or skip it.",
+              "**Invite your team**: give colleagues access and send each their invite link, or do it later from Team Members.",
+              "**Open the dashboard**: the last screen shows what's set up and what's left.",
             ],
           },
           { type: "p", text: "The default currency is used for new subscriptions; each subscription keeps its own currency. Renewal reminders and “today” follow the workspace time zone. You can change company details, preferences and notification defaults in [Settings](/business/settings)." },
@@ -384,7 +386,7 @@ export const guides: DocPage[] = [
         blocks: [
           { type: "p", text: "In-app notifications are created 30, 14 and 7 days before each renewal and before cancellation deadlines on auto-renewing plans. Change the defaults in [Settings → Notifications](/business/settings/notifications) or per subscription. Each reminder is created once." },
           { type: "p", text: "Reminders are created when someone opens the app, and daily when the site operator has configured the scheduled job." },
-          { type: "p", text: "**In your calendar:** under [Settings → Notifications](/business/settings/notifications), create your personal calendar link and add it to Google Calendar (Other calendars → From URL), Outlook or Apple Calendar. Renewals and cancellation deadlines appear as all-day events, with reminders at your reminder windows for the apps that use them. The link works only for you, can be reset at any time, and stops working if you leave the workspace. Google Calendar refreshes it on its own schedule, usually within a few hours." },
+          { type: "p", text: "**In your calendar:** choose **Add to Google Calendar** (during setup, on the dashboard or under [Settings → Notifications](/business/settings/notifications)): Google asks \"Add calendar?\", you choose Add, and that's it. **Apple Calendar or Outlook** does the same in those apps; for anything else, copy your link and add it as a calendar from a URL. Renewals and cancellation deadlines appear as all-day events, with reminders at your reminder windows for the apps that use them. Once your calendar has fetched them, the app shows it as connected. The link works only for you, can be reset at any time, and stops working if you leave the workspace. Google Calendar refreshes subscribed calendars on its own schedule, often every few hours and sometimes only once a day." },
           { type: "note", text: "Email reminders are **not available yet**. A reminder in the app doesn't mean anything was emailed." },
         ],
       },

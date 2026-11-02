@@ -211,13 +211,17 @@ export function ConfirmSubmit({
       <button ref={btn} type="button" disabled={pending} className={buttonClass(variant, size, className)} onClick={() => ref.current?.showModal()}>
         {children}
       </button>
-      {/* Centred on its own; it doesn't inherit the alignment of the table cell or form it sits in. */}
-      <dialog ref={ref} aria-labelledby={titleId} className="m-auto w-[min(92vw,26rem)] rounded-2xl border border-line bg-surface p-0 text-center text-fg shadow-xl backdrop:bg-black/40">
+      {/* Centred and wrapping on its own: it doesn't inherit the alignment or the no-wrap of the table cell or form it sits in. */}
+      <dialog
+        ref={ref}
+        aria-labelledby={titleId}
+        className="m-auto w-[min(92vw,26rem)] whitespace-normal rounded-2xl border border-line bg-surface p-0 text-center font-normal text-fg shadow-xl backdrop:bg-black/40"
+      >
         <div className="p-6">
-          <h2 id={titleId} className="text-[16px] font-semibold">
+          <h2 id={titleId} className="text-[16px] font-semibold [overflow-wrap:anywhere]">
             {title}
           </h2>
-          <div className="mt-2 text-[13.5px] leading-relaxed text-muted">{body}</div>
+          <div className="mt-2 text-[13.5px] leading-relaxed text-muted [overflow-wrap:anywhere]">{body}</div>
           <div className="mt-5 flex justify-center gap-2">
             <button type="button" className={buttonClass("secondary", "sm")} onClick={() => ref.current?.close()}>
               Cancel

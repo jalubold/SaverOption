@@ -18,8 +18,9 @@ export async function inviteMemberAction(_prev: FormState, form: FormData): Prom
     if (!r.ok || !email) return stateFromErrors(r);
     const id = await inviteMember(ctx, email, role);
     refresh();
-    // The Team page then shows the person's invite, ready to copy and send.
-    return { ok: true, redirectTo: `/business/team?invited=${id}#invite` };
+    // The Team page (or the onboarding step) then shows the person's invite, ready to copy and send.
+    const page = form.get("after") === "onboarding" ? "/business/onboarding?step=team&" : "/business/team?";
+    return { ok: true, redirectTo: `${page}invited=${id}#invite` };
   });
 }
 

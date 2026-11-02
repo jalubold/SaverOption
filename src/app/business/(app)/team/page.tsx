@@ -6,6 +6,7 @@ import { FormMessage } from "@/components/ui/form";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass } from "@/components/ui/primitives";
 import { formatIsoDate } from "@/lib/business/calc";
+import { inviteLink, inviteMessage } from "@/lib/business/invite";
 import { roleDescriptions, roleLabels, ROLES, type Role } from "@/lib/business/constants";
 import { assignableRoles, can, canManageMember } from "@/lib/business/permissions";
 import { requireBizContext } from "@/lib/server/business/context";
@@ -40,9 +41,7 @@ export default async function TeamPage(props: { searchParams: Promise<Record<str
   const editing = typeof q.edit === "string" && manageDirectory ? people.find((p) => p.id === q.edit) : undefined;
   // Each invitation has its own link, which tells the person which Google account to use.
   const origin = await requestOrigin();
-  const inviteUrl = (id: string) => `${origin}/business/invite/${id}`;
-  const inviteMessage = (email: string, url: string) =>
-    `Hi! I've given you access to ${ctx.workspace.name} on Saver Option Business.\n\n1. Open this link: ${url}\n2. Continue with Google using ${email}\n3. Choose "Join ${ctx.workspace.name}"`;
+  const inviteUrl = (id: string) => inviteLink(origin, id);
   const invited = typeof q.invited === "string" ? invitations.find((i) => i.id === q.invited) : undefined;
 
   return (
@@ -115,7 +114,7 @@ export default async function TeamPage(props: { searchParams: Promise<Record<str
                 role={roleLabels[invited.role]}
                 workspace={ctx.workspace.name}
                 url={inviteUrl(invited.id)}
-                message={inviteMessage(invited.email, inviteUrl(invited.id))}
+                message={inviteMessage(ctx.workspace.name, invited.email, inviteUrl(invited.id))}
               />
             ) : (
               <ol className="grid gap-2 sm:grid-cols-3" aria-label="How giving access works" data-invite-steps>

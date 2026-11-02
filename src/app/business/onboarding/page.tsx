@@ -1,7 +1,10 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { acceptInvitationAction, completeOnboardingAction, createDemoAction } from "@/app/business/actions/workspace";
 import { AddSoftwareWizard } from "@/components/business/add-software-wizard";
+import { CalendarConnect } from "@/components/business/calendar-connect";
 import { CreateWorkspaceForm } from "@/components/business/onboarding-forms";
+import { InviteForm, InviteSharePanel } from "@/components/business/team-forms";
 import { LogoStack } from "@/components/business/software-logo";
 import { Money } from "@/components/business/ui";
 import { BrandMark } from "@/components/brand/logo";
@@ -10,15 +13,21 @@ import { Icon } from "@/components/ui/icon";
 import { buttonClass, cn } from "@/components/ui/primitives";
 import { summarizeSpend } from "@/lib/business/calc";
 import { roleLabels } from "@/lib/business/constants";
-import { can } from "@/lib/business/permissions";
+import { inviteLink, inviteMessage } from "@/lib/business/invite";
+import { assignableRoles, can } from "@/lib/business/permissions";
 import { TRIAL_DAYS } from "@/lib/business/billing";
 import { trialUsed } from "@/lib/server/business/billing";
-import { getBizSession, requireBizUser } from "@/lib/server/business/context";
-import { getDepartments, getInvitationsForEmail, getPeople, getSoftwareList, getSubscriptions } from "@/lib/server/business/data";
+import { calendarClientLabels, calendarStatus } from "@/lib/server/business/calendar";
+import { getBizSession, requireBizUser, type BizContext } from "@/lib/server/business/context";
+import { getDepartments, getInvitationsForEmail, getOpenInvitations, getPeople, getSoftwareList, getSubscriptions } from "@/lib/server/business/data";
+import { requestOrigin } from "@/lib/server/origin";
 
 export const metadata = { title: "Set up Saver Option Business", robots: { index: false, follow: false } };
 
-const stepNames = ["Create workspace", "Add your first subscription", "Open the dashboard"];
+/** A few steps that matter, each one skippable; the last screen sums up what's set up. */
+const stepNames = ["Create workspace", "First subscription", "Calendar", "Invite your team"];
+const DONE = stepNames.length;
+const stepByName: Record<string, number> = { subscription: 1, calendar: 2, team: 3, done: DONE };
 
 export default async function OnboardingPage(props: PageProps<"/business/onboarding">) {
   const q = await props.searchParams;
@@ -26,7 +35,7 @@ export default async function OnboardingPage(props: PageProps<"/business/onboard
   const { ctx } = await getBizSession();
   const invitations = user.emailConfirmed ? await getInvitationsForEmail(user.email) : [];
   const wantsNew = q.new === "1";
-  const step = !ctx || wantsNew ? 0 : q.step === "done" ? 2 : 1;
+  const step = !ctx || wantsNew ? 0 : (stepByName[typeof q.step === "string" ? q.step : ""] ?? 1);
   const usedTrial = step === 0 && (await trialUsed(user));
 
   return (
@@ -118,16 +127,43 @@ export default async function OnboardingPage(props: PageProps<"/business/onboard
         )}
 
         {step === 1 && ctx && <FirstSubscription ctx={ctx} />}
-        {step === 2 && ctx && <Done ctx={ctx} />}
+        {step === 2 && ctx && <CalendarStep ctx={ctx} />}
+        {step === 3 && ctx && <TeamStep ctx={ctx} invitedId={typeof q.invited === "string" ? q.invited : null} />}
+        {step === DONE && ctx && <Done ctx={ctx} />}
       </main>
     </div>
   );
 }
 
-async function FirstSubscription({ ctx }: { ctx: NonNullable<Awaited<ReturnType<typeof getBizSession>>["ctx"]> }) {
+/** A step's heading, with its icon. */
+function StepHeader({ icon, title, children }: { icon: "calendar" | "users"; title: string; children: ReactNode }) {
+  return (
+    <>
+      <span aria-hidden="true" className="icon-tile mb-4 size-11">
+        <Icon name={icon} size={20} />
+      </span>
+      <h1 className="text-[22px] font-semibold tracking-tight">{title}</h1>
+      <p className="mt-1 max-w-xl text-[14px] leading-relaxed text-muted">{children}</p>
+    </>
+  );
+}
+
+/** Continue to the next step; the step can always be done later. */
+function StepFooter({ next, later }: { next: string; later: string }) {
+  return (
+    <div className="mt-7 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-5">
+      <p className="text-[12.5px] text-faint">{later}</p>
+      <Link href={next} className={buttonClass("primary", "md")} data-onboarding-next>
+        Continue <Icon name="arrow-right" size={15} />
+      </Link>
+    </div>
+  );
+}
+
+async function FirstSubscription({ ctx }: { ctx: BizContext }) {
+  if (!can(ctx.role, "records.manage")) return <CalendarStep ctx={ctx} />;
   const ws = ctx.workspace.id;
   const [software, people, departments] = await Promise.all([getSoftwareList(ws), getPeople(ws), getDepartments(ws)]);
-  if (!can(ctx.role, "records.manage")) return <Done ctx={ctx} />;
   return (
     <section>
       <h1 className="text-[22px] font-semibold tracking-tight">Add your first subscription</h1>
@@ -146,7 +182,7 @@ async function FirstSubscription({ ctx }: { ctx: NonNullable<Awaited<ReturnType<
         after="onboarding"
       />
       <div className="mt-4 flex justify-end">
-        <Link href="/business/onboarding?step=done" className={buttonClass("ghost", "sm")}>
+        <Link href="/business/onboarding?step=calendar" className={buttonClass("ghost", "sm")}>
           Skip for now
         </Link>
       </div>
@@ -154,12 +190,81 @@ async function FirstSubscription({ ctx }: { ctx: NonNullable<Awaited<ReturnType<
   );
 }
 
-async function Done({ ctx }: { ctx: NonNullable<Awaited<ReturnType<typeof getBizSession>>["ctx"]> }) {
-  const [subs, software] = await Promise.all([getSubscriptions(ctx.workspace.id), getSoftwareList(ctx.workspace.id)]);
+function CalendarStep({ ctx }: { ctx: BizContext }) {
+  return (
+    <section className="biz-card p-5 sm:p-7" data-onboarding-step="calendar">
+      <StepHeader icon="calendar" title="Put renewals in your calendar">
+        Every renewal and cancel-by date of {ctx.workspace.name} as an all-day event in Google Calendar, so nothing renews by surprise. It takes two clicks and
+        stays private to you.
+      </StepHeader>
+      <div className="mt-6">
+        <CalendarConnect ctx={ctx} />
+      </div>
+      <StepFooter next="/business/onboarding?step=team" later="You can also do this later in Settings → Notifications." />
+    </section>
+  );
+}
+
+async function TeamStep({ ctx, invitedId }: { ctx: BizContext; invitedId: string | null }) {
+  const roles = assignableRoles(ctx.role).map((r) => ({ value: r, label: roleLabels[r] }));
+  if (!can(ctx.role, "members.manage") || roles.length === 0) return <Done ctx={ctx} />;
+  const [invitations, origin] = await Promise.all([getOpenInvitations(ctx.workspace.id), requestOrigin()]);
+  const invited = invitedId ? invitations.find((i) => i.id === invitedId) : undefined;
+  const others = invitations.filter((i) => i.id !== invited?.id);
+  return (
+    <section className="biz-card p-5 sm:p-7" data-onboarding-step="team">
+      <StepHeader icon="users" title="Invite your team">
+        Give colleagues access so they can see renewals and keep records up to date. Saver Option doesn&apos;t email anyone: you send each person their own
+        invite link.
+      </StepHeader>
+      <div className="mt-6 space-y-4">
+        {invited && (
+          <InviteSharePanel
+            email={invited.email}
+            role={roleLabels[invited.role]}
+            workspace={ctx.workspace.name}
+            url={inviteLink(origin, invited.id)}
+            message={inviteMessage(ctx.workspace.name, invited.email, inviteLink(origin, invited.id))}
+          />
+        )}
+        <InviteForm workspaceId={ctx.workspace.id} roles={roles} after="onboarding" />
+        {others.length > 0 && (
+          <p className="text-[12.5px] text-muted" data-onboarding-invited>
+            Also waiting to sign in: {others.map((i) => i.email).join(", ")}. Their invite links are under Team Members.
+          </p>
+        )}
+      </div>
+      <StepFooter next="/business/onboarding?step=done" later="Add people any time from Team Members." />
+    </section>
+  );
+}
+
+async function Done({ ctx }: { ctx: BizContext }) {
+  const ws = ctx.workspace.id;
+  const [subs, software, calendar, invitations] = await Promise.all([getSubscriptions(ws), getSoftwareList(ws), calendarStatus(ctx), getOpenInvitations(ws)]);
   const s = summarizeSpend(subs, ctx.today);
   const added = software.filter((sw) => sw.status !== "archived");
+  const calendarApp = calendar.fetchedAt && calendar.client ? calendarClientLabels[calendar.client] : null;
+  const checklist: { done: boolean; title: string; detail: string; href?: string; label?: string }[] = [
+    { done: true, title: "Workspace created", detail: "Its currency, time zone and company details are in Settings." },
+    added.length > 0
+      ? { done: true, title: added.length === 1 ? `${added[0].name} added` : `${added.length} tools added`, detail: "Add more any time with “Add software”." }
+      : { done: false, title: "No subscriptions yet", detail: "Add the tools your company pays for, and the dashboard fills in.", href: "/business/onboarding?step=subscription", label: "Add one" },
+    calendarApp
+      ? { done: true, title: calendar.client === "other" ? "Renewals in your calendar" : `Renewals in ${calendarApp}`, detail: "Each renewal and cancel-by date is an all-day event." }
+      : {
+          done: false,
+          title: "Calendar not connected yet",
+          detail: "Added it? It shows as connected once your calendar fetches it. Otherwise it's in Settings → Notifications.",
+          href: "/business/onboarding?step=calendar",
+          label: "Connect",
+        },
+    invitations.length > 0
+      ? { done: true, title: `${invitations.length} colleague${invitations.length === 1 ? "" : "s"} invited`, detail: "They appear under Team Members once they sign in." }
+      : { done: false, title: "No one invited yet", detail: "Give colleagues access from Team Members whenever you're ready." },
+  ];
   return (
-    <section className="biz-card p-5 sm:p-7">
+    <section className="biz-card p-5 sm:p-7" data-onboarding-step="done">
       {added.length > 0 && (
         <div className="mb-4 flex flex-wrap items-center gap-3">
           <LogoStack items={added.map((sw) => ({ name: sw.name, src: sw.logoSrc }))} max={8} size={36} />
@@ -187,17 +292,34 @@ async function Done({ ctx }: { ctx: NonNullable<Awaited<ReturnType<typeof getBiz
       ) : (
         <p className="mt-2 text-[14px] text-muted">Your dashboard fills in as you add subscriptions.</p>
       )}
-      <ul className="mt-6 space-y-2 text-[13.5px] text-muted">
-        <li className="flex gap-2">
-          <Icon name="calendar" size={15} className="mt-0.5 text-faint" /> Renewal reminders go out {ctx.workspace.reminderDays.join(", ")} days before each renewal — change that in Settings → Notifications.
-        </li>
-        <li className="flex gap-2">
-          <Icon name="users" size={15} className="mt-0.5 text-faint" /> Give colleagues access from Team Members; they sign in with Google using the address you add.
-        </li>
-        <li className="flex gap-2">
-          <Icon name="plus" size={15} className="mt-0.5 text-faint" /> Add more tools any time with “Add software”.
-        </li>
+      <ul className="mt-6 divide-y divide-line rounded-xl border border-line" data-onboarding-checklist>
+        {checklist.map((item) => (
+          <li key={item.title} className="flex items-center gap-3 px-4 py-3" data-done={item.done ? "yes" : "no"}>
+            <span
+              aria-hidden="true"
+              className={cn(
+                "flex size-6 shrink-0 items-center justify-center rounded-full",
+                item.done ? "bg-success text-white" : "border border-dashed border-line-strong text-faint",
+              )}
+            >
+              {item.done && <Icon name="check" size={13} />}
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[13.5px] font-semibold text-fg">{item.title}</span>
+              <span className="block text-[12.5px] leading-snug text-muted">{item.detail}</span>
+            </span>
+            {!item.done && item.href && (
+              <Link href={item.href} className={buttonClass("ghost", "sm")}>
+                {item.label}
+              </Link>
+            )}
+          </li>
+        ))}
       </ul>
+      <p className="mt-4 flex gap-2 text-[13px] text-muted">
+        <Icon name="bell" size={15} className="mt-0.5 shrink-0 text-faint" /> Renewal reminders also appear in the app {ctx.workspace.reminderDays.join(", ")} days before
+        each renewal — change that in Settings → Notifications.
+      </p>
       <form action={completeOnboardingAction} className="mt-6">
         <input type="hidden" name="workspaceId" value={ctx.workspace.id} />
         <button type="submit" className={buttonClass("primary", "lg")}>
