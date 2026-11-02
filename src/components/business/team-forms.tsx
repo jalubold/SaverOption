@@ -8,34 +8,94 @@ import { buttonClass } from "@/components/ui/primitives";
 
 type Option = { value: string; label: string };
 
-/** Copies a link to the clipboard (falls back to selecting the text). */
-export function CopyLinkButton({ url }: { url: string }) {
-  const [copied, setCopied] = useState(false);
+/**
+ * Shown on Team right after giving access (and from "Share invite"): the person's own invite
+ * link and a ready-to-send message, with one-click ways to send it. Saver Option doesn't email
+ * anyone; the inviter sends it from their own email, WhatsApp, Slack or Teams.
+ */
+export function InviteSharePanel({ email, role, workspace, url, message }: { email: string; role: string; workspace: string; url: string; message: string }) {
+  const [copied, setCopied] = useState<"message" | "link" | null>(null);
+  const copy = async (what: "message" | "link") => {
+    const text = what === "message" ? message : url;
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(what);
+      setTimeout(() => setCopied(null), 2000);
+    } catch {
+      window.prompt(what === "message" ? "Copy the invite message" : "Copy the invite link", text);
+    }
+  };
+  const subject = `Join ${workspace} on Saver Option Business`;
   return (
-    <div className="flex min-w-0 items-center gap-2">
-      <code className="min-w-0 flex-1 truncate rounded-lg border border-line bg-subtle px-2.5 py-1.5 text-[12.5px] text-fg">{url}</code>
-      <button
-        type="button"
-        className={buttonClass("secondary", "sm")}
-        onClick={async () => {
-          try {
-            await navigator.clipboard.writeText(url);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-          } catch {
-            window.prompt("Copy the sign-in link", url);
-          }
-        }}
-      >
-        <Icon name={copied ? "check" : "copy"} size={14} /> {copied ? "Copied" : "Copy link"}
-      </button>
-    </div>
+    <section id="invite" className="scroll-mt-24 rounded-2xl border border-accent/30 bg-accent-soft/50 p-4 sm:p-5" data-invite-share>
+      <p className="flex items-center gap-2 text-[15px] font-semibold text-fg">
+        <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-accent text-white">
+          <Icon name="check" size={14} />
+        </span>
+        Access added for {email} · {role}
+      </p>
+      <p className="mt-1 text-[13px] leading-relaxed text-muted">Now send them their invite — Saver Option doesn&apos;t email it. It takes a few seconds:</p>
+      <ol className="mt-4 space-y-4">
+        <li className="flex gap-3">
+          <StepNumber n={1} />
+          <div className="min-w-0 flex-1">
+            <p className="text-[13.5px] font-semibold text-fg">Copy the invite</p>
+            <div className="mt-2 whitespace-pre-line rounded-xl border border-line bg-surface px-3.5 py-3 text-[13px] leading-relaxed text-fg" data-invite-message>
+              {message}
+            </div>
+            <div className="mt-2 flex flex-wrap gap-2">
+              <button type="button" onClick={() => copy("message")} className={buttonClass("primary", "sm")} data-copy-invite>
+                <Icon name={copied === "message" ? "check" : "copy"} size={14} /> {copied === "message" ? "Copied" : "Copy message"}
+              </button>
+              <button type="button" onClick={() => copy("link")} className={buttonClass("secondary", "sm")}>
+                <Icon name={copied === "link" ? "check" : "link"} size={14} /> {copied === "link" ? "Copied" : "Copy link only"}
+              </button>
+            </div>
+          </div>
+        </li>
+        <li className="flex gap-3">
+          <StepNumber n={2} />
+          <div className="min-w-0 flex-1">
+            <p className="text-[13.5px] font-semibold text-fg">Send it to {email}</p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              <a href={`mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`} className={buttonClass("secondary", "sm")}>
+                <Icon name="mail" size={14} /> Email from my account
+              </a>
+              <a href={`https://wa.me/?text=${encodeURIComponent(message)}`} target="_blank" rel="noopener noreferrer" className={buttonClass("secondary", "sm")}>
+                <Icon name="external" size={14} /> WhatsApp
+              </a>
+            </div>
+            <p className="mt-1.5 text-[12.5px] text-faint">Or paste it in Slack, Teams or any chat.</p>
+          </div>
+        </li>
+        <li className="flex gap-3">
+          <StepNumber n={3} />
+          <div className="min-w-0 flex-1">
+            <p className="text-[13.5px] font-semibold text-fg">They sign in with Google as {email}</p>
+            <p className="mt-0.5 text-[13px] leading-relaxed text-muted">
+              The link shows them which account to use, then they choose <strong className="font-medium text-fg">Join</strong>. They&apos;ll appear under Members.
+            </p>
+          </div>
+        </li>
+      </ol>
+    </section>
   );
+}
+
+function StepNumber({ n }: { n: number }) {
+  return <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full border border-accent/40 bg-surface text-[12px] font-semibold text-accent-ink">{n}</span>;
 }
 
 export function InviteForm({ workspaceId, roles }: { workspaceId: string; roles: Option[] }) {
   return (
-    <ActionForm action={inviteMemberAction} workspaceId={workspaceId} className="grid gap-3 sm:grid-cols-[1fr_12rem_auto] sm:items-end">
+    <ActionForm
+      action={inviteMemberAction}
+      workspaceId={workspaceId}
+      id="invite-form"
+      // The share panel above confirms it; the form is cleared for the next person.
+      onDone={(state) => state.ok && (document.getElementById("invite-form") as HTMLFormElement | null)?.reset()}
+      className="grid gap-3 sm:grid-cols-[1fr_12rem_auto] sm:items-end"
+    >
       <TextField label="Email address" name="email" type="email" required maxLength={254} placeholder="colleague@company.com" />
       <SelectField label="Role" name="role" defaultValue={roles.find((r) => r.value === "member")?.value ?? roles[0]?.value} options={roles} />
       <Submit size="md" pendingLabel="Adding…">

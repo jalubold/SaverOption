@@ -554,6 +554,43 @@ export async function getOpenInvitations(workspaceId: string): Promise<Invitatio
   return rows.map((r) => ({ id: r.id, email: r.email, role: r.role, createdAt: r.created_at }));
 }
 
+export interface InviteLink {
+  id: string;
+  email: string;
+  role: Role;
+  status: "open" | "accepted" | "revoked";
+  workspaceId: string;
+  workspaceName: string;
+  /** Who gave the access, as named in the workspace's people directory. */
+  inviterName: string | null;
+}
+
+/**
+ * The invitation behind a personal invite link (/business/invite/<id>). The id is the
+ * link's secret; accepting still needs a Google sign-in with the invited address.
+ */
+export async function getInviteLink(id: string): Promise<InviteLink | null> {
+  const [r] = await db()`
+    select i.id, i.email, i.role, i.accepted_at, i.revoked_at, i.workspace_id, w.name as workspace_name,
+      (select p.name from biz_people p where p.workspace_id = i.workspace_id and p.user_id = i.invited_by limit 1) as inviter_name
+    from biz_invitations i join biz_workspaces w on w.id = i.workspace_id where i.id = ${id}`;
+  if (!r) return null;
+  return {
+    id: r.id,
+    email: r.email,
+    role: r.role,
+    status: r.revoked_at ? "revoked" : r.accepted_at ? "accepted" : "open",
+    workspaceId: r.workspace_id,
+    workspaceName: r.workspace_name,
+    inviterName: r.inviter_name,
+  };
+}
+
+export async function isWorkspaceMember(userId: string, workspaceId: string): Promise<boolean> {
+  const [r] = await db()`select 1 from biz_memberships where user_id = ${userId} and workspace_id = ${workspaceId}`;
+  return Boolean(r);
+}
+
 /** Invitations waiting for a signed-in user (matched on their verified Google email). */
 export async function getInvitationsForEmail(email: string): Promise<(Invitation & { workspaceId: string; workspaceName: string })[]> {
   const rows = await db()`

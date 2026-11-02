@@ -16,9 +16,10 @@ export async function inviteMemberAction(_prev: FormState, form: FormData): Prom
     const email = r.email("email", { label: "Email", required: true });
     const role = r.oneOf("role", ROLES.filter((x) => x !== "owner"), { label: "Role" });
     if (!r.ok || !email) return stateFromErrors(r);
-    await inviteMember(ctx, email, role);
+    const id = await inviteMember(ctx, email, role);
     refresh();
-    return { ok: true, message: `Access added for ${email}. No email was sent — share the sign-in link with them.` };
+    // The Team page then shows the person's invite, ready to copy and send.
+    return { ok: true, redirectTo: `/business/team?invited=${id}#invite` };
   });
 }
 

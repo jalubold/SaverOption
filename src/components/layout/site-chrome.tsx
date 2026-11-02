@@ -15,7 +15,8 @@ export function SiteChrome({ header, footer, children }: { header: ReactNode; fo
   const businessPublic =
     ["/business", "/business/mcp", "/business/download", "/business/login", "/business/signup"].includes(path) ||
     path === "/business/software-deals" ||
-    path.startsWith("/business/software-deals/");
+    path.startsWith("/business/software-deals/") ||
+    path.startsWith("/business/invite/");
   const dark = ["/business", "/business/mcp", "/business/download"].includes(path);
   // The business app shell renders its own <main>.
   if (business && !businessPublic) return <>{children}</>;

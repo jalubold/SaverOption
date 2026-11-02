@@ -10,15 +10,15 @@ import type { SessionUser } from "@/lib/server/supabase";
 // ─── Members and invitations ────────────────────────────────────────────────
 
 /**
- * Gives an email address access with a role. No email is sent — none is
- * configured — so the inviter shares the sign-in link; the invitee accepts after
- * signing in with Google using that address.
+ * Gives an email address access with a role and returns the invitation's id. No email is
+ * sent — none is configured — so the inviter shares the personal invite link
+ * (/business/invite/<id>); the invitee accepts after signing in with Google using that address.
  */
-export async function inviteMember(ctx: BizContext, email: string, role: Role): Promise<void> {
+export async function inviteMember(ctx: BizContext, email: string, role: Role): Promise<string> {
   assertCan(ctx, "members.manage", "Only owners and admins can invite members.");
   if (!assignableRoles(ctx.role).includes(role)) throw new BizError("forbidden", `Your role can't grant ${roleLabels[role]} access.`);
   const ws = ctx.workspace.id;
-  await db().begin(async (sql) => {
+  return db().begin(async (sql) => {
     const [member] = await sql`
       select 1 from biz_memberships m join auth.users u on u.id = m.user_id
       where m.workspace_id = ${ws} and lower(u.email) = ${email}`;
@@ -26,8 +26,9 @@ export async function inviteMember(ctx: BizContext, email: string, role: Role): 
     await assertMemberCapacity(ctx, sql);
     const [{ n }] = await sql`select count(*)::int as n from biz_invitations where workspace_id = ${ws} and accepted_at is null and revoked_at is null`;
     if (n >= 50) throw new BizError("invalid", "This workspace has 50 open invitations. Revoke some first.");
-    await sql`insert into biz_invitations (workspace_id, email, role, invited_by) values (${ws}, ${email}, ${role}, ${ctx.user.id})`;
+    const [inv] = await sql`insert into biz_invitations (workspace_id, email, role, invited_by) values (${ws}, ${email}, ${role}, ${ctx.user.id}) returning id`;
     await logActivity(sql, ctx, { action: "member.invited", entityType: "workspace", entityId: ws, summary: `Gave ${email} ${roleLabels[role]} access (pending sign-in)` });
+    return inv.id as string;
   });
 }
 

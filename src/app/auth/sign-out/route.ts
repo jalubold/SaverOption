@@ -7,6 +7,9 @@ export async function POST(request: NextRequest) {
   // "Sign out everywhere" ends every session for the account, not just this browser's.
   const scope = form?.get("scope") === "global" ? "global" : "local";
   if (authConfigured()) await (await supabaseServer()).auth.signOut({ scope });
-  const to = form?.get("next") === "/business" ? "/business?signed_out=1" : "/";
+  const next = form?.get("next");
+  // An invite link's page offers "Sign out and switch account", so it comes back to the invite.
+  const invite = typeof next === "string" && /^\/business\/invite\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(next);
+  const to = next === "/business" ? "/business?signed_out=1" : invite ? (next as string) : "/";
   return NextResponse.redirect(new URL(to, request.nextUrl.origin), 303);
 }

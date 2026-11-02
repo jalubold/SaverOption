@@ -130,7 +130,7 @@ export const guides: DocPage[] = [
       {
         heading: "Giving colleagues access",
         blocks: [
-          { type: "p", text: "Owners and admins give an email address a role on [Team](/business/team). No invitation email is sent: the colleague signs in with Google using exactly that address and accepts on the onboarding page." },
+          { type: "p", text: "Owners and admins give an email address a role on [Team](/business/team). Each person gets a personal invite link, shown right after **Give access** (and under **Share invite** later) with a ready-to-send message: send it from your own email, WhatsApp or chat. The link tells them which Google account to use; they sign in with exactly that address and choose **Join**. (They can also accept on the setup page after signing in.)" },
           { type: "note", text: "Invitation and reminder emails are **not available yet** — there is no email provider configured." },
         ],
       },

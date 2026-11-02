@@ -1,14 +1,16 @@
 import Link from "next/link";
 import { LogoStack } from "@/components/business/software-logo";
-import { AddPersonForm, CopyLinkButton, EditPersonForm, InviteForm, RemoveMemberButton, RevokeInvitationButton, RoleSelectForm } from "@/components/business/team-forms";
-import { Card, EmptyState, InlineNote, PageHeader, Pill, TableWrap } from "@/components/business/ui";
+import { AddPersonForm, EditPersonForm, InviteForm, InviteSharePanel, RemoveMemberButton, RevokeInvitationButton, RoleSelectForm } from "@/components/business/team-forms";
+import { Card, EmptyState, PageHeader, Pill, TableWrap } from "@/components/business/ui";
 import { FormMessage } from "@/components/ui/form";
-import { siteConfig } from "@/config/site";
+import { Icon } from "@/components/ui/icon";
+import { buttonClass } from "@/components/ui/primitives";
 import { formatIsoDate } from "@/lib/business/calc";
 import { roleDescriptions, roleLabels, ROLES, type Role } from "@/lib/business/constants";
 import { assignableRoles, can, canManageMember } from "@/lib/business/permissions";
 import { requireBizContext } from "@/lib/server/business/context";
 import { getDepartments, getMembers, getOpenInvitations, getPeople, getSeatAssignments, getSubscriptions } from "@/lib/server/business/data";
+import { requestOrigin } from "@/lib/server/origin";
 
 export const metadata = { title: "Team Members" };
 
@@ -36,7 +38,12 @@ export default async function TeamPage(props: { searchParams: Promise<Record<str
   }
   const deptOptions = departments.filter((d) => !d.archivedAt).map((d) => ({ value: d.id, label: d.name }));
   const editing = typeof q.edit === "string" && manageDirectory ? people.find((p) => p.id === q.edit) : undefined;
-  const signInUrl = `${siteConfig.url}/business/login`;
+  // Each invitation has its own link, which tells the person which Google account to use.
+  const origin = await requestOrigin();
+  const inviteUrl = (id: string) => `${origin}/business/invite/${id}`;
+  const inviteMessage = (email: string, url: string) =>
+    `Hi! I've given you access to ${ctx.workspace.name} on Saver Option Business.\n\n1. Open this link: ${url}\n2. Continue with Google using ${email}\n3. Choose "Join ${ctx.workspace.name}"`;
+  const invited = typeof q.invited === "string" ? invitations.find((i) => i.id === q.invited) : undefined;
 
   return (
     <>
@@ -102,11 +109,31 @@ export default async function TeamPage(props: { searchParams: Promise<Record<str
       {manageMembers && (
         <Card title="Give access by email" description="Add a colleague's work email and the role they should have." className="mt-5">
           <div className="space-y-4">
-            <InlineNote title="No email is sent">
-              Saver Option doesn&apos;t have an email provider set up, so it can&apos;t send invitations. After adding someone, share the sign-in link with them
-              yourself. They sign in with Google using exactly that address, then choose <strong>Join workspace</strong> on the setup page.
-            </InlineNote>
-            <CopyLinkButton url={signInUrl} />
+            {invited ? (
+              <InviteSharePanel
+                email={invited.email}
+                role={roleLabels[invited.role]}
+                workspace={ctx.workspace.name}
+                url={inviteUrl(invited.id)}
+                message={inviteMessage(invited.email, inviteUrl(invited.id))}
+              />
+            ) : (
+              <ol className="grid gap-2 sm:grid-cols-3" aria-label="How giving access works" data-invite-steps>
+                {[
+                  ["Add their email and role", "Below. They get access as soon as they sign in."],
+                  ["Send them their invite link", "Saver Option doesn't email it: you send it from your email, WhatsApp or chat."],
+                  ["They sign in with Google", "Using exactly that address, then choose Join."],
+                ].map(([title, body], i) => (
+                  <li key={title} className="flex gap-2.5 rounded-xl border border-line bg-subtle/60 px-3.5 py-3">
+                    <span className="mt-px flex size-5 shrink-0 items-center justify-center rounded-full bg-accent-soft text-[11px] font-semibold text-accent-ink">{i + 1}</span>
+                    <span className="min-w-0">
+                      <span className="block text-[13px] font-semibold text-fg">{title}</span>
+                      <span className="block text-[12.5px] leading-snug text-muted">{body}</span>
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            )}
             {grantable.length > 0 ? <InviteForm workspaceId={ws} roles={grantable} /> : <p className="text-[13px] text-faint">Your role can&apos;t grant access.</p>}
             {invitations.length > 0 && (
               <div>
@@ -132,7 +159,12 @@ export default async function TeamPage(props: { searchParams: Promise<Record<str
                           </td>
                           <td className="whitespace-nowrap">{formatIsoDate(i.createdAt.toISOString().slice(0, 10), fmt)}</td>
                           <td className="num">
-                            <RevokeInvitationButton workspaceId={ws} invitationId={i.id} email={i.email} />
+                            <span className="inline-flex items-center gap-2">
+                              <Link href={`/business/team?invited=${i.id}#invite`} className={buttonClass("secondary", "sm")} data-share-invite>
+                                <Icon name="copy" size={13} /> Share invite
+                              </Link>
+                              <RevokeInvitationButton workspaceId={ws} invitationId={i.id} email={i.email} />
+                            </span>
                           </td>
                         </tr>
                       ))}

@@ -87,6 +87,25 @@ export async function resetDemoAction(_prev: FormState, form: FormData): Promise
   });
 }
 
+/** Joins from a personal invite link (/business/invite/<id>); a problem goes back to that page, which explains it. */
+export async function acceptInviteLinkAction(form: FormData): Promise<void> {
+  const id = form.get("invitationId");
+  if (!isUuid(id)) redirect("/business/onboarding");
+  const back = `/business/invite/${id.toLowerCase()}`;
+  const { user } = await getBizSession();
+  if (!user) redirect(`/business/login?next=${encodeURIComponent(back)}`);
+  let ws: string;
+  try {
+    ws = await acceptInvitation(user, id.toLowerCase());
+  } catch (err) {
+    unstable_rethrow(err);
+    redirect(`${back}?error=1`);
+  }
+  await selectWorkspace(ws);
+  revalidatePath("/business", "layout");
+  redirect("/business/dashboard");
+}
+
 export async function acceptInvitationAction(form: FormData): Promise<void> {
   const { user } = await getBizSession();
   if (!user) redirect("/business/login");
