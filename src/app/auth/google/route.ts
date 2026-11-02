@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { readClaimCookie } from "@/lib/server/claim";
 import { dbConfigured } from "@/lib/server/db";
-import { exchangeGoogleCode, switchGooglePopupOff } from "@/lib/server/google-identity";
+import { exchangeGoogleCode, googlePopupAvailable, recordGooglePopupFailure, switchGooglePopupOff } from "@/lib/server/google-identity";
 import { readFunnelSession } from "@/lib/server/funnel-session";
 import { clientIp, rateLimit } from "@/lib/server/mcp/rate-limit";
 import { getSubmissionByClaim } from "@/lib/server/submissions";
@@ -17,6 +17,11 @@ import { safeNext } from "@/lib/safe-next";
  * can't sign a visitor in to someone else's account): same-origin only, and the code path also needs
  * the X-Requested-With header Google recommends, which other sites can't set without a CORS preflight.
  */
+/** Whether the button should open Google's popup right now (pages built ahead can't know). */
+export async function GET() {
+  return NextResponse.json({ popup: await googlePopupAvailable() }, { headers: { "Cache-Control": "no-store" } });
+}
+
 export async function POST(req: NextRequest) {
   const no = (status: number, error: string) => NextResponse.json({ error }, { status, headers: { "Cache-Control": "no-store" } });
   if (!sameSite(req)) return no(403, "forbidden");
@@ -36,10 +41,19 @@ export async function POST(req: NextRequest) {
   let nonce: string | undefined;
   if (typeof body.code === "string") {
     if (req.headers.get("x-requested-with") !== "XmlHttpRequest") return no(403, "forbidden");
-    if (!/^[\w/.-]{10,512}$/.test(body.code)) return no(400, "bad_request");
-    const idToken = await exchangeGoogleCode(body.code);
-    if (!idToken) return no(401, "google");
-    token = idToken;
+    if (!/^[\w/.~+=%-]{10,1024}$/.test(body.code)) {
+      await recordGooglePopupFailure(`Our check: the code from Google didn't look like one (${body.code.length} characters)`);
+      return no(400, "bad_request");
+    }
+    const swapped = await exchangeGoogleCode(body.code);
+    if ("reason" in swapped) {
+      // Anything but a passing hiccup means the popup can't work as set up: switch it off so people
+      // choose their account once (the redirect), and say why on /admin/setup.
+      await recordGooglePopupFailure(swapped.reason);
+      if (!swapped.transient) await switchGooglePopupOff(swapped.reason);
+      return no(401, "google");
+    }
+    token = swapped.token;
   } else {
     const credential = typeof body.credential === "string" ? body.credential : "";
     nonce = typeof body.nonce === "string" ? body.nonce : "";
@@ -51,11 +65,12 @@ export async function POST(req: NextRequest) {
   const { data, error } = await supabase.auth.signInWithIdToken(nonce ? { provider: "google", token, nonce } : { provider: "google", token });
   if (error || !data.user) {
     console.error("[auth] google id token sign-in failed:", error?.code ?? error?.status ?? "no user", error?.message?.slice(0, 120) ?? "");
-    // Supabase refusing every popup token (this client isn't in its Client IDs, Google is off there) is a setup
-    // problem, not this person's: switch the popup off so sign-in takes the one redirect, and say why on /admin/setup.
-    if (!nonce && error && /audience|not enabled|disabled|unsupported|nonce/i.test(error.message ?? "")) {
-      await switchGooglePopupOff(`Supabase: ${error.message}`);
-    }
+    // Supabase refusing a popup token (this client isn't in its Client IDs, Google is off there) won't change on
+    // a retry: switch the popup off so sign-in takes the one redirect, and say why on /admin/setup.
+    // One person's own refusal (banned, sign-ups closed, too many tries) leaves the popup on for everyone else.
+    const personal = /banned|signup|sign-up|sign up|not allowed|rate|too many/i.test(`${error?.code ?? ""} ${error?.message ?? ""}`);
+    if (!nonce) await recordGooglePopupFailure(`Supabase: ${error?.message || error?.code || "no user"}`);
+    if (!nonce && error && (error.status ?? 400) < 500 && !personal) await switchGooglePopupOff(`Supabase: ${error.message || error.code || "refused"}`);
     return no(401, "google");
   }
 

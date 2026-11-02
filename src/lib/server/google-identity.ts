@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { getSettings, saveSettings } from "@/lib/server/settings";
-import { dbConfigured } from "@/lib/server/db";
+import { db, dbConfigured } from "@/lib/server/db";
 
 /**
  * Google sign-in on our own domain, behind our own button. A click opens Google's account chooser
@@ -14,9 +14,10 @@ import { dbConfigured } from "@/lib/server/db";
  * Google provider, and the site added to its Authorized JavaScript origins. Without both, the button
  * keeps the redirect flow through Supabase.
  *
- * If Google refuses the setup itself (a wrong secret, a client that doesn't allow this site), the popup
- * is switched off for that ID and secret, so nobody signs in twice (popup, then the redirect); the
- * reason shows on /admin/setup. Changing the secret (or the ID) in Vercel switches it back on.
+ * If a popup sign-in can't be finished on our side (Google refuses the code — a wrong secret, a client
+ * that doesn't allow this site — or Supabase refuses the token), the popup is switched off for that ID
+ * and secret, so nobody chooses their account twice (popup, then the redirect). /admin/setup shows why
+ * and can switch it back on; changing the secret (or the ID) in Vercel does too.
  */
 export interface GoogleIdentityConfig {
   clientId: string;
@@ -28,8 +29,7 @@ const GSI = "https://accounts.google.com/gsi/client";
 const TOKEN_URL = "https://oauth2.googleapis.com/token";
 const LOCAL = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?\//;
 const OFF_KEY = "google_popup_off";
-/** Google's answers that mean the setup is wrong, not this one sign-in (a bad or reused code is invalid_grant). */
-const SETUP_ERRORS = new Set(["invalid_client", "unauthorized_client", "redirect_uri_mismatch"]);
+const LAST_KEY = "google_popup_last_error";
 
 function clientId(): string | null {
   const id = (process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || process.env.GOOGLE_CLIENT_ID || "").trim();
@@ -71,16 +71,45 @@ export async function googleIdentity(): Promise<GoogleIdentityConfig | null> {
   return { clientId: id, scriptSrc: override && LOCAL.test(override) ? override : GSI };
 }
 
-/** For /admin/setup: whether the popup is set up, and why Google refused it if it did. */
-export async function googlePopupStatus(): Promise<{ configured: boolean; refused: { reason: string; at: string } | null }> {
+/**
+ * Whether the popup may be offered right now, read straight from the database (pages built ahead or
+ * cached would otherwise keep offering it for a while after it was switched off).
+ */
+export async function googlePopupAvailable(): Promise<boolean> {
   const id = clientId();
   const secret = clientSecret();
-  if (!id || !secret) return { configured: false, refused: null };
-  const off = await offNote();
-  return { configured: true, refused: off && off.fp === fingerprint(id, secret) ? { reason: off.reason, at: off.at } : null };
+  if (!id || !secret) return false;
+  if (!dbConfigured()) return true;
+  try {
+    const rows = await db()<{ value: string }[]>`select value from app_settings where key = ${OFF_KEY}`;
+    const note = rows[0] ? (JSON.parse(rows[0].value) as Partial<OffNote>) : null;
+    return note?.fp !== fingerprint(id, secret);
+  } catch {
+    return true;
+  }
 }
 
-/** Turns the popup off for the current ID and secret (Google or Supabase refused the setup), with the reason. */
+/** For /admin/setup: whether the popup is set up, why it was switched off if it was, and the last failure. */
+export async function googlePopupStatus(): Promise<{ configured: boolean; refused: { reason: string; at: string } | null; last: { reason: string; at: string } | null }> {
+  const id = clientId();
+  const secret = clientSecret();
+  let last: { reason: string; at: string } | null = null;
+  try {
+    const raw = (await getSettings()).get(LAST_KEY);
+    const note = raw ? (JSON.parse(raw) as { reason?: unknown; at?: unknown }) : null;
+    if (note && typeof note.reason === "string" && typeof note.at === "string") last = { reason: note.reason, at: note.at };
+  } catch {}
+  if (!id || !secret) return { configured: false, refused: null, last };
+  const off = await offNote();
+  return { configured: true, refused: off && off.fp === fingerprint(id, secret) ? { reason: off.reason, at: off.at } : null, last };
+}
+
+/** Remembers why the last popup sign-in couldn't be finished (shown on /admin/setup). */
+export async function recordGooglePopupFailure(reason: string): Promise<void> {
+  if (dbConfigured()) await saveSettings({ [LAST_KEY]: JSON.stringify({ reason: reason.slice(0, 160), at: new Date().toISOString() }) }).catch(() => {});
+}
+
+/** Turns the popup off for the current ID and secret (a popup sign-in couldn't be finished), with the reason. */
 export async function switchGooglePopupOff(reason: string): Promise<void> {
   const id = clientId();
   const secret = clientSecret();
@@ -88,15 +117,21 @@ export async function switchGooglePopupOff(reason: string): Promise<void> {
   await saveSettings({ [OFF_KEY]: JSON.stringify({ fp: fingerprint(id, secret), reason: reason.slice(0, 120), at: new Date().toISOString() }) }).catch(() => {});
 }
 
+/** Switches the popup back on (from /admin/setup). */
+export async function switchGooglePopupOn(): Promise<void> {
+  if (dbConfigured()) await saveSettings({ [OFF_KEY]: null });
+}
+
 /**
  * Swaps the popup's one-time code for Google's ID token (redirect_uri "postmessage" is how Google
- * names the popup flow). Returns null when Google refuses the code or the flow isn't configured;
- * a refusal of the setup itself switches the popup off for this ID and secret.
+ * names the popup flow). `transient` marks failures that say nothing about the setup: Google
+ * unreachable or erroring, or a made-up code ("Malformed auth code", which anyone can send). Any other
+ * refusal — invalid_client, invalid_grant for a real code, and so on — means the popup isn't working.
  */
-export async function exchangeGoogleCode(code: string): Promise<string | null> {
+export async function exchangeGoogleCode(code: string): Promise<{ token: string } | { reason: string; transient: boolean }> {
   const id = clientId();
   const secret = clientSecret();
-  if (!id || !secret) return null;
+  if (!id || !secret) return { reason: "not configured", transient: true };
   const override = process.env.GOOGLE_TOKEN_URL?.trim();
   const url = override && LOCAL.test(override) ? override : TOKEN_URL;
   try {
@@ -107,16 +142,18 @@ export async function exchangeGoogleCode(code: string): Promise<string | null> {
       signal: AbortSignal.timeout(10_000),
       cache: "no-store",
     });
-    const body = (await res.json().catch(() => ({}))) as { id_token?: unknown; error?: unknown };
+    const body = (await res.json().catch(() => ({}))) as { id_token?: unknown; error?: unknown; error_description?: unknown };
     if (!res.ok) {
-      const reason = typeof body.error === "string" ? body.error.slice(0, 60) : `http_${res.status}`;
-      console.error("[auth] google code exchange failed:", res.status, reason);
-      if (SETUP_ERRORS.has(reason)) await switchGooglePopupOff(reason);
-      return null;
+      const code = typeof body.error === "string" ? body.error.slice(0, 40) : `http_${res.status}`;
+      const desc = typeof body.error_description === "string" ? ` (${body.error_description.slice(0, 80)})` : "";
+      console.error("[auth] google code exchange failed:", res.status, code + desc);
+      const madeUp = code === "invalid_grant" && /malformed/i.test(desc);
+      return { reason: `Google: ${code}${desc}`, transient: res.status >= 500 || madeUp };
     }
-    return typeof body.id_token === "string" && body.id_token.length < 8192 ? body.id_token : null;
+    if (typeof body.id_token === "string" && body.id_token.length < 8192) return { token: body.id_token };
+    return { reason: "Google: no ID token in the answer", transient: false };
   } catch (err) {
     console.error("[auth] google code exchange error:", err instanceof Error ? err.name : "unknown");
-    return null;
+    return { reason: "Google unreachable", transient: true };
   }
 }

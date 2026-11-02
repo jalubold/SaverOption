@@ -2,11 +2,19 @@
 
 import { revalidatePath, updateTag } from "next/cache";
 import { DODO_PRODUCTS_TAG } from "@/lib/server/dodo";
+import { switchGooglePopupOn } from "@/lib/server/google-identity";
 import { setupLemonSqueezy, type SetupResult } from "@/lib/server/lemonsqueezy-setup";
 import { requestOrigin } from "@/lib/server/origin";
 import { getUser, isAdmin } from "@/lib/server/supabase";
 
 export type ConnectState = SetupResult | null;
+
+/** Admin-only: offers Google's popup sign-in again after it switched itself off (see google-identity.ts). */
+export async function googlePopupOnAction(): Promise<void> {
+  if (!isAdmin(await getUser())) return;
+  await switchGooglePopupOn();
+  revalidatePath("/admin/setup");
+}
 
 /** Admin-only: reads the Dodo products again now (after changing a price or billing period in Dodo). */
 export async function recheckDodoAction(): Promise<void> {

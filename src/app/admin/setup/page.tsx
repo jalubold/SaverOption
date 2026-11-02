@@ -4,7 +4,7 @@ import { DashboardShell, fmtDate, Panel } from "@/components/advertiser/dashboar
 import { ConnectLemonSqueezy } from "@/components/advertiser/setup-forms";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, cn } from "@/components/ui/primitives";
-import { recheckDodoAction } from "@/app/admin/setup/actions";
+import { googlePopupOnAction, recheckDodoAction } from "@/app/admin/setup/actions";
 import { siteConfig } from "@/config/site";
 import { formatMoney } from "@/lib/business/calc";
 import { billingSetupStatus } from "@/lib/server/business/billing";
@@ -89,13 +89,13 @@ export default async function AdminSetupPage() {
               label="Google sign-in on saveroption.com (popup)"
               detail={
                 popup.refused
-                  ? `Switched off: Google answered "${popup.refused.reason}" on ${new Date(popup.refused.at).toUTCString()}. Sign-in uses the redirect through Supabase meanwhile.`
+                  ? `Switched off after a sign-in couldn't finish — ${popup.refused.reason} (${new Date(popup.refused.at).toUTCString()}). Sign-in uses the redirect through Supabase meanwhile, one account choice.`
                   : popup.configured
                     ? "Google's account chooser names this site."
                     : "Off: sign-in redirects through Supabase, so Google's chooser names the Supabase project."
               }
               hint={
-                popup.refused?.reason === "invalid_client"
+                popup.refused?.reason.startsWith("Google: invalid_client")
                   ? "GOOGLE_CLIENT_SECRET doesn't belong to the client in NEXT_PUBLIC_GOOGLE_CLIENT_ID. Google Auth Platform → Clients → that client → Add secret, copy it at once, put it in Vercel and redeploy (keep the old secret: Supabase uses it)."
                   : popup.refused?.reason.startsWith("Supabase")
                     ? "Supabase → Authentication → Sign In / Providers → Google: add the ID in NEXT_PUBLIC_GOOGLE_CLIENT_ID to Client IDs (after the existing one) and keep Google on. Then change GOOGLE_CLIENT_SECRET in Vercel (a new secret of the same client) and redeploy to switch the popup back on."
@@ -104,6 +104,20 @@ export default async function AdminSetupPage() {
                     : "Optional: NEXT_PUBLIC_GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in Vercel (see docs/BUSINESS_SETUP.md)."
               }
             />
+            {popup.last && (
+              <li className="pl-8 text-[13px] text-muted [overflow-wrap:anywhere]" data-google-popup-last>
+                Last popup sign-in that couldn&apos;t finish: {popup.last.reason} ({new Date(popup.last.at).toUTCString()})
+              </li>
+            )}
+            {popup.refused && (
+              <li className="pl-8">
+                <form action={googlePopupOnAction}>
+                  <button type="submit" className={buttonClass("secondary", "sm")}>
+                    Try the popup again
+                  </button>
+                </form>
+              </li>
+            )}
           </ul>
         </Panel>
 

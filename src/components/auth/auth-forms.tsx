@@ -58,6 +58,22 @@ declare global {
   }
 }
 
+const SKIP_KEY = "so-google-popup-failed";
+const SKIP_MS = 24 * 60 * 60 * 1000;
+function skipPopup(clientId: string) {
+  try {
+    localStorage.setItem(SKIP_KEY, JSON.stringify({ clientId, at: Date.now() }));
+  } catch {}
+}
+function popupSkipped(clientId: string): boolean {
+  try {
+    const v = JSON.parse(localStorage.getItem(SKIP_KEY) ?? "null") as { clientId?: string; at?: number } | null;
+    return Boolean(v && v.clientId === clientId && typeof v.at === "number" && Date.now() - v.at < SKIP_MS);
+  } catch {
+    return false;
+  }
+}
+
 let scriptPromise: Promise<void> | null = null;
 function loadScript(src: string): Promise<void> {
   if (window.google?.accounts?.oauth2) return Promise.resolve();
@@ -94,7 +110,7 @@ function useGooglePopup(identity: GoogleIdentity | null, next: string, redirect:
   const scriptSrc = identity?.scriptSrc;
   useEffect(() => {
     // Google doesn't allow sign-in inside an app's web view: the Mac app keeps the browser hand-off.
-    if (!clientId || !scriptSrc || isDesktopApp(navigator.userAgent) || document.documentElement.classList.contains("desktop-app")) {
+    if (!clientId || !scriptSrc || popupSkipped(clientId) || isDesktopApp(navigator.userAgent) || document.documentElement.classList.contains("desktop-app")) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- decided on the device, after hydration
       setState("off");
       return;
@@ -122,7 +138,9 @@ function useGooglePopup(identity: GoogleIdentity | null, next: string, redirect:
         }
         // Our side couldn't finish (Google refused the code, Supabase refused the token, a setting is off):
         // the redirect through Supabase still signs the person in. Too many tries is the one to wait out.
+        // This browser then skips the popup for a day, so nobody here chooses their account twice again.
         if (r.status !== 429) {
+          skipPopup(clientId);
           redirectRef.current();
           return;
         }
@@ -130,10 +148,20 @@ function useGooglePopup(identity: GoogleIdentity | null, next: string, redirect:
       setError("Google sign-in didn't finish. Please try again.");
       setState("ready");
     };
-    loadScript(scriptSrc)
-      .then(() => {
+    // The server says whether the popup is on right now (it switches itself off when it can't be
+    // finished, so nobody chooses their account twice); pages built ahead can't know that.
+    const allowed = fetch("/auth/google", { cache: "no-store", credentials: "same-origin" })
+      .then((r) => (r.ok ? (r.json() as Promise<{ popup?: boolean }>) : { popup: false }))
+      .then((b) => b.popup === true)
+      .catch(() => false);
+    Promise.all([loadScript(scriptSrc), allowed])
+      .then(([, ok]) => {
         const oauth2 = window.google?.accounts?.oauth2;
-        if (!live || !oauth2) return;
+        if (!live) return;
+        if (!ok || !oauth2) {
+          setState("off");
+          return;
+        }
         client.current = oauth2.initCodeClient({
           client_id: clientId,
           scope: "openid email profile",
