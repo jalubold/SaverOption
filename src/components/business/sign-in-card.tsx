@@ -58,7 +58,7 @@ export async function BusinessSignIn({ searchParams, mode }: { searchParams: Rec
                   ) : !google ? (
                     <FormMessage tone="error">Google sign-in isn&apos;t switched on yet. Please try again a little later.</FormMessage>
                   ) : null}
-                  <GoogleButton identity={googleIdentity()} next={next} disabled={!google} />
+                  <GoogleButton identity={await googleIdentity()} next={next} disabled={!google} />
                   {desktop && (
                     <p className="flex gap-2 text-[12.5px] leading-relaxed text-muted" data-desktop-hint>
                       <Icon name="arrow-up-right" size={14} className="mt-0.5 text-accent-ink" />

@@ -12,6 +12,7 @@ import { db, dbConfigured } from "@/lib/server/db";
 import { dodoSetupStatus } from "@/lib/server/dodo";
 import { liveCheckoutEnabled, lsApiKey, lsCatalog, webhookSecret } from "@/lib/server/lemonsqueezy";
 import { checkoutChoice, providerNames } from "@/lib/server/listing-checkout";
+import { googlePopupStatus } from "@/lib/server/google-identity";
 import { getSettings } from "@/lib/server/settings";
 import { authConfigured, googleSignInEnabled, requireAdmin, storageAdmin } from "@/lib/server/supabase";
 import { pageMetadata } from "@/lib/seo";
@@ -39,7 +40,7 @@ export default async function AdminSetupPage() {
       migrations = null;
     }
   }
-  const [catalog, secret, saved, visitor, adminChoice, google, creem, dodo] = await Promise.all([
+  const [catalog, secret, saved, visitor, adminChoice, google, creem, dodo, popup] = await Promise.all([
     lsCatalog(),
     webhookSecret(),
     getSettings(),
@@ -48,6 +49,7 @@ export default async function AdminSetupPage() {
     googleSignInEnabled(),
     billingSetupStatus(),
     dodoSetupStatus(),
+    googlePopupStatus(),
   ]);
   const dodoWebhookUrl = `${siteConfig.url}/api/webhooks/dodo`;
   const hasKey = Boolean(lsApiKey());
@@ -81,6 +83,26 @@ export default async function AdminSetupPage() {
               label="Google sign-in"
               detail={google ? "Advertisers sign in with Google; no emails needed." : undefined}
               hint="Supabase → Authentication → Sign In / Providers → Google: turn it on and paste the Client ID and Secret from Google Cloud. Until then, nobody can sign in."
+            />
+            <Check
+              ok={popup.configured ? popup.refused === null : null}
+              label="Google sign-in on saveroption.com (popup)"
+              detail={
+                popup.refused
+                  ? `Switched off: Google answered "${popup.refused.reason}" on ${new Date(popup.refused.at).toUTCString()}. Sign-in uses the redirect through Supabase meanwhile.`
+                  : popup.configured
+                    ? "Google's account chooser names this site."
+                    : "Off: sign-in redirects through Supabase, so Google's chooser names the Supabase project."
+              }
+              hint={
+                popup.refused?.reason === "invalid_client"
+                  ? "GOOGLE_CLIENT_SECRET doesn't belong to the client in NEXT_PUBLIC_GOOGLE_CLIENT_ID. Google Auth Platform → Clients → that client → Add secret, copy it at once, put it in Vercel and redeploy (keep the old secret: Supabase uses it)."
+                  : popup.refused?.reason.startsWith("Supabase")
+                    ? "Supabase → Authentication → Sign In / Providers → Google: add the ID in NEXT_PUBLIC_GOOGLE_CLIENT_ID to Client IDs (after the existing one) and keep Google on. Then change GOOGLE_CLIENT_SECRET in Vercel (a new secret of the same client) and redeploy to switch the popup back on."
+                    : popup.refused
+                    ? "Check that client's Authorized JavaScript origins list https://www.saveroption.com and https://saveroption.com, then redeploy."
+                    : "Optional: NEXT_PUBLIC_GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in Vercel (see docs/BUSINESS_SETUP.md)."
+              }
             />
           </ul>
         </Panel>

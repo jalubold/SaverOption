@@ -112,7 +112,7 @@ export default async function BusinessLandingPage() {
       }
       signedOut={
         <div className="w-full max-w-xs rounded-[14px] shadow-[0_10px_30px_-12px_rgb(124_58_236/0.55)]">
-          <GoogleButton identity={googleIdentity()} next="/business/dashboard" disabled={!google} />
+          <GoogleButton identity={await googleIdentity()} next="/business/dashboard" disabled={!google} />
         </div>
       }
     />

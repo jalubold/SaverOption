@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { readClaimCookie } from "@/lib/server/claim";
 import { dbConfigured } from "@/lib/server/db";
-import { exchangeGoogleCode } from "@/lib/server/google-identity";
+import { exchangeGoogleCode, switchGooglePopupOff } from "@/lib/server/google-identity";
 import { readFunnelSession } from "@/lib/server/funnel-session";
 import { clientIp, rateLimit } from "@/lib/server/mcp/rate-limit";
 import { getSubmissionByClaim } from "@/lib/server/submissions";
@@ -50,7 +50,12 @@ export async function POST(req: NextRequest) {
   const supabase = await supabaseServer();
   const { data, error } = await supabase.auth.signInWithIdToken(nonce ? { provider: "google", token, nonce } : { provider: "google", token });
   if (error || !data.user) {
-    console.error("[auth] google id token sign-in failed:", error?.code ?? error?.status ?? "no user");
+    console.error("[auth] google id token sign-in failed:", error?.code ?? error?.status ?? "no user", error?.message?.slice(0, 120) ?? "");
+    // Supabase refusing every popup token (this client isn't in its Client IDs, Google is off there) is a setup
+    // problem, not this person's: switch the popup off so sign-in takes the one redirect, and say why on /admin/setup.
+    if (!nonce && error && /audience|not enabled|disabled|unsupported|nonce/i.test(error.message ?? "")) {
+      await switchGooglePopupOff(`Supabase: ${error.message}`);
+    }
     return no(401, "google");
   }
 

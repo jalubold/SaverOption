@@ -48,7 +48,7 @@ export default async function LoginPage(props: PageProps<"/login">) {
               <FormMessage tone="error">Google sign-in isn&apos;t switched on yet. Please try again a little later.</FormMessage>
             </div>
           )}
-          <GoogleButton identity={googleIdentity()} next={next} disabled={!google} />
+          <GoogleButton identity={await googleIdentity()} next={next} disabled={!google} />
         </>
       )}
     </AuthShell>

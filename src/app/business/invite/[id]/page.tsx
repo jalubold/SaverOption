@@ -65,7 +65,7 @@ export default async function InvitePage(props: PageProps<"/business/invite/[id]
         </p>
         {!user && (
           <div className="mt-6">
-            <GoogleButton identity={googleIdentity()} next={here} disabled={!google} label="Sign in with Google" />
+            <GoogleButton identity={await googleIdentity()} next={here} disabled={!google} label="Sign in with Google" />
           </div>
         )}
       </>
@@ -92,7 +92,7 @@ export default async function InvitePage(props: PageProps<"/business/invite/[id]
           {!user ? (
             <>
               {!google && <FormMessage tone="error">Google sign-in isn&apos;t switched on yet. Please try again a little later.</FormMessage>}
-              <GoogleButton identity={googleIdentity()} next={here} disabled={!google} />
+              <GoogleButton identity={await googleIdentity()} next={here} disabled={!google} />
               <Steps active={1} />
             </>
           ) : matches ? (

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { formatPlanRate, getPlan } from "@/config/listing-plans";
 import { TestModeBadge } from "@/components/advertiser/status-pill";
-import { GoogleButton } from "@/components/auth/auth-forms";
+import { GoogleButton, type GoogleIdentity } from "@/components/auth/auth-forms";
 import { googleIdentity } from "@/lib/server/google-identity";
 import { StatusPoller } from "@/components/promote/status-poller";
 import { providerNames } from "@/lib/server/listing-checkout";
@@ -35,6 +35,7 @@ export default async function PromoteSuccessPage(props: PageProps<"/promote/succ
   const id = typeof s === "string" && UUID.test(s) ? s.toLowerCase() : null;
   const user = await getUser();
   const google = await googleSignInEnabled();
+  const identity = await googleIdentity();
 
   let sub: SafeSubmission | null = null;
   let owned = false;
@@ -60,7 +61,7 @@ export default async function PromoteSuccessPage(props: PageProps<"/promote/succ
       <section className="hero-glow min-h-[70vh] border-b border-line">
         <Container className="max-w-2xl py-14 sm:py-20">
           <div className="rounded-[20px] border border-line bg-surface p-6 shadow-[var(--shadow-card)] sm:p-8">
-            {sub ? <Status sub={sub} owned={owned} signedIn={Boolean(user)} google={google} /> : <Unknown signedIn={Boolean(user)} />}
+            {sub ? <Status sub={sub} owned={owned} signedIn={Boolean(user)} google={google} identity={identity} /> : <Unknown signedIn={Boolean(user)} />}
           </div>
         </Container>
       </section>
@@ -68,7 +69,7 @@ export default async function PromoteSuccessPage(props: PageProps<"/promote/succ
   );
 }
 
-function Status({ sub, owned, signedIn, google }: { sub: SafeSubmission; owned: boolean; signedIn: boolean; google: boolean }) {
+function Status({ sub, owned, signedIn, google, identity }: { sub: SafeSubmission; owned: boolean; signedIn: boolean; google: boolean; identity: GoogleIdentity | null }) {
   const plan = getPlan(sub.plan);
   const summary = (
     <dl className="mt-6 divide-y divide-line rounded-[14px] border border-line bg-subtle text-sm">
@@ -114,7 +115,7 @@ function Status({ sub, owned, signedIn, google }: { sub: SafeSubmission; owned: 
             </a>
           ) : (
             <div className="w-full">
-              <GoogleButton identity={googleIdentity()} next="/claim" disabled={!google} />
+              <GoogleButton identity={identity} next="/claim" disabled={!google} />
               <p className="mt-2 text-center text-xs text-faint">
                 {google
                   ? "Creates your account, or signs you in if you already have one."
