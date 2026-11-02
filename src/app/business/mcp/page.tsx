@@ -11,7 +11,7 @@ import { SoftwareLogo } from "@/components/business/software-logo";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Icon, type IconProps } from "@/components/ui/icon";
 import { buttonClass, Container, Eyebrow, SectionHeading } from "@/components/ui/primitives";
-import { mcpClients, type McpClientInfo } from "@/lib/business/mcp-clients";
+import { mcpClients } from "@/lib/business/mcp-clients";
 import { assistantConfigured } from "@/lib/server/business/assistant";
 import { businessReady } from "@/lib/server/business/context";
 import { SCOPE_READ, SCOPE_WRITE } from "@/lib/server/mcp/oauth";
@@ -34,13 +34,6 @@ export const dynamic = "force-static";
 export const revalidate = 300;
 
 // Logos only identify each client; listing one doesn't mean it's supported or endorses Saver Option.
-const clientLogos: Record<McpClientInfo["id"], string> = {
-  claude: "/logos/business/claude.svg",
-  chatgpt: "/logos/chatgpt.svg",
-  gemini: "/logos/gemini-api.svg",
-  grok: "/logos/business/grok.svg",
-};
-
 // One description for every client: each supports remote MCP servers; setup details are on the docs page.
 const clientBlurb = "Connect Saver Option as a remote MCP server, then ask about your subscriptions, renewals and savings in plain language.";
 
@@ -211,7 +204,7 @@ export default async function McpLandingPage() {
             <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {mcpClients.map((c) => (
                 <li key={c.id} className="so-reveal so-spot biz-card-lift relative flex flex-col rounded-2xl border border-line bg-surface p-5">
-                  <SoftwareLogo name={c.name} src={clientLogos[c.id]} size={40} />
+                  <SoftwareLogo name={c.name} src={c.logo} size={40} />
                   <h3 className="mt-4 text-[16px] font-semibold text-heading">{c.name}</h3>
                   <p className="text-[12.5px] text-faint">{c.vendor}</p>
                   <p className="mt-3 flex-1 text-[13.5px] leading-relaxed text-muted">{clientBlurb}</p>

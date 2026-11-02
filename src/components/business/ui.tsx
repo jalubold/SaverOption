@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
 import { formatIsoDate, formatMoney, totalsList, type CurrencyTotals } from "@/lib/business/calc";
 import { formatRate, type FxNote, type OriginalMoney } from "@/lib/business/fx";
+import { InfoTip } from "@/components/business/info-tip";
 import { Icon, type IconProps } from "@/components/ui/icon";
 import { buttonClass, cn } from "@/components/ui/primitives";
 
@@ -111,10 +112,13 @@ export function Kpi({
   chart,
   className,
   style,
+  hint,
 }: {
   label: string;
   value: ReactNode;
   sub?: ReactNode;
+  /** A short explanation behind an ⓘ next to the label. */
+  hint?: ReactNode;
   href?: string;
   icon?: IconProps["name"];
   tone?: KpiTone;
@@ -125,7 +129,10 @@ export function Kpi({
   const body = (
     <>
       <div className="flex items-center justify-between gap-2">
-        <p className="text-[12.5px] font-medium text-muted">{label}</p>
+        <p className="flex items-center gap-1 text-[12.5px] font-medium text-muted">
+          {label}
+          {hint && <InfoTip label={label}>{hint}</InfoTip>}
+        </p>
         {icon && (tone ? <IconTile icon={icon} tone={tone} size={30} /> : <Icon name={icon} size={15} className="text-faint" />)}
       </div>
       <div className={cn("tabular text-[1.45rem] font-semibold leading-tight tracking-tight text-heading", tone ? "mt-0.5" : "mt-1.5")}>{value}</div>
@@ -138,7 +145,7 @@ export function Kpi({
       {body}
     </Link>
   ) : (
-    <div className={cn("biz-card px-4 py-3.5", className)} style={style}>
+    <div className={cn("biz-card relative px-4 py-3.5", className)} style={style}>
       {body}
     </div>
   );

@@ -47,9 +47,9 @@ export interface SubscriptionFormValues {
   reminderDays: number[] | null;
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ title, children, id }: { title: string; children: React.ReactNode; id?: string }) {
   return (
-    <fieldset className="border-t border-line pt-5 first:border-t-0 first:pt-0">
+    <fieldset id={id} className="scroll-mt-24 border-t border-line pt-5 first:border-t-0 first:pt-0">
       <legend className="mb-3 text-[14px] font-semibold text-fg">{title}</legend>
       <div className="grid gap-4 sm:grid-cols-2">{children}</div>
     </fieldset>
@@ -156,7 +156,7 @@ export function SubscriptionForm({
         </div>
       </Section>
 
-      <Section title="Seats">
+      <Section title="Seats" id="seats">
         <TextField label="Purchased seats" name="purchasedSeats" optional inputMode="numeric" defaultValue={v.purchasedSeats ?? ""} hint="Required for per-seat pricing." />
         <TextField label="Seats in use (reported)" name="reportedAssignedSeats" optional inputMode="numeric" defaultValue={v.reportedAssignedSeats ?? ""} hint="A count from the vendor's admin page, when seats aren't assigned by name." />
       </Section>

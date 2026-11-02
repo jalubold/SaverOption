@@ -1,11 +1,14 @@
 import { LogoStack } from "@/components/business/software-logo";
 import { SummaryStrip } from "@/components/business/summary-strip";
 import { SubscriptionTable, type SubscriptionRowView } from "@/components/business/subscription-table";
+import { cookies } from "next/headers";
 import { FilterBar } from "@/components/business/filter-bar";
+import { ViewToggle } from "@/components/business/view-toggle";
 import { Card, EmptyState, FxNoteLine, LinkButton, Money, PageHeader, Pagination, Tabs } from "@/components/business/ui";
 import { buttonClass } from "@/components/ui/primitives";
 import { daysBetween, formatIsoDate, formatMoney, isRecurring, monthlyEquivalent, periodSuffix, seatSummary, summarizeSpend } from "@/lib/business/calc";
 import { billingIntervalLabels, BILLING_INTERVALS, categoryLabels, SOFTWARE_CATEGORIES, SUBSCRIPTION_STATUSES, subscriptionStatusLabels } from "@/lib/business/constants";
+import { pickView, viewCookie } from "@/lib/business/list-view";
 import { can } from "@/lib/business/permissions";
 import { requireBizContext } from "@/lib/server/business/context";
 import { getDepartments, getPeople, getSubscriptions, getVendors } from "@/lib/server/business/data";
@@ -18,7 +21,10 @@ const PAGE_SIZE = 25;
 
 export default async function SubscriptionsPage(props: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const ctx = await requireBizContext("/business/subscriptions");
-  const f = parseSubscriptionFilters(await props.searchParams);
+  const sp = await props.searchParams;
+  const f = parseSubscriptionFilters(sp);
+  // List or cards: the URL can ask for one; otherwise the person's last choice (a cookie); otherwise the list.
+  const view = pickView(sp.view, (await cookies()).get(viewCookie("subscriptions"))?.value);
   const ws = ctx.workspace.id;
   const [billedAll, vendors, departments, people, display] = await Promise.all([getSubscriptions(ws), getVendors(ws), getDepartments(ws), getPeople(ws), workspaceDisplay(ctx)]);
   // Shown in the workspace currency (ECB rate); filters and the currency list use the currency each is billed in.
@@ -55,6 +61,9 @@ export default async function SubscriptionsPage(props: { searchParams: Promise<R
       renewalDays: s.nextRenewalDate && !s.archived && (s.status === "active" || s.status === "trial") ? daysBetween(ctx.today, s.nextRenewalDate) : null,
       autoRenew: s.autoRenew,
       seats: seats.purchased !== null ? `${seats.assigned} / ${seats.purchased}` : seats.assigned > 0 ? String(seats.assigned) : null,
+      interval: s.billingInterval,
+      seatsUsed: seats.assigned,
+      seatsTotal: seats.purchased,
       owner: s.ownerName,
       department: s.departmentName,
     };
@@ -149,6 +158,7 @@ export default async function SubscriptionsPage(props: { searchParams: Promise<R
           <FilterBar
             action="/business/subscriptions"
             label="Filter subscriptions"
+            trailing={<ViewToggle name="subscriptions" value={view} />}
             keep={{ status: f.status }}
             search={{ value: f.q, placeholder: "Search software, plan or vendor" }}
             inline={[
@@ -207,21 +217,25 @@ export default async function SubscriptionsPage(props: { searchParams: Promise<R
             />
           )}
 
-          <Card bodyClassName="px-4 pb-3 pt-0 sm:px-5">
-            <div className="flex flex-wrap items-baseline justify-between gap-2 py-3 text-[13px] text-muted">
-              <span>
-                {rows.length} subscription{rows.length === 1 ? "" : "s"}
-              </span>
-              {summary.missingPrice > 0 && f.status !== "archived" && <span className="text-[12px] text-faint">{summary.missingPrice} active without a price aren&apos;t in the totals</span>}
-            </div>
-            {rows.length === 0 ? (
+          {(() => {
+            const count = (
+              <div className="flex flex-wrap items-baseline justify-between gap-2 py-3 text-[13px] text-muted">
+                <span>
+                  {rows.length} subscription{rows.length === 1 ? "" : "s"}
+                </span>
+                {summary.missingPrice > 0 && f.status !== "archived" && <span className="text-[12px] text-faint">{summary.missingPrice} active without a price aren&apos;t in the totals</span>}
+              </div>
+            );
+            const empty = (
               <EmptyState icon="search" title={filtered ? "No subscriptions match" : "Nothing here"}>
                 {filtered ? "Try removing a filter or searching for something else." : "There are no subscriptions in this view."}
               </EmptyState>
-            ) : (
+            );
+            const list = (
               <>
                 <SubscriptionTable
                   rows={views}
+                  view={view}
                   workspaceId={ws}
                   canBulkAssign={canManage}
                   canArchive={canManage}
@@ -231,8 +245,20 @@ export default async function SubscriptionsPage(props: { searchParams: Promise<R
                 />
                 <Pagination page={page} pageCount={pageCount} href={(p) => `/business/subscriptions${filtersQuery(f, { page: p })}`} />
               </>
-            )}
-          </Card>
+            );
+            // Cards sit on the page; the list sits in a card.
+            return view === "cards" ? (
+              <section aria-label="Subscriptions">
+                <div className="-mt-1">{count}</div>
+                {rows.length === 0 ? <Card>{empty}</Card> : list}
+              </section>
+            ) : (
+              <Card bodyClassName="px-4 pb-3 pt-0 sm:px-5">
+                {count}
+                {rows.length === 0 ? empty : list}
+              </Card>
+            );
+          })()}
         </>
       )}
     </>

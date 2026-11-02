@@ -1,13 +1,16 @@
 import Link from "next/link";
 import { LogoStack, SoftwareLogo } from "@/components/business/software-logo";
+import { Icon } from "@/components/ui/icon";
 import { SummaryStrip } from "@/components/business/summary-strip";
+import { cookies } from "next/headers";
 import { FilterBar } from "@/components/business/filter-bar";
-import { Card, EmptyState, FxNoteLine, InlineNote, LinkButton, Money, PageHeader, StatusPill, Tabs } from "@/components/business/ui";
-import { cn } from "@/components/ui/primitives";
+import { ViewToggle } from "@/components/business/view-toggle";
+import { Card, EmptyState, FxNoteLine, InlineNote, LinkButton, Money, PageHeader, StatusPill } from "@/components/business/ui";
 import { addTo, groupMonthly, isLive, type CurrencyTotals } from "@/lib/business/calc";
 import { categoryLabels, SOFTWARE_CATEGORIES, SOFTWARE_STATUSES, softwareStatusLabels, type SoftwareCategory, type SoftwareStatus } from "@/lib/business/constants";
 import { findPotentialDuplicates } from "@/lib/business/duplicates";
 import { isUuid } from "@/lib/business/form";
+import { pickView, viewCookie } from "@/lib/business/list-view";
 import { can } from "@/lib/business/permissions";
 import { requireBizContext } from "@/lib/server/business/context";
 import { SUB_MONEY, workspaceDisplay } from "@/lib/server/business/display-currency";
@@ -31,22 +34,14 @@ function parse(sp: Params) {
     department: idOrNone(one(sp.department)),
     owner: idOrNone(one(sp.owner)),
     group: group === "vendor" || group === "category" ? group : null,
-    view: one(sp.view) === "grid" ? "grid" : "table",
   } as const;
-}
-type Filters = ReturnType<typeof parse>;
-
-function query(f: Filters, over: Partial<Record<keyof Filters, string | null>> = {}): string {
-  const p = new URLSearchParams();
-  const all: Record<string, string | null> = { q: f.q || null, category: f.category, status: f.status, vendor: f.vendor, department: f.department, owner: f.owner, group: f.group, view: f.view === "grid" ? "grid" : null, ...over };
-  for (const [k, v] of Object.entries(all)) if (v) p.set(k, v);
-  const s = p.toString();
-  return s ? `?${s}` : "";
 }
 
 export default async function SoftwareInventoryPage(props: { searchParams: Promise<Params> }) {
   const ctx = await requireBizContext("/business/software");
-  const f = parse(await props.searchParams);
+  const sp = await props.searchParams;
+  const f = parse(sp);
+  const view = pickView(sp.view, (await cookies()).get(viewCookie("software"))?.value);
   const ws = ctx.workspace.id;
   const [software, billedSubs, vendors, departments, people, display] = await Promise.all([getSoftwareList(ws), getSubscriptions(ws), getVendors(ws), getDepartments(ws), getPeople(ws), workspaceDisplay(ctx)]);
   // Spend in the workspace currency (ECB rate).
@@ -174,17 +169,10 @@ export default async function SoftwareInventoryPage(props: { searchParams: Promi
             </div>
           )}
 
-          <Tabs
-            items={[
-              { label: "Table", href: `/business/software${query(f, { view: null })}`, active: f.view === "table" },
-              { label: "Grid", href: `/business/software${query(f, { view: "grid" })}`, active: f.view === "grid" },
-            ]}
-          />
-
           <FilterBar
             action="/business/software"
             label="Filter software"
-            keep={{ view: f.view === "grid" ? "grid" : null }}
+            trailing={<ViewToggle name="software" value={view} />}
             search={{ value: f.q, placeholder: "Search name, vendor or purpose" }}
             inline={[{ name: "group", label: "Group", value: f.group, allLabel: "None", options: [{ value: "vendor", label: "Vendor" }, { value: "category", label: "Category" }] }]}
             more={[
@@ -248,31 +236,41 @@ export default async function SoftwareInventoryPage(props: { searchParams: Promi
                       <Money totals={groupTotal(g.items)} preferred={pref} className="text-[13px] text-muted" empty="" />
                     </div>
                   )}
-                  {f.view === "grid" ? (
+                  {view === "cards" ? (
                     <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                       {g.items.map((s) => {
                         const c = counts.get(s.id) ?? { live: 0, total: 0 };
                         return (
                           <li key={s.id}>
-                            <Link href={`/business/software/${s.id}`} className="biz-card group flex h-full flex-col px-4 py-4 transition-[border-color,box-shadow] hover:border-line-strong hover:shadow-md">
+                            <Link href={`/business/software/${s.id}`} className="biz-card group flex h-full flex-col p-4 transition-[border-color,box-shadow] hover:border-line-strong hover:shadow-md">
                               <span className="flex items-start gap-3">
                                 <SoftwareLogo name={s.name} src={s.logoSrc} size={40} className="transition-transform group-hover:scale-105" />
                                 <span className="min-w-0 flex-1">
-                                  <span className="block truncate text-[14.5px] font-semibold text-fg">{s.name}</span>
-                                  <span className="block truncate text-[12.5px] text-faint">{[s.vendorName, categoryLabels[s.category]].filter(Boolean).join(" · ")}</span>
+                                  <span className="block truncate text-[15px] font-semibold text-fg">{s.name}</span>
+                                  <span className="block truncate text-[12.5px] text-faint">{categoryLabels[s.category]}</span>
                                 </span>
                                 <StatusPill status={s.status} label={softwareStatusLabels[s.status]} />
                               </span>
-                              {s.businessPurpose && <span className="mt-3 line-clamp-2 text-[12.5px] text-muted">{s.businessPurpose}</span>}
+                              <span className="mt-3 line-clamp-2 min-h-[2.6em] text-[12.5px] leading-[1.3] text-muted">{s.businessPurpose || <span className="text-faint">No purpose written yet.</span>}</span>
                               <span aria-hidden="true" className="min-h-3 flex-1" />
-                              <span className="flex items-end justify-between gap-2 border-t border-line pt-3 text-[12.5px]">
-                                <span className="min-w-0 text-faint">
-                                  {c.total ? `${c.live} live of ${c.total} subscription${c.total === 1 ? "" : "s"}` : "No subscription"}
-                                  {s.ownerName && <span className="block truncate">Owner: {s.ownerName}</span>}
+                              <span className="flex items-end justify-between gap-3">
+                                {monthly.get(s.id) && Object.keys(monthly.get(s.id)!).length > 0 ? (
+                                  <span className="inline-flex items-baseline gap-0.5">
+                                    <Money totals={monthly.get(s.id) ?? {}} preferred={pref} className="tabular text-[19px] font-semibold tracking-tight text-heading" />
+                                    <span className="text-[12.5px] text-faint">/mo</span>
+                                  </span>
+                                ) : (
+                                  <span className="text-[13px] text-faint">No cost</span>
+                                )}
+                                <span className="text-right text-[12px] text-faint">
+                                  {c.live > 0 ? `${c.live} live plan${c.live === 1 ? "" : "s"}` : c.total > 0 ? "No live plan" : "No plan yet"}
                                 </span>
-                                <span className="shrink-0 text-right">
-                                  <Money totals={monthly.get(s.id) ?? {}} preferred={pref} className="text-[14px] font-semibold text-heading" />
-                                  {monthly.get(s.id) && <span className="block text-[11px] text-faint">a month</span>}
+                              </span>
+                              <span className="mt-3 flex items-center gap-2 border-t border-line pt-3 text-[12.5px]">
+                                <Icon name="users" size={14} className="shrink-0 text-faint" />
+                                <span className="min-w-0 truncate text-fg">
+                                  {s.ownerName ?? <span className="text-faint">No owner</span>}
+                                  {s.departmentName && <span className="text-faint"> · {s.departmentName}</span>}
                                 </span>
                               </span>
                             </Link>
@@ -283,45 +281,58 @@ export default async function SoftwareInventoryPage(props: { searchParams: Promi
                   ) : (
                     <Card bodyClassName="px-0 py-0">
                       <div className="overflow-x-auto max-sm:-mx-4 max-sm:-my-4">
-                        <table className="biz-table stack">
+                        <table className="biz-table stack" data-software-list>
                           <thead>
                             <tr>
                               <th>Software</th>
-                              <th>Vendor</th>
-                              <th>Category</th>
                               <th>Status</th>
                               <th>Owner</th>
-                              <th>Department</th>
-                              <th className="num">Subscriptions</th>
-                              <th className="num">Monthly equiv.</th>
+                              <th>Plans</th>
+                              <th className="num">Monthly cost</th>
                             </tr>
                           </thead>
                           <tbody>
                             {g.items.map((s) => {
                               const c = counts.get(s.id) ?? { live: 0, total: 0 };
+                              const detail = s.businessPurpose || [s.vendorName && s.vendorName.toLowerCase() !== s.name.toLowerCase() ? s.vendorName : null, categoryLabels[s.category]].filter(Boolean).join(" · ");
                               return (
                                 <tr key={s.id}>
-                                  <td className="stack-full sm:min-w-48">
-                                    <span className="flex items-center gap-2.5">
-                                      <SoftwareLogo name={s.name} src={s.logoSrc} size={30} />
+                                  <td className="max-sm:min-w-0 max-sm:flex-1 max-sm:basis-[60%] sm:min-w-56">
+                                    <span className="flex items-center gap-3">
+                                      <SoftwareLogo name={s.name} src={s.logoSrc} size={32} />
                                       <span className="min-w-0">
-                                        <Link href={`/business/software/${s.id}`} className="font-medium text-fg hover:underline underline-offset-2">
+                                        <Link href={`/business/software/${s.id}`} className="font-medium text-fg underline-offset-2 hover:underline">
                                           {s.name}
                                         </Link>
-                                        {s.businessPurpose && <span className="block max-w-xs truncate text-[12px] text-faint">{s.businessPurpose}</span>}
+                                        {detail && <span className="block max-w-xs truncate text-[12px] text-faint">{detail}</span>}
                                       </span>
                                     </span>
                                   </td>
-                                  <td className="stack-hide whitespace-nowrap">{s.vendorName ?? <span className="text-faint">—</span>}</td>
-                                  <td className="stack-hide whitespace-nowrap">{categoryLabels[s.category]}</td>
-                                  <td className="max-sm:pl-10">
+                                  <td className="max-sm:order-1 max-sm:pl-11">
                                     <StatusPill status={s.status} label={softwareStatusLabels[s.status]} />
                                   </td>
-                                  <td className="stack-hide whitespace-nowrap">{s.ownerName ?? <span className="text-faint">—</span>}</td>
-                                  <td className="stack-hide whitespace-nowrap">{s.departmentName ?? <span className="text-faint">—</span>}</td>
-                                  <td className={cn("num stack-hide", c.total === 0 && "text-faint")}>{c.total ? `${c.live} / ${c.total}` : "None"}</td>
-                                  <td className="num stack-end max-sm:font-semibold">
-                                    <Money totals={monthly.get(s.id) ?? {}} preferred={pref} />
+                                  <td className="stack-hide">
+                                    {s.ownerName ?? <span className="text-faint">No owner</span>}
+                                    {s.departmentName && <span className="block text-[11.5px] text-faint">{s.departmentName}</span>}
+                                  </td>
+                                  <td className="whitespace-nowrap text-[13px] max-sm:order-1 max-sm:text-[12px]">
+                                    {c.live > 0 ? (
+                                      <span className="text-fg max-sm:text-muted">
+                                        {c.live} live plan{c.live === 1 ? "" : "s"}
+                                      </span>
+                                    ) : (
+                                      <span className="text-faint">{c.total > 0 ? "No live plan" : "No plan yet"}</span>
+                                    )}
+                                  </td>
+                                  <td className="num max-sm:self-start max-sm:font-semibold">
+                                    {monthly.get(s.id) && Object.keys(monthly.get(s.id)!).length > 0 ? (
+                                      <span className="inline-flex items-baseline gap-0.5">
+                                        <Money totals={monthly.get(s.id) ?? {}} preferred={pref} />
+                                        <span className="text-[11.5px] font-normal text-faint">/mo</span>
+                                      </span>
+                                    ) : (
+                                      <span className="text-faint">—</span>
+                                    )}
                                   </td>
                                 </tr>
                               );
@@ -335,7 +346,7 @@ export default async function SoftwareInventoryPage(props: { searchParams: Promi
               ))}
             </div>
           )}
-          <p className="mt-3 text-[12px] text-faint">Subscriptions column: live (active or trial) / all non-archived. Monthly equivalent counts active subscriptions with a price.</p>
+          <p className="mt-3 text-[12px] text-faint">A live plan is an active or trial subscription. Monthly cost counts active plans with a price.</p>
         </>
       )}
     </>

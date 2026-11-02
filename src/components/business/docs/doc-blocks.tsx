@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import type { DocBlock, DocPage } from "@/content/business-docs";
 import { IMPORT_FIELDS } from "@/lib/business/csv-import";
 import { formatIsoDate } from "@/lib/business/calc";
+import { SoftwareLogo } from "@/components/business/software-logo";
 import { mcpClients, statusLabels, type ClientStatus } from "@/lib/business/mcp-clients";
 import type { ObjectSchema } from "@/lib/business/schema";
 import { tools } from "@/lib/server/mcp/tools";
@@ -127,7 +128,8 @@ export function ClientsTable() {
       minWidth="min-w-[860px]"
       head={["Client", "Status", "Last verified", "Read tools", "Write tools", "What the vendor documents"]}
       rows={mcpClients.map((c) => [
-        <Link key="n" href={`/business/docs/mcp/${c.id}`}>
+        <Link key="n" href={`/business/docs/mcp/${c.id}`} className="inline-flex items-center gap-2 whitespace-nowrap">
+          <SoftwareLogo name={c.name} src={c.logo} size={22} />
           {c.name}
         </Link>,
         <StatusBadge key="s" status={c.status} />,

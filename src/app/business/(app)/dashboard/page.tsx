@@ -221,6 +221,16 @@ export default async function DashboardPage() {
     const sub = converted.find((x) => x.id === t.id);
     if (sub && sub.priceMinor !== null) billedRenewing[sub.currency] = (billedRenewing[sub.currency] ?? 0) + sub.priceMinor;
   }
+  // A friendly opening: the time of day where the workspace is, and what's going on in one sentence.
+  const hour = Number(new Intl.DateTimeFormat("en-US", { hour: "numeric", hourCycle: "h23", timeZone: ctx.workspace.timeZone }).format(new Date()));
+  const greeting = hour >= 5 && hour < 12 ? "Good morning" : hour >= 12 && hour < 18 ? "Good afternoon" : "Good evening";
+  const soon = renewalsInWindow.filter((t) => t.daysLeft <= 30).length;
+  const daySummary =
+    s.activeCount === 0
+      ? "Nothing is active right now. Add the tools your team pays for and this page fills in."
+      : `You have ${s.activeCount} active subscription${s.activeCount === 1 ? "" : "s"}${
+          soon === 0 ? ", and nothing renews in the next 30 days." : `, and ${soon} renew${soon === 1 ? "s" : ""} in the next 30 days.`
+        }`;
   const listOf = (t: CurrencyTotals) => totalsList(t).filter((x) => x.amount !== 0).map((x) => formatMoney(x.amount, x.currency)).join(" + ");
   const rates = model.fx ? model.fx.rates.map((r) => formatRate(r.currency, pref, r.rate)).join(", ") : "";
   return (
@@ -234,7 +244,12 @@ export default async function DashboardPage() {
             <p className="text-[12.5px] font-medium text-faint">
               {ctx.workspace.name} · As of {formatIsoDate(ctx.today, fmt)}
             </p>
-            <h1 className="mt-1 text-[26px] font-semibold leading-tight tracking-tight text-heading">Overview</h1>
+            <h1 className="mt-1 text-[26px] font-semibold leading-tight tracking-tight text-heading" data-greeting>
+              {greeting}, {firstName}
+            </h1>
+            <p className="mt-1.5 max-w-xl text-[14px] leading-relaxed text-muted" data-day-summary>
+              {daySummary}
+            </p>
             <p className="mt-6 text-[12.5px] font-medium text-muted">Monthly software spend</p>
             <div className="so-ink tabular mt-1 w-fit text-[2.35rem] font-semibold leading-[1.1] tracking-tight sm:text-[2.75rem]">
               {heroMain ? formatMoney(heroMain.amount, heroMain.currency) : "—"}
@@ -273,7 +288,7 @@ export default async function DashboardPage() {
                   <Money totals={s.annualized} preferred={pref} />
                   {listOf(billed.annualized) && <span className="block text-[0.8em] font-normal opacity-65">incl. {listOf(billed.annualized)} converted</span>}
                 </dd>
-                <dd className="text-[11.5px] text-faint">Run-rate × 12, not cash spent</dd>
+                <dd className="text-[11.5px] text-faint">At today&apos;s prices, not cash spent</dd>
               </div>
               <div>
                 <dt className="text-faint">Renewing in 9 weeks</dt>

@@ -4,6 +4,7 @@ import { DisconnectForm } from "@/components/business/mcp-forms";
 import { Card, EmptyState, InlineNote, PageHeader, Pill, TableWrap } from "@/components/business/ui";
 import { formatIsoDate } from "@/lib/business/calc";
 import { mcpClients, statusLabels } from "@/lib/business/mcp-clients";
+import { SoftwareLogo } from "@/components/business/software-logo";
 import { can } from "@/lib/business/permissions";
 import { requireBizContext } from "@/lib/server/business/context";
 import { listConnections } from "@/lib/server/mcp/connections";
@@ -53,12 +54,15 @@ export default async function McpSettingsPage() {
         <Card title="Client compatibility" description="Only clients marked Verified have been tested end to end with this server.">
           <ul className="divide-y divide-line">
             {mcpClients.map((c) => (
-              <li key={c.id} className="flex items-start justify-between gap-3 py-2.5 first:pt-0 last:pb-0">
-                <span className="min-w-0">
-                  <Link href={`/business/docs/mcp/${c.id}`} className="text-[13.5px] font-medium text-fg hover:underline">
-                    {c.name}
-                  </Link>
-                  <span className="block text-[12px] text-faint">{c.lastVerified ? `Last verified ${formatIsoDate(c.lastVerified, fmt)}` : "Never tested with this server"}</span>
+              <li key={c.id} className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0">
+                <span className="flex min-w-0 items-center gap-3">
+                  <SoftwareLogo name={c.name} src={c.logo} size={34} />
+                  <span className="min-w-0">
+                    <Link href={`/business/docs/mcp/${c.id}`} className="text-[13.5px] font-medium text-fg hover:underline">
+                      {c.name}
+                    </Link>
+                    <span className="block text-[12px] text-faint">{c.lastVerified ? `Last verified ${formatIsoDate(c.lastVerified, fmt)}` : "Never tested with this server"}</span>
+                  </span>
                 </span>
                 <Pill tone={c.status === "verified" ? "success" : c.status === "partial" ? "accent" : "outline"}>{statusLabels[c.status]}</Pill>
               </li>

@@ -1,3 +1,5 @@
+import { mcpClients, statusLabels } from "@/lib/business/mcp-clients";
+import { SoftwareLogo } from "@/components/business/software-logo";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Card, IconTile, LinkButton, PageHeader, Pill, type KpiTone } from "@/components/business/ui";
@@ -18,7 +20,6 @@ const statusPill: Record<Status, { label: string; tone: "success" | "accent" | "
   planned: { label: "Planned — not available yet", tone: "outline" },
 };
 
-const AI_CLIENTS = ["Claude", "ChatGPT", "Gemini", "Grok"];
 
 export default async function IntegrationsPage() {
   const ctx = await requireBizContext("/business/integrations");
@@ -51,12 +52,14 @@ export default async function IntegrationsPage() {
             One remote MCP server lets AI assistants read your workspace (and, with your permission, add or update subscriptions) through the same permission checks as
             this app. You approve each connection and can revoke it at any time.
           </p>
-          <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Client compatibility">
-            {AI_CLIENTS.map((c) => (
-              <li key={c}>
-                <Pill tone="neutral">
-                  {c} · not yet tested
-                </Pill>
+          <ul className="mt-3 flex flex-wrap gap-2" aria-label="Client compatibility">
+            {mcpClients.map((c) => (
+              <li key={c.id}>
+                <Link href={`/business/docs/mcp/${c.id}`} className="inline-flex items-center gap-2 rounded-full border border-line bg-surface py-1 pl-1 pr-3 text-[12.5px] hover:border-line-strong">
+                  <SoftwareLogo name={c.name} src={c.logo} size={22} className="rounded-full" />
+                  <span className="font-medium text-fg">{c.name}</span>
+                  <span className={c.status === "verified" ? "text-[color-mix(in_oklab,var(--success)_75%,black)]" : "text-faint"}>{statusLabels[c.status]}</span>
+                </Link>
               </li>
             ))}
           </ul>

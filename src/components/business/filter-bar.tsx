@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition, type ReactNode } from "react";
 import { Icon } from "@/components/ui/icon";
 import { cn } from "@/components/ui/primitives";
 
@@ -37,6 +37,7 @@ export function FilterBar({
   inline = [],
   more = [],
   className = "mb-4",
+  trailing,
 }: {
   action: string;
   /** What the form filters, for screen readers ("Filter subscriptions"). */
@@ -48,6 +49,8 @@ export function FilterBar({
   more?: FilterField[];
   /** Spacing around the bar (no margin when it sits in a card's header). */
   className?: string;
+  /** Something at the end of the row, such as the List / Cards switch. */
+  trailing?: ReactNode;
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -160,6 +163,7 @@ export function FilterBar({
           </button>
         )}
         {!search && pending && <Spinner />}
+        {trailing && <div className="ml-auto flex shrink-0 items-center">{trailing}</div>}
       </div>
 
       {more.length > 0 && (

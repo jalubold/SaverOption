@@ -11,6 +11,8 @@ export interface McpClientInfo {
   id: "claude" | "chatgpt" | "gemini" | "grok";
   name: string;
   vendor: string;
+  /** The client's mark, under /public/logos. */
+  logo: string;
   status: ClientStatus;
   /** YYYY-MM-DD of the last test in that client, or null. */
   lastVerified: string | null;
@@ -42,6 +44,7 @@ const WRITE = "Available on a “Read and change” connection; every change is 
 export const mcpClients: McpClientInfo[] = [
   {
     id: "claude",
+    logo: "/logos/business/claude.svg",
     name: "Claude",
     vendor: "Anthropic",
     status: "verified",
@@ -58,6 +61,7 @@ export const mcpClients: McpClientInfo[] = [
   },
   {
     id: "chatgpt",
+    logo: "/logos/chatgpt.svg",
     name: "ChatGPT",
     vendor: "OpenAI",
     status: "verified",
@@ -72,6 +76,7 @@ export const mcpClients: McpClientInfo[] = [
   },
   {
     id: "gemini",
+    logo: "/logos/gemini-api.svg",
     name: "Gemini",
     vendor: "Google",
     status: "verified",
@@ -86,6 +91,7 @@ export const mcpClients: McpClientInfo[] = [
   },
   {
     id: "grok",
+    logo: "/logos/business/grok.svg",
     name: "Grok",
     vendor: "xAI",
     status: "verified",
