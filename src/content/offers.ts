@@ -8412,7 +8412,10 @@ export const offers: Offer[] = [
     "links": {
       "officialUrl": "https://www.hostinger.com/black-friday",
       "redeemUrl": "https://www.hostinger.com/black-friday-web-hosting-deals"
-    }
+    },
+    "campaigns": [
+      "black-friday"
+    ]
   },
   {
     "id": "o-ibm-bob-annual-subscription-20-off-october-2026",
@@ -14734,5 +14737,857 @@ export const offers: Offer[] = [
       "officialUrl": "https://help.zapier.com/hc/en-us/articles/8496197192461-Get-started-with-your-free-Zapier-trial",
       "redeemUrl": "https://zapier.com/pricing"
     }
+  },
+  {
+    "id": "o-outdoo-ai-black-friday-2026",
+    "slug": "outdoo-ai-black-friday-2026",
+    "productId": "outdoo-ai",
+    "title": "Outdoo AI Black Friday 2026: 20% off annual plans (November 20, 2026 to January 1, 2027)",
+    "summary": "Outdoo says its Black Friday 2026 offer is 20% off all annual Outdoo AI plans, from November 20, 2026 to January 1, 2027, with no coupon code.",
+    "description": "Outdoo's own 2026 Black Friday roundup lists its offer for Outdoo AI, its AI sales roleplay and coaching platform: 20% off all annual plans, running from November 20, 2026 to January 1, 2027.\n\nNo coupon code is needed. According to the post, you claim the discount by booking a demo from the deal page. Outdoo does not publish annual plan prices (its Growth and Enterprise tiers are priced on request), so the saving in dollars depends on the quote.",
+    "type": "discount",
+    "categories": [
+      "saas-discounts",
+      "ai-tools"
+    ],
+    "audiences": [
+      "businesses",
+      "ai-tools"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "savingsLabel": "20% off all annual plans"
+    },
+    "claim": {
+      "method": "link",
+      "note": "Book a demo from Outdoo's deal page; no coupon code is needed."
+    },
+    "eligibility": [
+      "Annual Outdoo AI plans bought between November 20, 2026 and January 1, 2027"
+    ],
+    "redemption": [
+      "Open Outdoo's Black Friday 2026 post",
+      "Book a demo from the deal page",
+      "Ask for the 20% Black Friday discount on an annual plan"
+    ],
+    "terms": [
+      "Offer period: November 20, 2026 to January 1, 2027",
+      "20% off annual plans; no coupon code",
+      "Annual plan prices are quoted on request, so the final price depends on the quote"
+    ],
+    "expiresAt": "2027-01-01",
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's own page; the live page could not be fetched from the research environment",
+      "note": "Quotes come from search-engine extracts of Outdoo's own blog post (outdoo.ai could not be fetched). The 'book a demo' claim step comes from the search tool's summary of the post, not a quote shown word for word. The post is a roundup of many vendors' deals; this offer is Outdoo's own entry. Outdoo describes its plans differently on different pages (Free/Growth/Enterprise vs Free/Usage-based/Enterprise).",
+      "evidence": [
+        {
+          "claim": "Discount and dates",
+          "quote": "Outdoo AI's 2026 offer is confirmed: 20% off all annual plans from November 20, 2026 to January 1, 2027."
+        },
+        {
+          "claim": "Offer period",
+          "quote": "Offer Period: November 20, 2026 to January 1, 2027."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.outdoo.ai/blog/best-black-friday-saas-deals-2026"
+    },
+    "campaigns": [
+      "black-friday"
+    ],
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-postnitro-black-friday-2026",
+    "slug": "postnitro-black-friday-2026",
+    "productId": "postnitro",
+    "title": "PostNitro Black Friday 2026: 40% off Creator+ and Team+ yearly plans (until November 30)",
+    "summary": "PostNitro takes 40% off its Creator+ and Team+ plans on yearly billing with code BF26A, or 16.7% off monthly billing with code BF26M, from November 1 to November 30, 2026.",
+    "description": "PostNitro's Black Friday 2026 page offers 40% off the Creator+ and Team+ plans on yearly billing with the code BF26A, and 16.7% off monthly billing with the code BF26M. The offer is valid from November 1 to November 30.\n\nOn yearly billing, Creator+ is listed at $18/month ($216 a year) instead of $30, and Team+ at $36/month ($432 a year) instead of $60. On monthly billing, Creator+ is $25 and Team+ $50. PostNitro says the discount is recurring and carries over to renewals for as long as you stay subscribed. Creator+ and Team+ are the plans that can schedule and publish posts.",
+    "type": "discount",
+    "categories": [
+      "saas-discounts",
+      "ai-tools"
+    ],
+    "audiences": [
+      "creators",
+      "marketing-tools",
+      "ai-tools"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "regularPrice": 30,
+      "dealPrice": 18,
+      "period": "month",
+      "savingsLabel": "40% off Creator+ and Team+ yearly, 16.7% off monthly"
+    },
+    "claim": {
+      "method": "code",
+      "code": "BF26A",
+      "note": "BF26A is for yearly billing; use BF26M for monthly billing."
+    },
+    "eligibility": [
+      "New Creator+ or Team+ subscriptions, November 1 to November 30, 2026"
+    ],
+    "redemption": [
+      "Open PostNitro's Black Friday page or plans page",
+      "Choose Creator+ or Team+ and a billing period",
+      "Enter BF26A (yearly) or BF26M (monthly) at checkout"
+    ],
+    "terms": [
+      "Valid on Creator+ and Team+ from November 1 to November 30, 2026",
+      "Yearly: Creator+ $18/month billed $216 a year (list $30/month); Team+ $36/month billed $432 a year (list $60/month)",
+      "Monthly: Creator+ $25/month and Team+ $50/month (list $30 and $60)",
+      "PostNitro says the discount applies to renewals for as long as the subscription continues",
+      "Creator+ includes 10 social accounts and 200 API credits a month; Team+ includes 30 accounts and 500 credits"
+    ],
+    "expiresAt": "2026-11-30",
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's own page; the live page could not be fetched from the research environment",
+      "note": "postnitro.ai could not be fetched, so the quotes come from search-engine extracts of PostNitro's own Black Friday page. Prices, codes and plan limits are from the search tool's summary of that page rather than quotes shown word for word. A PostNitro docs page about 112 days old lists Creator at $20/month, so check the final price at checkout. The page also lists other vendors' deals; only PostNitro's own offer is used here.",
+      "evidence": [
+        {
+          "claim": "Plans and dates",
+          "quote": "Valid on Creator+ and Team+ from November 1 to November 30."
+        },
+        {
+          "claim": "Headline discount (banner, as extracted)",
+          "quote": "40% off Creator+ and Team+ yearly and 16.7% off monthly"
+        },
+        {
+          "claim": "Codes (as extracted)",
+          "quote": "Annual plans use code BF26A, and monthly plans use BF26M"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://postnitro.ai/black-friday-deals"
+    },
+    "campaigns": [
+      "black-friday"
+    ],
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-coupler-io-black-friday-2026",
+    "slug": "coupler-io-black-friday-2026",
+    "productId": "coupler-io",
+    "title": "Coupler.io Black Friday 2026: 20% off your first payment with code CPLBF26 (November 1 to 30)",
+    "summary": "New Coupler.io users get 20% off the first payment on any plan, monthly or annual, with the code CPLBF26 from November 1 to November 30, 2026.",
+    "description": "Coupler.io's own 2026 Black Friday roundup lists its offer: 20% off any pricing plan for the first payment, on monthly or annual billing. The code is CPLBF26 and it runs from November 1 to November 30, 2026.\n\nThe discount is for new users and applies once, to the first payment only.",
+    "type": "discount",
+    "categories": [
+      "saas-discounts",
+      "software-deals"
+    ],
+    "audiences": [
+      "businesses",
+      "marketing-tools"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "savingsLabel": "20% off any pricing plan for the first payment"
+    },
+    "claim": {
+      "method": "code",
+      "code": "CPLBF26",
+      "note": "Enter the code when you pay for your first plan."
+    },
+    "requirements": {
+      "newCustomersOnly": true
+    },
+    "eligibility": [
+      "New Coupler.io users",
+      "Any paid plan, monthly or annual billing"
+    ],
+    "redemption": [
+      "Create a Coupler.io account",
+      "Choose a paid plan",
+      "Enter CPLBF26 at checkout"
+    ],
+    "terms": [
+      "Runs from November 1 to November 30, 2026",
+      "One-time discount on the first payment only",
+      "New users only"
+    ],
+    "expiresAt": "2026-11-30",
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's own page; the live page could not be fetched from the research environment",
+      "note": "coupler.io could not be fetched, so the quote comes from a search-engine extract of Coupler.io's own blog roundup of Black Friday deals (its own entry). Coupler.io's discounts help page does not mention the promotion.",
+      "evidence": [
+        {
+          "claim": "Discount, code, new users and dates",
+          "quote": "20% off any pricing plan for the first payment (monthly or annually). Using the promo code, new users will get a one-time discount. Promo code: CPLBF26 Duration: 01 November – 30 November 2026"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://blog.coupler.io/black-friday-saas-deals/"
+    },
+    "campaigns": [
+      "black-friday"
+    ],
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-plerdy-black-friday-2026",
+    "slug": "plerdy-black-friday-2026",
+    "productId": "plerdy",
+    "title": "Plerdy Black Friday 2026: 50% off annual plans with code plerdyBF2026 (until December 3)",
+    "summary": "Plerdy's Black Friday 2026 page offers 50% off annual plans with the code plerdyBF2026, running November 14 to December 3, 2026.",
+    "description": "Plerdy's Black Friday and Cyber Monday 2026 page offers 50% off its annual plans with the promo code plerdyBF2026. The page gives the dates as November 14 to December 3, 2026.\n\nOutside the promotion Plerdy's pricing page lists 35% off annual packages, so the Black Friday code is a deeper cut than the usual annual discount. Plerdy's blog roundup gives an earlier start date (November 11) for the same code.",
+    "type": "discount",
+    "categories": [
+      "saas-discounts",
+      "software-deals"
+    ],
+    "audiences": [
+      "marketing-tools",
+      "businesses"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "savingsLabel": "50% off annual plans"
+    },
+    "claim": {
+      "method": "code",
+      "code": "plerdyBF2026"
+    },
+    "eligibility": [
+      "Plerdy annual plans bought during the promotion"
+    ],
+    "redemption": [
+      "Open Plerdy's Black Friday page",
+      "Choose an annual plan",
+      "Enter plerdyBF2026 at checkout"
+    ],
+    "terms": [
+      "Runs November 14 to December 3, 2026 per Plerdy's Black Friday page (its blog roundup says November 11 to December 3)",
+      "Applies to annual plans"
+    ],
+    "expiresAt": "2026-12-03",
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's own page; the live page could not be fetched from the research environment",
+      "note": "plerdy.com could not be fetched. The code, discount and dates come from the search tool's summary of Plerdy's Black Friday page rather than a quote shown word for word; the page also shows a counter of users who have activated the code. Plerdy's blog roundup gives November 11 as the start date, against November 14 on the promo page. Do not confuse with the code PlerdyBF25, which appears in the roundup next to another vendor's 2025 entry.",
+      "evidence": [
+        {
+          "claim": "Page copy",
+          "quote": "Dive into the advanced features of Plerdy at a fraction of the price this Black Friday."
+        },
+        {
+          "claim": "Code, discount and dates (as extracted)",
+          "quote": "plerdyBF2026 ... 50% off annual plans ... Nov 14 – Dec 3, 2026"
+        },
+        {
+          "claim": "Blog roundup dates (as extracted)",
+          "quote": "Nov 11 – Dec 03, 2026"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.plerdy.com/black-friday/",
+      "redeemUrl": "https://www.plerdy.com/pricing/"
+    },
+    "campaigns": [
+      "black-friday"
+    ],
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-saner-ai-black-friday-2026",
+    "slug": "saner-ai-black-friday-2026",
+    "productId": "saner-ai",
+    "title": "Saner.AI Black Friday 2026: 50% off the first 2 months of the Standard plan",
+    "summary": "Saner.AI's Black Friday 2026 code BF26STANDARDMONTHLY takes 50% off the first two months of the Standard monthly plan; BF26STANDARDYEARLY takes 30% off the Standard annual plan.",
+    "description": "Saner.AI's own Black Friday AI deals post lists its 2026 offer: 50% off the first 2 months of the Standard plan on monthly billing with the code BF26STANDARDMONTHLY.\n\nThe same post lists a second code, BF26STANDARDYEARLY, for 30% off the annual Standard plan, limited to 100 slots. Saner.AI's other articles list Standard at $16/month on monthly billing and $12/month billed annually. No end date is given.",
+    "type": "discount",
+    "categories": [
+      "saas-discounts",
+      "ai-tools"
+    ],
+    "audiences": [
+      "ai-tools",
+      "office-tools"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "regularPrice": 16,
+      "period": "month",
+      "durationMonths": 2,
+      "savingsLabel": "50% Off First 2 Months on Standard plan"
+    },
+    "claim": {
+      "method": "code",
+      "code": "BF26STANDARDMONTHLY",
+      "note": "For the annual Standard plan, Saner.AI lists BF26STANDARDYEARLY (30% off, 100 slots)."
+    },
+    "eligibility": [
+      "Saner.AI Standard plan subscriptions"
+    ],
+    "redemption": [
+      "Open Saner.AI's pricing page",
+      "Choose the Standard plan",
+      "Enter BF26STANDARDMONTHLY (monthly) or BF26STANDARDYEARLY (annual) at checkout"
+    ],
+    "terms": [
+      "Monthly code: 50% off the first 2 months of Standard",
+      "Annual code: 30% off Standard yearly, limited to 100 slots",
+      "Standard is listed at $16/month monthly, or $12/month billed annually",
+      "No end date is stated"
+    ],
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's own page; the live page could not be fetched from the research environment",
+      "note": "saner.ai could not be fetched, so this comes from search-engine extracts of Saner.AI's own blog post (published on both saner.ai and blog.saner.ai). The yearly code and the 100-slot limit appear in only one version of the post and come from the search tool's summary. The search did not show whether the slot limit also applies to the monthly code. The Standard prices are from other Saner.AI articles; its pricing page in the index is old.",
+      "evidence": [
+        {
+          "claim": "Monthly code and discount",
+          "quote": "Saner.AI - 50% Off First 2 Months on Standard plan (Code: BF26STANDARDMONTHLY)"
+        },
+        {
+          "claim": "Standard plan price",
+          "quote": "Monthly at $16/month, Annually at $12/month"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.saner.ai/blogs/best-black-friday-ai-deals",
+      "redeemUrl": "https://www.saner.ai/pricing"
+    },
+    "campaigns": [
+      "black-friday"
+    ],
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-callhippo-black-friday-2026",
+    "slug": "callhippo-black-friday-2026",
+    "productId": "callhippo",
+    "title": "CallHippo Black Friday 2026: up to 20% off (until December 5, 2026)",
+    "summary": "CallHippo offers up to 20% off for Black Friday 2026: 20% on annual billing and 15% on monthly billing, with a coupon code you request by email, until December 5, 2026.",
+    "description": "CallHippo's own 2026 roundup of Black Friday SaaS deals lists its offer: up to 20% off, made up of 20% off annual billing and 15% off monthly billing. The offer is valid until December 5, 2026.\n\nThere is no public code. CallHippo asks you to email it for your coupon code.",
+    "type": "discount",
+    "categories": [
+      "saas-discounts",
+      "software-deals"
+    ],
+    "audiences": [
+      "businesses",
+      "startups"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "savingsLabel": "Up to 20% off (20% annual, 15% monthly)"
+    },
+    "claim": {
+      "method": "code",
+      "note": "CallHippo does not publish the code; email CallHippo to get your coupon code."
+    },
+    "eligibility": [
+      "CallHippo paid plans on annual (20% off) or monthly (15% off) billing"
+    ],
+    "redemption": [
+      "Email CallHippo and ask for the Black Friday coupon code",
+      "Choose a plan and billing period",
+      "Apply the code at checkout"
+    ],
+    "terms": [
+      "Valid until December 5, 2026",
+      "20% off annual billing, 15% off monthly billing",
+      "Coupon code is sent on request by email"
+    ],
+    "expiresAt": "2026-12-05",
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's own page; the live page could not be fetched from the research environment",
+      "note": "callhippo.com could not be fetched, so this comes from search-engine extracts of CallHippo's own blog roundup (its own entry). The 20%/15% split comes from the search tool's summary. A CallHippo reseller help page says Black Friday details are not fixed yet and are shared via its blog, so treat the blog entry as the source.",
+      "evidence": [
+        {
+          "claim": "End date and how to claim",
+          "quote": "Valid till December 5, 2026 · email us for your coupon code"
+        },
+        {
+          "claim": "Discount split (as extracted)",
+          "quote": "up to 20% off, with 20% off for annual billing and 15% off for monthly billing"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://callhippo.com/blog/general/black-friday-saas-deals",
+      "redeemUrl": "https://callhippo.com/pricing/"
+    },
+    "campaigns": [
+      "black-friday"
+    ],
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-seedeo-black-friday-2026",
+    "slug": "seedeo-black-friday-2026",
+    "productId": "seedeo",
+    "title": "Seedeo Black Friday 2026: Pro annual for $129 in the first year, plus 1,000 bonus credits",
+    "summary": "Seedeo's pricing page lists its Pro annual plan at $129 for the first year (64% off twelve months at $29.90), renewing at $179.40 a year, with 1,000 early Black Friday bonus credits.",
+    "description": "Seedeo's pricing page runs a Black Friday 2026 offer on its annual plans, applied automatically. Pro on annual billing is listed at $129.00 for the first year, which Seedeo shows as 64% off (a $229.80 saving) against twelve months at $29.90/month, and it renews at $179.40 a year.\n\nPro includes 2,500 credits a month, and the page adds an early Black Friday bonus of 1,000 credits. Annual plans start from $79, and unused credits roll over.",
+    "type": "discount",
+    "categories": [
+      "saas-discounts",
+      "ai-tools"
+    ],
+    "audiences": [
+      "creators",
+      "ai-tools"
+    ],
+    "pricing": {
+      "currency": "USD",
+      "regularPrice": 29.9,
+      "regularPeriod": "month",
+      "dealPrice": 129,
+      "period": "year",
+      "durationMonths": 12,
+      "renewalPrice": 179.4,
+      "renewalPeriod": "year",
+      "savingsLabel": "64% off Pro annual in the first year"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Seedeo says offers are auto-applied on its pricing page."
+    },
+    "eligibility": [
+      "Seedeo annual plans bought during the Black Friday offer"
+    ],
+    "redemption": [
+      "Open Seedeo's pricing page",
+      "Choose Pro (or another plan) on annual billing",
+      "Check out; the discount is applied automatically"
+    ],
+    "terms": [
+      "Pro annual: $129.00 for the first year, then $179.40 a year",
+      "Pro includes 2,500 credits a month; 1,000 early Black Friday bonus credits",
+      "Annual plans from $79 during the offer",
+      "Unused credits roll over",
+      "No end date is stated on the page (it shows a countdown)"
+    ],
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of the provider's own page; the live page could not be fetched from the research environment",
+      "note": "seedeo.ai could not be fetched, so this comes from search-engine extracts of Seedeo's pricing page, which the search tool says carries a 'Black Friday 2026' banner and countdown. The 64% and $229.80 figures come from the search tool's summary of the page. A third-party list gives the sale as October 27 to November 30, 2026 and mentions a 20,000-credit pack for $99; neither appeared on Seedeo's own page in the extracts, so they are not included. It is unclear whether the 1,000 bonus credits are one-time.",
+      "evidence": [
+        {
+          "claim": "Pro annual price and renewal",
+          "quote": "$129.00 first year · renews at $179.40/year"
+        },
+        {
+          "claim": "Bonus credits",
+          "quote": "Pro: Early Black Friday · 1,000 bonus credits"
+        },
+        {
+          "claim": "Automatic discount",
+          "quote": "annual plans from $79, offers auto-applied"
+        },
+        {
+          "claim": "Credit rollover",
+          "quote": "Unused credits roll over"
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://seedeo.ai/pricing"
+    },
+    "campaigns": [
+      "black-friday"
+    ],
+    "source": "official",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published"
+  },
+  {
+    "id": "o-nordvpn-black-friday-2026",
+    "slug": "nordvpn-black-friday-2026",
+    "productId": "nordvpn",
+    "title": "NordVPN Black Friday 2026: up to 78% off 2-year plans plus 3 extra months",
+    "summary": "NordVPN's Black Friday 2026 deal gives up to 78% off 2-year plans plus three extra months at no extra cost. The sale started early, on October 21, and runs until December 9, 2026.",
+    "description": "NordVPN's Black Friday page offers up to 78% off its 2-year plans, plus three extra months at no additional cost. NordVPN says it starts its Black Friday sales before the day itself (November 27, 2026). According to its Black Friday page, the 2026 sale began on October 21 and runs until December 9, 2026.\n\nThe headline 78% applies to the highest-tier plan. NordVPN calculates the saving by comparing that plan's intro monthly price on a 2-year term, extra months included, with the monthly price of its annual renewal. Lower tiers get smaller discounts. The pricing page lists the Basic 2-year plan at $3.49/mo with three extra months: $94.23 for the first 27 months, against $312.93.",
+    "type": "discount",
+    "categories": [
+      "saas-discounts",
+      "software-deals"
+    ],
+    "audiences": [
+      "freelancers",
+      "office-tools"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "savingsLabel": "Up to 78% off 2-year plans, plus 3 extra months"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "Sale prices are shown on NordVPN's Black Friday and pricing pages; choose a 2-year plan and check out on nordvpn.com."
+    },
+    "regions": {
+      "scope": "global",
+      "note": "Prices and currencies vary by country."
+    },
+    "eligibility": [
+      "Purchases of NordVPN 2-year plans during the Black Friday sale (October 21 to December 9, 2026)"
+    ],
+    "redemption": [
+      "Open NordVPN's Black Friday page",
+      "Pick a plan tier on the 2-year term",
+      "Check out; the three extra months are added to the plan"
+    ],
+    "terms": [
+      "Sale runs from October 21 to December 9, 2026, per NordVPN's Black Friday page",
+      "Up to 78% off applies to 2-year plans; the 78% figure is for the highest-tier plan",
+      "Three extra months at no additional cost on 2-year plans",
+      "Basic 2-year plan as listed: $3.49/mo, $94.23 for the first 27 months (against $312.93)",
+      "Savings compare the 2-year intro monthly price (including extra months) with the monthly price of the plan's annual renewal",
+      "Plans renew at the regular renewal price after the first term"
+    ],
+    "expiresAt": "2026-12-09",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of NordVPN's own Black Friday and pricing pages; the live pages could not be fetched from the research environment",
+      "note": "nordvpn.com could not be fetched, so the quotes come from search-engine extracts. The October 21 start date and December 9 end date come from the search tool's summary of the Black Friday page, not a quote shown word for word. The Basic price is from the pricing page and wasn't labelled as Black Friday in the extract. NordVPN's October coupon page shows a different figure ('up to 68%'), so check the plan price at checkout.",
+      "evidence": [
+        {
+          "claim": "2026 Black Friday page and headline discount",
+          "quote": "The best Black Friday VPN deal 2026: Up to 78% off"
+        },
+        {
+          "claim": "Discount and extra months",
+          "quote": "NordVPN's Black Friday deal gives you up to 78% off 2-year plans, plus three extra months at no additional cost."
+        },
+        {
+          "claim": "Early start",
+          "quote": "Black Friday is on November 27, 2026. However, we start our Black Friday sales earlier to give more customers a chance to get a great deal."
+        },
+        {
+          "claim": "Sale dates (search summary of the Black Friday page)",
+          "quote": "The deal starts on October 21, 2026, and runs until December 9, 2026."
+        },
+        {
+          "claim": "Basic 2-year plan price (pricing page, as extracted)",
+          "quote": "Save 69% Basic $3.49 per month /mo + 3 EXTRA months $312.93 $94.23 for the first 27 months."
+        },
+        {
+          "claim": "How the savings figure is calculated",
+          "quote": "Savings from comparing the intro monthly price of the 2-year highest-tier plan (including any extra months if offered) and the current monthly price of its annual renewal."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://nordvpn.com/black-friday/",
+      "redeemUrl": "https://nordvpn.com/pricing/"
+    },
+    "campaigns": [
+      "black-friday"
+    ]
+  },
+  {
+    "id": "o-bluehost-web-hosting-black-friday-2026",
+    "slug": "bluehost-web-hosting-black-friday-2026",
+    "productId": "bluehost-web-hosting",
+    "title": "Bluehost Black Friday 2026: 15% off one product, 20% off two, 25% off three (through November 30)",
+    "summary": "Bluehost's 2026 holiday sale takes 15% off one eligible product, 20% off two and 25% off three on 12-month terms, applied automatically at checkout, through November 30, 2026.",
+    "description": "Bluehost's Black Friday and Cyber Monday sale for 2026 is a tiered discount: 15% off one eligible product, 20% off two and 25% off three, each on a 12-month term. No promo code is needed. The discount is applied automatically at checkout. Bluehost's posts say the sale ends on November 30, 2026 (Cyber Monday), and one of them gives October 1 as the start date.\n\nEligible products include shared hosting, the AI All-Access Pack, the AI Website Builder and AI Store, plus Bluehost Self-Managed VPS, Managed VPS, Virtual Dedicated Server Hosting (VDS) and dedicated servers. The discount covers the first 12-month term only. Plans then renew at the regular rate. Eligible 12-month hosting plans include a free domain on qualifying extensions, claimable within 90 days. Bluehost notes that AI products are nonrefundable.",
+    "type": "discount",
+    "categories": [
+      "saas-discounts",
+      "software-deals"
+    ],
+    "audiences": [
+      "businesses",
+      "freelancers",
+      "creators"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "durationMonths": 12,
+      "savingsLabel": "15% off one eligible product, 20% off two and 25% off three, on 12-month terms"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "No promo code needed; the discount is applied at checkout on bluehost.com when you buy eligible products on 12-month terms."
+    },
+    "eligibility": [
+      "Purchases of eligible Bluehost products on 12-month terms during the sale, which ends November 30, 2026",
+      "Eligible products include shared hosting, AI All-Access Pack, AI Website Builder, AI Store, Self-Managed VPS, Managed VPS, VDS and dedicated servers"
+    ],
+    "redemption": [
+      "Choose one or more eligible Bluehost products on 12-month terms",
+      "Add them to the same order to reach the 20% (two products) or 25% (three products) tier",
+      "Check out; the discount is applied automatically"
+    ],
+    "terms": [
+      "Sale ends November 30, 2026; one Bluehost post says it runs from October 1",
+      "15% off one eligible product, 20% off two, 25% off three",
+      "12-month terms only",
+      "After the initial 12-month term, plans renew at the applicable regular rate",
+      "Eligible 12-month hosting plans include a free domain, redeemable within 90 days on qualifying extensions",
+      "AI products are nonrefundable under Bluehost's refund policy"
+    ],
+    "expiresAt": "2026-11-30",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of Bluehost's own blog posts about its 2026 Black Friday sale; the live pages could not be fetched from the research environment",
+      "note": "These quotes come from Bluehost's own blog (several 2026 Black Friday posts) via search extracts. Only one post (about the AI Website Builder) gives a start date (October 1), and one says pricing was verified in October 2026 and may change. No standalone Bluehost sale landing page turned up in search, so check the tier discount at checkout.",
+      "evidence": [
+        {
+          "claim": "Tiered discount on 12-month terms",
+          "quote": "The current Bluehost holiday sale gives you 15% off one eligible product, 20% off two and 25% off three, on 12-month terms."
+        },
+        {
+          "claim": "Applied without a code",
+          "quote": "Automatically applied at checkout."
+        },
+        {
+          "claim": "End date and VPS/dedicated coverage (as extracted)",
+          "quote": "Bluehost Self-Managed VPS, Bluehost Managed VPS, Virtual Dedicated Server Hosting (VDS) and Dedicated Hosting (Dedicated Servers) ... runs through Nov. 30, 2026 on 12-month terms"
+        },
+        {
+          "claim": "Single sale through Cyber Monday",
+          "quote": "It ends Nov 30, 2026."
+        },
+        {
+          "claim": "Renewal",
+          "quote": "After your initial 12-month promotional term, your hosting plan renews at the applicable regular rate."
+        },
+        {
+          "claim": "Free domain (as extracted)",
+          "quote": "Eligible 12-month hosting plans include a free domain, redeemable within 90 days on qualifying extensions."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.bluehost.com/blog/bluehost-shared-hosting-black-friday-deals/",
+      "redeemUrl": "https://www.bluehost.com"
+    },
+    "campaigns": [
+      "black-friday"
+    ]
+  },
+  {
+    "id": "o-scalahosting-managed-cloud-black-friday-2026",
+    "slug": "scalahosting-managed-cloud-black-friday-2026",
+    "productId": "scalahosting-managed-cloud",
+    "title": "ScalaHosting Black Friday 2026: up to 72% off managed cloud hosting (October 19 to December 1)",
+    "summary": "ScalaHosting's 2026 Black Friday sale cuts managed cloud plans by up to 72% on a 1-year term. Entry Cloud is $11.21/mo instead of $39.95/mo. The sale runs October 19 to December 1, 2026.",
+    "description": "ScalaHosting's 2026 Black Friday sale runs from October 19 to December 1, 2026, covering Black Friday and Cyber Monday. This year it only covers managed cloud plans. Shared, unmanaged and email plans are excluded. The top discounts are 72% off Entry Cloud and 71% off Build #4 on a 1-year term.\n\nEntry Cloud (2 CPU cores, 2 GB RAM, unlimited websites, SPanel, dedicated IP and priority support) is listed at $11.21/mo on the 1-year deal, against a standard $39.95/mo, or $24.95/mo on a 3-year deal (38% off). ScalaHosting says the 3-year deal costs less over 36 months on every plan in the sale. Plans renew at the standard price after the promotional term. New plans and upgrades qualify, but renewals of existing accounts don't. No coupon is needed because sale prices appear on the plan pages.",
+    "type": "discount",
+    "categories": [
+      "saas-discounts",
+      "software-deals"
+    ],
+    "audiences": [
+      "businesses",
+      "developers",
+      "freelancers"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "USD",
+      "regularPrice": 39.95,
+      "regularPeriod": "month",
+      "dealPrice": 11.21,
+      "period": "month",
+      "durationMonths": 12,
+      "renewalPrice": 39.95,
+      "renewalPeriod": "month",
+      "savingsLabel": "Up to 72% off"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "No coupon code needed; sale prices are shown on ScalaHosting's managed cloud plan pages."
+    },
+    "requirements": {
+      "newCustomersOnly": false
+    },
+    "eligibility": [
+      "New managed cloud plans and upgrades bought during the sale, October 19 to December 1, 2026",
+      "Renewals of existing accounts are not eligible"
+    ],
+    "redemption": [
+      "Open ScalaHosting's managed cloud hosting page",
+      "Pick a plan and a 1-year or 3-year term",
+      "Check out at the listed sale price"
+    ],
+    "terms": [
+      "Sale runs October 19 to December 1, 2026",
+      "Only managed cloud plans are included; shared, unmanaged and email plans are excluded",
+      "Entry Cloud: $11.21/mo on a 1-year term (72% off $39.95/mo), or $24.95/mo on a 3-year term (38% off)",
+      "Build #4: 71% off on a 1-year term",
+      "Plans renew at the standard price after the promotional term (Entry Cloud renews at $39.95/mo)",
+      "New plans and upgrades qualify; renewals of existing accounts do not"
+    ],
+    "expiresAt": "2026-12-01",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of ScalaHosting's own blog post 'Black Friday Web Hosting 2026'; the live page could not be fetched from the research environment",
+      "note": "The dates, prices and exclusions come from search-engine extracts of ScalaHosting's Black Friday 2026 blog post, mostly as summaries rather than word-for-word quotes. Other ScalaHosting pages give different entry-plan prices ($14.95/mo, $29.95/mo) and some still show older 'Black Friday' badges, so check the price on the order page. Setting newCustomersOnly to false reflects the post's statement that upgrades qualify.",
+      "evidence": [
+        {
+          "claim": "2026 sale and headline discount",
+          "quote": "Black Friday Web Hosting 2026: Up to 72% Off"
+        },
+        {
+          "claim": "Sale dates (as extracted)",
+          "quote": "The sale runs from October 19 to December 1, 2026, covering Black Friday (November 27) and Cyber Monday (November 30)."
+        },
+        {
+          "claim": "Entry Cloud prices (as extracted)",
+          "quote": "Entry Cloud at a standard price of $39.95/mo, with a 1-year deal of $11.21/mo (72% off) and a 3-year deal of $24.95/mo (38% off)"
+        },
+        {
+          "claim": "Renewal",
+          "quote": "Your plan renews at its standard price. For example, Entry Cloud renews at $39.95/mo"
+        },
+        {
+          "claim": "Scope, eligibility and no coupon (search summary)",
+          "quote": "Shared, unmanaged, and email plans are excluded this year. ... New plans and upgrades qualify, but renewals of existing accounts do not. ... No coupon code is needed because the sale prices appear on the plan pages."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://www.scalahosting.com/blog/black-friday-web-hosting-2026/",
+      "redeemUrl": "https://www.scalahosting.com/managed-cloud-hosting.html"
+    },
+    "campaigns": [
+      "black-friday"
+    ]
+  },
+  {
+    "id": "o-internxt-black-friday-2026",
+    "slug": "internxt-black-friday-2026",
+    "productId": "internxt",
+    "title": "Internxt Black Friday 2026: 87% off encrypted cloud storage plans, including lifetime plans (until December 3)",
+    "summary": "Internxt's Black Friday 2026 deal takes 87% off its plans, which bundle encrypted cloud storage with antivirus, cleaner, VPN, Meet and Mail. Lifetime plans are included. The discount is applied at checkout until December 3, 2026.",
+    "description": "Internxt's Black Friday 2026 deal page advertises 87% off its plans. Those cover end-to-end encrypted cloud storage plus Antivirus, Cleaner, VPN, Meet and Mail. Internxt's blog says the discount covers its Essential, Premium and Ultimate plans and its lifetime plans. The discount is applied automatically at checkout once you pick a plan, and the sale ends on December 3, 2026.\n\nOn subscriptions, the discount covers the first billing period, and the plan then renews at the regular price. Lifetime plans are a single payment, so the Black Friday price is the only one you pay. All plans have a 30-day money-back guarantee.",
+    "type": "discount",
+    "categories": [
+      "saas-discounts",
+      "software-deals",
+      "lifetime-deals"
+    ],
+    "audiences": [
+      "freelancers",
+      "office-tools",
+      "creators"
+    ],
+    "source": "official",
+    "pricing": {
+      "currency": "EUR",
+      "savingsLabel": "87% off"
+    },
+    "claim": {
+      "method": "automatic",
+      "note": "The discount is applied at checkout after choosing a plan on Internxt's Black Friday page."
+    },
+    "eligibility": [
+      "Purchases of Internxt subscription or lifetime plans before the sale ends on December 3, 2026"
+    ],
+    "redemption": [
+      "Open Internxt's Black Friday deal page",
+      "Choose a subscription or lifetime plan",
+      "Check out; the 87% discount is applied automatically"
+    ],
+    "terms": [
+      "Sale ends December 3, 2026",
+      "87% off covers Internxt's cloud storage plans, which include Antivirus, Cleaner, VPN, Meet and Mail",
+      "Subscriptions renew automatically at the regular price after the discounted period",
+      "Lifetime plans are a one-time payment, with no renewal",
+      "30-day money-back guarantee on all plans"
+    ],
+    "expiresAt": "2026-12-03",
+    "publishedAt": "2026-11-02",
+    "updatedAt": "2026-11-02",
+    "status": "published",
+    "verification": {
+      "status": "unverified",
+      "checkedAt": "2026-11-02",
+      "method": "Search-engine extracts of Internxt's own Black Friday 2026 deal page and blog; the live page could not be fetched from the research environment",
+      "note": "Quotes come from search-engine extracts, mostly summaries rather than verbatim text. Other Internxt pages show 85% and 90% figures, which seem to be from earlier campaigns. Euro prices in Internxt's blog conflict (e.g. 'EUR 1.29/month lifetime EUR 247' vs an older EUR 190 lifetime price), so no prices are included. Currency is set to EUR because Internxt's blog quotes euro prices; the checkout may show other currencies.",
+      "evidence": [
+        {
+          "claim": "2026 deal page",
+          "quote": "Internxt - Black Friday Deal 2026"
+        },
+        {
+          "claim": "Discount and products covered (as extracted)",
+          "quote": "87% off cloud storage, Antivirus, Cleaner, VPN, Meet, and Mail"
+        },
+        {
+          "claim": "End date (as extracted)",
+          "quote": "the Black Friday sale ends December 3rd, 2026"
+        },
+        {
+          "claim": "Applied at checkout (as extracted)",
+          "quote": "The discount is automatically applied at checkout after choosing a plan."
+        },
+        {
+          "claim": "Renewal (as extracted)",
+          "quote": "your subscription will automatically renew at the regular price after the discounted period"
+        },
+        {
+          "claim": "Lifetime plans included (blog, as extracted)",
+          "quote": "Internxt Black Friday deals include 87% off all of its lifetime plans"
+        },
+        {
+          "claim": "Refund window",
+          "quote": "With an Internxt plan, you get a 30-day money-back guarantee period for all plans."
+        }
+      ]
+    },
+    "links": {
+      "officialUrl": "https://internxt.com/deals/black-friday-internxt"
+    },
+    "campaigns": [
+      "black-friday"
+    ]
   }
 ];

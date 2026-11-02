@@ -8,6 +8,7 @@ import type { OfferView } from "@/lib/types";
 export function OfferBadges({ offer }: { offer: OfferView }) {
   return (
     <div className="flex flex-wrap items-center gap-1.5">
+      {offer.campaigns?.includes("black-friday") && <Badge className="bg-[linear-gradient(90deg,#f2545b,#ffb547)] font-semibold text-[#1d0b00]">Black Friday</Badge>}
       <Badge tone={offer.isFree ? "accent" : "neutral"}>{offerTypeLabels[offer.type]}</Badge>
       {offer.placement?.exclusive && (
         <Badge tone="outline">

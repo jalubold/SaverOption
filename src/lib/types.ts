@@ -210,6 +210,28 @@ export interface OfferPlacement {
 
 export type OfferStatus = "draft" | "published" | "archived";
 
+/** Seasonal sales an offer belongs to (it can also sit in its usual categories). */
+export type CampaignSlug = "black-friday";
+
+export interface Campaign {
+  slug: CampaignSlug;
+  name: string;
+  year: number;
+  /** When the sale itself starts and ends (Black Friday through Cyber Monday). */
+  startsAt: ISODate;
+  endsAt: ISODate;
+  /** Cyber Monday, for copy. */
+  cyberMonday: ISODate;
+  /** The window in which the site promotes it (home and categories sections). */
+  showFrom: ISODate;
+  showUntil: ISODate;
+  title: string;
+  description: string;
+  intro: string;
+  color: { from: string; to: string };
+  faq: { q: string; a: string }[];
+}
+
 export interface Offer {
   id: string;
   slug: string;
@@ -237,6 +259,8 @@ export interface Offer {
   terms: string[];
   /** Only set when the provider states an end date. */
   expiresAt?: ISODate;
+  /** Seasonal sales this offer is part of (only when the provider runs it as such, e.g. its Black Friday sale). */
+  campaigns?: CampaignSlug[];
   publishedAt: ISODate;
   updatedAt: ISODate;
   status: OfferStatus;
@@ -264,6 +288,7 @@ export interface OfferQuery {
   q?: string;
   category?: CategorySlug;
   audience?: AudienceSlug;
+  campaign?: CampaignSlug;
   type?: OfferType;
   price?: PriceFilter;
   /** Only offers that state no credit card is needed. */

@@ -34,6 +34,7 @@ export async function siteUrls(): Promise<SiteUrl[]> {
     { url: absoluteUrl("/"), lastModified: newest, changeFrequency: "daily", priority: 1 },
     { url: absoluteUrl("/deals"), lastModified: newest, changeFrequency: "daily", priority: 0.9 },
     { url: absoluteUrl("/categories"), lastModified: newest, changeFrequency: "weekly", priority: 0.6 },
+    { url: absoluteUrl("/black-friday"), lastModified: latest(live.filter((o) => o.campaigns?.includes("black-friday")).map((o) => o.updatedAt)) ?? newest, changeFrequency: "daily", priority: 0.8 },
     ...categories.map((c) => ({
       url: absoluteUrl(`/categories/${c.slug}`),
       lastModified: latest(live.filter((o) => o.categories.includes(c.slug)).map((o) => o.updatedAt)),

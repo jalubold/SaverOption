@@ -4,6 +4,7 @@
  * only means re-implementing this module. Functions are async for that reason.
  */
 import { audiences } from "@/content/audiences";
+import { campaigns } from "@/content/campaigns";
 import { categories } from "@/content/categories";
 import { offers } from "@/content/offers";
 import { products, providers } from "@/content/products";
@@ -13,6 +14,8 @@ import { scoreOffer, tokenize } from "@/lib/search";
 import type {
   Audience,
   AudienceSlug,
+  Campaign,
+  CampaignSlug,
   Category,
   CategorySlug,
   Offer,
@@ -122,6 +125,8 @@ export async function queryOffers(query: OfferQuery = {}): Promise<OfferQueryRes
   if (query.worldwide) pool = pool.filter((o) => o.regions?.scope === "global");
   const audience = query.audience;
   if (audience) pool = pool.filter((o) => o.audiences?.includes(audience));
+  const campaign = query.campaign;
+  if (campaign) pool = pool.filter((o) => o.campaigns?.includes(campaign));
 
   const inCategory = (o: OfferView) => !query.category || o.categories.includes(query.category);
   const ofType = (o: OfferView) => !query.type || o.type === query.type;
@@ -272,4 +277,30 @@ export async function getCatalogStats() {
       .sort()
       .at(-1),
   };
+}
+
+// ─── Seasonal campaigns (Black Friday) ─────────────────────────────────────
+
+export type CampaignPhase = "before" | "live" | "after";
+
+export function getCampaign(slug: CampaignSlug): Campaign | null {
+  return campaigns.find((c) => c.slug === slug) ?? null;
+}
+
+/** Before the sale starts, during it (Black Friday to the end of Cyber Monday), or after. */
+export function campaignPhase(c: Campaign, now = new Date()): CampaignPhase {
+  if (now < new Date(c.startsAt)) return "before";
+  if (now <= new Date(c.endsAt)) return "live";
+  return "after";
+}
+
+/** Whether the site promotes the campaign right now (home and categories sections). */
+export function campaignShown(c: Campaign, now = new Date()): boolean {
+  const day = now.toISOString().slice(0, 10);
+  return day >= c.showFrom && day <= c.showUntil;
+}
+
+/** The campaign's current offers: those with an end date first (soonest first), then the rest. */
+export async function getCampaignOffers(slug: CampaignSlug): Promise<OfferView[]> {
+  return (await queryOffers({ campaign: slug, sort: "ending-soon" })).offers;
 }

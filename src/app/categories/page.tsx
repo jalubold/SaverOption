@@ -1,8 +1,9 @@
 import Link from "next/link";
+import { BlackFridayBand } from "@/components/campaigns/black-friday-band";
 import { AudienceGrid } from "@/components/categories/audience-grid";
 import { CategoryGrid } from "@/components/categories/category-links";
 import { Container, Eyebrow, SectionHeading } from "@/components/ui/primitives";
-import { getAudiences, getCatalogStats, getCategories } from "@/lib/catalog";
+import { campaignShown, getAudiences, getCampaign, getCampaignOffers, getCatalogStats, getCategories } from "@/lib/catalog";
 import { pageMetadata } from "@/lib/seo";
 
 export const revalidate = 3600;
@@ -15,7 +16,8 @@ export const metadata = pageMetadata({
 });
 
 export default async function CategoriesPage() {
-  const [categories, audiences, stats] = await Promise.all([getCategories(), getAudiences(), getCatalogStats()]);
+  const blackFriday = getCampaign("black-friday");
+  const [categories, audiences, stats, bfOffers] = await Promise.all([getCategories(), getAudiences(), getCatalogStats(), blackFriday ? getCampaignOffers("black-friday") : Promise.resolve([])]);
   const live = categories.filter((c) => c.count > 0).length;
 
   return (
@@ -43,6 +45,9 @@ export default async function CategoriesPage() {
       </section>
 
       <Container className="space-y-20 pb-24 pt-10 sm:space-y-24 sm:pt-14">
+        {/* Seasonal: Black Friday through November. */}
+        {blackFriday && campaignShown(blackFriday) && <BlackFridayBand campaign={blackFriday} offers={bfOffers} limit={3} headingId="black-friday-categories" compact />}
+
         <section aria-label="Categories">
           <CategoryGrid categories={categories} />
         </section>

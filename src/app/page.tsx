@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
+import { BlackFridayBand } from "@/components/campaigns/black-friday-band";
 import { AudienceGrid } from "@/components/categories/audience-grid";
 import { CategoryChips } from "@/components/categories/category-links";
 import { NewsletterSection } from "@/components/newsletter/newsletter-section";
@@ -12,7 +13,10 @@ import { Icon } from "@/components/ui/icon";
 import { buttonClass, Container, Eyebrow, SectionHeading } from "@/components/ui/primitives";
 import { formatDate } from "@/lib/format";
 import {
+  campaignShown,
   getAudiences,
+  getCampaign,
+  getCampaignOffers,
   getCatalogStats,
   getCategories,
   getFeaturedOffers,
@@ -53,7 +57,8 @@ const principles = [
 ];
 
 export default async function HomePage() {
-  const [stats, categories, audiences, featured, recent, popular, endingSoon] = await Promise.all([
+  const blackFriday = getCampaign("black-friday");
+  const [stats, categories, audiences, featured, recent, popular, endingSoon, bfOffers] = await Promise.all([
     getCatalogStats(),
     getCategories(),
     getAudiences(),
@@ -61,7 +66,10 @@ export default async function HomePage() {
     getRecentOffers(6),
     getPopularOffers(6),
     queryOffers({ sort: "ending-soon" }),
+    blackFriday ? getCampaignOffers("black-friday") : Promise.resolve([]),
   ]);
+  // Black Friday gets its own section through November (see content/campaigns.ts for the dates).
+  const showBlackFriday = blackFriday !== null && campaignShown(blackFriday);
   // The hero panel only lists offers open to everyone; country-restricted offers stay in the catalog.
   const openToAll = endingSoon.offers.filter((o) => o.regions?.scope !== "limited");
   const ending = openToAll.filter((o) => o.daysLeft !== undefined).slice(0, HERO_ROWS - 1);
@@ -150,6 +158,13 @@ export default async function HomePage() {
             </aside>
           </Container>
         </section>
+
+        {/* ── Black Friday (November only) ─────────────────────────── */}
+        {showBlackFriday && blackFriday && (
+          <Container className="pt-14 sm:pt-20">
+            <BlackFridayBand campaign={blackFriday} offers={bfOffers} limit={6} />
+          </Container>
+        )}
 
         {/* ── Featured ─────────────────────────────────────────────── */}
         {featured.length > 0 && (

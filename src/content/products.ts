@@ -756,6 +756,72 @@ export const providers: Provider[] = [
     "name": "Zapier",
     "website": "https://zapier.com",
     "about": "Zapier makes no-code automation software that connects web apps."
+  },
+  {
+    "id": "outdoo",
+    "name": "Outdoo",
+    "website": "https://www.outdoo.ai",
+    "about": "Outdoo makes Outdoo AI, an AI roleplay and coaching platform for sales teams."
+  },
+  {
+    "id": "postnitro",
+    "name": "PostNitro",
+    "website": "https://postnitro.ai",
+    "about": "PostNitro makes an AI carousel maker and social media scheduler."
+  },
+  {
+    "id": "coupler-io",
+    "name": "Coupler.io",
+    "website": "https://www.coupler.io",
+    "about": "Coupler.io makes a data integration and automated reporting platform."
+  },
+  {
+    "id": "plerdy",
+    "name": "Plerdy",
+    "website": "https://www.plerdy.com",
+    "about": "Plerdy makes conversion rate optimization and website analytics tools."
+  },
+  {
+    "id": "saner-ai",
+    "name": "Saner.AI",
+    "website": "https://www.saner.ai",
+    "about": "Saner.AI makes an AI personal assistant for notes, tasks and planning."
+  },
+  {
+    "id": "callhippo",
+    "name": "CallHippo",
+    "website": "https://callhippo.com",
+    "about": "CallHippo makes a cloud phone system and call center software."
+  },
+  {
+    "id": "seedeo",
+    "name": "Seedeo",
+    "website": "https://seedeo.ai",
+    "about": "Seedeo runs an AI creative platform for video, image, music and voice generation."
+  },
+  {
+    "id": "nord-security",
+    "name": "Nord Security",
+    "website": "https://nordsecurity.com",
+    "about": "Nord Security makes consumer and business security software, including NordVPN, NordPass and NordLayer."
+  },
+  {
+    "id": "bluehost",
+    "name": "Bluehost",
+    "website": "https://www.bluehost.com",
+    "about": "Bluehost is a web hosting company offering shared, WordPress, VPS and dedicated hosting plus AI website tools. It is part of Newfold Digital."
+  },
+  {
+    "id": "scalahosting",
+    "name": "ScalaHosting",
+    "website": "https://www.scalahosting.com",
+    "about": "ScalaHosting is a web hosting company known for managed cloud VPS hosting with its own SPanel control panel."
+  },
+  {
+    "id": "internxt",
+    "name": "Internxt",
+    "website": "https://internxt.com",
+    "about": "Internxt is a Spanish company making end-to-end encrypted cloud storage and privacy tools."
   }
 ];
 
@@ -3502,5 +3568,186 @@ export const products: Product[] = [
       "src": "/logos/zapier.svg",
       "alt": "Zapier logo"
     }
+  },
+  {
+    "id": "outdoo-ai",
+    "slug": "outdoo-ai",
+    "name": "Outdoo AI",
+    "providerId": "outdoo",
+    "tagline": "AI sales roleplay and coaching for sales teams",
+    "description": "Outdoo AI is a sales training platform where reps practise calls in AI roleplays and get coaching on how they did. It has a free plan with limited roleplay credits, a usage-based tier and custom-quoted enterprise plans.",
+    "website": "https://www.outdoo.ai",
+    "tags": [
+      "AI",
+      "Sales training",
+      "Roleplay",
+      "Coaching"
+    ],
+    "brandColor": "#5B3DF5"
+  },
+  {
+    "id": "postnitro",
+    "slug": "postnitro",
+    "name": "PostNitro",
+    "providerId": "postnitro",
+    "tagline": "AI carousel maker and social media scheduler",
+    "description": "PostNitro creates social media carousels and posts with AI, and its higher plans schedule and publish them to connected social accounts. The Free and Starter plans create and export content; Creator+ and Team+ add scheduling and publishing.",
+    "website": "https://postnitro.ai",
+    "tags": [
+      "AI",
+      "Social media",
+      "Carousels",
+      "Scheduling"
+    ],
+    "brandColor": "#6D4AFF"
+  },
+  {
+    "id": "coupler-io",
+    "slug": "coupler-io",
+    "name": "Coupler.io",
+    "providerId": "coupler-io",
+    "tagline": "Data integration and automated reporting",
+    "description": "Coupler.io connects business apps and data sources and moves the data on a schedule into spreadsheets, BI tools and dashboards for reporting, with AI features for analysing it.",
+    "website": "https://www.coupler.io",
+    "tags": [
+      "Data integration",
+      "Reporting",
+      "Dashboards",
+      "Automation"
+    ],
+    "brandColor": "#FF5A1F"
+  },
+  {
+    "id": "plerdy",
+    "slug": "plerdy",
+    "name": "Plerdy",
+    "providerId": "plerdy",
+    "tagline": "Website analytics and conversion rate optimization",
+    "description": "Plerdy is a conversion rate optimization tool for websites and online stores, with heatmaps, session recordings, funnels, pop-up forms and SEO checks.",
+    "website": "https://www.plerdy.com",
+    "tags": [
+      "Analytics",
+      "Heatmaps",
+      "Conversion optimization",
+      "SEO"
+    ],
+    "brandColor": "#F26B21"
+  },
+  {
+    "id": "saner-ai",
+    "slug": "saner-ai",
+    "name": "Saner.AI",
+    "providerId": "saner-ai",
+    "tagline": "AI personal assistant for notes, tasks and planning",
+    "description": "Saner.AI is an AI personal assistant that keeps notes, tasks and calendar together and helps plan the day. It is marketed in particular to people with ADHD.",
+    "website": "https://www.saner.ai",
+    "tags": [
+      "AI",
+      "Personal assistant",
+      "Notes",
+      "Tasks"
+    ],
+    "brandColor": "#4F46E5"
+  },
+  {
+    "id": "callhippo",
+    "slug": "callhippo",
+    "name": "CallHippo",
+    "providerId": "callhippo",
+    "tagline": "Cloud phone system for sales and support teams",
+    "description": "CallHippo is a cloud VoIP phone system for businesses, with virtual phone numbers, call center features, click-to-call and AI voice agents for sales and support teams.",
+    "website": "https://callhippo.com",
+    "tags": [
+      "VoIP",
+      "Business phone",
+      "Call center"
+    ],
+    "brandColor": "#2B60DE"
+  },
+  {
+    "id": "seedeo",
+    "slug": "seedeo",
+    "name": "Seedeo",
+    "providerId": "seedeo",
+    "tagline": "AI creative platform for video, image, music and voice",
+    "description": "Seedeo is an AI creative platform that gives access to video and image generation models such as Kling 3.0 and Seedance 2.0 in one place. Paid plans include monthly credits, and unused credits roll over.",
+    "website": "https://seedeo.ai",
+    "tags": [
+      "AI",
+      "Video generation",
+      "Image generation",
+      "Music"
+    ],
+    "brandColor": "#111111"
+  },
+  {
+    "id": "nordvpn",
+    "slug": "nordvpn",
+    "name": "NordVPN",
+    "providerId": "nord-security",
+    "tagline": "VPN service for private, encrypted browsing",
+    "description": "NordVPN is a subscription VPN service from Nord Security. It encrypts your internet traffic and routes it through servers in many countries, with apps for desktop, mobile and browsers. Higher plans add threat protection, a password manager and other security tools.",
+    "website": "https://nordvpn.com",
+    "tags": [
+      "VPN",
+      "Privacy",
+      "Security",
+      "Threat protection"
+    ],
+    "brandColor": "#4687FF",
+    "logo": {
+      "src": "/logos/nordvpn.svg",
+      "alt": "NordVPN logo"
+    }
+  },
+  {
+    "id": "bluehost-web-hosting",
+    "slug": "bluehost-web-hosting",
+    "name": "Bluehost",
+    "providerId": "bluehost",
+    "tagline": "Web hosting for WordPress and small business sites",
+    "description": "Bluehost sells shared and WordPress hosting, VPS, virtual dedicated and dedicated servers, along with AI tools such as an AI website builder. Hosting plans include SSL, malware scanning and backups.",
+    "website": "https://www.bluehost.com",
+    "tags": [
+      "Web hosting",
+      "WordPress hosting",
+      "VPS",
+      "Website builder",
+      "Domains"
+    ],
+    "brandColor": "#196BDE"
+  },
+  {
+    "id": "scalahosting-managed-cloud",
+    "slug": "scalahosting-managed-cloud",
+    "name": "ScalaHosting Managed Cloud",
+    "providerId": "scalahosting",
+    "tagline": "Managed cloud VPS hosting with SPanel",
+    "description": "ScalaHosting's managed cloud plans run on dedicated cloud resources and host unlimited websites. They come with ScalaHosting's SPanel control panel, a dedicated IP and priority support.",
+    "website": "https://www.scalahosting.com/managed-cloud-hosting.html",
+    "tags": [
+      "Web hosting",
+      "Managed VPS",
+      "Cloud hosting",
+      "WordPress hosting"
+    ],
+    "brandColor": "#1E5BD8"
+  },
+  {
+    "id": "internxt",
+    "slug": "internxt",
+    "name": "Internxt",
+    "providerId": "internxt",
+    "tagline": "Encrypted cloud storage with privacy tools",
+    "description": "Internxt offers end-to-end encrypted cloud storage on subscription or lifetime plans. Paid plans also bundle privacy tools such as antivirus, a cleaner, a VPN, video meetings and mail.",
+    "website": "https://internxt.com",
+    "tags": [
+      "Cloud storage",
+      "Encrypted storage",
+      "Backup",
+      "Privacy",
+      "VPN"
+    ],
+    "brandColor": "#0066FF"
   }
 ];
