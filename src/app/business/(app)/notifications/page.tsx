@@ -41,7 +41,7 @@ export default async function NotificationsPage() {
         }
       />
       <div className="grid gap-5 xl:grid-cols-[1fr_300px]">
-        <Card bodyClassName="p-0" className="min-w-0">
+        <Card flush className="min-w-0">
           {items.length === 0 ? (
             <EmptyState icon="bell" title="No notifications yet">
               Reminders appear here ahead of each subscription&apos;s renewal date and cancellation deadline. Add renewal dates to your subscriptions to get them.
@@ -51,8 +51,9 @@ export default async function NotificationsPage() {
               {items.map((n) => {
                 const subject = subjectOf(n.link);
                 return (
-                  <li key={n.id} className={cn("flex items-start gap-3 px-4 py-3.5 sm:px-5", !n.readAt && "bg-accent-soft/40")}>
-                    <span className={cn("mt-1.5 size-2 shrink-0 rounded-full", n.readAt ? "bg-transparent" : "bg-accent")} aria-hidden="true" />
+                  <li key={n.id} className={cn("relative flex items-start gap-3 px-4 py-3.5 sm:px-5", !n.readAt && "bg-accent-soft/40")}>
+                    {/* The unread dot sits in the row's padding, so the logos line up with the card's other content. */}
+                    {!n.readAt && <span className="absolute left-1.5 top-[30px] size-1.5 rounded-full bg-accent sm:left-2" aria-hidden="true" />}
                     {subject ? (
                       <SoftwareLogo name={subject.softwareName} src={subject.logoSrc} size={34} />
                     ) : (

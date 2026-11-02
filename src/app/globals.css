@@ -1363,6 +1363,25 @@
   font-weight: 500;
 }
 
+/* iPhone Safari gives date fields a minimum width of their own, wider than a phone's column, so the field
+   ran past the card. Without the native look it takes the width it's given; the date picker still opens.
+   Only on iOS (-webkit-touch-callout exists nowhere else), so desktop browsers keep their date fields. */
+@supports (-webkit-touch-callout: none) {
+  .biz-shell input[type="date"],
+  .biz-shell input[type="month"],
+  .biz-shell input[type="time"] {
+    min-width: 0;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .biz-shell input[type="date"]::-webkit-date-and-time-value,
+  .biz-shell input[type="month"]::-webkit-date-and-time-value,
+  .biz-shell input[type="time"]::-webkit-date-and-time-value {
+    margin: 0;
+    text-align: left;
+  }
+}
+
 /* Forms on phones: no tab bar (it's a pushed screen), and the form's buttons in a bar at the bottom. */
 @media (max-width: 1023.98px) {
   html:not(.desktop-app) .biz-shell:has([data-no-tabbar]) {

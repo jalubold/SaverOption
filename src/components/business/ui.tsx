@@ -134,6 +134,7 @@ export function Card({
   children,
   className,
   bodyClassName,
+  flush = false,
   id,
   style,
 }: {
@@ -143,6 +144,8 @@ export function Card({
   children: ReactNode;
   className?: string;
   bodyClassName?: string;
+  /** No padding around the body (lists whose rows have their own); bodyClassName can't undo the default. */
+  flush?: boolean;
   id?: string;
   style?: CSSProperties;
 }) {
@@ -157,7 +160,7 @@ export function Card({
           {action && <div className="shrink-0">{action}</div>}
         </div>
       )}
-      <div className={cn("px-4 py-4 sm:px-5", bodyClassName)}>{children}</div>
+      <div className={cn(!flush && "px-4 py-4 sm:px-5", bodyClassName)}>{children}</div>
     </section>
   );
 }
