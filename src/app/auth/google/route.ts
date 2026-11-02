@@ -24,8 +24,17 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const no = (status: number, error: string) => NextResponse.json({ error }, { status, headers: { "Cache-Control": "no-store" } });
-  if (!sameSite(req)) return no(403, "forbidden");
-  if (!authConfigured()) return no(503, "unavailable");
+  if (!sameSite(req)) {
+    // A request from our own page that still fails the check means the host setup is off: keep the detail.
+    if (req.headers.get("sec-fetch-site") === "same-origin") {
+      await recordGooglePopupFailure(`Our check: origin ${hostOf(req.headers.get("origin"))} isn't host ${req.headers.get("x-forwarded-host") ?? req.headers.get("host") ?? "?"}`);
+    }
+    return no(403, "forbidden");
+  }
+  if (!authConfigured()) {
+    await recordGooglePopupFailure("Our check: Supabase Auth isn't configured on this deployment");
+    return no(503, "unavailable");
+  }
   const limit = await rateLimit(`google-signin:${clientIp(req.headers)}`, 20, 60);
   if (!limit.ok) return no(429, "slow_down");
 
@@ -33,6 +42,7 @@ export async function POST(req: NextRequest) {
   try {
     body = await req.json();
   } catch {
+    await recordGooglePopupFailure("Our check: the sign-in request wasn't JSON");
     return no(400, "bad_request");
   }
   const next = safeNext(body.next);
@@ -40,7 +50,11 @@ export async function POST(req: NextRequest) {
   let token: string;
   let nonce: string | undefined;
   if (typeof body.code === "string") {
-    if (req.headers.get("x-requested-with") !== "XmlHttpRequest") return no(403, "forbidden");
+    const xrw = req.headers.get("x-requested-with");
+    if (xrw !== "XmlHttpRequest") {
+      await recordGooglePopupFailure(`Our check: X-Requested-With was ${xrw === null ? "missing" : `"${xrw.slice(0, 30)}"`}`);
+      return no(403, "forbidden");
+    }
     if (!/^[\w/.~+=%-]{10,1024}$/.test(body.code)) {
       await recordGooglePopupFailure(`Our check: the code from Google didn't look like one (${body.code.length} characters)`);
       return no(400, "bad_request");
@@ -86,6 +100,14 @@ export async function POST(req: NextRequest) {
     } catch {}
   }
   return NextResponse.json({ next }, { headers: { "Cache-Control": "no-store" } });
+}
+
+function hostOf(origin: string | null): string {
+  try {
+    return origin ? new URL(origin).host : "(none)";
+  } catch {
+    return "(unreadable)";
+  }
 }
 
 function sameSite(req: NextRequest): boolean {
