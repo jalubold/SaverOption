@@ -1,6 +1,6 @@
 [package]
 name = "saver-option-business"
-version = "0.2.1"
+version = "0.2.2"
 description = "Saver Option Business for Mac"
 edition = "2021"
 publish = false

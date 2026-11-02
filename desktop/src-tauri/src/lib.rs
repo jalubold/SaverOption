@@ -74,8 +74,10 @@ fn in_app(url: &Url) -> bool {
   }
 }
 
+/// Links that leave the app: web pages go to the browser, mailto: to the mail app and webcal:
+/// (a calendar subscription, "Apple Calendar or Outlook") to the calendar app.
 pub(crate) fn open_outside<R: Runtime>(app: &AppHandle<R>, url: &Url) {
-  if matches!(url.scheme(), "https" | "http" | "mailto") {
+  if matches!(url.scheme(), "https" | "http" | "mailto" | "webcal") {
     let _ = app.opener().open_url(url.as_str(), None::<&str>);
   }
 }
