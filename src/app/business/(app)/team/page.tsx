@@ -106,7 +106,7 @@ export default async function TeamPage(props: { searchParams: Promise<Record<str
       </div>
 
       {manageMembers && (
-        <Card title="Give access by email" description="Add a colleague's work email and the role they should have." className="mt-5">
+        <Card title="Give access by email" description="Invite a colleague with their work email and choose what they can do." className="mt-5">
           <div className="space-y-4">
             {/* The form first; under it, how it works — or, once someone is added, their invite to send. */}
             {grantable.length > 0 ? <InviteForm workspaceId={ws} roles={grantable} /> : <p className="text-[13px] text-faint">Your role can&apos;t grant access.</p>}
@@ -124,7 +124,9 @@ export default async function TeamPage(props: { searchParams: Promise<Record<str
             )}
             {invitations.length > 0 && (
               <div>
-                <h3 className="mb-2 text-[13px] font-semibold">Waiting for sign-in</h3>
+                <h3 className="mb-2 mt-2 text-[13px] font-semibold">
+                  Invited, not joined yet <span className="font-normal text-faint">· {invitations.length}</span>
+                </h3>
                 <TableWrap>
                   <table className="biz-table">
                     <thead>

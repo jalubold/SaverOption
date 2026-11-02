@@ -1,10 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import { changeRoleAction, createPersonAction, inviteMemberAction, removeMemberAction, revokeInvitationAction, updatePersonAction } from "@/app/business/actions/team";
 import { ActionForm, ConfirmSubmit, SelectField, Submit, TextField } from "@/components/business/forms";
-import { GoogleLogo } from "@/components/brand/google-logo";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, cn } from "@/components/ui/primitives";
 
@@ -12,38 +11,32 @@ type Option = { value: string; label: string };
 
 type StepState = "done" | "active" | "next";
 
-/** A step's round marker: done (tick), the one to do now, or still to come. */
-function StepIcon({ state, children }: { state: StepState; children: ReactNode }) {
+/** A step's number in a circle: ticked once done, filled for the one to do now. */
+function StepMarker({ n, state }: { n: number; state: StepState }) {
   return (
     <span
       aria-hidden="true"
       className={cn(
-        "relative z-10 flex size-8 shrink-0 items-center justify-center rounded-full",
+        "relative z-10 flex size-7 shrink-0 items-center justify-center rounded-full text-[12.5px] font-semibold tabular-nums",
         state === "done" && "bg-success text-white",
         state === "active" && "bg-accent text-white shadow-[0_0_0_4px_color-mix(in_oklab,var(--accent)_16%,transparent)]",
-        state === "next" && "border border-line-strong bg-surface text-accent-ink",
+        state === "next" && "border border-accent/35 bg-surface text-accent-ink",
       )}
     >
-      {children}
+      {state === "done" ? <Icon name="check" size={14} /> : n}
     </span>
   );
 }
-
-const googleMark = (
-  <span className="flex size-[18px] items-center justify-center">
-    <GoogleLogo size={15} />
-  </span>
-);
 
 /**
  * How giving access works, under the form: the same three steps the share panel then walks
  * through once someone has been added.
  */
 export function InviteSteps() {
-  const steps: { icon: ReactNode; title: string; body: string }[] = [
-    { icon: <Icon name="mail" size={15} />, title: "Add their email and role", body: "Above. They get access as soon as they sign in." },
-    { icon: <Icon name="link" size={15} />, title: "Send them their invite link", body: "From your email, WhatsApp or chat — Saver Option doesn't email it." },
-    { icon: googleMark, title: "They sign in with Google", body: "Using exactly that address, then they choose Join." },
+  const steps: { title: string; body: string }[] = [
+    { title: "Add their work email", body: "Choose what they can do, then Give access." },
+    { title: "Send their invite link", body: "By email, WhatsApp or chat. Saver Option doesn't send it for you." },
+    { title: "They join with Google", body: "They sign in with that same email and choose Join." },
   ];
   return (
     <div className="rounded-2xl border border-line bg-subtle/50 px-4 py-4 sm:px-5">
@@ -53,9 +46,9 @@ export function InviteSteps() {
           <li key={step.title} className="relative flex gap-3 sm:flex-col sm:gap-2.5">
             {/* The line to the next step: down on phones, across on wider screens. */}
             {i < steps.length - 1 && (
-              <span aria-hidden="true" className="absolute bottom-[-16px] left-4 top-9 w-px bg-line-strong sm:bottom-auto sm:left-11 sm:right-[-16px] sm:top-4 sm:h-px sm:w-auto" />
+              <span aria-hidden="true" className="absolute bottom-[-16px] left-3.5 top-8 w-px bg-line-strong sm:bottom-auto sm:left-10 sm:right-[-16px] sm:top-3.5 sm:h-px sm:w-auto" />
             )}
-            <StepIcon state="next">{step.icon}</StepIcon>
+            <StepMarker n={i + 1} state="next" />
             <span className="min-w-0">
               <span className="block text-[13px] font-semibold text-fg">{step.title}</span>
               <span className="mt-0.5 block text-[12.5px] leading-snug text-muted">{step.body}</span>
@@ -101,21 +94,19 @@ export function InviteSharePanel({
     }
   };
   const subject = `Join ${workspace} on Saver Option Business`;
-  const line = <span aria-hidden="true" className="absolute bottom-0 left-4 top-9 w-px bg-line-strong" />;
+  const line = <span aria-hidden="true" className="absolute bottom-0 left-3.5 top-8 w-px bg-line-strong" />;
   return (
     <section id="invite" className="so-rise scroll-mt-24 rounded-2xl border border-accent/25 bg-accent-soft/40 p-4 sm:p-5" data-invite-share>
       <ol>
         <li className="relative flex gap-3.5 pb-5">
           {line}
-          <StepIcon state="done">
-            <Icon name="check" size={15} />
-          </StepIcon>
+          <StepMarker n={1} state="done" />
           <div className="flex min-w-0 flex-1 flex-wrap items-start justify-between gap-x-3 gap-y-1 pt-1">
             <div className="min-w-0">
               <p className="break-words text-[14.5px] font-semibold text-fg">
                 Access added for {email} · {role}
               </p>
-              <p className="mt-0.5 text-[12.5px] text-muted">They get it as soon as they sign in. To add someone else, use the form above.</p>
+              <p className="mt-0.5 text-[12.5px] text-muted">Their access starts when they join. To invite someone else, use the form above.</p>
             </div>
             <Link href={doneHref} scroll={false} className={buttonClass("ghost", "sm", "-mr-2 -mt-1")} data-invite-done>
               Done
@@ -124,12 +115,10 @@ export function InviteSharePanel({
         </li>
         <li className="relative flex gap-3.5 pb-5">
           {line}
-          <StepIcon state="active">
-            <Icon name="link" size={15} />
-          </StepIcon>
+          <StepMarker n={2} state="active" />
           <div className="min-w-0 flex-1 pt-1">
-            <p className="text-[14px] font-semibold text-fg">Now send them their invite</p>
-            <p className="mt-0.5 text-[12.5px] text-muted">Saver Option doesn&apos;t email it — send it yourself, it takes a few seconds.</p>
+            <p className="text-[14px] font-semibold text-fg">Send their invite link</p>
+            <p className="mt-0.5 text-[12.5px] text-muted">Copy this message, or send it straight from your email or WhatsApp.</p>
             <div className="mt-3 whitespace-pre-line break-words rounded-xl border border-line bg-surface px-3.5 py-3 text-[13px] leading-relaxed text-fg shadow-[0_1px_2px_rgb(0_0_0/0.04)]" data-invite-message>
               {message}
             </div>
@@ -152,11 +141,11 @@ export function InviteSharePanel({
           </div>
         </li>
         <li className="relative flex gap-3.5">
-          <StepIcon state="next">{googleMark}</StepIcon>
+          <StepMarker n={3} state="next" />
           <div className="min-w-0 flex-1 pt-1">
-            <p className="break-words text-[14px] font-semibold text-fg">They sign in with Google as {email}</p>
+            <p className="break-words text-[14px] font-semibold text-fg">They join with Google as {email}</p>
             <p className="mt-0.5 text-[12.5px] leading-relaxed text-muted">
-              The link shows them which account to use, then they choose <strong className="font-medium text-fg">Join</strong>. They&apos;ll appear under Members.
+              The link tells them which account to use. Once they choose <strong className="font-medium text-fg">Join</strong>, they move to Members.
             </p>
           </div>
         </li>
