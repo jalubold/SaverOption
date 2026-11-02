@@ -188,6 +188,22 @@ export async function dealCategoryOptions(): Promise<{ catalog: { value: string;
 
 export const DEAL_OFFER_TYPES = OFFER_TYPES;
 
+/** How many live listings there are, in all and per catalog category, and how many are verified. */
+export async function dealCatalogStats(): Promise<{ total: number; verified: number; byCategory: { value: string; label: string; count: number }[] }> {
+  const [{ offers }, cats] = await Promise.all([queryOffers({}), getCategories()]);
+  const deals = offers.map(summaryOf);
+  const counts = new Map<string, number>();
+  for (const d of deals) for (const c of d.categories) counts.set(c.slug, (counts.get(c.slug) ?? 0) + 1);
+  return {
+    total: deals.length,
+    verified: deals.filter((d) => d.verification.status === "verified").length,
+    byCategory: cats
+      .map((c) => ({ value: c.slug, label: c.name, count: counts.get(c.slug) ?? 0 }))
+      .filter((c) => c.count > 0)
+      .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label)),
+  };
+}
+
 /**
  * Searches live listings (published and not expired) in the deals catalog, with
  * the same keyword matching as /deals. `category` accepts a catalog category
