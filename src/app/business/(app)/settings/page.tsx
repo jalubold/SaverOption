@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { DeleteWorkspaceForm } from "@/components/business/settings-forms";
+import { DeleteWorkspaceForm, ResetDemoForm } from "@/components/business/settings-forms";
 import { RemoveMemberButton } from "@/components/business/team-forms";
 import { Card, DefinitionList, InlineNote, LinkButton, PageHeader, Pill } from "@/components/business/ui";
 import { Icon } from "@/components/ui/icon";
@@ -107,6 +107,17 @@ export default async function SettingsPage() {
             history, payments, renewal outcomes, seat assignments, savings opportunities, confirmed savings and the latest 1,000 activity log entries. Only
             this workspace is included. For spreadsheets, use the CSV exports on the Subscriptions and Reports pages.
           </p>
+        </Card>
+      )}
+
+      {ws.isDemo && (ctx.role === "owner" || ctx.role === "admin") && (
+        <Card title="Demo workspace" className="mt-5">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="max-w-2xl text-[13.5px] text-muted">
+              Northwind Studio is a fictional company with sample prices, kept apart from your real workspaces. Resetting puts back the original sample data.
+            </p>
+            <ResetDemoForm workspaceId={ws.id} />
+          </div>
         </Card>
       )}
 

@@ -8,6 +8,7 @@ import { COMPANY_SIZES } from "@/lib/business/constants";
 import { FormReader, isUuid, stateFromErrors, type FormState } from "@/lib/business/form";
 import { getBillingRecord } from "@/lib/server/business/billing";
 import { BizError, businessReady, getBizSession, listMemberships, runAction, WORKSPACE_COOKIE } from "@/lib/server/business/context";
+import { createDemoWorkspace, resetDemoWorkspace } from "@/lib/server/business/demo";
 import { acceptInvitation } from "@/lib/server/business/team";
 import {
   completeOnboarding,
@@ -67,6 +68,24 @@ export async function switchWorkspaceAction(form: FormData): Promise<void> {
   if (isUuid(id) && (await listMemberships(user.id)).some((m) => m.workspaceId === id)) await selectWorkspace(id);
   revalidatePath("/business", "layout");
   redirect("/business/dashboard");
+}
+
+/** Opens (or reopens) the user's demo workspace: the fictional Northwind Studio with sample data. */
+export async function createDemoAction(): Promise<void> {
+  const { user } = await getBizSession();
+  if (!user) redirect("/business/login");
+  const id = await createDemoWorkspace(user);
+  await selectWorkspace(id);
+  revalidatePath("/business", "layout");
+  redirect("/business/dashboard");
+}
+
+export async function resetDemoAction(_prev: FormState, form: FormData): Promise<FormState> {
+  return runAction(form, async (ctx) => {
+    await resetDemoWorkspace(ctx);
+    revalidatePath("/business", "layout");
+    return { ok: true, message: "The demo workspace was reset to its sample data." };
+  });
 }
 
 /** Joins from a personal invite link (/business/invite/<id>); a problem goes back to that page, which explains it. */

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { acceptInvitationAction, completeOnboardingAction } from "@/app/business/actions/workspace";
+import { acceptInvitationAction, completeOnboardingAction, createDemoAction } from "@/app/business/actions/workspace";
 import { AddSoftwareWizard } from "@/components/business/add-software-wizard";
 import { CalendarConnect } from "@/components/business/calendar-connect";
 import { CreateWorkspaceForm } from "@/components/business/onboarding-forms";
@@ -105,6 +105,17 @@ export default async function OnboardingPage(props: PageProps<"/business/onboard
               <div className="mt-6">
                 <CreateWorkspaceForm suggested={await regionDefaults()} />
               </div>
+            </section>
+            <section className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-dashed border-line-strong px-5 py-4" data-demo-offer>
+              <div>
+                <p className="text-[14px] font-medium">Just looking around?</p>
+                <p className="text-[13px] text-muted">Open a separate demo workspace with a fictional company&apos;s sample data. It never mixes with your own.</p>
+              </div>
+              <form action={createDemoAction}>
+                <button type="submit" className={buttonClass("secondary", "md")}>
+                  <Icon name="sparkles" size={14} /> Explore the demo
+                </button>
+              </form>
             </section>
             {ctx && (
               <p className="mt-6 text-center text-[13px]">

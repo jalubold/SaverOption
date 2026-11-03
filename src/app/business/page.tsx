@@ -76,6 +76,10 @@ const baseFaq = [
     a: "Yes. Subscriptions and reports export to CSV, the whole workspace exports to JSON, and the workspace owner can delete the workspace and everything in it.",
   },
   {
+    q: "Can I try it without entering our data?",
+    a: "Yes. When you sign up — or any time later from the workspace menu — you can open a separate demo workspace with a fictional company's sample data. It never mixes with your own workspace.",
+  },
+  {
     q: "Can I try it before committing?",
     a: "Yes. Every workspace starts with a 7-day free trial with everything included, and no card is needed. Add two or three tools and the dashboard, renewals and savings fill in from them. You can delete the workspace any time in Settings.",
   },
@@ -382,7 +386,7 @@ export default async function BusinessLandingPage() {
             <div className="flex items-start gap-3 rounded-2xl border border-dashed border-line-strong p-5">
               <Icon name="eye" size={18} className="mt-0.5 text-accent-ink" />
               <p className="min-w-0 flex-1 text-[14px] leading-relaxed text-muted">
-                Start small: add two or three tools and the dashboard, renewals and savings fill in from them. Nothing is estimated before you add your own data.
+                Prefer to look around first? When you sign up you can open a separate demo workspace with a fictional company&apos;s sample data.
               </p>
             </div>
             <div className="flex items-start gap-3 rounded-2xl border border-dashed border-line-strong p-5">
