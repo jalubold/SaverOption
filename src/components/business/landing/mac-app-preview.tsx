@@ -156,7 +156,7 @@ function Overview() {
           tone="orange"
           value={seatTotals.purchased - seatTotals.assigned}
           sub={`${seatTotals.assigned} of ${seatTotals.purchased} seats in use`}
-          chart={<Meter value={(seatTotals.assigned / seatTotals.purchased) * 100} label="Example: license utilization" tone="warn" />}
+          chart={<Meter value={(seatTotals.assigned / seatTotals.purchased) * 100} label="Example: license utilization" tone={(seatTotals.assigned / seatTotals.purchased) * 100 < 60 ? "warn" : "accent"} />}
         />
       </div>
 

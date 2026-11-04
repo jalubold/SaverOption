@@ -191,6 +191,8 @@
     --series-5: #435bcf;
     --series-6: #189e8c;
     --viz-other: #4b4b51;
+    --viz-track: #3a3a3e;
+    --viz-warn: #e5a33a;
     --viz-grid: #38383c;
     --viz-axis: #4a4a4f;
     --viz-muted: #8d8d93;
@@ -245,6 +247,8 @@
   --series-5: #435bcf;
   --series-6: #189e8c;
   --viz-other: #4b4b51;
+  --viz-track: #3a3a3e;
+  --viz-warn: #e5a33a;
   --viz-grid: #38383c;
   --viz-axis: #4a4a4f;
   --viz-muted: #8d8d93;
@@ -503,6 +507,8 @@
   --series-5: #345fcf;
   --series-6: #2bbdaa;
   --viz-other: #d5d4de;
+  --viz-track: #ececf1;
+  --viz-warn: #f5a524;
   --viz-grid: #e6e6eb;
   --viz-axis: #cfcfd6;
   --viz-muted: #8a8a90;

@@ -95,13 +95,13 @@ export function BarList({ rows, caption, valueHead = "Monthly", max: maxRows = 8
                 )}
                 <span className="tabular shrink-0 text-[13px] font-medium text-fg">{r.display}</span>
               </div>
-              <div className={cn("mt-1.5 h-2 rounded-r-[4px] bg-subtle/70", r.logo !== undefined ? "ml-[30px] w-[calc(100%-30px)]" : "w-full")} aria-hidden="true">
+              {/* Every bar in the app: 8 px, fully rounded, on a grey track, in one flat colour. */}
+              <div className={cn("mt-1.5 h-2 overflow-hidden rounded-full bg-[var(--viz-track)]", r.logo !== undefined ? "ml-[30px] w-[calc(100%-30px)]" : "w-full")} aria-hidden="true">
                 <div
-                  className="viz-grow-x h-full rounded-r-[4px] transition-[filter]"
+                  className="viz-grow-x h-full rounded-full bg-[var(--series-1)] transition-[filter]"
                   style={{
                     "--i": i,
-                    width: r.value > 0 ? `${Math.max(1.5, (r.value / max) * 100)}%` : 0,
-                    backgroundImage: "linear-gradient(90deg, color-mix(in oklab, var(--accent) 70%, white), var(--accent))",
+                    width: r.value > 0 ? `${Math.max(2, (r.value / max) * 100)}%` : 0,
                     filter: hover === i ? "brightness(1.12)" : undefined,
                   } as CSSProperties}
                 />
@@ -135,7 +135,7 @@ export function StackedBar({ segments, caption }: { segments: Segment[]; caption
   if (total <= 0) return <p className="text-[13px] text-faint">No priced active subscriptions yet.</p>;
   return (
     <div>
-      <div className="viz-grow-x relative flex h-6 w-full gap-[2px]" role="img" aria-label={`${caption}: ${parts.map((p) => `${p.label} ${p.display}`).join(", ")}`}>
+      <div className="viz-grow-x relative flex h-2 w-full gap-[2px] rounded-full" role="img" aria-label={`${caption}: ${parts.map((p) => `${p.label} ${p.display}`).join(", ")}`}>
         {parts.map((p, i) => (
           <div
             key={p.label}
@@ -144,7 +144,7 @@ export function StackedBar({ segments, caption }: { segments: Segment[]; caption
             onPointerLeave={() => setHover(null)}
             onFocus={() => setHover(i)}
             onBlur={() => setHover(null)}
-            className={cn("h-full outline-none first:rounded-l-[4px] last:rounded-r-[4px] focus-visible:ring-2 focus-visible:ring-fg", hover === i && "brightness-110")}
+            className={cn("h-full outline-none first:rounded-l-full last:rounded-r-full focus-visible:ring-2 focus-visible:ring-fg", hover === i && "brightness-110")}
             style={{ width: `${(p.value / total) * 100}%`, background: SERIES[i] }}
           />
         ))}
@@ -465,11 +465,12 @@ export function RadialGauge({ value, label, sub, size = 132 }: { value: number |
   const circ = 2 * Math.PI * rad;
   // Three-quarter arc, opening at the bottom.
   const arc = circ * 0.75;
-  const tone = value === null ? "var(--viz-other)" : v < 60 ? "#eda100" : "var(--accent)";
+  // The same colours as the bars: the first series colour, amber below 60% (worth a look).
+  const tone = value === null ? "var(--viz-other)" : v < 60 ? "var(--viz-warn)" : "var(--series-1)";
   return (
     <div className="relative inline-flex" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(v)} aria-label={label}>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-[225deg]">
-        <circle cx={size / 2} cy={size / 2} r={rad} fill="none" stroke="color-mix(in oklab, var(--accent) 14%, var(--surface))" strokeWidth={stroke} strokeDasharray={`${arc} ${circ}`} strokeLinecap="round" />
+        <circle cx={size / 2} cy={size / 2} r={rad} fill="none" stroke="var(--viz-track)" strokeWidth={stroke} strokeDasharray={`${arc} ${circ}`} strokeLinecap="round" />
         <circle
           cx={size / 2}
           cy={size / 2}

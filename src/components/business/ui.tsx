@@ -428,8 +428,8 @@ export function Meter({ value, label, tone = "accent" }: { value: number | null;
   const v = value === null ? 0 : Math.max(0, Math.min(100, value));
   return (
     <span className="flex min-w-24 items-center gap-2">
-      <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-subtle" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(v)} aria-label={label}>
-        <span className={cn("viz-grow-x block h-full rounded-full", tone === "warn" ? "bg-warn" : "bg-accent")} style={{ width: `${v}%` }} />
+      <span className="h-2 flex-1 overflow-hidden rounded-full bg-[var(--viz-track)]" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(v)} aria-label={label}>
+        <span className={cn("viz-grow-x block h-full rounded-full", tone === "warn" ? "bg-[var(--viz-warn)]" : "bg-[var(--series-1)]")} style={{ width: `${v}%` }} />
       </span>
       <span className="tabular w-10 text-right text-[12px] text-muted">{value === null ? "—" : `${Math.round(v)}%`}</span>
     </span>

@@ -91,7 +91,7 @@ export function LicensesVisual() {
                     {seats.assigned} of {seats.purchased} · {seats.available} free
                   </span>
                 </div>
-                <Meter value={seats.utilization} label={`Example: ${s.name} seat utilization`} tone={(seats.utilization ?? 0) < 70 ? "warn" : "accent"} />
+                <Meter value={seats.utilization} label={`Example: ${s.name} seat utilization`} tone={(seats.utilization ?? 0) < 60 ? "warn" : "accent"} />
               </div>
             </li>
           ))}
