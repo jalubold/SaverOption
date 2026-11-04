@@ -175,8 +175,17 @@ export function SectionTabs({ sections }: { sections: NavSection[] }) {
 const COLLAPSE_KEY = "so-biz-sidebar";
 
 /** Desktop sidebar that can collapse to icons (remembered per browser), and a drawer on small screens. */
+/** How long the sidebar takes to slide between full and the rail (Apple's ease-out curve). */
+const SLIDE_MS = 280;
+
 export function SidebarFrame({ sidebar, collapsedSidebar, children }: { sidebar: ReactNode; collapsedSidebar: ReactNode; children: ReactNode }) {
+  // The width (collapsed) and what's inside (rail) move separately, as a Mac sidebar slides: collapsing,
+  // the full list stays put and is clipped as the edge slides in, then the rail fades in; expanding, the
+  // full list is there at once and revealed as the edge slides out.
   const [collapsed, setCollapsed] = useState(false);
+  const [rail, setRail] = useState(false);
+  const [animate, setAnimate] = useState(false);
+  const timer = useRef<number | undefined>(undefined);
   const [open, setOpen] = useState(false);
   const path = usePathname();
   const [lastPath, setLastPath] = useState(path);
@@ -185,12 +194,21 @@ export function SidebarFrame({ sidebar, collapsedSidebar, children }: { sidebar:
     setOpen(false);
   }
   useEffect(() => {
+    let saved = false;
     try {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- read the saved preference once, after hydration
-      setCollapsed(localStorage.getItem(COLLAPSE_KEY) === "1");
+      saved = localStorage.getItem(COLLAPSE_KEY) === "1";
     } catch {
       // Storage can be unavailable (private mode); the sidebar just starts expanded.
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- read the saved preference once, after hydration
+    setCollapsed(saved);
+    setRail(saved);
+    // Slide only on a click, not while the saved width is first applied.
+    const id = requestAnimationFrame(() => requestAnimationFrame(() => setAnimate(true)));
+    return () => {
+      cancelAnimationFrame(id);
+      window.clearTimeout(timer.current);
+    };
   }, []);
   useEffect(() => {
     if (!open) return;
@@ -199,19 +217,29 @@ export function SidebarFrame({ sidebar, collapsedSidebar, children }: { sidebar:
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
   const toggle = () => {
-    setCollapsed((c) => {
-      try {
-        localStorage.setItem(COLLAPSE_KEY, c ? "0" : "1");
-      } catch {}
-      return !c;
-    });
+    const next = !collapsed;
+    try {
+      localStorage.setItem(COLLAPSE_KEY, next ? "1" : "0");
+    } catch {}
+    window.clearTimeout(timer.current);
+    setCollapsed(next);
+    const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!next || still) setRail(next);
+    else timer.current = window.setTimeout(() => setRail(true), SLIDE_MS);
   };
   return (
     <SidebarToggleContext.Provider value={{ collapsed, toggle }}>
     <div className="biz-shell flex min-h-dvh">
       {/* A Mac source list: light grey, a hairline edge, the selection a rounded grey highlight. */}
-      <div className={cn("hidden shrink-0 border-r border-[var(--mac-hairline)] bg-[var(--mac-sidebar)] transition-[width] duration-150 lg:block", collapsed ? "w-[68px]" : "w-[248px]")}>
-        <aside className="sticky top-0 flex h-dvh flex-col">
+      {/* overflow-x: clip, not hidden: it clips the sliding edge without becoming a scroll box, so the aside stays sticky. */}
+      <div
+        className={cn(
+          "hidden shrink-0 overflow-x-clip border-r border-[var(--mac-hairline)] bg-[var(--mac-sidebar)] lg:block",
+          animate && "transition-[width] duration-[280ms] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none",
+          collapsed ? "w-[68px]" : "w-[248px]",
+        )}
+      >
+        <aside className={cn("sticky top-0 flex h-dvh flex-col", rail ? "w-[68px]" : "w-[248px]")}>
           {/* In the Mac app: the window buttons sit here, and the strip drags the window. */}
           <div aria-hidden="true" data-tauri-drag-region className="hidden h-14 shrink-0 desktop-app:block" />
           {/* Hide the sidebar, at its top right as in Finder and Notes (in the Mac app, beside the window
@@ -227,7 +255,9 @@ export function SidebarFrame({ sidebar, collapsedSidebar, children }: { sidebar:
               <Icon name="panel-left" size={16} />
             </button>
           )}
-          <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-3 pb-3 [&>*]:shrink-0">{collapsed ? collapsedSidebar : sidebar}</div>
+          <div key={rail ? "rail" : "full"} className={cn("flex min-h-0 flex-1 flex-col overflow-y-auto px-3 pb-3 [&>*]:shrink-0", animate && "animate-[so-fade_200ms_ease-out] motion-reduce:animate-none")}>
+            {rail ? collapsedSidebar : sidebar}
+          </div>
         </aside>
       </div>
       {open && (
