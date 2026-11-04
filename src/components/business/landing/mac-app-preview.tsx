@@ -1,7 +1,7 @@
 import { BrandMark } from "@/components/brand/logo";
-import { DonutChart, Sparkline } from "@/components/business/charts";
-import { annualTotal, byCategory, byId, monthlyTotal, potentialAnnual, renewalsIn30, runRateTrend, seatTotals, summary, trackable, usd } from "@/components/business/landing/example-data";
-import { PreviewCard, SubRow } from "@/components/business/landing/preview-parts";
+import { DonutChart, Sparkline, TrendChart } from "@/components/business/charts";
+import { annualTotal, byCategory, exampleSubs, monthlyTotal, potentialAnnual, renewalsIn30, runRateTrend, seatTotals, summary, trackable, usd } from "@/components/business/landing/example-data";
+import { PreviewCard } from "@/components/business/landing/preview-parts";
 import { LogoStack } from "@/components/business/software-logo";
 import { Kpi, Meter } from "@/components/business/ui";
 import { Icon, type IconProps } from "@/components/ui/icon";
@@ -10,38 +10,17 @@ import { buttonClass, cn } from "@/components/ui/primitives";
 /**
  * The hero picture on the Business landing and download pages: Saver Option Business as the
  * Mac app really looks: a macOS window whose title bar is hidden, with the window buttons over the top of
- * the sidebar (titleBarStyle Overlay in desktop/src-tauri/src/lib.rs), the app's own sidebar
- * (src/components/business/app-shell.tsx) and the Overview page with example data.
+ * the sidebar (titleBarStyle Overlay in desktop/src-tauri/src/lib.rs), the app's own sidebar collapsed
+ * to its icons, the header and the Overview page as they are now
+ * (src/components/business/app-shell.tsx, app/business/(app)/dashboard), with example data.
  */
 
-const nav: { label: string | null; items: { label: string; icon: IconProps["name"] }[] }[] = [
-  { label: null, items: [{ label: "Overview", icon: "home" }] },
-  {
-    label: "Manage",
-    items: [
-      { label: "Subscriptions", icon: "layers" },
-      { label: "Renewals", icon: "calendar" },
-      { label: "Software", icon: "box" },
-      { label: "Licenses & seats", icon: "key" },
-    ],
-  },
-  {
-    label: "Insights",
-    items: [
-      { label: "Analytics", icon: "trending-up" },
-      { label: "Savings", icon: "piggy" },
-      { label: "Reports", icon: "chart" },
-      { label: "Deals", icon: "tag" },
-    ],
-  },
-  {
-    label: "Workspace",
-    items: [
-      { label: "Team", icon: "users" },
-      { label: "AI clients (MCP)", icon: "code" },
-      { label: "Settings", icon: "gear" },
-    ],
-  },
+/** The app's four places, as the sidebar shows them. */
+const nav: { label: string; icon: IconProps["name"] }[] = [
+  { label: "Overview", icon: "home" },
+  { label: "Manage", icon: "layers" },
+  { label: "Insights", icon: "trending-up" },
+  { label: "Workspace", icon: "building" },
 ];
 
 /** The macOS close, minimize and zoom buttons. */
@@ -55,54 +34,45 @@ function WindowButtons({ className }: { className?: string }) {
   );
 }
 
+/** The sidebar collapsed to its icons (68 px, as in the app), with the window buttons over its top. */
 function Sidebar() {
   return (
-    <div className="theme-dark hidden w-[212px] shrink-0 flex-col border-r border-line bg-bg px-2.5 pb-3 text-fg md:flex">
+    <div className="theme-dark hidden w-[68px] shrink-0 flex-col items-center border-r border-line bg-bg pb-3 text-fg md:flex">
       {/* The strip the window buttons sit on. */}
       <div className="h-[42px] shrink-0" />
-      <div className="flex h-10 items-center gap-2 px-1">
-        <BrandMark size={22} />
-        <span className="truncate text-[13px] font-semibold tracking-tight text-fg">
-          Saver Option <span className="text-accent-ink">Business</span>
-        </span>
-      </div>
-      <div className="mb-2.5 flex items-center gap-2 rounded-lg border border-line px-2 py-1.5">
-        <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-subtle text-[11px] font-semibold text-fg">N</span>
-        <span className="min-w-0 flex-1">
-          <span className="block truncate text-[12px] font-semibold text-fg">Northwind Studio</span>
-          <span className="block text-[10.5px] text-faint">Owner</span>
-        </span>
-        <Icon name="chevron-down" size={13} className="text-faint" />
-      </div>
-      <span className={buttonClass("primary", "sm", "mb-4 h-8 w-full text-[12.5px]")}>
-        <Icon name="plus" size={14} /> Add software
+      <BrandMark size={26} />
+      <span className="mt-3 flex size-8 items-center justify-center rounded-lg border border-line bg-subtle text-[12px] font-semibold text-fg">N</span>
+      <span className={buttonClass("primary", "sm", "mt-3 size-8 px-0")}>
+        <Icon name="plus" size={15} />
       </span>
-      <div className="flex flex-col gap-3.5">
-        {nav.map((g) => (
-          <div key={g.label ?? "home"}>
-            {g.label && <p className="mb-1 px-2.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-faint">{g.label}</p>}
-            <ul className="flex flex-col gap-0.5">
-              {g.items.map((it) => {
-                const on = it.label === "Overview";
-                return (
-                  <li
-                    key={it.label}
-                    className={cn(
-                      "relative flex h-[30px] items-center gap-2.5 rounded-lg px-2.5 text-[12.5px] font-medium",
-                      on
-                        ? "bg-[linear-gradient(90deg,color-mix(in_oklab,var(--accent)_26%,transparent),color-mix(in_oklab,var(--accent)_6%,transparent))] text-fg shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--accent)_22%,transparent)]"
-                        : "text-muted",
-                    )}
-                  >
-                    {on && <span className="absolute -left-2.5 bottom-1.5 top-1.5 w-[3px] rounded-r-full bg-accent shadow-[0_0_12px_2px_color-mix(in_oklab,var(--accent)_70%,transparent)]" />}
-                    <Icon name={it.icon} size={15} className={on ? "text-accent-ink" : undefined} />
-                    <span className="truncate">{it.label}</span>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        ))}
+      <div className="mt-5 flex w-full flex-col items-center gap-1 px-2.5">
+        {nav.map((it) => {
+          const on = it.label === "Overview";
+          return (
+            <span
+              key={it.label}
+              title={it.label}
+              className={cn(
+                "relative flex h-10 w-full items-center justify-center rounded-lg",
+                on
+                  ? "bg-[linear-gradient(90deg,color-mix(in_oklab,var(--accent)_26%,transparent),color-mix(in_oklab,var(--accent)_6%,transparent))] text-accent-ink shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--accent)_22%,transparent)]"
+                  : "text-muted",
+              )}
+            >
+              {on && <span className="absolute -left-2.5 bottom-2.5 top-2.5 w-[3px] rounded-r-full bg-accent shadow-[0_0_12px_2px_color-mix(in_oklab,var(--accent)_70%,transparent)]" />}
+              <Icon name={it.icon} size={18} />
+            </span>
+          );
+        })}
+      </div>
+      {/* The trial and the collapse toggle at the bottom, as in the app. */}
+      <div className="mt-auto flex flex-col items-center gap-2 pt-6">
+        <span className="flex size-9 items-center justify-center text-accent-ink">
+          <Icon name="calendar" size={16} />
+        </span>
+        <span className="flex size-9 items-center justify-center border-t border-line pt-2 text-faint">
+          <Icon name="panel-left" size={15} />
+        </span>
       </div>
     </div>
   );
@@ -123,6 +93,9 @@ function Header() {
         <kbd className="rounded border border-line bg-subtle px-1 font-sans text-[10px] text-faint">⌘K</kbd>
       </span>
       <span className="ml-auto flex items-center gap-2">
+        <span className={buttonClass("primary", "sm", "hidden h-7 px-2.5 text-[11.5px] sm:inline-flex")}>
+          <Icon name="sparkles" size={12} /> Upgrade
+        </span>
         <span className="relative flex size-7 items-center justify-center text-muted">
           <Icon name="bell" size={16} />
           <span className="absolute right-0.5 top-0.5 size-1.5 rounded-full bg-accent" />
@@ -133,6 +106,13 @@ function Header() {
     </div>
   );
 }
+
+const MONTHS = ["Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct"];
+/** The example run-rate (whole dollars) as the dashboard's trend points (cents). */
+const trendPoints = runRateTrend.map((v, i) => ({ label: MONTHS[i], value: v * 100, display: `${usd(v * 100)}/mo` }));
+/** Logos of the example tools with an active plan, and of those renewing in the next 30 days. */
+const active = exampleSubs.filter((x) => x.status === "active" && !x.archived).map((x) => ({ name: x.name, src: x.logo }));
+const renewing = exampleSubs.filter((x) => x.renewsIn <= 30).map((x) => ({ name: x.name, src: x.logo }));
 
 function Overview() {
   return (
@@ -157,48 +137,58 @@ function Overview() {
             </div>
           </dl>
         </div>
-        <div className="relative z-10 hidden min-w-0 rounded-xl border border-white/10 bg-white/[0.05] p-3 shadow-[inset_0_1px_0_rgb(255_255_255/0.08)] sm:block">
-          <div className="flex items-baseline justify-between gap-2 text-[11px]">
-            <span className="font-medium text-muted">12-month run-rate · USD</span>
-            <span className="tabular text-faint">{usd(monthlyTotal)}/mo now</span>
-          </div>
-          <div className="mt-1.5">
-            <Sparkline values={runRateTrend} label="Example: monthly run-rate over the last 12 months" tone="light" height={44} />
-          </div>
-          <div className="mt-3 flex items-center justify-between gap-2 border-t border-white/10 pt-2.5 text-[11px] text-muted">
-            <span>
-              <strong className="font-semibold text-heading">{summary.activeCount}</strong> active subscriptions
+        <div className="relative z-10 hidden min-w-0 sm:block">
+          <div className="mb-2 flex justify-end gap-1.5">
+            <span className="inline-flex h-6 items-center gap-1 rounded-md border border-white/15 bg-white/10 px-2 text-[10.5px] font-medium text-fg">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 3v12M7 8l5-5 5 5M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" />
+              </svg>
+              Share
             </span>
-            <span className="[&_.ring-surface]:ring-[#1a1530]">
-              <LogoStack items={trackable.slice(0, 5)} max={5} size={20} />
+            <span className="inline-flex h-6 items-center gap-1 rounded-md border border-white/15 bg-white/10 px-2 text-[10.5px] font-medium text-fg">
+              <Icon name="download" size={11} /> Save <Icon name="chevron-down" size={10} className="opacity-60" />
             </span>
+          </div>
+          <div className="rounded-xl border border-white/10 bg-white/[0.05] p-3 shadow-[inset_0_1px_0_rgb(255_255_255/0.08)]">
+            <div className="flex items-baseline justify-between gap-2 text-[11px]">
+              <span className="font-medium text-muted">12-month run-rate · USD</span>
+              <span className="tabular text-faint">{usd(monthlyTotal)}/mo now</span>
+            </div>
+            <div className="mt-1.5">
+              <Sparkline values={runRateTrend} label="Example: monthly run-rate over the last 12 months" tone="light" height={44} />
+            </div>
+            <div className="mt-3 flex items-center justify-between gap-2 border-t border-white/10 pt-2.5 text-[11px] text-muted">
+              <span>
+                <strong className="font-semibold text-heading">{summary.activeCount}</strong> active subscriptions
+              </span>
+              <span className="[&_.ring-surface]:ring-[#1a1530]">
+                <LogoStack items={trackable.slice(0, 5)} max={5} size={20} />
+              </span>
+            </div>
           </div>
         </div>
       </section>
 
       <div className="grid grid-cols-2 gap-2.5 xl:grid-cols-4">
-        <Kpi label="Active subscriptions" icon="layers" tone="violet" value={summary.activeCount} sub={`Across ${byCategory.length} categories`} />
-        <Kpi label="Upcoming renewals" icon="calendar" tone="blue" value={renewalsIn30} sub="Next 30 days" />
+        <Kpi label="Active subscriptions" icon="layers" tone="violet" value={summary.activeCount} sub={`${summary.activeCount} tools with a paid plan`} chart={<LogoStack items={active} max={6} size={20} />} />
+        <Kpi label="Upcoming renewals" icon="calendar" tone="blue" value={renewalsIn30} sub="Next 30 days" chart={<LogoStack items={renewing} max={6} size={20} />} />
         <Kpi label="Est. potential savings" icon="piggy" tone="green" value={`${usd(potentialAnnual)}/yr`} sub="Estimate, not guaranteed" />
         <Kpi
           label="Unused licenses"
           icon="key"
           tone="orange"
           value={seatTotals.purchased - seatTotals.assigned}
+          sub={`${seatTotals.assigned} of ${seatTotals.purchased} seats in use`}
           chart={<Meter value={(seatTotals.assigned / seatTotals.purchased) * 100} label="Example: license utilization" tone="warn" />}
         />
       </div>
 
-      <div className="hidden gap-2.5 sm:grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)]">
+      <div className="hidden gap-2.5 sm:grid lg:grid-cols-3">
+        <PreviewCard title="Monthly spending trend" className="lg:col-span-2">
+          <TrendChart points={trendPoints} caption="Example: monthly recurring run-rate, USD, last 12 months" currency="USD" height={230} />
+        </PreviewCard>
         <PreviewCard title="Spending by category">
           <DonutChart caption="Example: monthly spending by category" segments={byCategory} centerLabel="Per month" centerValue={usd(monthlyTotal)} />
-        </PreviewCard>
-        <PreviewCard title="Upcoming renewals" aside={<span className="text-[11px] text-faint">Next 30 days</span>}>
-          <ul className="-my-2 divide-y divide-line">
-            {["hubspot", "linear", "slack", "aws", "figma"].map((id) => (
-              <SubRow key={id} s={byId(id)} compact />
-            ))}
-          </ul>
         </PreviewCard>
       </div>
     </div>

@@ -10,35 +10,36 @@ import { BrandMark } from "@/components/brand/logo";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, cn } from "@/components/ui/primitives";
 import { DesktopMenuLinks, NavProgress } from "@/components/business/nav-progress";
-import { MobileAccountButton, MobileMenuButton, MobileNav, MobileTitle, Popover, QuickJump, SidebarFrame, SidebarNav, type NavGroup, type QuickAction, type TabItem } from "@/components/business/shell-client";
+import { MobileAccountButton, MobileMenuButton, MobileNav, MobileTitle, Popover, QuickJump, SectionTabs, SidebarFrame, SidebarNav, type NavSection, type QuickAction, type TabItem } from "@/components/business/shell-client";
 
 /**
- * The sidebar: a flat list, most-used first, with plain section labels —
- * the overview, the records people manage, what they tell them, and the
- * workspace (with AI clients). Departments, Integrations and the in-app assistant
- * (when it's configured) are in Settings or Quick jump, so the list stays short.
+ * The sidebar has four places: the overview, the records people manage, what they tell them, and the
+ * workspace. Each place's pages are the tabs at the top of its pages (SectionTabs), so the sidebar stays
+ * at four, collapsed or not. Departments and the in-app assistant (when it's configured) are in
+ * Settings or Quick jump.
  */
-const groups: NavGroup[] = [
+const sections: NavSection[] = [
   {
-    id: "home",
-    label: null,
-    items: [
-      { label: "Overview", href: "/business/dashboard", icon: "home", keywords: "dashboard home" },
-    ],
+    id: "overview",
+    label: "Overview",
+    icon: "home",
+    items: [{ label: "Overview", href: "/business/dashboard", icon: "home", keywords: "dashboard home" }],
   },
   {
     id: "manage",
     label: "Manage",
+    icon: "layers",
     items: [
       { label: "Subscriptions", href: "/business/subscriptions", icon: "layers", keywords: "plans billing" },
       { label: "Renewals", href: "/business/renewals", icon: "calendar", keywords: "upcoming deadlines calendar" },
       { label: "Software", href: "/business/software", icon: "box", keywords: "inventory tools apps" },
-      { label: "Licenses & seats", href: "/business/licenses", icon: "key", keywords: "seats utilization users" },
+      { label: "Licenses & seats", short: "Licenses", href: "/business/licenses", icon: "key", keywords: "seats utilization users" },
     ],
   },
   {
     id: "insights",
     label: "Insights",
+    icon: "trending-up",
     items: [
       { label: "Analytics", href: "/business/analytics", icon: "trending-up", keywords: "spend charts vendors categories" },
       { label: "Savings", href: "/business/savings", icon: "piggy", keywords: "opportunities save money" },
@@ -49,24 +50,24 @@ const groups: NavGroup[] = [
   {
     id: "workspace",
     label: "Workspace",
+    icon: "building",
     items: [
       { label: "Team", href: "/business/team", icon: "users", keywords: "members invite people roles" },
-      { label: "AI clients (MCP)", href: "/business/settings/mcp", icon: "code", keywords: "mcp claude chatgpt gemini grok connect ai" },
-      { label: "Settings", href: "/business/settings", icon: "gear", keywords: "company preferences notifications security" },
+      { label: "AI clients (MCP)", short: "AI clients", href: "/business/settings/mcp", icon: "code", keywords: "mcp claude chatgpt gemini grok connect ai" },
+      { label: "Integrations", href: "/business/integrations", icon: "link", keywords: "csv import connect" },
+      { label: "Settings", href: "/business/settings", icon: "gear", keywords: "company preferences notifications security billing" },
     ],
   },
 ];
+const sectionPages = sections.flatMap((s) => s.items);
 
-/** Reached from Settings rather than the sidebar; listed in Quick jump. */
-const morePages: QuickAction[] = [
-  { label: "Departments", href: "/business/settings/departments", icon: "building", group: "Workspace", keywords: "teams org" },
-  { label: "Integrations", href: "/business/integrations", icon: "link", group: "Workspace", keywords: "csv import connect" },
-];
+/** Reached from Settings rather than a tab; listed in Quick jump. */
+const morePages: QuickAction[] = [{ label: "Departments", href: "/business/settings/departments", icon: "building", group: "Workspace", keywords: "teams org" }];
 const assistantPage: QuickAction = { label: "AI Assistant", href: "/business/assistant", icon: "sparkles", group: "AI", keywords: "chat claude ask ai" };
 
-/** Pages from the sidebar plus common actions, for Quick jump. */
+/** Every page of the four places plus common actions, for Quick jump. */
 function quickActions(ctx: BizContext): QuickAction[] {
-  const pages = [...groups.flatMap((g) => g.items.map((it) => ({ ...it, group: g.label ?? "Overview" }))), ...morePages, ...(assistantConfigured() ? [assistantPage] : [])];
+  const pages = [...sections.flatMap((s) => s.items.map((it) => ({ ...it, group: s.label }))), ...morePages, ...(assistantConfigured() ? [assistantPage] : [])];
   const actions: QuickAction[] = [
     ...(can(ctx.role, "records.manage")
       ? [
@@ -82,19 +83,20 @@ function quickActions(ctx: BizContext): QuickAction[] {
   return [...pages, ...actions];
 }
 
-/** The tab bar on phones and tablets: the places people go most, with Add software in the middle for those who can add. */
+/**
+ * The tab bar on phones and tablets: the same places as the sidebar, with Add software in the middle
+ * for those who can add (Workspace is then in More). A tab is current on every page of its place.
+ */
 function mobileTabs(ctx: BizContext): TabItem[] {
-  const overview: TabItem = { label: "Overview", href: "/business/dashboard", icon: "home" };
-  const subscriptions: TabItem = { label: "Subscriptions", href: "/business/subscriptions", icon: "layers" };
-  const renewals: TabItem = { label: "Renewals", href: "/business/renewals", icon: "calendar" };
+  const [overview, manage, insights, workspace] = sections.map((s): TabItem => ({ label: s.label, href: s.items[0].href, icon: s.icon, paths: s.items.slice(1).map((it) => it.href) }));
   return can(ctx.role, "records.manage")
-    ? [overview, subscriptions, { label: "Add software", href: "/business/subscriptions/new", icon: "plus", primary: true }, renewals]
-    : [overview, subscriptions, renewals, { label: "Savings", href: "/business/savings", icon: "piggy" }];
+    ? [overview, manage, { label: "Add software", href: "/business/subscriptions/new", icon: "plus", primary: true }, insights]
+    : [overview, manage, insights, workspace];
 }
 
 /** Names for the title bar on phones (the longest matching path wins). */
 const pageTitles: { href: string; label: string }[] = [
-  ...groups.flatMap((g) => g.items.map(({ href, label }) => ({ href, label }))),
+  ...sectionPages.map(({ href, label }) => ({ href, label })),
   ...morePages.map(({ href, label }) => ({ href, label })),
   { href: "/business/subscriptions/new", label: "Add software" },
   { href: "/business/subscriptions/import", label: "Import" },
@@ -114,14 +116,15 @@ const tileTone: Record<string, string> = {
   "/business/deals": "bg-[#fff1e6] text-[#ea580c]",
   "/business/team": "bg-[#e8f8f8] text-[#0f766e]",
   "/business/settings/mcp": "bg-[#f3ecff] text-[#7c3aed]",
+  "/business/integrations": "bg-[#e9f2ff] text-[#2563eb]",
   "/business/settings": "bg-[#f1f1f4] text-[#52525b]",
 };
 
-/** The More sheet on phones and tablets: who's signed in, the workspace, every other page, and sign out. */
+/** The More sheet on phones and tablets: who's signed in, the workspace, the places not in the tab bar, and sign out. */
 function MoreSheet({ ctx, plan, unread, tabs }: { ctx: BizContext; plan: ShellPlan; unread: number; tabs: TabItem[] }) {
   const name = displayName(ctx.user);
   const inTabs = new Set(tabs.map((t) => t.href));
-  const pages = [...groups.flatMap((g) => g.items), ...(assistantConfigured() ? [assistantPage] : [])].filter((it) => !inTabs.has(it.href));
+  const pages = [...sections.filter((s) => !inTabs.has(s.items[0].href)).flatMap((s) => s.items), ...(assistantConfigured() ? [assistantPage] : [])];
   const row = "flex min-h-12 w-full items-center gap-3 px-3.5 text-left text-[15px] text-fg active:bg-subtle";
   return (
     <div className="space-y-4 pb-1">
@@ -176,20 +179,22 @@ function MoreSheet({ ctx, plan, unread, tabs }: { ctx: BizContext; plan: ShellPl
         </ul>
       </details>
 
-      <nav aria-label="All pages">
-        <ul className="grid grid-cols-3 gap-2" data-more-pages>
+      {pages.length > 0 && (
+      <nav aria-label="More pages">
+        <ul className={cn("grid gap-2", pages.length % 4 === 0 ? "grid-cols-4" : "grid-cols-3")} data-more-pages>
           {pages.map((it) => (
             <li key={it.href}>
               <Link href={it.href} className="tile flex h-[86px] flex-col items-center justify-center gap-2 rounded-2xl border border-line bg-surface px-1 text-center active:bg-subtle">
                 <span className={cn("flex size-9 items-center justify-center rounded-xl", tileTone[it.href] ?? "bg-accent-soft text-accent-ink")}>
                   <Icon name={it.icon} size={18} />
                 </span>
-                <span className="line-clamp-2 text-[12px] font-medium leading-tight text-fg">{it.label === "AI clients (MCP)" ? "AI clients" : it.label === "Licenses & seats" ? "Licenses" : it.label}</span>
+                <span className="line-clamp-2 text-[12px] font-medium leading-tight text-fg">{it.short ?? it.label}</span>
               </Link>
             </li>
           ))}
         </ul>
       </nav>
+      )}
 
       {plan.trial && <TrialCard trial={plan.trial} upgrade={plan.upgrade} />}
 
@@ -355,7 +360,7 @@ function Sidebar({ ctx, plan, collapsed }: { ctx: BizContext; plan: ShellPlan; c
           <span className={collapsed ? "sr-only" : undefined}>Add software</span>
         </Link>
       )}
-      <SidebarNav groups={groups} collapsed={collapsed} />
+      <SidebarNav sections={sections} collapsed={collapsed} />
       <div className="mt-auto pt-4">
         {plan.trial && <TrialCard trial={plan.trial} upgrade={plan.upgrade} collapsed={collapsed} />}
       </div>
@@ -388,7 +393,7 @@ function BillingStrip({ notice }: { notice: BillingNotice }) {
 export function AppShell({ ctx, unread, notice, plan, children }: { ctx: BizContext; unread: number; notice: BillingNotice | null; plan: ShellPlan; children: ReactNode }) {
   const name = displayName(ctx.user);
   const tabs = mobileTabs(ctx);
-  const morePaths = [...groups.flatMap((g) => g.items.map((it) => it.href)), ...pageTitles.map((t) => t.href), "/business/integrations", "/business/docs"];
+  const morePaths = [...sectionPages.map((it) => it.href), ...pageTitles.map((t) => t.href), "/business/docs"];
   return (
     <SidebarFrame sidebar={<Sidebar ctx={ctx} plan={plan} />} collapsedSidebar={<Sidebar ctx={ctx} plan={plan} collapsed />}>
       <MobileNav tabs={tabs} morePaths={morePaths} more={<MoreSheet ctx={ctx} plan={plan} unread={unread} tabs={tabs} />}>
@@ -478,6 +483,7 @@ export function AppShell({ ctx, unread, notice, plan, children }: { ctx: BizCont
       )}
       <NavProgress />
       <DesktopMenuLinks />
+      <SectionTabs sections={sections} />
       <main id="main" className="mx-auto w-full max-w-[1280px] flex-1 px-4 pb-[calc(4rem+var(--tabbar,0px))] pt-5 sm:px-6 sm:pt-6 lg:px-8">
         {children}
       </main>

@@ -154,7 +154,7 @@ export function DealsFilters(props: FiltersProps) {
                 name="sort"
                 defaultValue={props.sort ?? "relevance"}
                 key={props.sort ?? "relevance"}
-                className="h-10 rounded-full border border-line-strong bg-surface pl-4 pr-9 text-sm text-fg outline-none focus:border-accent"
+                className="field-select h-10 appearance-none rounded-[10px] border border-line-strong bg-surface pl-3.5 pr-10 text-sm font-medium text-fg outline-none transition-colors focus:border-accent focus:ring-4 focus:ring-accent/20"
               >
                 {props.sortOptions.map((o) => (
                   <option key={o.value} value={o.value}>

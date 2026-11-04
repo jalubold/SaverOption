@@ -15,77 +15,161 @@ export interface NavItem {
   icon: IconProps["name"];
   /** Extra words Quick jump matches on. */
   keywords?: string;
+  /** A shorter label for the section tabs on phones ("Licenses" for "Licenses & seats"). */
+  short?: string;
 }
 
-export interface NavGroup {
+/** One of the sidebar's four places; its pages show as tabs at the top of each of them. */
+export interface NavSection {
   id: string;
-  /** A plain section label; null for the items at the top. */
-  label: string | null;
+  label: string;
+  icon: IconProps["name"];
+  /** Its pages, the first one being where the sidebar item goes. */
   items: NavItem[];
 }
 
-/** The nav item whose href is the longest prefix of the current path. */
-function activeHref(path: string, items: NavItem[]): string | null {
-  let best: string | null = null;
+/** Forms (add, edit, import) take the whole screen, with their own buttons at the bottom, as a pushed screen does. */
+const FORM_ROUTE = /^\/business\/(subscriptions|software)\/(new|import|[^/]+\/edit)\/?$/;
+
+/** The entry whose href is the longest prefix of the current path. */
+function longestMatch<T extends { href: string }>(path: string, items: T[]): T | null {
+  let best: T | null = null;
   for (const it of items) {
-    if ((path === it.href || path.startsWith(`${it.href}/`)) && (!best || it.href.length > best.length)) best = it.href;
+    if ((path === it.href || path.startsWith(`${it.href}/`)) && (!best || it.href.length > best.href.length)) best = it;
   }
   return best;
 }
 
-export function SidebarNav({ groups, collapsed }: { groups: NavGroup[]; collapsed?: boolean }) {
-  const path = usePathname() ?? "";
-  // The clicked item is marked current straight away, until its page arrives (the path changes).
-  const [clicked, setClicked] = useState<{ href: string; from: string } | null>(null);
-  const active = (clicked?.from === path ? clicked.href : null) ?? activeHref(path, groups.flatMap((g) => g.items));
-  // A page is fetched in full once the pointer or focus reaches its item, so most clicks open it at once.
-  // (Not when items scroll into view: that would render every page of the app on each visit.)
+/** The nav item whose href is the longest prefix of the current path. */
+function activeHref(path: string, items: NavItem[]): string | null {
+  return longestMatch(path, items)?.href ?? null;
+}
+
+/** The section a path belongs to, and which of its pages it is (Plan & billing is under Settings, a subscription under Subscriptions). */
+function sectionFor(path: string, sections: NavSection[]): { section: NavSection; href: string } | null {
+  const hit = longestMatch(
+    path,
+    sections.flatMap((section) => section.items.map((it) => ({ href: it.href, section }))),
+  );
+  return hit && { section: hit.section, href: hit.href };
+}
+
+/** Pages are fetched in full once the pointer or focus reaches their link, so most clicks open them at once. */
+function useWarm() {
+  // (Not when links scroll into view: that would render every page of the app on each visit.)
   const [warmed, setWarmed] = useState<ReadonlySet<string>>(() => new Set());
   const warm = (href: string) => setWarmed((s) => (s.has(href) ? s : new Set(s).add(href)));
+  return { warmed, warm };
+}
+
+/**
+ * The sidebar's four places: Overview, Manage, Insights and Workspace. Each goes to its first page;
+ * the others are the tabs at the top of the page (SectionTabs), so the list never grows.
+ */
+export function SidebarNav({ sections, collapsed }: { sections: NavSection[]; collapsed?: boolean }) {
+  const path = usePathname() ?? "";
+  // The clicked item is marked current straight away, until its page arrives (the path changes).
+  const [clicked, setClicked] = useState<{ id: string; from: string } | null>(null);
+  const active = (clicked?.from === path ? clicked.id : null) ?? sectionFor(path, sections)?.section.id ?? null;
+  const { warmed, warm } = useWarm();
   return (
-    <nav aria-label="Business app" className="flex flex-col gap-5">
-      {groups.map((g, gi) => (
-        <div key={g.id} data-nav-group={g.id}>
-          {g.label &&
-            (collapsed ? (
-              gi > 0 && <span aria-hidden="true" className="mx-auto mb-2 hidden h-px w-6 bg-line lg:block" />
-            ) : (
-              <p className="mb-1 px-2.5 text-[11px] leading-4 font-semibold uppercase tracking-[0.08em] text-faint">{g.label}</p>
-            ))}
-          <ul className="flex flex-col gap-0.5">
-            {g.items.map((it) => {
-              const on = it.href === active;
-              return (
-                <li key={it.href}>
-                  <Link
-                    href={it.href}
-                    prefetch={warmed.has(it.href)}
-                    onMouseEnter={() => warm(it.href)}
-                    onFocus={() => warm(it.href)}
-                    onTouchStart={() => warm(it.href)}
-                    onClick={(e) => {
-                      if (!e.metaKey && !e.ctrlKey && !e.shiftKey && it.href !== path) setClicked({ href: it.href, from: path });
-                    }}
-                    aria-current={on ? "page" : undefined}
-                    title={collapsed ? it.label : undefined}
-                    className={cn(
-                      "relative flex h-9 items-center gap-2.5 rounded-lg px-2.5 text-[13.5px] font-medium transition-colors",
-                      on
-                        ? "bg-[linear-gradient(90deg,color-mix(in_oklab,var(--accent)_26%,transparent),color-mix(in_oklab,var(--accent)_6%,transparent))] text-fg shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--accent)_22%,transparent)]"
-                        : "text-muted hover:bg-subtle hover:text-fg",
-                      collapsed && "lg:justify-center lg:px-0",
+    <nav aria-label="Business app">
+      <ul className="flex flex-col gap-1">
+        {sections.map((s) => {
+          const on = s.id === active;
+          const href = s.items[0].href;
+          return (
+            <li key={s.id} data-nav-section={s.id}>
+              <Link
+                href={href}
+                prefetch={warmed.has(href)}
+                onMouseEnter={() => warm(href)}
+                onFocus={() => warm(href)}
+                onTouchStart={() => warm(href)}
+                onClick={(e) => {
+                  if (!e.metaKey && !e.ctrlKey && !e.shiftKey && href !== path) setClicked({ id: s.id, from: path });
+                }}
+                aria-current={on ? "page" : undefined}
+                title={collapsed ? s.label : undefined}
+                className={cn(
+                  "relative flex h-10 items-center gap-3 rounded-lg px-2.5 text-[14px] font-medium transition-colors",
+                  on
+                    ? "bg-[linear-gradient(90deg,color-mix(in_oklab,var(--accent)_26%,transparent),color-mix(in_oklab,var(--accent)_6%,transparent))] text-fg shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--accent)_22%,transparent)]"
+                    : "text-muted hover:bg-subtle hover:text-fg",
+                  collapsed && "lg:justify-center lg:px-0",
+                )}
+              >
+                {on && <span aria-hidden="true" className="absolute -left-3 top-2.5 bottom-2.5 w-[3px] rounded-r-full bg-accent shadow-[0_0_12px_2px_color-mix(in_oklab,var(--accent)_70%,transparent)]" />}
+                <Icon name={s.icon} size={18} className={on ? "text-accent-ink" : undefined} />
+                <span className={cn("truncate", collapsed && "lg:sr-only")}>{s.label}</span>
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+  );
+}
+
+/**
+ * The pages of the current section, as tabs under the title bar (Subscriptions, Renewals, Software,
+ * Licenses & seats in Manage). Not on Overview, which is one page, nor on forms, which stay focused.
+ * On phones the row scrolls sideways, with the current tab brought into view.
+ */
+export function SectionTabs({ sections }: { sections: NavSection[] }) {
+  const path = usePathname() ?? "";
+  const [clicked, setClicked] = useState<{ href: string; from: string } | null>(null);
+  const { warmed, warm } = useWarm();
+  const list = useRef<HTMLUListElement>(null);
+  const hit = sectionFor(path, sections);
+  const current = (clicked?.from === path ? clicked.href : null) ?? hit?.href ?? null;
+  useEffect(() => {
+    const ul = list.current;
+    const li = ul?.querySelector<HTMLElement>('[aria-current="page"]')?.parentElement;
+    if (!ul || !li || ul.scrollWidth <= ul.clientWidth) return;
+    ul.scrollLeft = Math.max(0, li.offsetLeft - (ul.clientWidth - li.offsetWidth) / 2);
+  }, [current]);
+  if (!hit || hit.section.items.length < 2 || FORM_ROUTE.test(path)) return null;
+  const { section } = hit;
+  return (
+    <nav aria-label={`${section.label} pages`} className="border-b border-line bg-bg" data-section-tabs={section.id}>
+      <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8">
+        <ul ref={list} className="no-scrollbar -mx-2 flex overflow-x-auto">
+          {section.items.map((it) => {
+            const on = it.href === current;
+            return (
+              <li key={it.href} className="shrink-0">
+                <Link
+                  href={it.href}
+                  prefetch={warmed.has(it.href)}
+                  onMouseEnter={() => warm(it.href)}
+                  onFocus={() => warm(it.href)}
+                  onTouchStart={() => warm(it.href)}
+                  onClick={(e) => {
+                    if (!e.metaKey && !e.ctrlKey && !e.shiftKey && it.href !== path) setClicked({ href: it.href, from: path });
+                  }}
+                  aria-current={on ? "page" : undefined}
+                  className={cn("group relative flex h-11 items-center px-1 text-[13.5px] font-medium transition-colors", on ? "text-fg" : "text-muted hover:text-fg")}
+                  data-section-tab={it.href}
+                >
+                  <span className="flex h-8 items-center gap-2 rounded-md px-2 transition-colors group-hover:bg-subtle">
+                    <Icon name={it.icon} size={15} className={cn("max-sm:hidden", on ? "text-accent-ink" : "text-faint group-hover:text-muted")} />
+                    {it.short ? (
+                      <>
+                        <span className="sm:hidden">{it.short}</span>
+                        <span className="max-sm:hidden">{it.label}</span>
+                      </>
+                    ) : (
+                      it.label
                     )}
-                  >
-                    {on && <span aria-hidden="true" className="absolute -left-3 top-2 bottom-2 w-[3px] rounded-r-full bg-accent shadow-[0_0_12px_2px_color-mix(in_oklab,var(--accent)_70%,transparent)]" />}
-                    <Icon name={it.icon} size={17} className={on ? "text-accent-ink" : undefined} />
-                    <span className={cn("truncate", collapsed && "lg:sr-only")}>{it.label}</span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      ))}
+                  </span>
+                  {on && <span aria-hidden="true" className="absolute inset-x-2 bottom-0 h-0.5 rounded-t-full bg-accent" />}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </nav>
   );
 }
@@ -398,6 +482,8 @@ export interface TabItem {
   icon: IconProps["name"];
   /** The raised button in the middle (Add software). */
   primary?: boolean;
+  /** Other pages this tab stands for (Manage is current on Renewals too). */
+  paths?: string[];
 }
 
 const MoreSheetContext = createContext<() => void>(() => {});
@@ -412,18 +498,18 @@ export function MobileNav({ tabs, morePaths, more, children }: { tabs: TabItem[]
   const [open, setOpen] = useState(false);
   const [lastPath, setLastPath] = useState(path);
   const [clicked, setClicked] = useState<{ href: string; from: string } | null>(null);
-  const [warmed, setWarmed] = useState<ReadonlySet<string>>(() => new Set());
+  const { warmed, warm } = useWarm();
   if (path !== lastPath) {
     setLastPath(path);
     setOpen(false);
   }
   const close = useCallback(() => setOpen(false), []);
-  const all = [...tabs, ...morePaths.map((href) => ({ label: "", href, icon: "grid" as const }))];
-  const current = (clicked?.from === path ? clicked.href : null) ?? activeHref(path, all);
+  // Each path belongs to the tab with the longest matching href (or path), or else to More.
+  const routes = [...tabs.flatMap((t) => [t.href, ...(t.paths ?? [])].map((href) => ({ href, tab: t.href as string | null }))), ...morePaths.map((href) => ({ href, tab: null }))];
+  const match = longestMatch(path, routes);
+  const current = clicked?.from === path ? clicked.href : match ? (match.tab ?? match.href) : null;
   const inMore = current !== null && !tabs.some((t) => t.href === current);
-  // Forms (add, edit, import) take the whole screen, with their own buttons at the bottom, as a pushed screen does.
-  const form = /^\/business\/(subscriptions|software)\/(new|import|[^/]+\/edit)\/?$/.test(path);
-  const warm = (href: string) => setWarmed((s) => (s.has(href) ? s : new Set(s).add(href)));
+  const form = FORM_ROUTE.test(path);
   return (
     <MoreSheetContext.Provider value={() => setOpen(true)}>
       {children}
