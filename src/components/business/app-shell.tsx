@@ -10,7 +10,7 @@ import { BrandMark } from "@/components/brand/logo";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, cn } from "@/components/ui/primitives";
 import { DesktopMenuLinks, NavProgress } from "@/components/business/nav-progress";
-import { MobileAccountButton, MobileMenuButton, MobileNav, MobileTitle, Popover, QuickJump, SectionTabs, SidebarFrame, SidebarNav, type NavSection, type QuickAction, type TabItem } from "@/components/business/shell-client";
+import { MobileAccountButton, MobileMenuButton, MobileNav, MobileTitle, Popover, QuickJump, SectionTabs, SidebarExpandButton, SidebarFrame, SidebarNav, type NavSection, type QuickAction, type TabItem } from "@/components/business/shell-client";
 
 /**
  * The sidebar has four places: the overview, the records people manage, what they tell them, and the
@@ -258,7 +258,7 @@ function Avatar({ name, src, size = 28 }: { name: string; src: string | null; si
 
 function WorkspaceSwitcher({ ctx, collapsed }: { ctx: BizContext; collapsed?: boolean }) {
   const trigger = (
-    <span className={cn("flex w-full items-center gap-2.5 rounded-lg bg-white/70 px-2 py-1.5 text-left shadow-[0_0.5px_1px_rgb(0_0_0/0.08)] ring-1 ring-black/[0.06] hover:bg-white", collapsed && "justify-center bg-transparent px-0 shadow-none ring-0 hover:bg-black/[0.05]")}>
+    <span className={cn("flex w-full items-center gap-2.5 rounded-lg text-left", collapsed ? "justify-center py-1 hover:bg-black/[0.05]" : "bg-white/70 px-2 py-1.5 shadow-[0_0.5px_1px_rgb(0_0_0/0.08)] ring-1 ring-black/[0.06] hover:bg-white")}>
       <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-[linear-gradient(160deg,var(--accent),color-mix(in_oklab,var(--accent)_60%,#000))] text-[12px] font-semibold text-white">{ctx.workspace.name.slice(0, 1).toUpperCase()}</span>
       {!collapsed && (
         <>
@@ -343,7 +343,7 @@ function TrialCard({ trial, upgrade, collapsed }: { trial: TrialBadge; upgrade: 
 function Sidebar({ ctx, plan, collapsed }: { ctx: BizContext; plan: ShellPlan; collapsed?: boolean }) {
   return (
     <>
-      <Link href="/business/dashboard" className={cn("flex h-14 shrink-0 items-center gap-2 px-1.5", collapsed && "justify-center px-0")} aria-label="Saver Option Business overview">
+      <Link href="/business/dashboard" className={cn("flex h-14 shrink-0 items-center gap-2 px-1.5", collapsed ? "justify-center px-0" : "pr-9")} aria-label="Saver Option Business overview">
         <BrandMark size={26} />
         {!collapsed && (
           <span className="text-[14px] font-semibold tracking-tight text-fg">
@@ -355,7 +355,11 @@ function Sidebar({ ctx, plan, collapsed }: { ctx: BizContext; plan: ShellPlan; c
         <WorkspaceSwitcher ctx={ctx} collapsed={collapsed} />
       </div>
       {can(ctx.role, "records.manage") && (
-        <Link href="/business/subscriptions/new" className={buttonClass("primary", "sm", cn("mb-5 w-full", collapsed && "px-0"))} title={collapsed ? "Add software" : undefined}>
+        <Link
+          href="/business/subscriptions/new"
+          className={collapsed ? "mx-auto mb-5 flex size-8 items-center justify-center rounded-full bg-accent text-accent-fg shadow-[0_1px_2px_rgb(0_0_0/0.18),inset_0_1px_0_rgb(255_255_255/0.2)] hover:brightness-110" : buttonClass("primary", "sm", "mb-5 w-full")}
+          title={collapsed ? "Add software" : undefined}
+        >
           <Icon name="plus" size={15} />
           <span className={collapsed ? "sr-only" : undefined}>Add software</span>
         </Link>
@@ -399,6 +403,7 @@ export function AppShell({ ctx, unread, notice, plan, children }: { ctx: BizCont
       <MobileNav tabs={tabs} morePaths={morePaths} more={<MoreSheet ctx={ctx} plan={plan} unread={unread} tabs={tabs} />}>
       {/* data-tauri-drag-region: in the Mac app, the bar's empty space drags the window; on narrow windows it starts after the window buttons. */}
       <header data-tauri-drag-region className="sticky top-0 z-30 flex h-14 items-center gap-1.5 border-b border-black/[0.08] bg-white/80 px-3 backdrop-blur-xl backdrop-saturate-150 sm:gap-2 sm:px-5 desktop-app:max-lg:pl-[84px]">
+        <SidebarExpandButton />
         <MobileMenuButton />
         <MobileTitle workspace={ctx.workspace.name} titles={pageTitles} />
         <form action="/business/search" method="get" role="search" className="relative hidden min-w-0 max-w-md flex-1 md:block desktop-app:block">

@@ -207,20 +207,27 @@ export function SidebarFrame({ sidebar, collapsedSidebar, children }: { sidebar:
     });
   };
   return (
+    <SidebarToggleContext.Provider value={{ collapsed, toggle }}>
     <div className="biz-shell flex min-h-dvh">
       {/* A Mac source list: light grey, a hairline edge, the selection a rounded grey highlight. */}
       <div className={cn("hidden shrink-0 border-r border-black/[0.08] bg-[var(--mac-sidebar)] transition-[width] duration-150 lg:block", collapsed ? "w-[68px]" : "w-[248px]")}>
         <aside className="sticky top-0 flex h-dvh flex-col">
           {/* In the Mac app: the window buttons sit here, and the strip drags the window. */}
           <div aria-hidden="true" data-tauri-drag-region className="hidden h-14 shrink-0 desktop-app:block" />
-          <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-3 pb-3 [&>*]:shrink-0">{collapsed ? collapsedSidebar : sidebar}</div>
-          {/* A footer of its own, so the end of a long, scrolling list never runs into it. */}
-          <div className="shrink-0 border-t border-black/[0.06] px-3 py-2.5">
-            <button type="button" onClick={toggle} className="flex h-8 w-full items-center justify-center gap-2 rounded-md text-[12.5px] text-muted hover:bg-black/[0.05] hover:text-fg" aria-pressed={collapsed}>
-              <Icon name="panel-left" size={15} />
-              <span className={collapsed ? "sr-only" : undefined}>{collapsed ? "Expand sidebar" : "Collapse sidebar"}</span>
+          {/* Hide the sidebar, at its top right as in Finder and Notes (in the Mac app, beside the window
+              buttons). Hidden, its twin sits at the start of the toolbar (SidebarExpandButton). */}
+          {!collapsed && (
+            <button
+              type="button"
+              onClick={toggle}
+              aria-label="Collapse sidebar"
+              title="Hide sidebar"
+              className="absolute right-3 top-[14px] z-10 flex size-7 items-center justify-center rounded-md text-muted hover:bg-black/[0.06] hover:text-fg"
+            >
+              <Icon name="panel-left" size={16} />
             </button>
-          </div>
+          )}
+          <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-3 pb-3 [&>*]:shrink-0">{collapsed ? collapsedSidebar : sidebar}</div>
         </aside>
       </div>
       {open && (
@@ -233,6 +240,26 @@ export function SidebarFrame({ sidebar, collapsedSidebar, children }: { sidebar:
         <MobileMenuButtonContext.Provider value={() => setOpen(true)}>{children}</MobileMenuButtonContext.Provider>
       </div>
     </div>
+    </SidebarToggleContext.Provider>
+  );
+}
+
+const SidebarToggleContext = createContext<{ collapsed: boolean; toggle: () => void }>({ collapsed: false, toggle: () => {} });
+
+/** Show the sidebar again: at the start of the toolbar while it's collapsed, as macOS apps do. */
+export function SidebarExpandButton() {
+  const { collapsed, toggle } = useContext(SidebarToggleContext);
+  if (!collapsed) return null;
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      aria-label="Expand sidebar"
+      title="Show sidebar"
+      className="hidden size-8 shrink-0 items-center justify-center rounded-md text-muted hover:bg-black/[0.06] hover:text-fg lg:inline-flex"
+    >
+      <Icon name="panel-left" size={17} />
+    </button>
   );
 }
 

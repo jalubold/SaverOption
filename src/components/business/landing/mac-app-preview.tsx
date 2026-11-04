@@ -42,7 +42,7 @@ function Sidebar() {
       <div className="h-[42px] shrink-0" />
       <BrandMark size={26} />
       <span className="mt-3 flex size-8 items-center justify-center rounded-lg bg-[linear-gradient(160deg,var(--accent),color-mix(in_oklab,var(--accent)_60%,#000))] text-[12px] font-semibold text-white">N</span>
-      <span className={buttonClass("primary", "sm", "mt-3 size-8 px-0")}>
+      <span className="mt-3 flex size-8 items-center justify-center rounded-full bg-accent text-accent-fg shadow-[0_1px_2px_rgb(0_0_0/0.18),inset_0_1px_0_rgb(255_255_255/0.2)]">
         <Icon name="plus" size={15} />
       </span>
       <div className="mt-5 flex w-full flex-col items-center gap-0.5 px-2.5">
@@ -59,12 +59,6 @@ function Sidebar() {
           );
         })}
       </div>
-      {/* The collapse toggle in its own footer at the bottom, as in the app. */}
-      <div className="mt-auto flex w-full justify-center border-t border-black/[0.06] pt-2.5">
-        <span className="flex h-8 w-full items-center justify-center text-muted">
-          <Icon name="panel-left" size={15} />
-        </span>
-      </div>
     </div>
   );
 }
@@ -73,6 +67,10 @@ function Header() {
   return (
     // On narrow windows the app's header starts after the window buttons, as it does in the app.
     <div className="flex h-[42px] items-center gap-2 border-b border-black/[0.08] bg-white/80 pl-[78px] pr-3 md:px-4">
+      {/* Show the sidebar: at the start of the toolbar while it's collapsed, as in the app. */}
+      <span className="hidden size-7 shrink-0 items-center justify-center rounded-md text-muted md:flex">
+        <Icon name="panel-left" size={15} />
+      </span>
       <span className="flex h-7 min-w-0 max-w-[280px] flex-1 items-center gap-2 rounded-lg bg-black/[0.05] px-2.5 text-[12px] text-faint">
         <Icon name="search" size={13} className="shrink-0" />
         <span className="truncate">Search software, vendors, people…</span>
