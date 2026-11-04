@@ -1,4 +1,3 @@
-import { BrandMark } from "@/components/brand/logo";
 import { DonutChart, Sparkline, TrendChart } from "@/components/business/charts";
 import { annualTotal, byCategory, exampleSubs, monthlyTotal, potentialAnnual, renewalsIn30, runRateTrend, seatTotals, summary, usd } from "@/components/business/landing/example-data";
 import { PreviewCard } from "@/components/business/landing/preview-parts";
@@ -40,12 +39,9 @@ function Sidebar() {
     <div className="hidden w-[68px] shrink-0 flex-col items-center border-r border-[var(--mac-hairline)] bg-[var(--mac-sidebar)] pb-3 text-fg md:flex">
       {/* The strip the window buttons sit on. */}
       <div className="h-[42px] shrink-0" />
-      <BrandMark size={26} />
-      <span className="mt-3 flex size-8 items-center justify-center rounded-lg bg-[linear-gradient(160deg,var(--accent),color-mix(in_oklab,var(--accent)_60%,#000))] text-[12px] font-semibold text-white">N</span>
-      <span className="mt-3 flex size-8 items-center justify-center rounded-full bg-accent text-accent-fg shadow-[0_1px_2px_rgb(0_0_0/0.18),inset_0_1px_0_rgb(255_255_255/0.2)]">
-        <Icon name="plus" size={15} />
-      </span>
-      <div className="mt-5 flex w-full flex-col items-center gap-0.5 px-2.5">
+      {/* As in the app: the workspace, the four places, then Add as a quiet icon under a hairline. */}
+      <span className="mt-1.5 flex size-7 items-center justify-center rounded-md bg-[var(--pill-accent-bg)] text-[12px] font-semibold text-accent-ink ring-1 ring-inset ring-[var(--pill-accent-ring)]">N</span>
+      <div className="mt-4 flex w-full flex-col items-center gap-0.5 px-2.5">
         {nav.map((it) => {
           const on = it.label === "Overview";
           return (
@@ -58,6 +54,10 @@ function Sidebar() {
             </span>
           );
         })}
+        <span className="my-2 h-px w-6 bg-[var(--mac-hairline)]" />
+        <span className="flex h-9 w-full items-center justify-center rounded-md text-accent">
+          <Icon name="plus" size={18} />
+        </span>
       </div>
     </div>
   );

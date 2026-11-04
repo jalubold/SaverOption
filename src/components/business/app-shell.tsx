@@ -259,7 +259,7 @@ function Avatar({ name, src, size = 28 }: { name: string; src: string | null; si
 function WorkspaceSwitcher({ ctx, collapsed }: { ctx: BizContext; collapsed?: boolean }) {
   const trigger = (
     <span className={cn("flex w-full items-center gap-2.5 rounded-lg text-left", collapsed ? "justify-center py-1 hover:bg-[var(--mac-fill)]" : "bg-[var(--mac-control)] px-2 py-1.5 shadow-[0_0.5px_1px_rgb(0_0_0/0.08)] ring-1 ring-[var(--mac-hairline)] hover:bg-[var(--mac-control-hover)]")}>
-      <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-[linear-gradient(160deg,var(--accent),color-mix(in_oklab,var(--accent)_60%,#000))] text-[12px] font-semibold text-white">{ctx.workspace.name.slice(0, 1).toUpperCase()}</span>
+      <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-[var(--pill-accent-bg)] text-[12px] font-semibold text-accent-ink ring-1 ring-inset ring-[var(--pill-accent-ring)]">{ctx.workspace.name.slice(0, 1).toUpperCase()}</span>
       {!collapsed && (
         <>
           <span className="min-w-0 flex-1">
@@ -333,34 +333,47 @@ function TrialCard({ trial, upgrade }: { trial: TrialBadge; upgrade: string | nu
 }
 
 function Sidebar({ ctx, plan, collapsed }: { ctx: BizContext; plan: ShellPlan; collapsed?: boolean }) {
+  const canAdd = can(ctx.role, "records.manage");
+  if (collapsed) {
+    // The rail, in order of use: which workspace you're in, the four places, then Add as one more
+    // quiet icon under a hairline. The brand is in the full sidebar; the trial in the strip above the page.
+    return (
+      <>
+        <div className="flex h-14 shrink-0 items-center [&>*]:w-full">
+          <WorkspaceSwitcher ctx={ctx} collapsed />
+        </div>
+        <SidebarNav sections={sections} collapsed />
+        {canAdd && (
+          <>
+            <span aria-hidden="true" className="mx-auto my-2 h-px w-6 bg-[var(--mac-hairline)]" />
+            <Link href="/business/subscriptions/new" title="Add software" className="flex h-9 w-full items-center justify-center rounded-md text-[var(--mac-icon)] hover:bg-[var(--mac-fill)]" data-rail-add>
+              <Icon name="plus" size={18} />
+              <span className="sr-only">Add software</span>
+            </Link>
+          </>
+        )}
+      </>
+    );
+  }
   return (
     <>
-      <Link href="/business/dashboard" className={cn("flex h-14 shrink-0 items-center gap-2 px-1.5", collapsed ? "justify-center px-0" : "pr-9")} aria-label="Saver Option Business overview">
+      <Link href="/business/dashboard" className="flex h-14 shrink-0 items-center gap-2 px-1.5 pr-9" aria-label="Saver Option Business overview">
         <BrandMark size={26} />
-        {!collapsed && (
-          <span className="text-[14px] font-semibold tracking-tight text-fg">
-            Saver Option <span className="text-accent-ink">Business</span>
-          </span>
-        )}
+        <span className="text-[14px] font-semibold tracking-tight text-fg">
+          Saver Option <span className="text-accent-ink">Business</span>
+        </span>
       </Link>
       <div className="mb-3">
-        <WorkspaceSwitcher ctx={ctx} collapsed={collapsed} />
+        <WorkspaceSwitcher ctx={ctx} />
       </div>
-      {can(ctx.role, "records.manage") && (
-        <Link
-          href="/business/subscriptions/new"
-          className={collapsed ? "mx-auto mb-5 flex size-8 items-center justify-center rounded-full bg-accent text-accent-fg shadow-[0_1px_2px_rgb(0_0_0/0.18),inset_0_1px_0_rgb(255_255_255/0.2)] hover:brightness-110" : buttonClass("primary", "sm", "mb-5 w-full")}
-          title={collapsed ? "Add software" : undefined}
-        >
+      {canAdd && (
+        <Link href="/business/subscriptions/new" className={buttonClass("primary", "sm", "mb-5 w-full")}>
           <Icon name="plus" size={15} />
-          <span className={collapsed ? "sr-only" : undefined}>Add software</span>
+          Add software
         </Link>
       )}
-      <SidebarNav sections={sections} collapsed={collapsed} />
-      <div className="mt-auto pt-4">
-        {/* Collapsed, the rail stays navigation only; the trial shows in the strip above the page. */}
-        {plan.trial && !collapsed && <TrialCard trial={plan.trial} upgrade={plan.upgrade} />}
-      </div>
+      <SidebarNav sections={sections} />
+      <div className="mt-auto pt-4">{plan.trial && <TrialCard trial={plan.trial} upgrade={plan.upgrade} />}</div>
     </>
   );
 }
