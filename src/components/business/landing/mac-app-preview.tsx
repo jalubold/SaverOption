@@ -65,12 +65,9 @@ function Sidebar() {
           );
         })}
       </div>
-      {/* The trial and the collapse toggle at the bottom, as in the app. */}
-      <div className="mt-auto flex flex-col items-center gap-2 pt-6">
-        <span className="flex size-9 items-center justify-center text-accent-ink">
-          <Icon name="calendar" size={16} />
-        </span>
-        <span className="flex size-9 items-center justify-center border-t border-line pt-2 text-faint">
+      {/* The collapse toggle in its own footer at the bottom, as in the app. */}
+      <div className="mt-auto flex w-full justify-center border-t border-line pt-2.5">
+        <span className="flex h-8 w-full items-center justify-center text-faint">
           <Icon name="panel-left" size={15} />
         </span>
       </div>

@@ -4,6 +4,7 @@ import { formatIsoDate, formatMoney, totalsList, type CurrencyTotals } from "@/l
 import { formatRate, type FxNote, type OriginalMoney } from "@/lib/business/fx";
 import { InfoTip } from "@/components/business/info-tip";
 import { MoreMenu, PageActions, type ExportAs, type MenuLink } from "@/components/business/page-actions";
+import { ViewTabsRow } from "@/components/business/view-tabs-row";
 import { Icon, type IconProps } from "@/components/ui/icon";
 import { buttonClass, cn } from "@/components/ui/primitives";
 
@@ -327,24 +328,36 @@ export function TableWrap({ children, className }: { children: ReactNode; classN
   return <div className={cn("-mx-4 overflow-x-auto sm:-mx-5", className)}>{children}</div>;
 }
 
+/**
+ * A page's views (All / Active / Archived, Upcoming / Calendar…) as a segmented control, like the
+ * List / Cards switch. Underlined tabs are kept for the place's pages above (SectionTabs), so the two
+ * never look like tabs inside tabs. On phones, where most don't fit, they're separate chips in a
+ * row that scrolls sideways to the screen's edges.
+ */
 export function Tabs({ items }: { items: { label: string; href: string; active: boolean; count?: number }[] }) {
   return (
-    <nav aria-label="Views" className="mb-4 flex gap-1 overflow-x-auto border-b border-line">
-      {items.map((t) => (
-        <Link
-          key={t.href}
-          href={t.href}
-          aria-current={t.active ? "page" : undefined}
-          className={cn(
-            "-mb-px whitespace-nowrap border-b-2 px-3 py-2 text-[13.5px] font-medium transition-colors",
-            t.active ? "border-accent text-fg" : "border-transparent text-muted hover:text-fg",
-          )}
-        >
-          {t.label}
-          {t.count !== undefined && <span className="ml-1.5 rounded bg-subtle px-1.5 text-[11.5px] text-faint">{t.count}</span>}
-        </Link>
-      ))}
-    </nav>
+    <ViewTabsRow>
+      <div className="inline-flex h-9 items-center gap-0.5 rounded-[10px] border border-line bg-subtle/70 p-0.5 max-sm:h-8 max-sm:gap-2 max-sm:rounded-none max-sm:border-0 max-sm:bg-transparent max-sm:p-0">
+        {items.map((t) => (
+          <Link
+            key={t.href}
+            href={t.href}
+            aria-current={t.active ? "page" : undefined}
+            className={cn(
+              "inline-flex h-full items-center gap-1.5 whitespace-nowrap rounded-[8px] px-3 text-[13px] leading-5 font-medium transition-colors max-sm:rounded-full max-sm:border",
+              t.active
+                ? "bg-surface text-fg shadow-[0_1px_2px_rgb(0_0_0/0.06),inset_0_0_0_1px_var(--line)] max-sm:border-accent/35 max-sm:bg-accent-soft max-sm:text-accent-ink max-sm:shadow-none"
+                : "text-muted hover:text-fg max-sm:border-line max-sm:bg-surface",
+            )}
+          >
+            {t.label}
+            {t.count !== undefined && (
+              <span className={cn("min-w-5 rounded-full px-1.5 text-center text-[11px] leading-[18px] tabular-nums", t.active ? "bg-accent-soft text-accent-ink max-sm:bg-surface/80" : "bg-line/70 text-faint")}>{t.count}</span>
+            )}
+          </Link>
+        ))}
+      </div>
+    </ViewTabsRow>
   );
 }
 
