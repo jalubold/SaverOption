@@ -6,6 +6,7 @@ import { googleIdentity } from "@/lib/server/google-identity";
 import { trackable } from "@/components/business/landing/example-data";
 import { LicensesVisual, RenewalsVisual, ReportsVisual, SavingsVisual, SpendVisual } from "@/components/business/landing/feature-visuals";
 import { HeroFloaters } from "@/components/business/landing/hero-floaters";
+import { HeroSecondaryCta } from "@/components/business/landing/hero-secondary-cta";
 import { MacAppPreview } from "@/components/business/landing/mac-app-preview";
 import { MAC_APP_FEATURES, MAC_APP_ICON, MacDownloadButton, MacReleaseMeta } from "@/components/business/landing/mac-download";
 import { McpChatPreview } from "@/components/business/landing/mcp-chat-preview";
@@ -281,9 +282,7 @@ export default async function BusinessLandingPage() {
           <div className="so-rise mt-9 flex w-full flex-wrap items-center justify-center gap-3" style={{ "--d": "680ms" } as CSSProperties}>
             {/* Both buttons share one width, side by side or stacked. */}
             <div className="w-full max-w-xs">{cta}</div>
-            <Link href="#features" className={buttonClass("secondary", "lg", "w-full max-w-xs")}>
-              Explore features
-            </Link>
+            <HeroSecondaryCta className="w-full max-w-xs" />
           </div>
           {unavailable && <div className="mt-3">{unavailable}</div>}
           <ul className="so-rise mt-7 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[13px] text-faint" style={{ "--d": "800ms" } as CSSProperties}>
