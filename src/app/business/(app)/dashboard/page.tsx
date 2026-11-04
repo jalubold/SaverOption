@@ -321,7 +321,7 @@ export default async function DashboardPage() {
       <CalendarPrompt ctx={ctx} className="so-rise mt-5" />
 
       {/* ── KPI tiles ───────────────────────────────────────────────────────── */}
-      <SpotlightGroup className="mt-5 grid grid-cols-1 gap-3 min-[460px]:grid-cols-2 xl:grid-cols-4">
+      <SpotlightGroup className="mt-5 grid grid-cols-2 gap-2.5 sm:gap-3 xl:grid-cols-4">
         <Kpi
           className="so-rise"
           style={{ "--d": "120ms" } as CSSProperties}
@@ -332,6 +332,7 @@ export default async function DashboardPage() {
           sub={s.trialCount ? `+ ${s.trialCount} in trial` : `${tools.length} tool${tools.length === 1 ? "" : "s"} with a paid plan`}
           href="/business/subscriptions?status=active"
           chart={tools.length > 0 ? <LogoStack items={tools} max={7} size={22} /> : undefined}
+          chartOnPhone={false}
         />
         <Kpi
           className="so-rise"
@@ -343,6 +344,7 @@ export default async function DashboardPage() {
           sub={s.missingRenewalDate ? `Next 30 days · ${s.missingRenewalDate} without a date` : "Next 30 days"}
           href="/business/renewals"
           chart={model.upcoming.length > 0 ? <LogoStack items={model.upcoming.map((r) => ({ name: r.softwareName, src: r.logoSrc }))} max={7} size={22} /> : undefined}
+          chartOnPhone={false}
         />
         <Kpi
           className="so-rise"

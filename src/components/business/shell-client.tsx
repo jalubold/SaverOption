@@ -92,13 +92,13 @@ export function SidebarNav({ sections, collapsed }: { sections: NavSection[]; co
                 aria-current={on ? "page" : undefined}
                 title={collapsed ? s.label : undefined}
                 className={cn(
-                  "relative flex h-8 items-center gap-2.5 rounded-md px-2 text-[13px] font-medium text-fg transition-colors",
-                  on ? "bg-[var(--mac-select)]" : "hover:bg-[var(--mac-fill)]",
+                  "relative flex h-8 items-center gap-2.5 rounded-md px-2 text-[13px] font-medium transition-colors",
+                  on ? "bg-[var(--mac-select)] text-fg" : "text-muted hover:bg-[var(--mac-fill)] hover:text-fg",
                   collapsed && "lg:h-9 lg:justify-center lg:px-0",
                 )}
               >
-                {/* As in Finder's sidebar: the icons in the accent colour, the selection a grey highlight. */}
-                <Icon name={s.icon} size={17} className="text-[var(--mac-icon)]" />
+                {/* Grey icons; the current place in full ink on a soft highlight. */}
+                <Icon name={s.icon} size={17} className={on ? "text-fg" : "text-[var(--mac-icon)]"} />
                 <span className={cn("truncate", collapsed && "lg:sr-only")}>{s.label}</span>
               </Link>
             </li>
@@ -186,6 +186,7 @@ export function SidebarFrame({ sidebar, collapsedSidebar, children }: { sidebar:
   const [rail, setRail] = useState(false);
   const [animate, setAnimate] = useState(false);
   const timer = useRef<number | undefined>(undefined);
+  const settle = useRef<number | undefined>(undefined);
   const [open, setOpen] = useState(false);
   const path = usePathname();
   const [lastPath, setLastPath] = useState(path);
@@ -208,6 +209,7 @@ export function SidebarFrame({ sidebar, collapsedSidebar, children }: { sidebar:
     return () => {
       cancelAnimationFrame(id);
       window.clearTimeout(timer.current);
+      window.clearTimeout(settle.current);
     };
   }, []);
   useEffect(() => {
@@ -222,10 +224,25 @@ export function SidebarFrame({ sidebar, collapsedSidebar, children }: { sidebar:
       localStorage.setItem(COLLAPSE_KEY, next ? "1" : "0");
     } catch {}
     window.clearTimeout(timer.current);
+    window.clearTimeout(settle.current);
     setCollapsed(next);
-    const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!next || still) setRail(next);
-    else timer.current = window.setTimeout(() => setRail(true), SLIDE_MS);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setRail(next);
+      return;
+    }
+    // The page is laid out once, at its final width, for the length of the slide: only its position
+    // moves with the edge, so charts and tables aren't measured and redrawn on every frame.
+    const main = document.getElementById("main");
+    if (main) {
+      main.style.width = `${Math.min(1280, document.documentElement.clientWidth - (next ? 68 : 248))}px`;
+      settle.current = window.setTimeout(() => {
+        main.style.width = "";
+      }, SLIDE_MS + 40);
+    }
+    // Expanding shows the full list at once (revealed by the edge); collapsing brings the rail in
+    // while the edge is still moving, so the two motions overlap instead of following each other.
+    if (!next) setRail(false);
+    else timer.current = window.setTimeout(() => setRail(true), Math.round(SLIDE_MS * 0.55));
   };
   return (
     <SidebarToggleContext.Provider value={{ collapsed, toggle }}>
@@ -266,7 +283,8 @@ export function SidebarFrame({ sidebar, collapsedSidebar, children }: { sidebar:
           <aside className="absolute inset-y-0 left-0 flex w-[min(86vw,300px)] flex-col overflow-y-auto border-r border-[var(--mac-hairline)] bg-[var(--mac-sidebar)] px-3 pb-6 desktop-app:pt-14 [&>*]:shrink-0">{sidebar}</aside>
         </div>
       )}
-      <div className="flex min-w-0 flex-1 flex-col">
+      {/* Clipped sideways (without becoming a scroll box), for the moment the page is wider than its column mid-slide. */}
+      <div className="flex min-w-0 flex-1 flex-col overflow-x-clip">
         <MobileMenuButtonContext.Provider value={() => setOpen(true)}>{children}</MobileMenuButtonContext.Provider>
       </div>
     </div>
@@ -446,7 +464,7 @@ export function QuickJump({ items }: { items: QuickAction[] }) {
       <button
         type="button"
         onClick={() => show(true)}
-        className="hidden h-8 shrink-0 items-center gap-2 rounded-lg bg-[var(--mac-fill)] px-2.5 text-[12.5px] text-faint hover:bg-[var(--mac-select)] hover:text-muted md:inline-flex"
+        className="hidden h-8 shrink-0 items-center gap-2 rounded-md border border-line bg-[var(--mac-control)] px-2.5 text-[12.5px] text-faint hover:border-line-strong hover:text-muted md:inline-flex"
         aria-keyshortcuts="Control+K Meta+K"
         data-quick-jump
       >
@@ -545,9 +563,9 @@ export interface TabItem {
 const MoreSheetContext = createContext<() => void>(() => {});
 
 /**
- * What a phone app has at the bottom: four or five tabs for the places people go most, and More,
- * which opens a sheet with every other page and the account. From the laptop size up (and in the
- * Mac app) the sidebar does this job, so none of it shows there.
+ * What a phone app has at the bottom: a tab for each of the four places. The profile picture in the
+ * title bar opens the sheet with the account, the workspace, the other pages and sign out. From the
+ * laptop size up (and in the Mac app) the sidebar does this job, so none of it shows there.
  */
 export function MobileNav({ tabs, morePaths, more, children }: { tabs: TabItem[]; morePaths: string[]; more: ReactNode; children: ReactNode }) {
   const path = usePathname() ?? "";
@@ -560,18 +578,18 @@ export function MobileNav({ tabs, morePaths, more, children }: { tabs: TabItem[]
     setOpen(false);
   }
   const close = useCallback(() => setOpen(false), []);
-  // Each path belongs to the tab with the longest matching href (or path), or else to More.
+  // Each path belongs to the tab with the longest matching href (or path); pages under none of them
+  // (notifications, billing, help) leave every tab unmarked.
   const routes = [...tabs.flatMap((t) => [t.href, ...(t.paths ?? [])].map((href) => ({ href, tab: t.href as string | null }))), ...morePaths.map((href) => ({ href, tab: null }))];
   const match = longestMatch(path, routes);
   const current = clicked?.from === path ? clicked.href : match ? (match.tab ?? match.href) : null;
-  const inMore = current !== null && !tabs.some((t) => t.href === current);
   const form = FORM_ROUTE.test(path);
   return (
     <MoreSheetContext.Provider value={() => setOpen(true)}>
       {children}
       {form && <span hidden data-no-tabbar />}
       <nav aria-label="Tabs" hidden={form} className="tab-bar fixed inset-x-0 bottom-0 z-40 select-none border-t border-line bg-bg/85 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl backdrop-saturate-150 lg:hidden desktop-app:hidden" data-tab-bar>
-        <ul className="mx-auto grid h-[60px] max-w-xl grid-cols-5 px-1">
+        <ul className="mx-auto grid h-[60px] max-w-xl grid-cols-4 px-1">
           {tabs.map((t) => {
             const on = !open && t.href === current;
             return (
@@ -605,21 +623,6 @@ export function MobileNav({ tabs, morePaths, more, children }: { tabs: TabItem[]
               </li>
             );
           })}
-          <li className="flex">
-            <button
-              type="button"
-              onClick={() => setOpen(true)}
-              aria-expanded={open}
-              aria-haspopup="dialog"
-              className={cn("tab-item flex flex-1 flex-col items-center justify-center gap-0.5 text-[10.5px] font-medium tracking-tight", open || inMore ? "text-accent-ink" : "text-faint")}
-              data-tab-more
-            >
-              <span className={cn("flex h-7 w-12 items-center justify-center rounded-full transition-colors duration-200", (open || inMore) && "bg-accent-soft")}>
-                <Icon name="grid" size={20} />
-              </span>
-              <span>More</span>
-            </button>
-          </li>
         </ul>
       </nav>
       <BottomSheet open={open} onClose={close} title="More" data-more-sheet>

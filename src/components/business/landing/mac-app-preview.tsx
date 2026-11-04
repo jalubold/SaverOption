@@ -39,7 +39,7 @@ function Sidebar() {
     <div className="hidden w-[68px] shrink-0 flex-col items-center border-r border-[var(--mac-hairline)] bg-[var(--mac-sidebar)] pb-3 text-fg md:flex">
       {/* The strip the window buttons sit on. */}
       <div className="h-[42px] shrink-0" />
-      {/* As in the app: the workspace, the four places, then Add as a quiet icon under a hairline. */}
+      {/* As in the app: the workspace, then the four places. */}
       <span className="mt-1.5 flex size-7 items-center justify-center rounded-md bg-[var(--pill-accent-bg)] text-[12px] font-semibold text-accent-ink ring-1 ring-inset ring-[var(--pill-accent-ring)]">N</span>
       <div className="mt-4 flex w-full flex-col items-center gap-0.5 px-2.5">
         {nav.map((it) => {
@@ -48,16 +48,12 @@ function Sidebar() {
             <span
               key={it.label}
               title={it.label}
-              className={cn("flex h-9 w-full items-center justify-center rounded-md text-accent", on && "bg-[var(--mac-select)]")}
+              className={cn("flex h-9 w-full items-center justify-center rounded-md", on ? "bg-[var(--mac-select)] text-fg" : "text-[var(--mac-icon)]")}
             >
               <Icon name={it.icon} size={17} />
             </span>
           );
         })}
-        <span className="my-2 h-px w-6 bg-[var(--mac-hairline)]" />
-        <span className="flex h-9 w-full items-center justify-center rounded-md text-accent">
-          <Icon name="plus" size={18} />
-        </span>
       </div>
     </div>
   );
@@ -71,12 +67,12 @@ function Header() {
       <span className="hidden size-7 shrink-0 items-center justify-center rounded-md text-muted md:flex">
         <Icon name="panel-left" size={15} />
       </span>
-      <span className="flex h-7 min-w-0 max-w-[280px] flex-1 items-center gap-2 rounded-lg bg-[var(--mac-fill)] px-2.5 text-[12px] text-faint">
+      <span className="flex h-7 min-w-0 max-w-[280px] flex-1 items-center gap-2 rounded-md border border-line bg-[var(--mac-control)] px-2.5 text-[12px] text-faint">
         <Icon name="search" size={13} className="shrink-0" />
         <span className="truncate">Search software, vendors, people…</span>
       </span>
       {/* The quick jump button (QuickJump in shell-client.tsx). */}
-      <span className="hidden h-7 shrink-0 items-center gap-1.5 rounded-lg bg-[var(--mac-fill)] px-2 text-[11.5px] text-faint md:inline-flex">
+      <span className="hidden h-7 shrink-0 items-center gap-1.5 rounded-md border border-line bg-[var(--mac-control)] px-2 text-[11.5px] text-faint md:inline-flex">
         <Icon name="arrow-up-right" size={12} />
         Jump to…
         <kbd className="rounded bg-[var(--mac-toolbar)] px-1 text-[10px] text-faint shadow-[0_0.5px_1px_rgb(0_0_0/0.12)]">⌘K</kbd>

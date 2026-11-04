@@ -84,14 +84,11 @@ function quickActions(ctx: BizContext): QuickAction[] {
 }
 
 /**
- * The tab bar on phones and tablets: the same places as the sidebar, with Add software in the middle
- * for those who can add (Workspace is then in More). A tab is current on every page of its place.
+ * The tab bar on phones and tablets: the sidebar's four places, nothing else. A tab is current on every
+ * page of its place; the account, workspace switching and sign out are under the profile picture.
  */
-function mobileTabs(ctx: BizContext): TabItem[] {
-  const [overview, manage, insights, workspace] = sections.map((s): TabItem => ({ label: s.label, href: s.items[0].href, icon: s.icon, paths: s.items.slice(1).map((it) => it.href) }));
-  return can(ctx.role, "records.manage")
-    ? [overview, manage, { label: "Add software", href: "/business/subscriptions/new", icon: "plus", primary: true }, insights]
-    : [overview, manage, insights, workspace];
+function mobileTabs(): TabItem[] {
+  return sections.map((s): TabItem => ({ label: s.label, href: s.items[0].href, icon: s.icon, paths: s.items.slice(1).map((it) => it.href) }));
 }
 
 /** Names for the title bar on phones (the longest matching path wins). */
@@ -333,25 +330,15 @@ function TrialCard({ trial, upgrade }: { trial: TrialBadge; upgrade: string | nu
 }
 
 function Sidebar({ ctx, plan, collapsed }: { ctx: BizContext; plan: ShellPlan; collapsed?: boolean }) {
-  const canAdd = can(ctx.role, "records.manage");
   if (collapsed) {
-    // The rail, in order of use: which workspace you're in, the four places, then Add as one more
-    // quiet icon under a hairline. The brand is in the full sidebar; the trial in the strip above the page.
+    // The rail: which workspace you're in, then the four places. The brand is in the full sidebar; the
+    // trial in the strip above the page. Adding software is on the pages that list it (and Quick jump).
     return (
       <>
         <div className="flex h-14 shrink-0 items-center [&>*]:w-full">
           <WorkspaceSwitcher ctx={ctx} collapsed />
         </div>
         <SidebarNav sections={sections} collapsed />
-        {canAdd && (
-          <>
-            <span aria-hidden="true" className="mx-auto my-2 h-px w-6 bg-[var(--mac-hairline)]" />
-            <Link href="/business/subscriptions/new" title="Add software" className="flex h-9 w-full items-center justify-center rounded-md text-[var(--mac-icon)] hover:bg-[var(--mac-fill)]" data-rail-add>
-              <Icon name="plus" size={18} />
-              <span className="sr-only">Add software</span>
-            </Link>
-          </>
-        )}
       </>
     );
   }
@@ -363,15 +350,9 @@ function Sidebar({ ctx, plan, collapsed }: { ctx: BizContext; plan: ShellPlan; c
           Saver Option <span className="text-accent-ink">Business</span>
         </span>
       </Link>
-      <div className="mb-3">
+      <div className="mb-5">
         <WorkspaceSwitcher ctx={ctx} />
       </div>
-      {canAdd && (
-        <Link href="/business/subscriptions/new" className={buttonClass("primary", "sm", "mb-5 w-full")}>
-          <Icon name="plus" size={15} />
-          Add software
-        </Link>
-      )}
       <SidebarNav sections={sections} />
       <div className="mt-auto pt-4">{plan.trial && <TrialCard trial={plan.trial} upgrade={plan.upgrade} />}</div>
     </>
@@ -402,7 +383,7 @@ function BillingStrip({ notice }: { notice: BillingNotice }) {
 
 export function AppShell({ ctx, unread, notice, plan, children }: { ctx: BizContext; unread: number; notice: BillingNotice | null; plan: ShellPlan; children: ReactNode }) {
   const name = displayName(ctx.user);
-  const tabs = mobileTabs(ctx);
+  const tabs = mobileTabs();
   const morePaths = [...sectionPages.map((it) => it.href), ...pageTitles.map((t) => t.href), "/business/docs"];
   return (
     <SidebarFrame sidebar={<Sidebar ctx={ctx} plan={plan} />} collapsedSidebar={<Sidebar ctx={ctx} plan={plan} collapsed />}>
@@ -422,7 +403,7 @@ export function AppShell({ ctx, unread, notice, plan, children }: { ctx: BizCont
             name="q"
             type="search"
             placeholder="Search software, vendors, people…"
-            className="h-8 w-full rounded-lg border-0 bg-[var(--mac-fill)] pl-9 pr-3 text-[13px] outline-none placeholder:text-faint focus:bg-surface focus:ring-4 focus:ring-accent/20"
+            className="h-8 w-full rounded-md border border-line bg-[var(--mac-control)] pl-9 pr-3 text-[13px] outline-none placeholder:text-faint hover:border-line-strong focus:border-accent focus:ring-4 focus:ring-accent/20"
           />
         </form>
         <QuickJump items={quickActions(ctx)} />

@@ -194,6 +194,7 @@ export function Kpi({
   icon,
   tone,
   chart,
+  chartOnPhone = true,
   className,
   style,
   hint,
@@ -207,29 +208,33 @@ export function Kpi({
   icon?: IconProps["name"];
   tone?: KpiTone;
   chart?: ReactNode;
+  /** False: the chart (a row of logos) is left out on phones, where two tiles share a row. */
+  chartOnPhone?: boolean;
   className?: string;
   style?: CSSProperties;
 }) {
   const body = (
     <>
-      <div className="flex items-center justify-between gap-2">
-        <p className="flex items-center gap-1 text-[12.5px] font-medium text-muted">
+      {/* On phones two tiles share a row: the label may wrap beside a smaller icon, the figure and
+          note shrink a step, and a logo row stays out (the tile's link leads to the list). */}
+      <div className="flex items-start justify-between gap-2">
+        <p className="flex min-w-0 items-center gap-1 text-[12.5px] leading-4 font-medium text-muted max-sm:text-[12px]">
           {label}
           {hint && <InfoTip label={label}>{hint}</InfoTip>}
         </p>
-        {icon && (tone ? <IconTile icon={icon} tone={tone} size={30} /> : <Icon name={icon} size={15} className="text-faint" />)}
+        {icon && (tone ? <IconTile icon={icon} tone={tone} size={30} className="max-sm:size-[26px]!" /> : <Icon name={icon} size={15} className="shrink-0 text-faint" />)}
       </div>
-      <div className={cn("tabular text-[1.45rem] font-semibold leading-tight tracking-tight text-heading", tone ? "mt-0.5" : "mt-1.5")}>{value}</div>
-      {sub && <div className="mt-1 text-[12px] text-faint">{sub}</div>}
-      {chart && <div className="mt-3">{chart}</div>}
+      <div className={cn("tabular text-[1.45rem] font-semibold leading-tight tracking-tight text-heading max-sm:text-[1.2rem]", tone ? "mt-0.5" : "mt-1.5")}>{value}</div>
+      {sub && <div className="mt-1 text-[12px] text-faint max-sm:text-[11.5px] max-sm:leading-4">{sub}</div>}
+      {chart && <div className={cn("mt-3", !chartOnPhone && "max-sm:hidden")}>{chart}</div>}
     </>
   );
   return href ? (
-    <Link href={href} className={cn("biz-card biz-card-lift so-spot block px-4 py-3.5", className)} style={style}>
+    <Link href={href} className={cn("biz-card biz-card-lift so-spot block px-4 py-3.5 max-sm:px-3.5 max-sm:py-3", className)} style={style}>
       {body}
     </Link>
   ) : (
-    <div className={cn("biz-card relative px-4 py-3.5", className)} style={style}>
+    <div className={cn("biz-card relative px-4 py-3.5 max-sm:px-3.5 max-sm:py-3", className)} style={style}>
       {body}
     </div>
   );

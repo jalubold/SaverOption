@@ -168,7 +168,7 @@ export default async function AnalyticsPage(props: { searchParams: Promise<Raw> 
         ))}
       </ul>
 
-      <div className="grid grid-cols-1 gap-3 min-[460px]:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-2.5 sm:gap-3 xl:grid-cols-4">
         <Kpi
           label="Monthly run-rate"
           icon="trending-up"

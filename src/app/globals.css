@@ -105,24 +105,27 @@
   color: var(--fg);
 }
 
-/* ── The business app looks like a Mac app ─────────────────────────────────
- * The system font (San Francisco on Apple devices, Segoe UI on Windows), Apple's cool greys,
- * hairline borders and a light source-list sidebar. Set on the whole document while the app is
- * open (menus and dialogs are portalled to <body>), and on .mac-ui for the app picture on the
- * landing and download pages.
+/* ── The business app's look ────────────────────────────────────────────────
+ * Flat and neutral, in the manner of the Supabase dashboard, with the system font (San Francisco on
+ * Apple devices, Segoe UI on Windows): a near-white or #121212 page, cards a step lighter with a
+ * hairline border and no shadow, grey text steps. Set on the whole document while the app is open
+ * (menus and dialogs are portalled to <body>), and on .mac-ui for the app picture on the landing and
+ * download pages.
  */
 :root:has(.biz-shell),
 .mac-ui {
+  /* Light: flat and neutral (in the manner of the Supabase dashboard): near-white page, white cards
+     with a hairline border and no shadow, grey text steps, the accent only where it means something. */
   color-scheme: light;
-  --bg: #f5f5f7;
+  --bg: #fcfcfc;
   --surface: #ffffff;
-  --subtle: #f1f1f4;
-  --fg: #1d1d1f;
-  --heading: #1d1d1f;
-  --muted: #6e6e73;
-  --faint: #86868b;
-  --line: #e3e3e8;
-  --line-strong: #d2d2d7;
+  --subtle: #f4f4f4;
+  --fg: #1c1c1c;
+  --heading: #171717;
+  --muted: #6f6f6f;
+  --faint: #8f8f8f;
+  --line: #e5e5e5;
+  --line-strong: #d4d4d4;
   --accent-soft: color-mix(in oklab, var(--accent) 10%, white);
   --accent-ink: color-mix(in oklab, var(--accent) 82%, black);
   --warn: #9a5b00;
@@ -131,20 +134,20 @@
   --success: #16a34a;
   --btn2-from: #ffffff;
   --btn2-to: #ffffff;
-  --btn2-border: rgb(0 0 0 / 0.14);
-  --btn2-fg: #1d1d1f;
-  --card-shadow: 0 0.5px 1.5px rgb(0 0 0 / 0.07);
-  --card-shadow-hover: 0 4px 14px -6px rgb(0 0 0 / 0.14);
-  --btn2-hover: #f7f7f9;
-  /* Mac fills: the sidebar's source-list grey, the toolbar, control and selection tints, hairlines. */
-  --mac-sidebar: #ececf0;
-  --mac-toolbar: rgb(255 255 255 / 0.8);
-  --mac-control: rgb(255 255 255 / 0.7);
-  --mac-control-hover: #ffffff;
-  --mac-fill: rgb(0 0 0 / 0.05);
-  --mac-select: rgb(0 0 0 / 0.08);
-  --mac-hairline: rgb(0 0 0 / 0.08);
-  --mac-icon: var(--accent);
+  --btn2-border: #dcdcdc;
+  --btn2-fg: #1c1c1c;
+  --btn2-hover: #f7f7f7;
+  --card-shadow: none;
+  --card-shadow-hover: 0 4px 14px -8px rgb(0 0 0 / 0.12);
+  /* The sidebar, toolbar, control and selection fills, hairlines and the nav icon grey. */
+  --mac-sidebar: #fcfcfc;
+  --mac-toolbar: #fcfcfc;
+  --mac-control: #ffffff;
+  --mac-control-hover: #f7f7f7;
+  --mac-fill: rgb(0 0 0 / 0.04);
+  --mac-select: rgb(0 0 0 / 0.06);
+  --mac-hairline: #e5e5e5;
+  --mac-icon: #8f8f8f;
 }
 
 /* Dark appearance: the device's setting (System), or the person's own choice in Settings, saved in
@@ -153,49 +156,49 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]):has(.biz-shell) {
     color-scheme: dark;
-    --bg: #1c1c1e;
-    --surface: #2c2c2e;
-    --subtle: #343437;
-    --fg: #f5f5f7;
-    --heading: #f5f5f7;
-    --muted: #a1a1a6;
-    --faint: #8d8d93;
-    --line: #3a3a3d;
-    --line-strong: #4a4a4e;
-    --accent-soft: color-mix(in oklab, var(--accent) 26%, #2c2c2e);
+    --bg: #121212;
+    --surface: #171717;
+    --subtle: #1f1f1f;
+    --fg: #ededed;
+    --heading: #fafafa;
+    --muted: #a0a0a0;
+    --faint: #7c7c7c;
+    --line: #2e2e2e;
+    --line-strong: #3e3e3e;
+    --accent-soft: color-mix(in oklab, var(--accent) 22%, #171717);
     --accent-ink: var(--brand-accent-on-dark, #b99cff);
     --warn: #f5b759;
-    --warn-soft: rgb(245 183 89 / 0.14);
+    --warn-soft: rgb(245 183 89 / 0.12);
     --danger: #ff8a80;
     --success: #4ade80;
-    --btn2-from: #3a3a3d;
-    --btn2-to: #3a3a3d;
-    --btn2-border: rgb(255 255 255 / 0.1);
-    --btn2-fg: #f5f5f7;
-    --btn2-hover: #444448;
-    --card-shadow: 0 0 0 0.5px rgb(0 0 0 / 0.4);
+    --btn2-from: #1f1f1f;
+    --btn2-to: #1f1f1f;
+    --btn2-border: #363636;
+    --btn2-fg: #ededed;
+    --btn2-hover: #262626;
+    --card-shadow: none;
     --card-shadow-hover: 0 6px 18px -8px rgb(0 0 0 / 0.6);
-    --mac-sidebar: #262628;
-    --mac-toolbar: rgb(36 36 38 / 0.82);
-    --mac-control: rgb(255 255 255 / 0.06);
-    --mac-control-hover: rgb(255 255 255 / 0.1);
-    --mac-fill: rgb(255 255 255 / 0.07);
-    --mac-select: rgb(255 255 255 / 0.1);
-    --mac-hairline: rgb(255 255 255 / 0.08);
-    --mac-icon: #a98bff;
-    /* Charts: the same hues stepped for the dark card (validated: colour-blind ΔE 12.9, normal 18.9). */
+    --mac-sidebar: #121212;
+    --mac-toolbar: #121212;
+    --mac-control: #1a1a1a;
+    --mac-control-hover: #222222;
+    --mac-fill: rgb(255 255 255 / 0.05);
+    --mac-select: rgb(255 255 255 / 0.08);
+    --mac-hairline: #2e2e2e;
+    --mac-icon: #8f8f8f;
+    /* Charts: the same hues stepped for the dark card (validated on #171717: colour-blind ΔE 12.9, normal 18.9, all ≥ 3:1). */
     --series-1: #9169f5;
     --series-2: #e1568f;
     --series-3: #c8830b;
     --series-4: #27a1cd;
     --series-5: #435bcf;
     --series-6: #189e8c;
-    --viz-other: #4b4b51;
-    --viz-track: #3a3a3e;
+    --viz-other: #3a3a3a;
+    --viz-track: #262626;
     --viz-warn: #e5a33a;
-    --viz-grid: #38383c;
-    --viz-axis: #4a4a4f;
-    --viz-muted: #8d8d93;
+    --viz-grid: #262626;
+    --viz-axis: #3a3a3a;
+    --viz-muted: #7c7c7c;
     /* Labels. */
     --pill-neutral-bg: rgb(255 255 255 / 0.07); --pill-neutral-fg: #d1d1d6; --pill-neutral-ring: rgb(255 255 255 / 0.12);
     --pill-accent-bg: rgb(139 92 246 / 0.2); --pill-accent-fg: #c9b8ff; --pill-accent-ring: rgb(167 139 250 / 0.34);
@@ -209,49 +212,49 @@
 }
 :root[data-theme="dark"]:has(.biz-shell) {
   color-scheme: dark;
-  --bg: #1c1c1e;
-  --surface: #2c2c2e;
-  --subtle: #343437;
-  --fg: #f5f5f7;
-  --heading: #f5f5f7;
-  --muted: #a1a1a6;
-  --faint: #8d8d93;
-  --line: #3a3a3d;
-  --line-strong: #4a4a4e;
-  --accent-soft: color-mix(in oklab, var(--accent) 26%, #2c2c2e);
+  --bg: #121212;
+  --surface: #171717;
+  --subtle: #1f1f1f;
+  --fg: #ededed;
+  --heading: #fafafa;
+  --muted: #a0a0a0;
+  --faint: #7c7c7c;
+  --line: #2e2e2e;
+  --line-strong: #3e3e3e;
+  --accent-soft: color-mix(in oklab, var(--accent) 22%, #171717);
   --accent-ink: var(--brand-accent-on-dark, #b99cff);
   --warn: #f5b759;
-  --warn-soft: rgb(245 183 89 / 0.14);
+  --warn-soft: rgb(245 183 89 / 0.12);
   --danger: #ff8a80;
   --success: #4ade80;
-  --btn2-from: #3a3a3d;
-  --btn2-to: #3a3a3d;
-  --btn2-border: rgb(255 255 255 / 0.1);
-  --btn2-fg: #f5f5f7;
-  --btn2-hover: #444448;
-  --card-shadow: 0 0 0 0.5px rgb(0 0 0 / 0.4);
+  --btn2-from: #1f1f1f;
+  --btn2-to: #1f1f1f;
+  --btn2-border: #363636;
+  --btn2-fg: #ededed;
+  --btn2-hover: #262626;
+  --card-shadow: none;
   --card-shadow-hover: 0 6px 18px -8px rgb(0 0 0 / 0.6);
-  --mac-sidebar: #262628;
-  --mac-toolbar: rgb(36 36 38 / 0.82);
-  --mac-control: rgb(255 255 255 / 0.06);
-  --mac-control-hover: rgb(255 255 255 / 0.1);
-  --mac-fill: rgb(255 255 255 / 0.07);
-  --mac-select: rgb(255 255 255 / 0.1);
-  --mac-hairline: rgb(255 255 255 / 0.08);
-  --mac-icon: #a98bff;
-  /* Charts: the same hues stepped for the dark card (validated: colour-blind ΔE 12.9, normal 18.9). */
+  --mac-sidebar: #121212;
+  --mac-toolbar: #121212;
+  --mac-control: #1a1a1a;
+  --mac-control-hover: #222222;
+  --mac-fill: rgb(255 255 255 / 0.05);
+  --mac-select: rgb(255 255 255 / 0.08);
+  --mac-hairline: #2e2e2e;
+  --mac-icon: #8f8f8f;
+  /* Charts: the same hues stepped for the dark card (validated on #171717: colour-blind ΔE 12.9, normal 18.9, all ≥ 3:1). */
   --series-1: #9169f5;
   --series-2: #e1568f;
   --series-3: #c8830b;
   --series-4: #27a1cd;
   --series-5: #435bcf;
   --series-6: #189e8c;
-  --viz-other: #4b4b51;
-  --viz-track: #3a3a3e;
+  --viz-other: #3a3a3a;
+  --viz-track: #262626;
   --viz-warn: #e5a33a;
-  --viz-grid: #38383c;
-  --viz-axis: #4a4a4f;
-  --viz-muted: #8d8d93;
+  --viz-grid: #262626;
+  --viz-axis: #3a3a3a;
+  --viz-muted: #7c7c7c;
   /* Labels. */
   --pill-neutral-bg: rgb(255 255 255 / 0.07); --pill-neutral-fg: #d1d1d6; --pill-neutral-ring: rgb(255 255 255 / 0.12);
   --pill-accent-bg: rgb(139 92 246 / 0.2); --pill-accent-fg: #c9b8ff; --pill-accent-ring: rgb(167 139 250 / 0.34);
@@ -395,23 +398,22 @@
     background: var(--subtle);
   }
 
-  /* Mac push buttons in the app: a flat accent fill with a faint top light, and white secondary
-     buttons with a hairline edge. Utilities still win (later layer), as before. */
+  /* Buttons in the app: a flat accent fill, and secondary buttons on the card colour with a hairline
+     edge, no shadows. Utilities still win (later layer), as before. */
   :root:has(.biz-shell) .btn,
   .mac-ui .btn {
     font-weight: 500;
   }
   :root:has(.biz-shell) .btn-primary,
   .mac-ui .btn-primary {
-    background-image: linear-gradient(180deg, color-mix(in oklab, var(--accent) 86%, white) 0%, var(--accent) 100%);
-    border: 1px solid color-mix(in oklab, var(--accent) 78%, black);
-    box-shadow:
-      0 0.5px 1px rgb(0 0 0 / 0.14),
-      inset 0 1px 0 rgb(255 255 255 / 0.22);
+    background-image: none;
+    background-color: var(--accent);
+    border: 1px solid color-mix(in oklab, var(--accent) 80%, black);
+    box-shadow: none;
   }
   :root:has(.biz-shell) .btn-secondary,
   .mac-ui .btn-secondary {
-    box-shadow: 0 0.5px 1px rgb(0 0 0 / 0.08);
+    box-shadow: none;
   }
   :root:has(.biz-shell) .btn-secondary:hover,
   .mac-ui .btn-secondary:hover {
@@ -506,12 +508,12 @@
   --series-4: #24abe8;
   --series-5: #345fcf;
   --series-6: #2bbdaa;
-  --viz-other: #d5d4de;
-  --viz-track: #ececf1;
+  --viz-other: #dcdcdc;
+  --viz-track: #efefef;
   --viz-warn: #f5a524;
-  --viz-grid: #e6e6eb;
-  --viz-axis: #cfcfd6;
-  --viz-muted: #8a8a90;
+  --viz-grid: #ededed;
+  --viz-axis: #d4d4d4;
+  --viz-muted: #8f8f8f;
 }
 .theme-dark {
   --pill-neutral-bg: rgb(255 255 255 / 0.07); --pill-neutral-fg: #cfd0d6; --pill-neutral-ring: rgb(255 255 255 / 0.12);
@@ -563,10 +565,10 @@
   .biz-card {
     /* Grid and flex children: let wide tables scroll inside the card instead of widening the page. */
     min-width: 0;
-    border-radius: 12px;
+    border-radius: 8px;
     border: 1px solid var(--line);
     background: var(--surface);
-    box-shadow: 0 0.5px 1.5px rgb(0 0 0 / 0.06);
+    box-shadow: var(--card-shadow);
   }
   .biz-card-lift {
     transition:
