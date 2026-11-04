@@ -15,7 +15,8 @@ import { requestOrigin } from "@/lib/server/origin";
 
 export const metadata = { title: "Team Members" };
 
-const roleTone: Record<Role, "accent" | "neutral" | "outline"> = { owner: "accent", admin: "accent", finance: "neutral", member: "neutral", viewer: "outline" };
+/** Each role its own colour, from most access (violet) to least (outline). */
+const roleTone: Record<Role, "accent" | "info" | "teal" | "neutral" | "outline"> = { owner: "accent", admin: "info", finance: "teal", member: "neutral", viewer: "outline" };
 
 export default async function TeamPage(props: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const q = await props.searchParams;

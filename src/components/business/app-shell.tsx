@@ -156,7 +156,7 @@ function MoreSheet({ ctx, plan, unread, tabs }: { ctx: BizContext; plan: ShellPl
                 <input type="hidden" name="workspaceId" value={m.workspaceId} />
                 <button type="submit" className={row}>
                   <span className="min-w-0 flex-1 truncate">{m.name}</span>
-                  {m.isDemo && <span className="rounded bg-warn-soft px-1 text-[10.5px] font-medium text-warn">Demo</span>}
+                  {m.isDemo && <span className="pill pill-warn px-1.5 py-0 text-[10.5px]">Demo</span>}
                   {m.workspaceId === ctx.workspace.id && <Icon name="check" size={16} className="text-accent-ink" />}
                 </button>
               </form>
@@ -281,7 +281,7 @@ function WorkspaceSwitcher({ ctx, collapsed }: { ctx: BizContext; collapsed?: bo
               <input type="hidden" name="workspaceId" value={m.workspaceId} />
               <button type="submit" className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-[13px] hover:bg-subtle">
                 <span className="min-w-0 flex-1 truncate">{m.name}</span>
-                {m.isDemo && <span className="rounded bg-warn-soft px-1 text-[10.5px] font-medium text-warn">Demo</span>}
+                {m.isDemo && <span className="pill pill-warn px-1.5 py-0 text-[10.5px]">Demo</span>}
                 {m.workspaceId === ctx.workspace.id && <Icon name="check" size={14} className="text-accent-ink" />}
               </button>
             </form>

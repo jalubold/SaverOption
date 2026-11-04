@@ -290,27 +290,25 @@ export function EmptyState({ icon = "box", title, children, action }: { icon?: I
   );
 }
 
-type Tone = "neutral" | "accent" | "success" | "warn" | "danger" | "outline";
-const tones: Record<Tone, string> = {
-  neutral: "bg-subtle text-muted",
-  accent: "bg-accent-soft text-accent-ink",
-  success: "bg-success/12 text-[color-mix(in_oklab,var(--success)_75%,black)]",
-  warn: "bg-warn-soft text-warn",
-  danger: "bg-danger/10 text-danger",
-  outline: "border border-line-strong text-muted",
-};
+type Tone = "neutral" | "accent" | "info" | "teal" | "success" | "warn" | "danger" | "outline";
 
-export function Pill({ tone = "neutral", children, className }: { tone?: Tone; children: ReactNode; className?: string }) {
-  return <span className={cn("inline-flex items-center gap-1 whitespace-nowrap rounded-md px-1.5 py-0.5 text-[11.5px] font-medium leading-4", tones[tone], className)}>{children}</span>;
+/** A label: a rounded pill in one of the tones (see .pill in globals.css); `dot` adds a status dot. */
+export function Pill({ tone = "neutral", dot, children, className }: { tone?: Tone; dot?: boolean; children: ReactNode; className?: string }) {
+  return (
+    <span className={cn("pill", `pill-${tone}`, className)}>
+      {dot && <span aria-hidden="true" className="pill-dot" />}
+      {children}
+    </span>
+  );
 }
 
 const statusTone: Record<string, Tone> = {
   active: "success",
-  trial: "accent",
-  paused: "neutral",
+  trial: "info",
+  paused: "warn",
   cancelled: "outline",
   expired: "outline",
-  evaluating: "accent",
+  evaluating: "info",
   deprecated: "warn",
   archived: "outline",
   open: "accent",
@@ -320,8 +318,13 @@ const statusTone: Record<string, Tone> = {
   resolved: "outline",
 };
 
+/** A record's status, with a dot so it reads as a state rather than a tag. */
 export function StatusPill({ status, label }: { status: string; label: string }) {
-  return <Pill tone={statusTone[status] ?? "neutral"}>{label}</Pill>;
+  return (
+    <Pill tone={statusTone[status] ?? "neutral"} dot>
+      {label}
+    </Pill>
+  );
 }
 
 export function TableWrap({ children, className }: { children: ReactNode; className?: string }) {

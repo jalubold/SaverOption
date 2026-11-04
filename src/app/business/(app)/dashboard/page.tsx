@@ -156,6 +156,9 @@ export default async function DashboardPage() {
   const chartCurrency = model.currencies.includes(pref) || model.currencies.length === 0 ? pref : model.currencies[0];
   const trend = model.runRate.map((p) => ({ label: formatMonth(p.month).replace(/ \d{4}$/, (y) => (p.month.endsWith("-01") ? y : "")), value: p.totals[chartCurrency] ?? 0, display: `${whole(p.totals[chartCurrency] ?? 0, chartCurrency)}/mo` }));
   const cur = model.runRate.at(-1)?.totals[chartCurrency] ?? 0;
+  // How the run-rate moved over the 12 months, once there's real history behind it.
+  const first = model.runRate[0]?.totals[chartCurrency] ?? 0;
+  const change = model.historyReliable && first > 0 && Math.abs(cur / first - 1) >= 0.005 ? (cur / first - 1) * 100 : null;
   const otherMonthly = others(s.monthly, chartCurrency);
   const tools = topTools(model.subs, pref);
 
@@ -231,95 +234,87 @@ export default async function DashboardPage() {
   const rates = model.fx ? model.fx.rates.map((r) => formatRate(r.currency, pref, r.rate)).join(", ") : "";
   return (
     <>
-      {/* ── Hero: the monthly figure, the year, what renews soon, and the 12-month run-rate ── */}
-      <section className="biz-card biz-hero so-grain theme-dark so-rise px-5 py-6 text-fg sm:px-7 sm:py-7" data-dashboard-hero>
+      {/* ── Hero: the monthly figure, the year and the 12-month run-rate. What's active and what renews
+           soon are the tiles just below, so the hero doesn't repeat them. ── */}
+      <section className="biz-card biz-hero so-grain theme-dark so-rise px-5 py-5 text-fg sm:px-6" data-dashboard-hero>
         <Aurora />
         <span aria-hidden="true" className="so-shine pointer-events-none absolute inset-0 rounded-[inherit]" />
-        <div className="relative z-10 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,400px)] lg:items-center">
-          <div className="min-w-0">
-            <div className="flex items-start justify-between gap-3">
-              <p className="text-[12.5px] font-medium text-faint">{ctx.workspace.name}</p>
-              <span className="lg:hidden">
-                <PageActions title="Overview" workspace={ctx.workspace.name} tone="dark" />
-              </span>
-            </div>
-            <h1 className="mt-1 text-[26px] font-semibold leading-tight tracking-tight text-heading" data-hero-title>
-              Overview
-            </h1>
-
-            <p className="mt-5 flex items-center gap-1 text-[12.5px] font-medium text-muted">
+        <h1 className="sr-only" data-hero-title>
+          Overview
+        </h1>
+        <div className="relative z-10">
+          <div className="flex items-center justify-between gap-3">
+            <p className="flex items-center gap-1 whitespace-nowrap text-[12.5px] font-medium text-muted">
               Monthly software spend
               <InfoTip label="Monthly software spend">
                 What every active plan with a price costs per month — a yearly plan counts as a twelfth. It&apos;s today&apos;s run-rate, not cash already spent.
+                {model.fx && ` Amounts billed in other currencies are converted at the European Central Bank reference rate of ${formatIsoDate(model.fx.date, fmt)}.`}
               </InfoTip>
             </p>
-            <p className="so-ink tabular mt-0.5 w-fit text-[2.35rem] font-semibold leading-[1.1] tracking-tight sm:text-[2.75rem]" data-hero-monthly>
-              {heroMain ? formatMoney(heroMain.amount, heroMain.currency) : "—"}
-            </p>
-            {(s.missingPrice > 0 || (model.fx && listOf(billed.monthly)) || heroRest.length > 0) && (
-              <div className="mt-1.5 max-w-md space-y-1 text-[12px] text-faint">
+            <span className="max-sm:hidden">
+              <PageActions title="Overview" workspace={ctx.workspace.name} tone="dark" />
+            </span>
+          </div>
+
+          <div className="mt-2 grid gap-x-8 gap-y-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:items-end">
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                <p className="so-ink tabular w-fit text-[2.25rem] font-semibold leading-[1.1] tracking-tight sm:text-[2.5rem]" data-hero-monthly>
+                  {heroMain ? formatMoney(heroMain.amount, heroMain.currency) : "—"}
+                </p>
+                {change !== null && (
+                  <span className="pill bg-white/10 text-muted shadow-[inset_0_0_0_1px_rgb(255_255_255/0.14)]" title={`Monthly run-rate now against ${trend[0]?.label ?? "12 months ago"}`} data-hero-change>
+                    {change > 0 ? "↑" : "↓"} {Math.abs(change) < 10 ? Math.abs(change).toFixed(1) : Math.round(Math.abs(change))}% in 12 months
+                  </span>
+                )}
+              </div>
+              <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[13px] text-muted">
+                <span title="Annualized software spend" data-hero-annual>
+                  <span className="tabular font-semibold text-heading">
+                    <Money totals={s.annualized} preferred={pref} className="!inline" />
+                  </span>{" "}
+                  a year
+                </span>
                 {s.missingPrice > 0 && (
                   <Link href="/business/subscriptions?status=active" className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5 text-[12px] text-muted hover:text-fg">
                     <Icon name="info" size={12} /> {s.missingPrice} without a price not included
                   </Link>
                 )}
-                {model.fx && listOf(billed.monthly) && (
-                  <p>
-                    Includes <span className="tabular text-muted">{listOf(billed.monthly)}</span>/mo converted at the ECB reference rate of {formatIsoDate(model.fx.date, fmt)} ({rates})
-                  </p>
-                )}
-                {heroRest.length > 0 && (
-                  <p>
-                    Plus <span className="tabular text-muted">{heroRest.map((t) => formatMoney(t.amount, t.currency)).join(" + ")}</span>/mo billed in {heroRest.map((t) => t.currency).join(" and ")}, not
-                    converted (no exchange rate right now)
-                  </p>
-                )}
-              </div>
-            )}
-
-            <dl className="mt-5 flex flex-wrap gap-x-10 gap-y-3 text-[12.5px]">
-              <div data-hero-annual>
-                <dt className="text-faint">Annualized software spend</dt>
-                <dd className="tabular mt-1 text-[16px] font-semibold text-heading">
-                  <Money totals={s.annualized} preferred={pref} className="!inline" />
-                </dd>
-              </div>
-              <div data-hero-renewing>
-                <dt className="text-faint">Renewing in 30 days</dt>
-                <dd className="tabular mt-1 text-[16px] font-semibold text-heading">
-                  <Link href="/business/renewals" className="hover:underline underline-offset-4">
-                    {s.upcomingRenewals} renewal{s.upcomingRenewals === 1 ? "" : "s"}
-                  </Link>
-                </dd>
-              </div>
-            </dl>
-          </div>
-
-          {/* The 12-month run-rate and what's active; with little history yet, it says so. */}
-          <div className="min-w-0">
-            <div className="mb-3 hidden justify-end lg:flex">
-              <PageActions title="Overview" workspace={ctx.workspace.name} tone="dark" />
+              </p>
+              {(model.fx && listOf(billed.monthly)) || heroRest.length > 0 ? (
+                <div className="mt-1.5 max-w-xl space-y-0.5 text-[11.5px] text-faint">
+                  {model.fx && listOf(billed.monthly) && (
+                    <p>
+                      Includes <span className="tabular text-muted">{listOf(billed.monthly)}</span>/mo at the ECB reference rate ({rates})
+                    </p>
+                  )}
+                  {heroRest.length > 0 && (
+                    <p>
+                      Plus <span className="tabular text-muted">{heroRest.map((t) => formatMoney(t.amount, t.currency)).join(" + ")}</span>/mo billed in {heroRest.map((t) => t.currency).join(" and ")}, not
+                      converted (no exchange rate right now)
+                    </p>
+                  )}
+                </div>
+              ) : null}
             </div>
-            <div className="so-rise min-w-0 rounded-2xl border border-white/10 bg-white/[0.05] p-4 shadow-[inset_0_1px_0_rgb(255_255_255/0.08)] backdrop-blur-md" style={{ "--d": "250ms" } as CSSProperties} data-hero-trend>
-              <div className="flex items-baseline justify-between gap-2 text-[12.5px]">
-                <span className="font-medium text-muted">12-month run-rate · {chartCurrency}</span>
-                <span className="tabular text-faint">{whole(cur, chartCurrency)}/mo now</span>
-              </div>
-              <div className="mt-2">
-                <Sparkline values={model.runRate.map((p) => p.totals[chartCurrency] ?? 0)} label={`Monthly run-rate over the last 12 months, ${chartCurrency}`} tone="light" height={64} />
-              </div>
-              {!model.historyReliable && <p className="mt-2 text-[12px] text-faint">The trend fills in as the months go by and prices change.</p>}
-              <div className="mt-3 flex items-center justify-between gap-3 border-t border-white/10 pt-3 text-[12.5px] text-muted">
-                <Link href="/business/subscriptions?status=active" className="hover:text-fg">
-                  <strong className="font-semibold text-heading">{s.activeCount}</strong> active subscription{s.activeCount === 1 ? "" : "s"}
-                </Link>
-                {tools.length > 0 && (
-                  <span className="[&_.ring-surface]:ring-[#1a1530]">
-                    <LogoStack items={tools.slice(0, 5)} max={5} size={22} />
+
+            {/* The 12-month run-rate, drawn straight on the hero; with little history yet, it says so. */}
+            <div className="so-rise min-w-0" style={{ "--d": "200ms" } as CSSProperties} data-hero-trend>
+              <div className="mb-1 flex items-baseline justify-between gap-2 text-[11.5px] text-faint">
+                <span>12-month run-rate · {chartCurrency}</span>
+                {trend.length > 1 && (
+                  <span className="tabular">
+                    {trend[0].label} – {trend.at(-1)!.label}
                   </span>
                 )}
               </div>
+              <Sparkline values={model.runRate.map((p) => p.totals[chartCurrency] ?? 0)} label={`Monthly run-rate over the last 12 months, ${chartCurrency}`} tone="light" height={56} />
+              {!model.historyReliable && <p className="mt-1 text-[11.5px] text-faint">The trend fills in as the months go by and prices change.</p>}
             </div>
+          </div>
+          {/* On phones the buttons sit under the figures, so the label keeps its line. */}
+          <div className="mt-4 sm:hidden">
+            <PageActions title="Overview" workspace={ctx.workspace.name} tone="dark" />
           </div>
         </div>
       </section>

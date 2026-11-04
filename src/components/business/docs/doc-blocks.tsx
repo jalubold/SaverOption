@@ -88,7 +88,7 @@ export function ToolsTable() {
           <li key={t.name} className="space-y-1.5 px-3.5 py-3">
             <div className="flex flex-wrap items-center gap-1.5">
               <code className="break-all font-mono text-[13px] font-medium text-fg">{t.name}</code>
-              {t.write && <span className="rounded bg-warn-soft px-1.5 text-[11px] font-semibold text-warn">Changes records</span>}
+              {t.write && <span className="pill pill-warn">Changes records</span>}
             </div>
             <p className="text-[14px] leading-relaxed text-muted">
               <strong className="font-semibold text-fg">{t.title}.</strong> {t.description}
@@ -106,7 +106,7 @@ export function ToolsTable() {
         rows={tools.map((t) => [
           <span key="n" className="block">
             <code className="font-mono text-[13px]">{t.name}</code>
-            {t.write && <span className="mt-1 block w-fit rounded bg-warn-soft px-1.5 text-[11px] font-semibold text-warn">Changes records</span>}
+            {t.write && <span className="pill pill-warn mt-1 w-fit">Changes records</span>}
           </span>,
           <span key="d" className="text-muted">
             <strong className="block font-semibold text-fg">{t.title}</strong>

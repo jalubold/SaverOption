@@ -1,6 +1,6 @@
 import { BrandMark } from "@/components/brand/logo";
 import { DonutChart, Sparkline, TrendChart } from "@/components/business/charts";
-import { annualTotal, byCategory, exampleSubs, monthlyTotal, potentialAnnual, renewalsIn30, runRateTrend, seatTotals, summary, trackable, usd } from "@/components/business/landing/example-data";
+import { annualTotal, byCategory, exampleSubs, monthlyTotal, potentialAnnual, renewalsIn30, runRateTrend, seatTotals, summary, usd } from "@/components/business/landing/example-data";
 import { PreviewCard } from "@/components/business/landing/preview-parts";
 import { LogoStack } from "@/components/business/software-logo";
 import { Kpi, Meter } from "@/components/business/ui";
@@ -106,6 +106,8 @@ function Header() {
 
 const MONTHS = ["Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct"];
 /** The example run-rate (whole dollars) as the dashboard's trend points (cents). */
+/** How the example run-rate moved over the 12 months, as the dashboard shows it. */
+const trendChange = (runRateTrend.at(-1)! / runRateTrend[0] - 1) * 100;
 const trendPoints = runRateTrend.map((v, i) => ({ label: MONTHS[i], value: v * 100, display: `${usd(v * 100)}/mo` }));
 /** Logos of the example tools with an active plan, and of those renewing in the next 30 days. */
 const active = exampleSubs.filter((x) => x.status === "active" && !x.archived).map((x) => ({ name: x.name, src: x.logo }));
@@ -114,28 +116,11 @@ const renewing = exampleSubs.filter((x) => x.renewsIn <= 30).map((x) => ({ name:
 function Overview() {
   return (
     <div className="space-y-3 p-3 sm:p-4">
-      {/* The Overview's dark summary card. */}
-      <section className="biz-card biz-hero theme-dark grid gap-4 px-4 py-4 text-fg sm:px-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,260px)] lg:items-end">
-        <div className="relative z-10 min-w-0">
-          <p className="text-[11px] font-medium text-faint">Northwind Studio</p>
-          <p className="mt-0.5 text-[19px] font-semibold leading-tight tracking-tight text-heading">Overview</p>
-          <p className="mt-3.5 text-[11px] font-medium text-muted">Monthly software spend</p>
-          <p className="so-ink tabular w-fit text-[1.85rem] font-semibold leading-[1.1] tracking-tight">{usd(monthlyTotal)}</p>
-          <dl className="mt-3 flex flex-wrap gap-x-7 gap-y-2 text-[11.5px]">
-            <div>
-              <dt className="text-faint">Annualized software spend</dt>
-              <dd className="tabular mt-0.5 text-[13px] font-semibold text-heading">{usd(annualTotal)}</dd>
-            </div>
-            <div>
-              <dt className="text-faint">Renewing in 30 days</dt>
-              <dd className="tabular mt-0.5 text-[13px] font-semibold text-heading">
-                {renewalsIn30} renewal{renewalsIn30 === 1 ? "" : "s"}
-              </dd>
-            </div>
-          </dl>
-        </div>
-        <div className="relative z-10 hidden min-w-0 sm:block">
-          <div className="mb-2 flex justify-end gap-1.5">
+      {/* The Overview's dark summary card, as compact as the dashboard's. */}
+      <section className="biz-card biz-hero theme-dark px-4 py-3.5 text-fg sm:px-5">
+        <div className="relative z-10 flex items-center justify-between gap-2">
+          <p className="text-[11px] font-medium text-muted">Monthly software spend</p>
+          <div className="hidden gap-1.5 sm:flex">
             <span className="inline-flex h-6 items-center gap-1 rounded-md border border-white/15 bg-white/10 px-2 text-[10.5px] font-medium text-fg">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 3v12M7 8l5-5 5 5M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" />
@@ -146,22 +131,25 @@ function Overview() {
               <Icon name="download" size={11} /> Save <Icon name="chevron-down" size={10} className="opacity-60" />
             </span>
           </div>
-          <div className="rounded-xl border border-white/10 bg-white/[0.05] p-3 shadow-[inset_0_1px_0_rgb(255_255_255/0.08)]">
-            <div className="flex items-baseline justify-between gap-2 text-[11px]">
-              <span className="font-medium text-muted">12-month run-rate · USD</span>
-              <span className="tabular text-faint">{usd(monthlyTotal)}/mo now</span>
+        </div>
+        <div className="relative z-10 mt-1 grid gap-x-6 gap-y-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,300px)] lg:items-end">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+              <p className="so-ink tabular w-fit text-[1.85rem] font-semibold leading-[1.1] tracking-tight">{usd(monthlyTotal)}</p>
+              <span className="pill bg-white/10 text-[10.5px] text-muted shadow-[inset_0_0_0_1px_rgb(255_255_255/0.14)]">↑ {Math.round(trendChange)}% in 12 months</span>
             </div>
-            <div className="mt-1.5">
-              <Sparkline values={runRateTrend} label="Example: monthly run-rate over the last 12 months" tone="light" height={44} />
-            </div>
-            <div className="mt-3 flex items-center justify-between gap-2 border-t border-white/10 pt-2.5 text-[11px] text-muted">
-              <span>
-                <strong className="font-semibold text-heading">{summary.activeCount}</strong> active subscriptions
+            <p className="mt-1.5 text-[11.5px] text-muted">
+              <span className="tabular font-semibold text-heading">{usd(annualTotal)}</span> a year
+            </p>
+          </div>
+          <div className="hidden min-w-0 sm:block">
+            <div className="mb-1 flex items-baseline justify-between gap-2 text-[10.5px] text-faint">
+              <span>12-month run-rate · USD</span>
+              <span className="tabular">
+                {MONTHS[0]} – {MONTHS.at(-1)}
               </span>
-              <span className="[&_.ring-surface]:ring-[#1a1530]">
-                <LogoStack items={trackable.slice(0, 5)} max={5} size={20} />
-              </span>
             </div>
+            <Sparkline values={runRateTrend} label="Example: monthly run-rate over the last 12 months" tone="light" height={40} />
           </div>
         </div>
       </section>

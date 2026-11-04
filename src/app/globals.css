@@ -295,6 +295,46 @@
 
 /* Saver Option Business app: dense, quiet data tables and cards. */
 @layer components {
+  /* Labels (Pill): a soft tint, a hairline ring of the same hue, and ink dark enough to read.
+     Each tone is three variables, so the dark theme only swaps values. */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+    border-radius: 9999px;
+    padding: 2px 8px;
+    font-size: 11.5px;
+    font-weight: 500;
+    line-height: 16px;
+    background: var(--pill-bg);
+    color: var(--pill-fg);
+    box-shadow: inset 0 0 0 1px var(--pill-ring);
+  }
+  .pill-dot {
+    width: 6px;
+    height: 6px;
+    flex-shrink: 0;
+    border-radius: 9999px;
+    background: currentColor;
+  }
+  .pill-neutral { --pill-bg: #f2f2f5; --pill-fg: #51525c; --pill-ring: #e2e2e8; }
+  .pill-accent { --pill-bg: color-mix(in oklab, var(--accent) 8%, white); --pill-fg: var(--accent-ink); --pill-ring: color-mix(in oklab, var(--accent) 22%, white); }
+  .pill-info { --pill-bg: #eff5ff; --pill-fg: #1d4fd8; --pill-ring: #cfdffd; }
+  .pill-teal { --pill-bg: #edfbf8; --pill-fg: #0d7068; --pill-ring: #b9ebe1; }
+  .pill-success { --pill-bg: #ecfdf3; --pill-fg: #067647; --pill-ring: #bfeccf; }
+  .pill-warn { --pill-bg: #fff8eb; --pill-fg: #b54708; --pill-ring: #fbdfa5; }
+  .pill-danger { --pill-bg: #fef3f2; --pill-fg: #b42318; --pill-ring: #fbcfc9; }
+  .pill-outline { --pill-bg: var(--surface); --pill-fg: #5d5e68; --pill-ring: #dadae2; }
+  .theme-dark .pill-outline { --pill-fg: var(--muted); --pill-ring: rgb(255 255 255 / 0.16); }
+  .theme-dark .pill-neutral { --pill-bg: rgb(255 255 255 / 0.07); --pill-fg: #cfd0d6; --pill-ring: rgb(255 255 255 / 0.12); }
+  .theme-dark .pill-accent { --pill-bg: rgb(139 92 246 / 0.18); --pill-fg: #c9b8ff; --pill-ring: rgb(167 139 250 / 0.32); }
+  .theme-dark .pill-info { --pill-bg: rgb(59 130 246 / 0.16); --pill-fg: #a5c8ff; --pill-ring: rgb(96 165 250 / 0.3); }
+  .theme-dark .pill-teal { --pill-bg: rgb(20 184 166 / 0.15); --pill-fg: #7ee8d6; --pill-ring: rgb(45 212 191 / 0.28); }
+  .theme-dark .pill-success { --pill-bg: rgb(34 197 94 / 0.14); --pill-fg: #8ef0b0; --pill-ring: rgb(74 222 128 / 0.28); }
+  .theme-dark .pill-warn { --pill-bg: rgb(245 158 11 / 0.14); --pill-fg: #fcd581; --pill-ring: rgb(251 191 36 / 0.28); }
+  .theme-dark .pill-danger { --pill-bg: rgb(239 68 68 / 0.14); --pill-fg: #fdaaa4; --pill-ring: rgb(248 113 113 / 0.3); }
+
   .biz-card {
     /* Grid and flex children: let wide tables scroll inside the card instead of widening the page. */
     min-width: 0;
