@@ -10,7 +10,7 @@ function remember(name: string, view: ListView) {
 }
 
 /**
- * List or cards for a list page (Subscriptions, Software). The choice is remembered in a cookie,
+ * List or cards (the default) for a list page (Subscriptions, Software). The choice is remembered in a cookie,
  * so it stays when the tab, the filters or the page change.
  */
 export function ViewToggle({ name, value }: { name: "subscriptions" | "software"; value: ListView }) {

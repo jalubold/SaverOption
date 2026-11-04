@@ -10,19 +10,20 @@ import { cn } from "@/components/ui/primitives";
  * Charts for the business app, following the data-viz rules: thin marks with
  * 4px rounded data-ends, 2px lines, hairline grids, one hover tooltip per mark
  * (crosshair on the trend), legends for multi-series, text in text colours, and
- * a table view for every chart. Categorical slots 1–4 (blue, orange, aqua,
- * yellow) were validated for CVD separation on the white card surface; aqua and
- * yellow sit below 3:1 contrast, so their values are always labelled.
+ * a table view for every chart. The categorical slots start from the brand violet
+ * (violet, pink, amber, sky, indigo, teal), in an order validated on the white card
+ * surface (worst adjacent colour-blind ΔE 16.6, normal vision 20.2). Amber, sky and
+ * teal sit below 3:1 contrast, so their values are always labelled in the legend.
  */
 
 const vizVars = {
-  "--series-1": "#2a78d6",
-  "--series-2": "#eb6834",
-  "--series-3": "#1baf7a",
-  "--series-4": "#eda100",
-  "--series-5": "#e87ba4",
-  "--series-6": "#6250d6",
-  "--viz-other": "#c3c2b7",
+  "--series-1": "#8453ed",
+  "--series-2": "#ef5b98",
+  "--series-3": "#ee9e10",
+  "--series-4": "#24abe8",
+  "--series-5": "#345fcf",
+  "--series-6": "#2bbdaa",
+  "--viz-other": "#d5d4de",
   "--viz-grid": "#e1e0d9",
   "--viz-axis": "#c3c2b7",
   "--viz-muted": "#898781",
@@ -170,7 +171,7 @@ export function StackedBar({ segments, caption }: { segments: Segment[]; caption
       <ul className="mt-3 grid grid-cols-1 gap-y-1.5 text-[12.5px]">
         {parts.map((p, i) => (
           <li key={p.label} className="flex items-center gap-2">
-            <span aria-hidden="true" className="size-2.5 shrink-0 rounded-[3px]" style={{ background: SERIES[i] }} />
+            <span aria-hidden="true" className="size-2.5 shrink-0 rounded-full" style={{ background: SERIES[i] }} />
             <span className="text-muted">{p.label}</span>
             <span className="tabular ml-auto font-medium text-fg">
               {p.display} <span className="font-normal text-faint">({Math.round((p.value / total) * 100)}%)</span>
@@ -364,6 +365,7 @@ export function DonutChart({ segments, caption, centerLabel, centerValue, otherL
   // The gap between segments has the same width all the way across the ring (parallel edges),
   // so each side's angle is worked out at its own radius: wider in angle on the inner edge.
   const GAP = parts.length > 1 ? 3 : 0;
+  const ROUND = 2.5;
   const ends = parts.reduce<number[]>((acc, p) => [...acc, (acc.at(-1) ?? 0) + p.value / total], []);
   const arcs = parts.map((p, i) => {
     const frac = p.value / total;
@@ -372,19 +374,24 @@ export function DonutChart({ segments, caption, centerLabel, centerValue, otherL
     const pt = (rad: number, ang: number) => `${(C + rad * Math.cos(ang)).toFixed(3)},${(C + rad * Math.sin(ang)).toFixed(3)}`;
     if (frac >= 0.999 || GAP === 0) {
       const d = `M${C - R},${C} a${R},${R} 0 1,0 ${R * 2},0 a${R},${R} 0 1,0 -${R * 2},0 M${C - r},${C} a${r},${r} 0 1,1 ${r * 2},0 a${r},${r} 0 1,1 -${r * 2},0`;
-      return { ...p, d, i };
+      return { ...p, d, i, round: false };
     }
-    const outer = GAP / 2 / R;
-    const inner = GAP / 2 / r;
-    const o0 = from + outer;
-    const o1 = to - outer;
-    const i0 = from + inner;
-    const i1 = to - inner;
-    if (i1 <= i0) return { ...p, d: "", i }; // too small to draw with a gap
-    const largeO = o1 - o0 > Math.PI ? 1 : 0;
-    const largeI = i1 - i0 > Math.PI ? 1 : 0;
-    const d = `M${pt(R, o0)} A${R},${R} 0 ${largeO} 1 ${pt(R, o1)} L${pt(r, i1)} A${r},${r} 0 ${largeI} 0 ${pt(r, i0)} Z`;
-    return { ...p, d, i };
+    // Soft corners: the segment is drawn ROUND px smaller all round and stroked in its own colour
+    // with round joins, which brings it back to the ring's size with corners of that radius. A
+    // segment too thin for that keeps square corners.
+    const shape = (gap: number, ro: number, ri: number) => {
+      const o0 = from + gap / 2 / ro;
+      const o1 = to - gap / 2 / ro;
+      const i0 = from + gap / 2 / ri;
+      const i1 = to - gap / 2 / ri;
+      if (i1 - i0 <= 0.002 || o1 - o0 <= 0.002) return null;
+      const largeO = o1 - o0 > Math.PI ? 1 : 0;
+      const largeI = i1 - i0 > Math.PI ? 1 : 0;
+      return `M${pt(ro, o0)} A${ro},${ro} 0 ${largeO} 1 ${pt(ro, o1)} L${pt(ri, i1)} A${ri},${ri} 0 ${largeI} 0 ${pt(ri, i0)} Z`;
+    };
+    const soft = shape(GAP + ROUND * 2, R - ROUND, r + ROUND);
+    if (soft) return { ...p, d: soft, i, round: true };
+    return { ...p, d: shape(GAP, R, r) ?? "", i, round: false }; // "" when too small to draw with a gap
   });
   const active = hover !== null ? parts[hover] : null;
   return (
@@ -398,6 +405,9 @@ export function DonutChart({ segments, caption, centerLabel, centerValue, otherL
                 d={a.d}
                 fill={a.color}
                 fillRule="evenodd"
+                stroke={a.round ? a.color : undefined}
+                strokeWidth={a.round ? ROUND * 2 : undefined}
+                strokeLinejoin="round"
                 tabIndex={0}
                 className="cursor-default outline-none transition-opacity"
                 opacity={hover === null || hover === a.i ? 1 : 0.35}
@@ -417,7 +427,7 @@ export function DonutChart({ segments, caption, centerLabel, centerValue, otherL
         <ul className="w-full min-w-0 space-y-1.5 text-[12.5px]">
           {parts.map((p, i) => (
             <li key={p.label} className={cn("flex items-center gap-2 rounded-md px-1.5 py-0.5", hover === i && "bg-subtle")} onPointerEnter={() => setHover(i)} onPointerLeave={() => setHover(null)}>
-              <span aria-hidden="true" className="size-2.5 shrink-0 rounded-[3px]" style={{ background: p.color }} />
+              <span aria-hidden="true" className="size-2.5 shrink-0 rounded-full" style={{ background: p.color }} />
               <span className="min-w-0 truncate text-muted">{p.label}</span>
               <span className="tabular ml-auto whitespace-nowrap font-medium text-fg">
                 {p.display} <span className="font-normal text-faint">{Math.round((p.value / total) * 100)}%</span>
