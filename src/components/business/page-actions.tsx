@@ -243,7 +243,7 @@ function usePageExport({ title, workspace }: { title: string; workspace: string 
   const save = async (kind: "pdf" | "png") => {
     setBusy(kind);
     try {
-      const { canvas, breaks, ratio } = await capture({ title, workspace });
+      const { canvas, breaks, ratio, bg } = await capture({ title, workspace });
       const name = fileName(workspace, title, kind);
       if (kind === "png") {
         const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"));
@@ -275,9 +275,12 @@ function usePageExport({ title, workspace }: { title: string; workspace: string 
           if (!g) throw new Error("no canvas");
           g.drawImage(canvas, 0, y, canvas.width, end - y, 0, 0, canvas.width, end - y);
           if (page > 0) pdf.addPage();
+          // The whole page in the app's page colour, so a dark file has no white edges.
+          pdf.setFillColor(...rgbOf(bg));
+          pdf.rect(0, 0, pageW, pageH, "F");
           pdf.addImage(slice.toDataURL("image/jpeg", 0.92), "JPEG", margin, margin, imgW, (end - y) * scale, undefined, "FAST");
           pdf.setFontSize(8);
-          pdf.setTextColor(150);
+          pdf.setTextColor(isDark(bg) ? 120 : 150);
           pdf.text(`${page + 1}`, pageW - margin, pageH - 10, { align: "right" });
           y = end;
         }
@@ -318,7 +321,17 @@ function ExportNote({ note, dark }: { note: string | null; dark?: boolean }) {
  * hides that change while it happens. Also returns where rows and cards end, so a PDF page can end
  * between them.
  */
-async function capture({ title, workspace }: { title: string; workspace: string }): Promise<{ canvas: HTMLCanvasElement; breaks: number[]; ratio: number }> {
+/** The page colour as [r, g, b] (from a computed rgb() value), and whether it's a dark one. */
+function rgbOf(color: string): [number, number, number] {
+  const m = color.match(/\d+(\.\d+)?/g)?.map(Number) ?? [255, 255, 255];
+  return [m[0] ?? 255, m[1] ?? 255, m[2] ?? 255];
+}
+function isDark(color: string): boolean {
+  const [r, g, b] = rgbOf(color);
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b < 128;
+}
+
+async function capture({ title, workspace }: { title: string; workspace: string }): Promise<{ canvas: HTMLCanvasElement; breaks: number[]; ratio: number; bg: string }> {
   const node = document.getElementById("main");
   if (!node) throw new Error("no main");
   const { toCanvas } = await import("html-to-image");
@@ -336,11 +349,6 @@ async function capture({ title, workspace }: { title: string; workspace: string 
     });
   };
   try {
-    // Files are made in the light look, whatever the app shows (behind the cover, so nothing flashes).
-    const root = document.documentElement;
-    const theme = root.getAttribute("data-theme");
-    root.setAttribute("data-theme", "light");
-    undo.push(() => (theme === null ? root.removeAttribute("data-theme") : root.setAttribute("data-theme", theme)));
     let hidden = 0;
     for (const el of node.querySelectorAll<HTMLElement>("*")) {
       if (el.closest("[data-export-hide]")) continue;
@@ -390,7 +398,9 @@ async function capture({ title, workspace }: { title: string; workspace: string 
     const box = node.getBoundingClientRect();
     const width = Math.ceil(node.scrollWidth);
     const height = Math.ceil(node.scrollHeight);
+    // The file is made in the look the app shows (light or dark), page colour and all.
     const bg = getComputedStyle(document.body).backgroundColor || "#ffffff";
+    const dark = isDark(bg);
     // Large pages get a lower resolution so the picture stays within what browsers can draw.
     const ratio = Math.max(1, Math.min(2, 14000 / Math.max(1, height), 16000 / Math.max(1, width)));
     const options = {
@@ -428,17 +438,17 @@ async function capture({ title, workspace }: { title: string; workspace: string 
     if (!g) throw new Error("no canvas");
     g.fillStyle = bg;
     g.fillRect(0, 0, out.width, out.height);
-    g.fillStyle = "#6d28d9";
+    g.fillStyle = dark ? "#b99cff" : "#6d28d9";
     g.font = `600 ${Math.round(13 * ratio)}px system-ui, -apple-system, Segoe UI, sans-serif`;
     const pad = Math.round(24 * ratio);
     g.fillText("Saver Option Business", pad, Math.round(28 * ratio));
     const brandW = g.measureText("Saver Option Business").width;
-    g.fillStyle = "#6b6b76";
+    g.fillStyle = dark ? "#a0a0a0" : "#6b6b76";
     g.font = `400 ${Math.round(13 * ratio)}px system-ui, -apple-system, Segoe UI, sans-serif`;
     const when = new Date().toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
     g.fillText(`  ·  ${workspace}  ·  ${title}  ·  ${when}`, pad + brandW, Math.round(28 * ratio));
     g.drawImage(shot, 0, head);
-    return { canvas: out, breaks, ratio };
+    return { canvas: out, breaks, ratio, bg };
   } finally {
     for (const fn of undo.reverse()) fn();
     cover.remove();
