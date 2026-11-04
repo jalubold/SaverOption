@@ -7,6 +7,7 @@ import { trackable } from "@/components/business/landing/example-data";
 import { LicensesVisual, RenewalsVisual, ReportsVisual, SavingsVisual, SpendVisual } from "@/components/business/landing/feature-visuals";
 import { HeroFloaters } from "@/components/business/landing/hero-floaters";
 import { MacAppPreview } from "@/components/business/landing/mac-app-preview";
+import { MAC_APP_FEATURES, MAC_APP_ICON, MacDownloadButton, MacReleaseMeta } from "@/components/business/landing/mac-download";
 import { McpChatPreview } from "@/components/business/landing/mcp-chat-preview";
 import { PricingSwitch } from "@/components/business/pricing-switch";
 import { LogoStrip } from "@/components/business/landing/logo-strip";
@@ -14,7 +15,7 @@ import { FeatureStory, PointerLight, PointerTilt, ScrollScrub, ScrollWords, type
 import { FaqAccordion, IconTile, type TileTone } from "@/components/business/landing/sections";
 import { Aurora, RevealOnScroll, SpotlightGroup } from "@/components/business/motion";
 import { BusinessPublicHeader } from "@/components/business/public-header";
-import { QueryFlag, SignedInSwitch } from "@/components/business/session-hint";
+import { HideInDesktopApp, QueryFlag, SignedInSwitch } from "@/components/business/session-hint";
 import { LogoStack } from "@/components/business/software-logo";
 import { JsonLd } from "@/components/seo/json-ld";
 import { FormMessage } from "@/components/ui/form";
@@ -26,6 +27,7 @@ import { assistantConfigured } from "@/lib/server/business/assistant";
 import { offerViews, pricingInfo, type OfferView } from "@/lib/server/business/billing";
 import { businessReady } from "@/lib/server/business/context";
 import { businessContactEmail, planFeatures } from "@/lib/server/business/plans";
+import { latestMacRelease } from "@/lib/server/desktop-release";
 import { googleSignInEnabled } from "@/lib/server/supabase";
 import { faqJsonLd, pageMetadata } from "@/lib/seo";
 
@@ -103,7 +105,7 @@ const principles: { icon: IconProps["name"]; tone: TileTone; title: string; body
 export default async function BusinessLandingPage() {
   const ready = businessReady();
   const google = ready && (await googleSignInEnabled());
-  const offers = await offerViews();
+  const [offers, macRelease] = await Promise.all([offerViews(), latestMacRelease()]);
   const contact = businessContactEmail();
   const faq = [...baseFaq, ...pricingFaq(offers)];
 
@@ -439,6 +441,54 @@ export default async function BusinessLandingPage() {
           </SpotlightGroup>
         </Container>
       </section>
+
+      {/* ── Mac app (not shown inside the Mac app itself) ───────── */}
+      <HideInDesktopApp>
+        <section aria-labelledby="mac-heading" className="relative overflow-hidden border-b border-line" data-mac-app-section>
+          <Container className="relative py-20 sm:py-28">
+            <div className="so-reveal lx-glass relative overflow-hidden rounded-[28px] p-6 sm:p-10 lg:p-12">
+              <div aria-hidden="true" className="pointer-events-none absolute -right-28 -top-28 size-96 rounded-full bg-accent/25 blur-3xl" />
+              <div className="relative grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-16">
+                <div className="min-w-0">
+                  <p className="inline-flex items-center gap-2 text-[12.5px] font-semibold uppercase tracking-[0.12em] text-faint">
+                    <Icon name="laptop" size={14} /> Saver Option Business for Mac
+                  </p>
+                  <h2 id="mac-heading" className="display mt-4 text-[2.4rem] leading-[1.02] sm:text-[3.2rem]">
+                    Keep it in your <em className="accent">Dock.</em>
+                  </h2>
+                  <p className="mt-4 max-w-xl text-[16px] leading-relaxed text-muted">
+                    The same workspace in an app of its own: your subscriptions, renewals and team, exactly as in the browser, one click from the Dock.
+                  </p>
+                  <ul className="mt-7 grid gap-3 sm:grid-cols-3">
+                    {MAC_APP_FEATURES.map((f) => (
+                      <li key={f.text} className="flex items-start gap-2.5 text-[14px] leading-snug text-muted">
+                        <span className="mt-0.5 inline-flex size-7 shrink-0 items-center justify-center rounded-lg bg-white/[0.06] text-accent-ink">
+                          <Icon name={f.icon} size={15} />
+                        </span>
+                        {f.text}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-8 flex flex-wrap items-center gap-3">
+                    <div className="w-full sm:w-auto">
+                      <MacDownloadButton lookup={macRelease} shine={false} className="sm:w-auto" />
+                    </div>
+                    <Link href="/business/download" className={buttonClass("secondary", "lg", "w-full sm:w-auto")}>
+                      Learn more
+                    </Link>
+                  </div>
+                  <MacReleaseMeta lookup={macRelease} align="start" className="mt-4" />
+                </div>
+                <div aria-hidden="true" className="relative order-first mx-auto flex size-28 items-center justify-center sm:size-44 lg:order-none lg:size-60">
+                  <div className="absolute inset-[12%] rounded-[32%] bg-accent/40 blur-3xl" />
+                  {/* eslint-disable-next-line @next/next/no-img-element -- a fixed 512 px PNG, no optimization needed */}
+                  <img src={MAC_APP_ICON} alt="" width={240} height={240} className="relative size-full drop-shadow-[0_30px_50px_rgb(0_0_0/0.55)]" />
+                </div>
+              </div>
+            </div>
+          </Container>
+        </section>
+      </HideInDesktopApp>
 
       {/* ── Pricing ──────────────────────────────────────────────── */}
       <Pricing offers={offers} contact={contact} assistant={assistantConfigured()} />

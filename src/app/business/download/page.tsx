@@ -9,8 +9,9 @@ import { IconTile, type TileTone } from "@/components/business/landing/sections"
 import { Aurora, RevealOnScroll, SpotlightGroup } from "@/components/business/motion";
 import { BusinessPublicHeader } from "@/components/business/public-header";
 import { Icon, type IconProps } from "@/components/ui/icon";
-import { buttonClass, cn, Container, SectionHeading } from "@/components/ui/primitives";
-import { latestMacRelease, MAC_DOWNLOAD_PATH, type MacReleaseLookup } from "@/lib/server/desktop-release";
+import { buttonClass, Container, SectionHeading } from "@/components/ui/primitives";
+import { latestMacRelease } from "@/lib/server/desktop-release";
+import { MAC_APP_FEATURES, MAC_APP_ICON, MacDownloadButton, MacReleaseMeta } from "@/components/business/landing/mac-download";
 import { pageMetadata } from "@/lib/seo";
 
 const description =
@@ -25,15 +26,6 @@ export const metadata: Metadata = {
 // (and at once when a release is published, see /api/desktop/refresh).
 export const dynamic = "force-static";
 export const revalidate = 900;
-
-const APP_ICON = "/business/mac-app-icon.png";
-
-/** What the Mac app adds, as it's implemented in desktop/src-tauri (shown under the screenshot). */
-const desktop: { icon: IconProps["name"]; text: string }[] = [
-  { icon: "laptop", text: "Its own window, Dock icon and ⌘-Tab" },
-  { icon: "grid", text: "Menu bar and shortcuts, ⌘1–⌘9 for pages" },
-  { icon: "clock", text: "Reopens on the page you left" },
-];
 
 // The same feature story as on the Business landing page (bullets as there).
 const benefits: StoryItem[] = [
@@ -119,43 +111,6 @@ const steps: { icon: IconProps["name"]; tone: TileTone; title: string; body: str
   },
 ];
 
-const fmtSize = (bytes: number) => (bytes > 0 ? `${(bytes / 1024 / 1024).toFixed(bytes > 100 * 1024 * 1024 ? 0 : 1)} MB` : null);
-
-/** "Free · v0.2.1 · 10.4 MB · macOS 12+ · Apple silicon & Intel": one short line, wrapping only between items. */
-function ReleaseMeta({ lookup, withVersion = true, className }: { lookup: MacReleaseLookup; withVersion?: boolean; className?: string }) {
-  const release = lookup.state === "ready" ? lookup.release : null;
-  const items = ["Free", withVersion && release && `v${release.version}`, release && fmtSize(release.sizeBytes), "macOS 12+", "Apple silicon & Intel"].filter(Boolean);
-  return (
-    <p className={cn("flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[13px] text-faint", className)}>
-      {items.map((t, i) => (
-        <span key={i} className="flex items-center gap-2 whitespace-nowrap">
-          {i > 0 && <span aria-hidden="true" className="size-[3px] rounded-full bg-current opacity-60" />}
-          {t}
-        </span>
-      ))}
-    </p>
-  );
-}
-
-function DownloadButton({ lookup, mark, className }: { lookup: MacReleaseLookup; mark?: boolean; className?: string }) {
-  if (lookup.state === "none") {
-    return (
-      <span className={buttonClass("secondary", "lg", cn("pointer-events-none w-full opacity-70", className))} aria-disabled="true">
-        The first build is on its way
-      </span>
-    );
-  }
-  return (
-    <a
-      href={MAC_DOWNLOAD_PATH}
-      className={buttonClass("primary", "lg", cn("so-shine-hover w-full shadow-[0_14px_40px_-12px_rgb(124_58_236/0.8)]", className))}
-      {...(mark ? { "data-download-mac": "" } : {})}
-    >
-      <Icon name="download" size={16} /> Download for Mac
-    </a>
-  );
-}
-
 export default async function DownloadPage() {
   const lookup = await latestMacRelease();
   const version = lookup.state === "ready" ? lookup.release.version : null;
@@ -174,7 +129,7 @@ export default async function DownloadPage() {
         <Container className="relative flex flex-col items-center pt-14 text-center sm:pt-20">
           <span className="so-rise inline-flex items-center gap-2.5 rounded-full border border-white/12 bg-white/[0.04] py-1 pl-1 pr-3.5 text-[12.5px] text-muted shadow-[inset_0_1px_0_rgb(255_255_255/0.06)] backdrop-blur-md">
             {/* eslint-disable-next-line @next/next/no-img-element -- a fixed 512 px PNG, no optimization needed */}
-            <img src={APP_ICON} alt="" width={24} height={24} className="size-6 rounded-[6px]" />
+            <img src={MAC_APP_ICON} alt="" width={24} height={24} className="size-6 rounded-[6px]" />
             <span className="font-medium text-fg">Saver Option Business for Mac</span>
             <span className="rounded-full bg-accent px-2 py-0.5 text-[11px] font-semibold text-white shadow-[0_0_18px_rgb(124_58_236/0.7)]">{version ? `v${version}` : "New"}</span>
           </span>
@@ -198,7 +153,7 @@ export default async function DownloadPage() {
           <div className="so-rise mt-9 flex w-full flex-wrap items-center justify-center gap-3" style={{ "--d": "600ms" } as CSSProperties}>
             {/* Both buttons share one width, side by side or stacked. */}
             <div className="w-full max-w-xs">
-              <DownloadButton lookup={lookup} mark />
+              <MacDownloadButton lookup={lookup} mark />
             </div>
             <Link href="/business" className={buttonClass("secondary", "lg", "w-full max-w-xs")}>
               Use it in the browser
@@ -206,7 +161,7 @@ export default async function DownloadPage() {
           </div>
           <div className="so-rise mt-5" style={{ "--d": "720ms" } as CSSProperties}>
             {/* The version is in the badge above. */}
-            <ReleaseMeta lookup={lookup} withVersion={false} />
+            <MacReleaseMeta lookup={lookup} withVersion={false} />
           </div>
         </Container>
 
@@ -221,7 +176,7 @@ export default async function DownloadPage() {
             </div>
           </div>
           <ul className="so-rise relative mx-auto mt-10 flex max-w-4xl flex-wrap items-center justify-center gap-x-7 gap-y-3 text-[13.5px] text-muted" style={{ "--d": "900ms" } as CSSProperties}>
-            {desktop.map((d) => (
+            {MAC_APP_FEATURES.map((d) => (
               <li key={d.text} className="flex items-center gap-2">
                 <Icon name={d.icon} size={15} className="text-accent-ink" />
                 {d.text}
@@ -298,7 +253,7 @@ export default async function DownloadPage() {
         <Container className="so-reveal relative flex flex-col items-center py-28 text-center sm:py-40">
           <span className="so-float block">
             {/* eslint-disable-next-line @next/next/no-img-element -- a fixed 512 px PNG, no optimization needed */}
-            <img src={APP_ICON} alt="" width={88} height={88} className="size-[88px] drop-shadow-[0_20px_36px_rgb(0_0_0/0.5)]" />
+            <img src={MAC_APP_ICON} alt="" width={88} height={88} className="size-[88px] drop-shadow-[0_20px_36px_rgb(0_0_0/0.5)]" />
           </span>
           <h2 className="display mt-8 max-w-3xl text-[2.7rem] leading-[0.98] sm:text-[4.2rem]">
             Your software spend, <em className="accent lx-sheen">one click away.</em>
@@ -306,9 +261,9 @@ export default async function DownloadPage() {
           <p className="mt-5 max-w-md text-[16px] leading-relaxed text-muted">Download once — new features arrive without reinstalling.</p>
           <div className="mt-9 flex w-full flex-col items-center gap-4">
             <div className="w-full max-w-xs">
-              <DownloadButton lookup={lookup} />
+              <MacDownloadButton lookup={lookup} />
             </div>
-            <ReleaseMeta lookup={lookup} />
+            <MacReleaseMeta lookup={lookup} />
           </div>
           <p className="mt-10 max-w-md text-[12.5px] leading-relaxed text-faint">
             Windows and Linux versions aren&apos;t available yet — Saver Option Business works in any modern browser there.
