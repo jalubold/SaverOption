@@ -54,6 +54,21 @@ function sectionFor(path: string, sections: NavSection[]): { section: NavSection
   return hit && { section: hit.section, href: hit.href };
 }
 
+/**
+ * The item just clicked, marked current straight away until its page arrives. It's forgotten as soon
+ * as the path changes, so coming back later to the page it was clicked on doesn't bring the old click
+ * back (Workspace → Settings → Overview → Workspace would otherwise mark Settings over the Team page).
+ */
+function usePending<T>(path: string): [T | null, (value: T) => void] {
+  const [pending, setPending] = useState<{ value: T; from: string } | null>(null);
+  const [seen, setSeen] = useState(path);
+  if (path !== seen) {
+    setSeen(path);
+    if (pending) setPending(null);
+  }
+  return [pending && pending.from === path ? pending.value : null, (value: T) => setPending({ value, from: path })];
+}
+
 /** Pages are fetched in full once the pointer or focus reaches their link, so most clicks open them at once. */
 function useWarm() {
   // (Not when links scroll into view: that would render every page of the app on each visit.)
@@ -68,9 +83,8 @@ function useWarm() {
  */
 export function SidebarNav({ sections, collapsed }: { sections: NavSection[]; collapsed?: boolean }) {
   const path = usePathname() ?? "";
-  // The clicked item is marked current straight away, until its page arrives (the path changes).
-  const [clicked, setClicked] = useState<{ id: string; from: string } | null>(null);
-  const active = (clicked?.from === path ? clicked.id : null) ?? sectionFor(path, sections)?.section.id ?? null;
+  const [pendingId, markPending] = usePending<string>(path);
+  const active = pendingId ?? sectionFor(path, sections)?.section.id ?? null;
   const { warmed, warm } = useWarm();
   return (
     <nav aria-label="Business app">
@@ -87,7 +101,7 @@ export function SidebarNav({ sections, collapsed }: { sections: NavSection[]; co
                 onFocus={() => warm(href)}
                 onTouchStart={() => warm(href)}
                 onClick={(e) => {
-                  if (!e.metaKey && !e.ctrlKey && !e.shiftKey && href !== path) setClicked({ id: s.id, from: path });
+                  if (!e.metaKey && !e.ctrlKey && !e.shiftKey && href !== path) markPending(s.id);
                 }}
                 aria-current={on ? "page" : undefined}
                 title={collapsed ? s.label : undefined}
@@ -116,11 +130,11 @@ export function SidebarNav({ sections, collapsed }: { sections: NavSection[]; co
  */
 export function SectionTabs({ sections }: { sections: NavSection[] }) {
   const path = usePathname() ?? "";
-  const [clicked, setClicked] = useState<{ href: string; from: string } | null>(null);
+  const [pendingHref, markPending] = usePending<string>(path);
   const { warmed, warm } = useWarm();
   const list = useRef<HTMLUListElement>(null);
   const hit = sectionFor(path, sections);
-  const current = (clicked?.from === path ? clicked.href : null) ?? hit?.href ?? null;
+  const current = pendingHref ?? hit?.href ?? null;
   useEffect(() => {
     const ul = list.current;
     const li = ul?.querySelector<HTMLElement>('[aria-current="page"]')?.parentElement;
@@ -144,7 +158,7 @@ export function SectionTabs({ sections }: { sections: NavSection[] }) {
                   onFocus={() => warm(it.href)}
                   onTouchStart={() => warm(it.href)}
                   onClick={(e) => {
-                    if (!e.metaKey && !e.ctrlKey && !e.shiftKey && it.href !== path) setClicked({ href: it.href, from: path });
+                    if (!e.metaKey && !e.ctrlKey && !e.shiftKey && it.href !== path) markPending(it.href);
                   }}
                   aria-current={on ? "page" : undefined}
                   className={cn("group relative flex h-10 items-center px-1 text-[13px] font-medium transition-colors", on ? "text-fg" : "text-muted hover:text-fg")}
@@ -571,7 +585,7 @@ export function MobileNav({ tabs, morePaths, more, children }: { tabs: TabItem[]
   const path = usePathname() ?? "";
   const [open, setOpen] = useState(false);
   const [lastPath, setLastPath] = useState(path);
-  const [clicked, setClicked] = useState<{ href: string; from: string } | null>(null);
+  const [pendingHref, markPending] = usePending<string>(path);
   const { warmed, warm } = useWarm();
   if (path !== lastPath) {
     setLastPath(path);
@@ -582,7 +596,7 @@ export function MobileNav({ tabs, morePaths, more, children }: { tabs: TabItem[]
   // (notifications, billing, help) leave every tab unmarked.
   const routes = [...tabs.flatMap((t) => [t.href, ...(t.paths ?? [])].map((href) => ({ href, tab: t.href as string | null }))), ...morePaths.map((href) => ({ href, tab: null }))];
   const match = longestMatch(path, routes);
-  const current = clicked?.from === path ? clicked.href : match ? (match.tab ?? match.href) : null;
+  const current = pendingHref ?? (match ? (match.tab ?? match.href) : null);
   const form = FORM_ROUTE.test(path);
   return (
     <MoreSheetContext.Provider value={() => setOpen(true)}>
@@ -600,7 +614,7 @@ export function MobileNav({ tabs, morePaths, more, children }: { tabs: TabItem[]
                   onTouchStart={() => warm(t.href)}
                   onMouseEnter={() => warm(t.href)}
                   onClick={(e) => {
-                    if (!e.metaKey && !e.ctrlKey && !e.shiftKey && t.href !== path) setClicked({ href: t.href, from: path });
+                    if (!e.metaKey && !e.ctrlKey && !e.shiftKey && t.href !== path) markPending(t.href);
                   }}
                   aria-current={on ? "page" : undefined}
                   aria-label={t.primary ? t.label : undefined}
