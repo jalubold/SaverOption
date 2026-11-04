@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { BasisBadge, basisInfo } from "@/components/business/analytics/basis-badge";
+import { basisInfo } from "@/components/business/analytics/basis-badge";
+import { InfoTip } from "@/components/business/info-tip";
 import { BarList, Sparkline, TrendChart, type BarRow } from "@/components/business/charts";
 import { SoftwareLogo, SoftwareName } from "@/components/business/software-logo";
 import { FilterBar } from "@/components/business/filter-bar";
@@ -160,44 +161,39 @@ export default async function AnalyticsPage(props: { searchParams: Promise<Raw> 
         ]}
       />
 
-      <ul className="mb-5 flex flex-wrap gap-x-5 gap-y-1.5 text-[12px] text-faint" aria-label="What the figures are based on">
-        {(Object.keys(basisInfo) as InsightBasis[]).map((b) => (
-          <li key={b} className="flex items-center gap-1.5">
-            <BasisBadge basis={b} /> {basisInfo[b].explain}
-          </li>
-        ))}
-      </ul>
-
       <div className="grid grid-cols-2 gap-2.5 sm:gap-3 xl:grid-cols-4">
         <Kpi
-          label="Monthly run-rate"
+          label="Monthly spend"
           icon="trending-up"
           tone="violet"
           value={<Money totals={s.monthly} preferred={pref} />}
-          sub={<BasisBadge basis="normalized_estimate" />}
-          chart={report.runRate.length > 1 ? <Sparkline values={report.runRate.map((p) => p.totals[cur] ?? 0)} label={`Monthly run-rate, ${cur}, ${months} months`} /> : undefined}
+          sub="What your plans cost a month"
+          hint={basisInfo.normalized_estimate.explain}
+          chart={report.runRate.length > 1 ? <Sparkline values={report.runRate.map((p) => p.totals[cur] ?? 0)} label={`Monthly spend, ${cur}, ${months} months`} /> : undefined}
         />
-        <Kpi label="Annualized run-rate" icon="chart" tone="blue" value={<Money totals={s.annualized} preferred={pref} />} sub={<span className="flex flex-wrap items-center gap-1.5"><BasisBadge basis="normalized_estimate" /> run-rate × 12</span>} />
+        <Kpi label="Yearly spend" icon="chart" tone="blue" value={<Money totals={s.annualized} preferred={pref} />} sub="Monthly spend × 12" hint={basisInfo.normalized_estimate.explain} />
         <Kpi
-          label="Recorded payments"
+          label="Paid in this period"
           icon="coins"
           tone="green"
           value={totalsList(report.paymentsTotal).length ? <Money totals={report.paymentsTotal} preferred={pref} /> : "—"}
-          sub={<span className="flex flex-wrap items-center gap-1.5"><BasisBadge basis="actual" /> {report.payments.length} in the period</span>}
+          sub={report.payments.length ? `${report.payments.length} payment${report.payments.length === 1 ? "" : "s"} recorded` : "No payments recorded yet"}
+          hint={basisInfo.actual.explain}
         />
         <Kpi
-          label="Committed, next 12 months"
+          label="Next 12 months"
           icon="calendar"
           tone="amber"
           value={totalsList(windows[2].totals).length ? <Money totals={windows[2].totals} preferred={pref} /> : "—"}
-          sub={<span className="flex flex-wrap items-center gap-1.5"><BasisBadge basis="projection" /> {windows[2].renewals} renewals</span>}
+          sub={`${windows[2].renewals} renewal${windows[2].renewals === 1 ? "" : "s"} at today's prices`}
+          hint={basisInfo.projection.explain}
         />
       </div>
 
       <div className="mt-5 grid gap-5 lg:grid-cols-3">
         <Card
           className="lg:col-span-2"
-          title={<SectionTitle basis="normalized_estimate">Monthly run-rate over time</SectionTitle>}
+          title={<SectionTitle basis="normalized_estimate">Monthly spend over time</SectionTitle>}
           description={`Recurring run-rate at each month's end, ${cur} — from start and end dates and recorded price changes.`}
         >
           <TrendChart points={trend} caption={`Monthly recurring run-rate, ${cur}, last ${months} months`} currency={cur} height={220} />
@@ -207,7 +203,7 @@ export default async function AnalyticsPage(props: { searchParams: Promise<Raw> 
             </p>
           )}
         </Card>
-        <Card title={<SectionTitle basis="actual">Recorded payments by month</SectionTitle>} description={`What your team logged as paid, ${cur}.`}>
+        <Card title={<SectionTitle basis="actual">Payments by month</SectionTitle>} description={`What your team logged as paid, ${cur}.`}>
           {paymentsRecorded ? (
             <BarList caption={`Recorded payments by month, ${cur}`} rows={paymentRows} valueHead="Paid" max={months} />
           ) : (
@@ -225,7 +221,6 @@ export default async function AnalyticsPage(props: { searchParams: Promise<Raw> 
               <thead>
                 <tr>
                   <th>Comparison</th>
-                  <th>Basis</th>
                   <th className="num">Earlier</th>
                   <th className="num">Later</th>
                   <th className="num">Change</th>
@@ -236,10 +231,9 @@ export default async function AnalyticsPage(props: { searchParams: Promise<Raw> 
                   <tr key={`${c.id}-${c.currency}`}>
                     <td className="min-w-56">
                       {c.label}
-                      <span className="block text-[12px] text-faint">{c.currency}</span>
-                    </td>
-                    <td>
-                      <BasisBadge basis={c.basis} />
+                      <span className="block text-[12px] text-faint">
+                        {c.currency} · {sourceWords[c.basis]}
+                      </span>
                     </td>
                     <td className="num">
                       {whole(c.previous, c.currency)}
@@ -268,11 +262,12 @@ export default async function AnalyticsPage(props: { searchParams: Promise<Raw> 
           <ul className="grid gap-3 md:grid-cols-2">
             {insights.map((i) => (
               <li key={i.id} className="rounded-xl border border-line px-4 py-3">
-                <div className="flex flex-wrap items-center gap-1.5">
-                  <BasisBadge basis={i.basis} />
-                  {i.priority === 1 && <Pill tone="warn">Act soon</Pill>}
-                </div>
-                <p className="mt-1.5 text-[14px] font-semibold leading-snug text-fg">{i.title}</p>
+                {i.priority === 1 && (
+                  <div className="mb-1.5">
+                    <Pill tone="warn">Act soon</Pill>
+                  </div>
+                )}
+                <p className="text-[14px] font-semibold leading-snug text-fg">{i.title}</p>
                 <p className="mt-1 text-[12.5px] leading-relaxed text-muted">{i.detail}</p>
                 {i.evidence.length > 0 && (
                   <dl className="mt-2 space-y-0.5 text-[12px]">
@@ -380,7 +375,7 @@ export default async function AnalyticsPage(props: { searchParams: Promise<Raw> 
         </Card>
       </div>
 
-      <Card className="mt-5" title={<SectionTitle basis="projection">Upcoming commitments</SectionTitle>} description="Each auto-renewing plan's renewal dates in the window × its current price. Plans set to renew manually aren't counted.">
+      <Card className="mt-5" title={<SectionTitle basis="projection">Coming up</SectionTitle>} description="Each auto-renewing plan's renewal dates in the window × its current price. Plans set to renew manually aren't counted.">
         <div className="grid gap-3 sm:grid-cols-3">
           {windows.map((w) => (
             <div key={w.months} className="rounded-xl border border-line px-4 py-3">
@@ -437,11 +432,15 @@ export default async function AnalyticsPage(props: { searchParams: Promise<Raw> 
   );
 }
 
+/** Where a comparison's figures come from, in plain words. */
+const sourceWords: Record<InsightBasis, string> = { actual: "from payments", normalized_estimate: "from plan prices", projection: "upcoming renewals" };
+
+/** A card title in plain words; what its figures rest on is behind the ⓘ. */
 function SectionTitle({ basis, children }: { basis: InsightBasis; children: ReactNode }) {
   return (
-    <span className="flex flex-wrap items-center gap-2">
+    <span className="flex items-center gap-1">
       {children}
-      <BasisBadge basis={basis} />
+      <InfoTip label={typeof children === "string" ? children : "this card"}>{basisInfo[basis].explain}</InfoTip>
     </span>
   );
 }

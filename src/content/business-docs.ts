@@ -315,7 +315,7 @@ export const guides: DocPage[] = [
     slug: "analytics",
     title: "Spending analytics",
     nav: "Analytics",
-    description: "Trends, period-over-period changes, largest subscriptions, cost per seat and upcoming commitments — each labelled actual, estimate or projection.",
+    description: "Trends, period-over-period changes, largest subscriptions, cost per seat and what's coming up, in plain words, with what each figure rests on behind its ⓘ.",
     group: "Use Saver Option Business",
     sections: [
       {
@@ -337,15 +337,16 @@ export const guides: DocPage[] = [
         ],
       },
       {
-        heading: "Actual, estimate or projection",
+        heading: "What each figure rests on",
         blocks: [
+          { type: "p", text: "Each tile and chart says in its own words what it shows; the ⓘ next to it explains what it's based on:" },
           {
             type: "table",
-            head: ["Label", "Meaning"],
+            head: ["Figure", "Based on"],
             rows: [
-              ["Actual", "Payments your team recorded, by payment date."],
-              ["Normalized estimate", "Prices converted to monthly or annual equivalents (a run-rate, not cash spent)."],
-              ["Projection", "Future renewals at each subscription's current recorded price."],
+              ["Monthly and yearly spend", "Each plan's price as a monthly equivalent (yearly ÷ 12, quarterly ÷ 3) — a run-rate, not cash spent."],
+              ["Paid in this period, payments by month", "Payments your team recorded, by payment date."],
+              ["Next 12 months, coming up", "Future renewals at each subscription's current recorded price."],
             ],
           },
         ],
