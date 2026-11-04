@@ -311,15 +311,7 @@ export interface ShellPlan {
   trial: TrialBadge | null;
 }
 
-function TrialCard({ trial, upgrade, collapsed }: { trial: TrialBadge; upgrade: string | null; collapsed?: boolean }) {
-  if (collapsed) {
-    return (
-      <Link href="/business/settings/billing#plans" className="mb-2 flex h-9 items-center justify-center rounded-md text-accent hover:bg-black/[0.05]" title={`Free trial · ${trial.left} left`}>
-        <Icon name="calendar" size={16} />
-        <span className="sr-only">Free trial, {trial.left} left</span>
-      </Link>
-    );
-  }
+function TrialCard({ trial, upgrade }: { trial: TrialBadge; upgrade: string | null }) {
   return (
     <div className="mb-2 rounded-[10px] bg-white/70 px-3 py-2.5 shadow-[0_0.5px_1px_rgb(0_0_0/0.06)] ring-1 ring-black/[0.06]" data-trial-card>
       <div className="flex items-baseline justify-between gap-2">
@@ -366,7 +358,8 @@ function Sidebar({ ctx, plan, collapsed }: { ctx: BizContext; plan: ShellPlan; c
       )}
       <SidebarNav sections={sections} collapsed={collapsed} />
       <div className="mt-auto pt-4">
-        {plan.trial && <TrialCard trial={plan.trial} upgrade={plan.upgrade} collapsed={collapsed} />}
+        {/* Collapsed, the rail stays navigation only; the trial shows in the strip above the page. */}
+        {plan.trial && !collapsed && <TrialCard trial={plan.trial} upgrade={plan.upgrade} />}
       </div>
     </>
   );
