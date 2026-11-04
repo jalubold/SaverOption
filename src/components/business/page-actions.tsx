@@ -336,6 +336,11 @@ async function capture({ title, workspace }: { title: string; workspace: string 
     });
   };
   try {
+    // Files are made in the light look, whatever the app shows (behind the cover, so nothing flashes).
+    const root = document.documentElement;
+    const theme = root.getAttribute("data-theme");
+    root.setAttribute("data-theme", "light");
+    undo.push(() => (theme === null ? root.removeAttribute("data-theme") : root.setAttribute("data-theme", theme)));
     let hidden = 0;
     for (const el of node.querySelectorAll<HTMLElement>("*")) {
       if (el.closest("[data-export-hide]")) continue;

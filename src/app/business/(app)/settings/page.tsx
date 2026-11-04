@@ -1,10 +1,13 @@
+import { cookies } from "next/headers";
 import Link from "next/link";
+import { AppearancePicker } from "@/components/business/appearance-picker";
 import { DeleteWorkspaceForm, ResetDemoForm } from "@/components/business/settings-forms";
 import { RemoveMemberButton } from "@/components/business/team-forms";
 import { Card, DefinitionList, InlineNote, LinkButton, PageHeader, Pill } from "@/components/business/ui";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass } from "@/components/ui/primitives";
 import { formatIsoDate } from "@/lib/business/calc";
+import { APPEARANCE_COOKIE, type Appearance } from "@/lib/business/appearance";
 import { roleLabels } from "@/lib/business/constants";
 import { can } from "@/lib/business/permissions";
 import { displayName, requireBizContext } from "@/lib/server/business/context";
@@ -28,6 +31,8 @@ export default async function SettingsPage() {
   const ws = ctx.workspace;
   const me = (await getMembers(ws.id)).find((m) => m.userId === ctx.user.id);
   const name = displayName(ctx.user);
+  const saved = (await cookies()).get(APPEARANCE_COOKIE)?.value;
+  const appearance: Appearance = saved === "light" || saved === "dark" ? saved : "system";
 
   return (
     <>
@@ -72,6 +77,10 @@ export default async function SettingsPage() {
             </form>
           </div>
           <p className="mt-2 text-[12px] text-faint">“Sign out everywhere” ends your sessions on every device and browser, not just this one.</p>
+        </Card>
+
+        <Card title="Appearance" description="Light or dark for this browser. Auto follows your device, like the Mac and iPhone do.">
+          <AppearancePicker initial={appearance} />
         </Card>
 
         <Card title="Workspace" action={<Pill tone={ws.isDemo ? "warn" : "neutral"}>{ws.isDemo ? "Demo" : "Workspace"}</Pill>}>

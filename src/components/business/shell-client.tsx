@@ -93,12 +93,12 @@ export function SidebarNav({ sections, collapsed }: { sections: NavSection[]; co
                 title={collapsed ? s.label : undefined}
                 className={cn(
                   "relative flex h-8 items-center gap-2.5 rounded-md px-2 text-[13px] font-medium text-fg transition-colors",
-                  on ? "bg-black/[0.08]" : "hover:bg-black/[0.04]",
+                  on ? "bg-[var(--mac-select)]" : "hover:bg-[var(--mac-fill)]",
                   collapsed && "lg:h-9 lg:justify-center lg:px-0",
                 )}
               >
                 {/* As in Finder's sidebar: the icons in the accent colour, the selection a grey highlight. */}
-                <Icon name={s.icon} size={17} className="text-accent" />
+                <Icon name={s.icon} size={17} className="text-[var(--mac-icon)]" />
                 <span className={cn("truncate", collapsed && "lg:sr-only")}>{s.label}</span>
               </Link>
             </li>
@@ -130,7 +130,7 @@ export function SectionTabs({ sections }: { sections: NavSection[] }) {
   if (!hit || hit.section.items.length < 2 || FORM_ROUTE.test(path)) return null;
   const { section } = hit;
   return (
-    <nav aria-label={`${section.label} pages`} className="border-b border-black/[0.08] bg-white/80 backdrop-blur-xl backdrop-saturate-150" data-section-tabs={section.id}>
+    <nav aria-label={`${section.label} pages`} className="border-b border-[var(--mac-hairline)] bg-[var(--mac-toolbar)] backdrop-blur-xl backdrop-saturate-150" data-section-tabs={section.id}>
       <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8">
         <ul ref={list} className="no-scrollbar -mx-2 flex overflow-x-auto">
           {section.items.map((it) => {
@@ -150,7 +150,7 @@ export function SectionTabs({ sections }: { sections: NavSection[] }) {
                   className={cn("group relative flex h-10 items-center px-1 text-[13px] font-medium transition-colors", on ? "text-fg" : "text-muted hover:text-fg")}
                   data-section-tab={it.href}
                 >
-                  <span className="flex h-7 items-center gap-2 rounded-md px-2 transition-colors group-hover:bg-black/[0.05]">
+                  <span className="flex h-7 items-center gap-2 rounded-md px-2 transition-colors group-hover:bg-[var(--mac-fill)]">
                     <Icon name={it.icon} size={15} className={cn("max-sm:hidden", on ? "text-accent-ink" : "text-faint group-hover:text-muted")} />
                     {it.short ? (
                       <>
@@ -210,7 +210,7 @@ export function SidebarFrame({ sidebar, collapsedSidebar, children }: { sidebar:
     <SidebarToggleContext.Provider value={{ collapsed, toggle }}>
     <div className="biz-shell flex min-h-dvh">
       {/* A Mac source list: light grey, a hairline edge, the selection a rounded grey highlight. */}
-      <div className={cn("hidden shrink-0 border-r border-black/[0.08] bg-[var(--mac-sidebar)] transition-[width] duration-150 lg:block", collapsed ? "w-[68px]" : "w-[248px]")}>
+      <div className={cn("hidden shrink-0 border-r border-[var(--mac-hairline)] bg-[var(--mac-sidebar)] transition-[width] duration-150 lg:block", collapsed ? "w-[68px]" : "w-[248px]")}>
         <aside className="sticky top-0 flex h-dvh flex-col">
           {/* In the Mac app: the window buttons sit here, and the strip drags the window. */}
           <div aria-hidden="true" data-tauri-drag-region className="hidden h-14 shrink-0 desktop-app:block" />
@@ -222,7 +222,7 @@ export function SidebarFrame({ sidebar, collapsedSidebar, children }: { sidebar:
               onClick={toggle}
               aria-label="Collapse sidebar"
               title="Hide sidebar"
-              className="absolute right-3 top-[14px] z-10 flex size-7 items-center justify-center rounded-md text-muted hover:bg-black/[0.06] hover:text-fg"
+              className="absolute right-3 top-[14px] z-10 flex size-7 items-center justify-center rounded-md text-muted hover:bg-[var(--mac-fill)] hover:text-fg"
             >
               <Icon name="panel-left" size={16} />
             </button>
@@ -233,7 +233,7 @@ export function SidebarFrame({ sidebar, collapsedSidebar, children }: { sidebar:
       {open && (
         <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="Navigation">
           <button type="button" aria-label="Close navigation" className="absolute inset-0 bg-black/50" onClick={() => setOpen(false)} />
-          <aside className="absolute inset-y-0 left-0 flex w-[min(86vw,300px)] flex-col overflow-y-auto border-r border-black/[0.08] bg-[var(--mac-sidebar)] px-3 pb-6 desktop-app:pt-14 [&>*]:shrink-0">{sidebar}</aside>
+          <aside className="absolute inset-y-0 left-0 flex w-[min(86vw,300px)] flex-col overflow-y-auto border-r border-[var(--mac-hairline)] bg-[var(--mac-sidebar)] px-3 pb-6 desktop-app:pt-14 [&>*]:shrink-0">{sidebar}</aside>
         </div>
       )}
       <div className="flex min-w-0 flex-1 flex-col">
@@ -256,7 +256,7 @@ export function SidebarExpandButton() {
       onClick={toggle}
       aria-label="Expand sidebar"
       title="Show sidebar"
-      className="hidden size-8 shrink-0 items-center justify-center rounded-md text-muted hover:bg-black/[0.06] hover:text-fg lg:inline-flex"
+      className="hidden size-8 shrink-0 items-center justify-center rounded-md text-muted hover:bg-[var(--mac-fill)] hover:text-fg lg:inline-flex"
     >
       <Icon name="panel-left" size={17} />
     </button>
@@ -416,13 +416,13 @@ export function QuickJump({ items }: { items: QuickAction[] }) {
       <button
         type="button"
         onClick={() => show(true)}
-        className="hidden h-8 shrink-0 items-center gap-2 rounded-lg bg-black/[0.05] px-2.5 text-[12.5px] text-faint hover:bg-black/[0.08] hover:text-muted md:inline-flex"
+        className="hidden h-8 shrink-0 items-center gap-2 rounded-lg bg-[var(--mac-fill)] px-2.5 text-[12.5px] text-faint hover:bg-[var(--mac-select)] hover:text-muted md:inline-flex"
         aria-keyshortcuts="Control+K Meta+K"
         data-quick-jump
       >
         <Icon name="arrow-up-right" size={14} />
         Jump to…
-        <kbd className="rounded bg-white/80 px-1 text-[11px] text-faint shadow-[0_0.5px_1px_rgb(0_0_0/0.12)]">⌘K</kbd>
+        <kbd className="rounded bg-surface px-1 text-[11px] text-faint shadow-[0_0.5px_1px_rgb(0_0_0/0.12)]">⌘K</kbd>
       </button>
       <button
         type="button"

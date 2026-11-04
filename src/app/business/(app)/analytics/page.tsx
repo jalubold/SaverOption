@@ -249,7 +249,7 @@ export default async function AnalyticsPage(props: { searchParams: Promise<Raw> 
                       {whole(c.current, c.currency)}
                       <span className="block text-[11.5px] text-faint">{c.currentLabel}</span>
                     </td>
-                    <td className={`num font-medium ${c.change > 0 ? "text-[#c2410c]" : c.change < 0 ? "text-[color-mix(in_oklab,#1baf7a_70%,black)]" : ""}`}>
+                    <td className={`num font-medium ${c.change > 0 ? "text-[var(--pill-warn-fg)]" : c.change < 0 ? "text-[var(--pill-success-fg)]" : ""}`}>
                       {signed(c.change, c.currency)}
                       <span className="block text-[11.5px] font-normal text-faint">{c.changePct === null ? "—" : `${c.changePct > 0 ? "+" : ""}${c.changePct.toFixed(0)}%`}</span>
                     </td>

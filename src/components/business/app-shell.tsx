@@ -108,16 +108,16 @@ const pageTitles: { href: string; label: string }[] = [
 ];
 
 const tileTone: Record<string, string> = {
-  "/business/software": "bg-[#e9f2ff] text-[#2563eb]",
-  "/business/licenses": "bg-[#fff4e0] text-[#c2410c]",
-  "/business/analytics": "bg-[#eaf7ef] text-[#15803d]",
-  "/business/savings": "bg-[#fdeef4] text-[#be185d]",
-  "/business/reports": "bg-[#eef0ff] text-[#4f46e5]",
-  "/business/deals": "bg-[#fff1e6] text-[#ea580c]",
-  "/business/team": "bg-[#e8f8f8] text-[#0f766e]",
-  "/business/settings/mcp": "bg-[#f3ecff] text-[#7c3aed]",
-  "/business/integrations": "bg-[#e9f2ff] text-[#2563eb]",
-  "/business/settings": "bg-[#f1f1f4] text-[#52525b]",
+  "/business/software": "bg-[#2563eb]/12 text-[#3b82f6]",
+  "/business/licenses": "bg-[#ea580c]/12 text-[#f97316]",
+  "/business/analytics": "bg-[#16a34a]/12 text-[#22c55e]",
+  "/business/savings": "bg-[#db2777]/12 text-[#ec4899]",
+  "/business/reports": "bg-[#4f46e5]/12 text-[#6366f1]",
+  "/business/deals": "bg-[#ea580c]/12 text-[#f97316]",
+  "/business/team": "bg-[#0d9488]/12 text-[#14b8a6]",
+  "/business/settings/mcp": "bg-[#7c3aed]/12 text-[#8b5cf6]",
+  "/business/integrations": "bg-[#2563eb]/12 text-[#3b82f6]",
+  "/business/settings": "bg-[var(--mac-fill)] text-muted",
 };
 
 /** The More sheet on phones and tablets: who's signed in, the workspace, the places not in the tab bar, and sign out. */
@@ -258,7 +258,7 @@ function Avatar({ name, src, size = 28 }: { name: string; src: string | null; si
 
 function WorkspaceSwitcher({ ctx, collapsed }: { ctx: BizContext; collapsed?: boolean }) {
   const trigger = (
-    <span className={cn("flex w-full items-center gap-2.5 rounded-lg text-left", collapsed ? "justify-center py-1 hover:bg-black/[0.05]" : "bg-white/70 px-2 py-1.5 shadow-[0_0.5px_1px_rgb(0_0_0/0.08)] ring-1 ring-black/[0.06] hover:bg-white")}>
+    <span className={cn("flex w-full items-center gap-2.5 rounded-lg text-left", collapsed ? "justify-center py-1 hover:bg-[var(--mac-fill)]" : "bg-[var(--mac-control)] px-2 py-1.5 shadow-[0_0.5px_1px_rgb(0_0_0/0.08)] ring-1 ring-[var(--mac-hairline)] hover:bg-[var(--mac-control-hover)]")}>
       <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-[linear-gradient(160deg,var(--accent),color-mix(in_oklab,var(--accent)_60%,#000))] text-[12px] font-semibold text-white">{ctx.workspace.name.slice(0, 1).toUpperCase()}</span>
       {!collapsed && (
         <>
@@ -313,12 +313,12 @@ export interface ShellPlan {
 
 function TrialCard({ trial, upgrade }: { trial: TrialBadge; upgrade: string | null }) {
   return (
-    <div className="mb-2 rounded-[10px] bg-white/70 px-3 py-2.5 shadow-[0_0.5px_1px_rgb(0_0_0/0.06)] ring-1 ring-black/[0.06]" data-trial-card>
+    <div className="mb-2 rounded-[10px] bg-[var(--mac-control)] px-3 py-2.5 shadow-[0_0.5px_1px_rgb(0_0_0/0.06)] ring-1 ring-[var(--mac-hairline)]" data-trial-card>
       <div className="flex items-baseline justify-between gap-2">
         <p className="text-[12.5px] font-semibold text-fg">Free trial</p>
         <p className="text-[11.5px] text-faint">{trial.left} left</p>
       </div>
-      <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-black/[0.08]" role="progressbar" aria-label="Free trial used" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(trial.used * 100)}>
+      <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-[var(--mac-select)]" role="progressbar" aria-label="Free trial used" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(trial.used * 100)}>
         <div className="h-full rounded-full bg-accent" style={{ width: `${Math.max(4, Math.round(trial.used * 100))}%` }} />
       </div>
       {upgrade ? (
@@ -395,7 +395,7 @@ export function AppShell({ ctx, unread, notice, plan, children }: { ctx: BizCont
     <SidebarFrame sidebar={<Sidebar ctx={ctx} plan={plan} />} collapsedSidebar={<Sidebar ctx={ctx} plan={plan} collapsed />}>
       <MobileNav tabs={tabs} morePaths={morePaths} more={<MoreSheet ctx={ctx} plan={plan} unread={unread} tabs={tabs} />}>
       {/* data-tauri-drag-region: in the Mac app, the bar's empty space drags the window; on narrow windows it starts after the window buttons. */}
-      <header data-tauri-drag-region className="sticky top-0 z-30 flex h-14 items-center gap-1.5 border-b border-black/[0.08] bg-white/80 px-3 backdrop-blur-xl backdrop-saturate-150 sm:gap-2 sm:px-5 desktop-app:max-lg:pl-[84px]">
+      <header data-tauri-drag-region className="sticky top-0 z-30 flex h-14 items-center gap-1.5 border-b border-[var(--mac-hairline)] bg-[var(--mac-toolbar)] px-3 backdrop-blur-xl backdrop-saturate-150 sm:gap-2 sm:px-5 desktop-app:max-lg:pl-[84px]">
         <SidebarExpandButton />
         <MobileMenuButton />
         <MobileTitle workspace={ctx.workspace.name} titles={pageTitles} />
@@ -409,7 +409,7 @@ export function AppShell({ ctx, unread, notice, plan, children }: { ctx: BizCont
             name="q"
             type="search"
             placeholder="Search software, vendors, people…"
-            className="h-8 w-full rounded-lg border-0 bg-black/[0.05] pl-9 pr-3 text-[13px] outline-none placeholder:text-faint focus:bg-white focus:ring-4 focus:ring-accent/20"
+            className="h-8 w-full rounded-lg border-0 bg-[var(--mac-fill)] pl-9 pr-3 text-[13px] outline-none placeholder:text-faint focus:bg-surface focus:ring-4 focus:ring-accent/20"
           />
         </form>
         <QuickJump items={quickActions(ctx)} />

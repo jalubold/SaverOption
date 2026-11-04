@@ -16,18 +16,7 @@ import { cn } from "@/components/ui/primitives";
  * teal sit below 3:1 contrast, so their values are always labelled in the legend.
  */
 
-const vizVars = {
-  "--series-1": "#8453ed",
-  "--series-2": "#ef5b98",
-  "--series-3": "#ee9e10",
-  "--series-4": "#24abe8",
-  "--series-5": "#345fcf",
-  "--series-6": "#2bbdaa",
-  "--viz-other": "#d5d4de",
-  "--viz-grid": "#e1e0d9",
-  "--viz-axis": "#c3c2b7",
-  "--viz-muted": "#898781",
-} as CSSProperties;
+/** The chart colours are theme tokens (--series-1…6, --viz-* in globals.css): light, and stepped for dark mode. */
 
 export const SERIES = ["var(--series-1)", "var(--series-2)", "var(--series-3)", "var(--series-4)", "var(--series-5)", "var(--series-6)"];
 
@@ -74,7 +63,7 @@ export function BarList({ rows, caption, valueHead = "Monthly", max: maxRows = 8
   const total = rows.reduce((t, r) => t + r.value, 0);
   const max = Math.max(...shown.map((r) => r.value), 1);
   return (
-    <div style={vizVars}>
+    <div>
       <ul className="space-y-2.5" aria-label={caption}>
         {shown.map((r, i) => {
           const share = total > 0 ? Math.round((r.value / total) * 100) : 0;
@@ -145,7 +134,7 @@ export function StackedBar({ segments, caption }: { segments: Segment[]; caption
   const total = parts.reduce((t, s) => t + s.value, 0);
   if (total <= 0) return <p className="text-[13px] text-faint">No priced active subscriptions yet.</p>;
   return (
-    <div style={vizVars}>
+    <div>
       <div className="viz-grow-x relative flex h-6 w-full gap-[2px]" role="img" aria-label={`${caption}: ${parts.map((p) => `${p.label} ${p.display}`).join(", ")}`}>
         {parts.map((p, i) => (
           <div
@@ -235,7 +224,7 @@ export function TrendChart({ points, caption, currency, height = 200 }: { points
   };
   const labelEvery = Math.ceil(points.length / (W < 420 ? 4 : 6));
   return (
-    <div ref={wrap} style={vizVars} className="relative">
+    <div ref={wrap} className="relative">
       <svg
         ref={ref}
         viewBox={`0 0 ${W} ${H}`}
@@ -276,7 +265,7 @@ export function TrendChart({ points, caption, currency, height = 200 }: { points
         <path d={area} fill={`url(#${gradientId})`} className="viz-fade" />
         <path d={line} pathLength={1} fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" className="viz-draw" />
         {hover !== null && <line x1={x(hover)} x2={x(hover)} y1={pad.t} y2={y(0)} stroke="var(--viz-axis)" strokeWidth="1" />}
-        <circle cx={x(hover ?? last)} cy={y(points[hover ?? last].value)} r="4.5" fill="var(--accent)" stroke="#ffffff" strokeWidth="2" className="viz-fade" style={{ "--d": "1300ms" } as CSSProperties} />
+        <circle cx={x(hover ?? last)} cy={y(points[hover ?? last].value)} r="4.5" fill="var(--accent)" stroke="var(--surface)" strokeWidth="2" className="viz-fade" style={{ "--d": "1300ms" } as CSSProperties} />
       </svg>
       {hover !== null && (
         <div
@@ -395,7 +384,7 @@ export function DonutChart({ segments, caption, centerLabel, centerValue, otherL
   });
   const active = hover !== null ? parts[hover] : null;
   return (
-    <div style={vizVars} className="@container" data-donut>
+    <div className="@container" data-donut>
       <div className="flex flex-col items-center gap-4 @md:flex-row">
         <div className="relative shrink-0">
           <svg viewBox="0 0 180 180" width="180" height="180" className="viz-sweep" role="img" aria-label={`${caption}: ${parts.map((p) => `${p.label} ${Math.round((p.value / total) * 100)}%`).join(", ")}`}>
@@ -478,9 +467,9 @@ export function RadialGauge({ value, label, sub, size = 132 }: { value: number |
   const arc = circ * 0.75;
   const tone = value === null ? "var(--viz-other)" : v < 60 ? "#eda100" : "var(--accent)";
   return (
-    <div style={vizVars} className="relative inline-flex" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(v)} aria-label={label}>
+    <div className="relative inline-flex" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(v)} aria-label={label}>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-[225deg]">
-        <circle cx={size / 2} cy={size / 2} r={rad} fill="none" stroke="color-mix(in oklab, var(--accent) 12%, white)" strokeWidth={stroke} strokeDasharray={`${arc} ${circ}`} strokeLinecap="round" />
+        <circle cx={size / 2} cy={size / 2} r={rad} fill="none" stroke="color-mix(in oklab, var(--accent) 14%, var(--surface))" strokeWidth={stroke} strokeDasharray={`${arc} ${circ}`} strokeLinecap="round" />
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -538,7 +527,7 @@ export function RenewalTimeline({ items, days, startLabel }: { items: TimelineIt
   const readout = active ?? next;
   if (shown.length === 0) return <p className="text-[13px] text-faint">Nothing renews in the next {days} days.</p>;
   return (
-    <div style={vizVars}>
+    <div>
       {/* Readout: the hovered (or next) item, outside the scroll area so it's never clipped. */}
       <p className="mb-3 flex min-h-5 flex-wrap items-center gap-x-1.5 text-[12.5px]" aria-live="polite">
         {readout && (

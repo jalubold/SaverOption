@@ -37,7 +37,7 @@ function WindowButtons({ className }: { className?: string }) {
 /** The sidebar collapsed to its icons (68 px, as in the app), with the window buttons over its top. */
 function Sidebar() {
   return (
-    <div className="hidden w-[68px] shrink-0 flex-col items-center border-r border-black/[0.08] bg-[var(--mac-sidebar)] pb-3 text-fg md:flex">
+    <div className="hidden w-[68px] shrink-0 flex-col items-center border-r border-[var(--mac-hairline)] bg-[var(--mac-sidebar)] pb-3 text-fg md:flex">
       {/* The strip the window buttons sit on. */}
       <div className="h-[42px] shrink-0" />
       <BrandMark size={26} />
@@ -52,7 +52,7 @@ function Sidebar() {
             <span
               key={it.label}
               title={it.label}
-              className={cn("flex h-9 w-full items-center justify-center rounded-md text-accent", on && "bg-black/[0.08]")}
+              className={cn("flex h-9 w-full items-center justify-center rounded-md text-accent", on && "bg-[var(--mac-select)]")}
             >
               <Icon name={it.icon} size={17} />
             </span>
@@ -66,20 +66,20 @@ function Sidebar() {
 function Header() {
   return (
     // On narrow windows the app's header starts after the window buttons, as it does in the app.
-    <div className="flex h-[42px] items-center gap-2 border-b border-black/[0.08] bg-white/80 pl-[78px] pr-3 md:px-4">
+    <div className="flex h-[42px] items-center gap-2 border-b border-[var(--mac-hairline)] bg-[var(--mac-toolbar)] pl-[78px] pr-3 md:px-4">
       {/* Show the sidebar: at the start of the toolbar while it's collapsed, as in the app. */}
       <span className="hidden size-7 shrink-0 items-center justify-center rounded-md text-muted md:flex">
         <Icon name="panel-left" size={15} />
       </span>
-      <span className="flex h-7 min-w-0 max-w-[280px] flex-1 items-center gap-2 rounded-lg bg-black/[0.05] px-2.5 text-[12px] text-faint">
+      <span className="flex h-7 min-w-0 max-w-[280px] flex-1 items-center gap-2 rounded-lg bg-[var(--mac-fill)] px-2.5 text-[12px] text-faint">
         <Icon name="search" size={13} className="shrink-0" />
         <span className="truncate">Search software, vendors, people…</span>
       </span>
       {/* The quick jump button (QuickJump in shell-client.tsx). */}
-      <span className="hidden h-7 shrink-0 items-center gap-1.5 rounded-lg bg-black/[0.05] px-2 text-[11.5px] text-faint md:inline-flex">
+      <span className="hidden h-7 shrink-0 items-center gap-1.5 rounded-lg bg-[var(--mac-fill)] px-2 text-[11.5px] text-faint md:inline-flex">
         <Icon name="arrow-up-right" size={12} />
         Jump to…
-        <kbd className="rounded bg-white/80 px-1 text-[10px] text-faint shadow-[0_0.5px_1px_rgb(0_0_0/0.12)]">⌘K</kbd>
+        <kbd className="rounded bg-[var(--mac-toolbar)] px-1 text-[10px] text-faint shadow-[0_0.5px_1px_rgb(0_0_0/0.12)]">⌘K</kbd>
       </span>
       <span className="ml-auto flex items-center gap-2">
         <span className={buttonClass("primary", "sm", "hidden h-7 px-2.5 text-[11.5px] sm:inline-flex")}>

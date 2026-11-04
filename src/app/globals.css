@@ -135,8 +135,128 @@
   --btn2-fg: #1d1d1f;
   --card-shadow: 0 0.5px 1.5px rgb(0 0 0 / 0.07);
   --card-shadow-hover: 0 4px 14px -6px rgb(0 0 0 / 0.14);
-  /* The sidebar's source-list grey. */
+  --btn2-hover: #f7f7f9;
+  /* Mac fills: the sidebar's source-list grey, the toolbar, control and selection tints, hairlines. */
   --mac-sidebar: #ececf0;
+  --mac-toolbar: rgb(255 255 255 / 0.8);
+  --mac-control: rgb(255 255 255 / 0.7);
+  --mac-control-hover: #ffffff;
+  --mac-fill: rgb(0 0 0 / 0.05);
+  --mac-select: rgb(0 0 0 / 0.08);
+  --mac-hairline: rgb(0 0 0 / 0.08);
+  --mac-icon: var(--accent);
+}
+
+/* Dark appearance: the device's setting (System), or the person's own choice in Settings, saved in
+   the so_theme cookie and put on <html data-theme> before the page shows. The same token names as
+   above, so nothing else needs to know. Exports (Save PDF / PNG) are made in the light look. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):has(.biz-shell) {
+    color-scheme: dark;
+    --bg: #1c1c1e;
+    --surface: #2c2c2e;
+    --subtle: #343437;
+    --fg: #f5f5f7;
+    --heading: #f5f5f7;
+    --muted: #a1a1a6;
+    --faint: #8d8d93;
+    --line: #3a3a3d;
+    --line-strong: #4a4a4e;
+    --accent-soft: color-mix(in oklab, var(--accent) 26%, #2c2c2e);
+    --accent-ink: var(--brand-accent-on-dark, #b99cff);
+    --warn: #f5b759;
+    --warn-soft: rgb(245 183 89 / 0.14);
+    --danger: #ff8a80;
+    --success: #4ade80;
+    --btn2-from: #3a3a3d;
+    --btn2-to: #3a3a3d;
+    --btn2-border: rgb(255 255 255 / 0.1);
+    --btn2-fg: #f5f5f7;
+    --btn2-hover: #444448;
+    --card-shadow: 0 0 0 0.5px rgb(0 0 0 / 0.4);
+    --card-shadow-hover: 0 6px 18px -8px rgb(0 0 0 / 0.6);
+    --mac-sidebar: #262628;
+    --mac-toolbar: rgb(36 36 38 / 0.82);
+    --mac-control: rgb(255 255 255 / 0.06);
+    --mac-control-hover: rgb(255 255 255 / 0.1);
+    --mac-fill: rgb(255 255 255 / 0.07);
+    --mac-select: rgb(255 255 255 / 0.1);
+    --mac-hairline: rgb(255 255 255 / 0.08);
+    --mac-icon: #a98bff;
+    /* Charts: the same hues stepped for the dark card (validated: colour-blind ΔE 12.9, normal 18.9). */
+    --series-1: #9169f5;
+    --series-2: #e1568f;
+    --series-3: #c8830b;
+    --series-4: #27a1cd;
+    --series-5: #435bcf;
+    --series-6: #189e8c;
+    --viz-other: #4b4b51;
+    --viz-grid: #38383c;
+    --viz-axis: #4a4a4f;
+    --viz-muted: #8d8d93;
+    /* Labels. */
+    --pill-neutral-bg: rgb(255 255 255 / 0.07); --pill-neutral-fg: #d1d1d6; --pill-neutral-ring: rgb(255 255 255 / 0.12);
+    --pill-accent-bg: rgb(139 92 246 / 0.2); --pill-accent-fg: #c9b8ff; --pill-accent-ring: rgb(167 139 250 / 0.34);
+    --pill-info-bg: rgb(59 130 246 / 0.18); --pill-info-fg: #a5c8ff; --pill-info-ring: rgb(96 165 250 / 0.32);
+    --pill-teal-bg: rgb(20 184 166 / 0.16); --pill-teal-fg: #7ee8d6; --pill-teal-ring: rgb(45 212 191 / 0.3);
+    --pill-success-bg: rgb(34 197 94 / 0.16); --pill-success-fg: #8ef0b0; --pill-success-ring: rgb(74 222 128 / 0.3);
+    --pill-warn-bg: rgb(245 158 11 / 0.16); --pill-warn-fg: #fcd581; --pill-warn-ring: rgb(251 191 36 / 0.3);
+    --pill-danger-bg: rgb(239 68 68 / 0.16); --pill-danger-fg: #fdaaa4; --pill-danger-ring: rgb(248 113 113 / 0.32);
+    --pill-outline-fg: #c7c7cc; --pill-outline-ring: rgb(255 255 255 / 0.18);
+  }
+}
+:root[data-theme="dark"]:has(.biz-shell) {
+  color-scheme: dark;
+  --bg: #1c1c1e;
+  --surface: #2c2c2e;
+  --subtle: #343437;
+  --fg: #f5f5f7;
+  --heading: #f5f5f7;
+  --muted: #a1a1a6;
+  --faint: #8d8d93;
+  --line: #3a3a3d;
+  --line-strong: #4a4a4e;
+  --accent-soft: color-mix(in oklab, var(--accent) 26%, #2c2c2e);
+  --accent-ink: var(--brand-accent-on-dark, #b99cff);
+  --warn: #f5b759;
+  --warn-soft: rgb(245 183 89 / 0.14);
+  --danger: #ff8a80;
+  --success: #4ade80;
+  --btn2-from: #3a3a3d;
+  --btn2-to: #3a3a3d;
+  --btn2-border: rgb(255 255 255 / 0.1);
+  --btn2-fg: #f5f5f7;
+  --btn2-hover: #444448;
+  --card-shadow: 0 0 0 0.5px rgb(0 0 0 / 0.4);
+  --card-shadow-hover: 0 6px 18px -8px rgb(0 0 0 / 0.6);
+  --mac-sidebar: #262628;
+  --mac-toolbar: rgb(36 36 38 / 0.82);
+  --mac-control: rgb(255 255 255 / 0.06);
+  --mac-control-hover: rgb(255 255 255 / 0.1);
+  --mac-fill: rgb(255 255 255 / 0.07);
+  --mac-select: rgb(255 255 255 / 0.1);
+  --mac-hairline: rgb(255 255 255 / 0.08);
+  --mac-icon: #a98bff;
+  /* Charts: the same hues stepped for the dark card (validated: colour-blind ΔE 12.9, normal 18.9). */
+  --series-1: #9169f5;
+  --series-2: #e1568f;
+  --series-3: #c8830b;
+  --series-4: #27a1cd;
+  --series-5: #435bcf;
+  --series-6: #189e8c;
+  --viz-other: #4b4b51;
+  --viz-grid: #38383c;
+  --viz-axis: #4a4a4f;
+  --viz-muted: #8d8d93;
+  /* Labels. */
+  --pill-neutral-bg: rgb(255 255 255 / 0.07); --pill-neutral-fg: #d1d1d6; --pill-neutral-ring: rgb(255 255 255 / 0.12);
+  --pill-accent-bg: rgb(139 92 246 / 0.2); --pill-accent-fg: #c9b8ff; --pill-accent-ring: rgb(167 139 250 / 0.34);
+  --pill-info-bg: rgb(59 130 246 / 0.18); --pill-info-fg: #a5c8ff; --pill-info-ring: rgb(96 165 250 / 0.32);
+  --pill-teal-bg: rgb(20 184 166 / 0.16); --pill-teal-fg: #7ee8d6; --pill-teal-ring: rgb(45 212 191 / 0.3);
+  --pill-success-bg: rgb(34 197 94 / 0.16); --pill-success-fg: #8ef0b0; --pill-success-ring: rgb(74 222 128 / 0.3);
+  --pill-warn-bg: rgb(245 158 11 / 0.16); --pill-warn-fg: #fcd581; --pill-warn-ring: rgb(251 191 36 / 0.3);
+  --pill-danger-bg: rgb(239 68 68 / 0.16); --pill-danger-fg: #fdaaa4; --pill-danger-ring: rgb(248 113 113 / 0.32);
+  --pill-outline-fg: #c7c7cc; --pill-outline-ring: rgb(255 255 255 / 0.18);
 }
 :root:has(.biz-shell) body,
 .mac-ui {
@@ -293,7 +413,7 @@
   .mac-ui .btn-secondary:hover {
     filter: none;
     background-image: none;
-    background-color: #f7f7f9;
+    background-color: var(--btn2-hover);
   }
 
   /* Pill segmented control with an accent ring (tabs, price filter). */
@@ -375,6 +495,17 @@
   --pill-warn-bg: #fff8eb; --pill-warn-fg: #b54708; --pill-warn-ring: #fbdfa5;
   --pill-danger-bg: #fef3f2; --pill-danger-fg: #b42318; --pill-danger-ring: #fbcfc9;
   --pill-outline-fg: #5d5e68; --pill-outline-ring: #dadae2;
+  /* Charts (charts.tsx): categorical slots from the brand violet, validated on the white card. */
+  --series-1: #8453ed;
+  --series-2: #ef5b98;
+  --series-3: #ee9e10;
+  --series-4: #24abe8;
+  --series-5: #345fcf;
+  --series-6: #2bbdaa;
+  --viz-other: #d5d4de;
+  --viz-grid: #e6e6eb;
+  --viz-axis: #cfcfd6;
+  --viz-muted: #8a8a90;
 }
 .theme-dark {
   --pill-neutral-bg: rgb(255 255 255 / 0.07); --pill-neutral-fg: #cfd0d6; --pill-neutral-ring: rgb(255 255 255 / 0.12);

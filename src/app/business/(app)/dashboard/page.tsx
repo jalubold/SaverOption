@@ -458,8 +458,8 @@ export default async function DashboardPage() {
 
         <Card title="Savings" description="Potential is an estimate; realized is only what someone confirmed." action={<LinkButton href="/business/savings">Savings center</LinkButton>}>
           <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-xl bg-[#1baf7a]/10 px-3 py-2.5">
-              <p className="text-[11.5px] font-medium text-[color-mix(in_oklab,#1baf7a_70%,black)]">Potential / yr</p>
+            <div className="rounded-xl bg-[var(--pill-success-bg)] px-3 py-2.5">
+              <p className="text-[11.5px] font-medium text-[var(--pill-success-fg)]">Potential / yr</p>
               <p className="tabular mt-0.5 text-[1.15rem] font-semibold text-heading">
                 <Money totals={model.potential.annual} preferred={pref} />
               </p>

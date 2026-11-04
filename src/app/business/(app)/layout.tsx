@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
 import { AppShell } from "@/components/business/app-shell";
+import { appearanceScript } from "@/lib/business/appearance";
 import { billingNotice, trialBadge } from "@/lib/business/billing";
 import { can } from "@/lib/business/permissions";
 import { accessFor } from "@/lib/server/business/billing";
@@ -18,7 +19,10 @@ export const metadata: Metadata = {
  * the whole screen (viewport-fit) so the tab bar sits on the home indicator's safe area.
  */
 export const viewport: Viewport = {
-  themeColor: "#f5f5f7",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f5f5f7" },
+    { media: "(prefers-color-scheme: dark)", color: "#1c1c1e" },
+  ],
   viewportFit: "cover",
 };
 
@@ -43,6 +47,8 @@ export default async function BusinessAppLayout({ children }: { children: React.
   const plan = { upgrade: canManage && access.kind === "trial" ? "Upgrade" : canManage && access.kind === "locked" ? "Choose a plan" : null, trial: trialBadge(access, now) };
   return (
     <div className="bg-bg text-fg">
+      {/* The saved light/dark choice, before anything paints. */}
+      <script dangerouslySetInnerHTML={{ __html: appearanceScript }} />
       <AppShell ctx={ctx} unread={unread} notice={notice} plan={plan}>
         {children}
       </AppShell>
