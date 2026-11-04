@@ -37,37 +37,31 @@ function WindowButtons({ className }: { className?: string }) {
 /** The sidebar collapsed to its icons (68 px, as in the app), with the window buttons over its top. */
 function Sidebar() {
   return (
-    <div className="theme-dark hidden w-[68px] shrink-0 flex-col items-center border-r border-line bg-bg pb-3 text-fg md:flex">
+    <div className="hidden w-[68px] shrink-0 flex-col items-center border-r border-black/[0.08] bg-[var(--mac-sidebar)] pb-3 text-fg md:flex">
       {/* The strip the window buttons sit on. */}
       <div className="h-[42px] shrink-0" />
       <BrandMark size={26} />
-      <span className="mt-3 flex size-8 items-center justify-center rounded-lg border border-line bg-subtle text-[12px] font-semibold text-fg">N</span>
+      <span className="mt-3 flex size-8 items-center justify-center rounded-lg bg-[linear-gradient(160deg,var(--accent),color-mix(in_oklab,var(--accent)_60%,#000))] text-[12px] font-semibold text-white">N</span>
       <span className={buttonClass("primary", "sm", "mt-3 size-8 px-0")}>
         <Icon name="plus" size={15} />
       </span>
-      <div className="mt-5 flex w-full flex-col items-center gap-1 px-2.5">
+      <div className="mt-5 flex w-full flex-col items-center gap-0.5 px-2.5">
         {nav.map((it) => {
           const on = it.label === "Overview";
           return (
             <span
               key={it.label}
               title={it.label}
-              className={cn(
-                "relative flex h-10 w-full items-center justify-center rounded-lg",
-                on
-                  ? "bg-[linear-gradient(90deg,color-mix(in_oklab,var(--accent)_26%,transparent),color-mix(in_oklab,var(--accent)_6%,transparent))] text-accent-ink shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--accent)_22%,transparent)]"
-                  : "text-muted",
-              )}
+              className={cn("flex h-9 w-full items-center justify-center rounded-md text-accent", on && "bg-black/[0.08]")}
             >
-              {on && <span className="absolute -left-2.5 bottom-2.5 top-2.5 w-[3px] rounded-r-full bg-accent shadow-[0_0_12px_2px_color-mix(in_oklab,var(--accent)_70%,transparent)]" />}
-              <Icon name={it.icon} size={18} />
+              <Icon name={it.icon} size={17} />
             </span>
           );
         })}
       </div>
       {/* The collapse toggle in its own footer at the bottom, as in the app. */}
-      <div className="mt-auto flex w-full justify-center border-t border-line pt-2.5">
-        <span className="flex h-8 w-full items-center justify-center text-faint">
+      <div className="mt-auto flex w-full justify-center border-t border-black/[0.06] pt-2.5">
+        <span className="flex h-8 w-full items-center justify-center text-muted">
           <Icon name="panel-left" size={15} />
         </span>
       </div>
@@ -78,16 +72,16 @@ function Sidebar() {
 function Header() {
   return (
     // On narrow windows the app's header starts after the window buttons, as it does in the app.
-    <div className="flex h-[42px] items-center gap-2 border-b border-line bg-bg pl-[78px] pr-3 md:px-4">
-      <span className="flex h-7 min-w-0 max-w-[280px] flex-1 items-center gap-2 rounded-lg border border-line bg-surface px-2.5 text-[12px] text-faint">
+    <div className="flex h-[42px] items-center gap-2 border-b border-black/[0.08] bg-white/80 pl-[78px] pr-3 md:px-4">
+      <span className="flex h-7 min-w-0 max-w-[280px] flex-1 items-center gap-2 rounded-lg bg-black/[0.05] px-2.5 text-[12px] text-faint">
         <Icon name="search" size={13} className="shrink-0" />
         <span className="truncate">Search software, vendors, people…</span>
       </span>
       {/* The quick jump button (QuickJump in shell-client.tsx). */}
-      <span className="hidden h-7 shrink-0 items-center gap-1.5 rounded-lg border border-line bg-surface px-2 text-[11.5px] text-faint md:inline-flex">
+      <span className="hidden h-7 shrink-0 items-center gap-1.5 rounded-lg bg-black/[0.05] px-2 text-[11.5px] text-faint md:inline-flex">
         <Icon name="arrow-up-right" size={12} />
         Jump to…
-        <kbd className="rounded border border-line bg-subtle px-1 font-sans text-[10px] text-faint">⌘K</kbd>
+        <kbd className="rounded bg-white/80 px-1 text-[10px] text-faint shadow-[0_0.5px_1px_rgb(0_0_0/0.12)]">⌘K</kbd>
       </span>
       <span className="ml-auto flex items-center gap-2">
         <span className={buttonClass("primary", "sm", "hidden h-7 px-2.5 text-[11.5px] sm:inline-flex")}>
@@ -116,27 +110,27 @@ const renewing = exampleSubs.filter((x) => x.renewsIn <= 30).map((x) => ({ name:
 function Overview() {
   return (
     <div className="space-y-3 p-3 sm:p-4">
-      {/* The Overview's dark summary card, as compact as the dashboard's. */}
-      <section className="biz-card biz-hero theme-dark px-4 py-3.5 text-fg sm:px-5">
-        <div className="relative z-10 flex items-center justify-between gap-2">
+      {/* The Overview's summary card, as compact and light as the dashboard's. */}
+      <section className="biz-card px-4 py-3.5 sm:px-5">
+        <div className="flex items-center justify-between gap-2">
           <p className="text-[11px] font-medium text-muted">Monthly software spend</p>
           <div className="hidden gap-1.5 sm:flex">
-            <span className="inline-flex h-6 items-center gap-1 rounded-md border border-white/15 bg-white/10 px-2 text-[10.5px] font-medium text-fg">
+            <span className={buttonClass("secondary", "sm", "h-6 gap-1 rounded-md px-2 text-[10.5px]")}>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 3v12M7 8l5-5 5 5M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" />
               </svg>
               Share
             </span>
-            <span className="inline-flex h-6 items-center gap-1 rounded-md border border-white/15 bg-white/10 px-2 text-[10.5px] font-medium text-fg">
+            <span className={buttonClass("secondary", "sm", "h-6 gap-1 rounded-md px-2 text-[10.5px]")}>
               <Icon name="download" size={11} /> Save <Icon name="chevron-down" size={10} className="opacity-60" />
             </span>
           </div>
         </div>
-        <div className="relative z-10 mt-1 grid gap-x-6 gap-y-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,300px)] lg:items-end">
+        <div className="mt-1 grid gap-x-6 gap-y-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,300px)] lg:items-end">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
-              <p className="so-ink tabular w-fit text-[1.85rem] font-semibold leading-[1.1] tracking-tight">{usd(monthlyTotal)}</p>
-              <span className="pill bg-white/10 text-[10.5px] text-muted shadow-[inset_0_0_0_1px_rgb(255_255_255/0.14)]">↑ {Math.round(trendChange)}% in 12 months</span>
+              <p className="tabular w-fit text-[1.85rem] font-semibold leading-[1.1] tracking-tight text-heading">{usd(monthlyTotal)}</p>
+              <span className="pill pill-neutral text-[10.5px]">↑ {Math.round(trendChange)}% in 12 months</span>
             </div>
             <p className="mt-1.5 text-[11.5px] text-muted">
               <span className="tabular font-semibold text-heading">{usd(annualTotal)}</span> a year
@@ -149,7 +143,7 @@ function Overview() {
                 {MONTHS[0]} – {MONTHS.at(-1)}
               </span>
             </div>
-            <Sparkline values={runRateTrend} label="Example: monthly run-rate over the last 12 months" tone="light" height={40} />
+            <Sparkline values={runRateTrend} label="Example: monthly run-rate over the last 12 months" height={40} />
           </div>
         </div>
       </section>
@@ -184,12 +178,12 @@ export function MacAppPreview() {
   return (
     <div
       aria-hidden="true"
-      className="relative overflow-hidden rounded-[12px] bg-bg shadow-[0_0_0_1px_rgb(0_0_0/0.6),0_0_0_1.5px_rgb(255_255_255/0.1),0_60px_120px_-30px_rgb(0_0_0/0.9),0_28px_56px_-28px_rgb(0_0_0/0.65)]"
+      className="mac-ui relative overflow-hidden rounded-[12px] bg-bg shadow-[0_0_0_1px_rgb(0_0_0/0.6),0_0_0_1.5px_rgb(255_255_255/0.1),0_60px_120px_-30px_rgb(0_0_0/0.9),0_28px_56px_-28px_rgb(0_0_0/0.65)]"
     >
       <WindowButtons className="absolute left-[14px] top-[15px] z-20" />
       <div className="flex">
         <Sidebar />
-        <div className="theme-light min-w-0 flex-1 bg-bg text-fg">
+        <div className="min-w-0 flex-1 bg-bg text-fg">
           <Header />
           <Overview />
         </div>

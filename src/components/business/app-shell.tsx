@@ -258,8 +258,8 @@ function Avatar({ name, src, size = 28 }: { name: string; src: string | null; si
 
 function WorkspaceSwitcher({ ctx, collapsed }: { ctx: BizContext; collapsed?: boolean }) {
   const trigger = (
-    <span className={cn("flex w-full items-center gap-2.5 rounded-lg border border-line px-2 py-2 text-left hover:bg-subtle", collapsed && "justify-center border-0 px-0")}>
-      <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-subtle text-[12px] font-semibold text-fg">{ctx.workspace.name.slice(0, 1).toUpperCase()}</span>
+    <span className={cn("flex w-full items-center gap-2.5 rounded-lg bg-white/70 px-2 py-1.5 text-left shadow-[0_0.5px_1px_rgb(0_0_0/0.08)] ring-1 ring-black/[0.06] hover:bg-white", collapsed && "justify-center bg-transparent px-0 shadow-none ring-0 hover:bg-black/[0.05]")}>
+      <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-[linear-gradient(160deg,var(--accent),color-mix(in_oklab,var(--accent)_60%,#000))] text-[12px] font-semibold text-white">{ctx.workspace.name.slice(0, 1).toUpperCase()}</span>
       {!collapsed && (
         <>
           <span className="min-w-0 flex-1">
@@ -314,19 +314,19 @@ export interface ShellPlan {
 function TrialCard({ trial, upgrade, collapsed }: { trial: TrialBadge; upgrade: string | null; collapsed?: boolean }) {
   if (collapsed) {
     return (
-      <Link href="/business/settings/billing#plans" className="mb-2 flex h-9 items-center justify-center rounded-lg text-accent-ink hover:bg-subtle" title={`Free trial · ${trial.left} left`}>
+      <Link href="/business/settings/billing#plans" className="mb-2 flex h-9 items-center justify-center rounded-md text-accent hover:bg-black/[0.05]" title={`Free trial · ${trial.left} left`}>
         <Icon name="calendar" size={16} />
         <span className="sr-only">Free trial, {trial.left} left</span>
       </Link>
     );
   }
   return (
-    <div className="mb-2 rounded-xl border border-line bg-subtle/60 px-3 py-2.5" data-trial-card>
+    <div className="mb-2 rounded-[10px] bg-white/70 px-3 py-2.5 shadow-[0_0.5px_1px_rgb(0_0_0/0.06)] ring-1 ring-black/[0.06]" data-trial-card>
       <div className="flex items-baseline justify-between gap-2">
         <p className="text-[12.5px] font-semibold text-fg">Free trial</p>
         <p className="text-[11.5px] text-faint">{trial.left} left</p>
       </div>
-      <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-line" role="progressbar" aria-label="Free trial used" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(trial.used * 100)}>
+      <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-black/[0.08]" role="progressbar" aria-label="Free trial used" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(trial.used * 100)}>
         <div className="h-full rounded-full bg-accent" style={{ width: `${Math.max(4, Math.round(trial.used * 100))}%` }} />
       </div>
       {upgrade ? (
@@ -398,7 +398,7 @@ export function AppShell({ ctx, unread, notice, plan, children }: { ctx: BizCont
     <SidebarFrame sidebar={<Sidebar ctx={ctx} plan={plan} />} collapsedSidebar={<Sidebar ctx={ctx} plan={plan} collapsed />}>
       <MobileNav tabs={tabs} morePaths={morePaths} more={<MoreSheet ctx={ctx} plan={plan} unread={unread} tabs={tabs} />}>
       {/* data-tauri-drag-region: in the Mac app, the bar's empty space drags the window; on narrow windows it starts after the window buttons. */}
-      <header data-tauri-drag-region className="sticky top-0 z-30 flex h-14 items-center gap-1.5 border-b border-line bg-bg/85 px-3 backdrop-blur-xl backdrop-saturate-150 sm:gap-2 sm:px-5 desktop-app:max-lg:pl-[84px]">
+      <header data-tauri-drag-region className="sticky top-0 z-30 flex h-14 items-center gap-1.5 border-b border-black/[0.08] bg-white/80 px-3 backdrop-blur-xl backdrop-saturate-150 sm:gap-2 sm:px-5 desktop-app:max-lg:pl-[84px]">
         <MobileMenuButton />
         <MobileTitle workspace={ctx.workspace.name} titles={pageTitles} />
         <form action="/business/search" method="get" role="search" className="relative hidden min-w-0 max-w-md flex-1 md:block desktop-app:block">
@@ -411,7 +411,7 @@ export function AppShell({ ctx, unread, notice, plan, children }: { ctx: BizCont
             name="q"
             type="search"
             placeholder="Search software, vendors, people…"
-            className="h-9 w-full rounded-lg border border-line bg-surface pl-9 pr-3 text-[13.5px] outline-none placeholder:text-faint focus:border-accent focus:ring-4 focus:ring-accent/15"
+            className="h-8 w-full rounded-lg border-0 bg-black/[0.05] pl-9 pr-3 text-[13px] outline-none placeholder:text-faint focus:bg-white focus:ring-4 focus:ring-accent/20"
           />
         </form>
         <QuickJump items={quickActions(ctx)} />

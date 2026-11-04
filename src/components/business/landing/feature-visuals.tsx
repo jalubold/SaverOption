@@ -25,7 +25,7 @@ import { FakeControl, MiniTimeline, PreviewCard, SubRow } from "./preview-parts"
 function Frame({ children }: { children: React.ReactNode }) {
   return (
     // A glass frame for the dark landing page, holding light example cards.
-    <div className="theme-light so-spot relative rounded-[22px] border border-white/12 bg-white/[0.06] p-3 text-fg shadow-[inset_0_1px_0_rgb(255_255_255/0.08),0_40px_80px_-40px_rgb(0_0_0/0.9)] backdrop-blur-md transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[inset_0_1px_0_rgb(255_255_255/0.1),0_50px_90px_-40px_rgb(90_40_200/0.6)] motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:p-4">
+    <div className="mac-ui so-spot relative rounded-[22px] border border-white/12 bg-white/[0.06] p-3 text-fg shadow-[inset_0_1px_0_rgb(255_255_255/0.08),0_40px_80px_-40px_rgb(0_0_0/0.9)] backdrop-blur-md transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[inset_0_1px_0_rgb(255_255_255/0.1),0_50px_90px_-40px_rgb(90_40_200/0.6)] motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:p-4">
       <div className="space-y-3">{children}</div>
     </div>
   );

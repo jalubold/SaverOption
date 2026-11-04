@@ -18,7 +18,7 @@ export const metadata: Metadata = {
  * the whole screen (viewport-fit) so the tab bar sits on the home indicator's safe area.
  */
 export const viewport: Viewport = {
-  themeColor: "#fafaf7",
+  themeColor: "#f5f5f7",
   viewportFit: "cover",
 };
 

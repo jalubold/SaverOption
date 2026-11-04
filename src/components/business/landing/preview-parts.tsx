@@ -10,7 +10,7 @@ import { intervalLabel, pricePerPeriod, type ExampleSub, type TimelineEntry } fr
 /** A faux browser window around a preview. */
 export function AppWindow({ children, path, className }: { children: ReactNode; path: string; className?: string }) {
   return (
-    <div className={cn("theme-light overflow-hidden rounded-[18px] border border-line bg-bg text-fg shadow-[0_1px_0_rgb(255_255_255/0.6)_inset,0_40px_80px_-40px_rgb(0_0_0/0.7),0_0_0_1px_rgb(0_0_0/0.04)]", className)}>
+    <div className={cn("mac-ui overflow-hidden rounded-[18px] border border-line bg-bg text-fg shadow-[0_1px_0_rgb(255_255_255/0.6)_inset,0_40px_80px_-40px_rgb(0_0_0/0.7),0_0_0_1px_rgb(0_0_0/0.04)]", className)}>
       <div className="flex items-center gap-3 border-b border-line bg-surface px-3.5 py-2.5" aria-hidden="true">
         <span className="flex gap-1.5">
           <span className="size-2.5 rounded-full bg-[#f2545b]/80" />

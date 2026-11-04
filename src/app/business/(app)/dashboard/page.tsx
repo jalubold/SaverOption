@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import { createDemoAction } from "@/app/business/actions/workspace";
 import { BarList, DonutChart, RadialGauge, RenewalTimeline, Sparkline, StackedBar, TrendChart, type TimelineItem } from "@/components/business/charts";
-import { Aurora, SpotlightGroup } from "@/components/business/motion";
+import { SpotlightGroup } from "@/components/business/motion";
 import { LogoStack, SoftwareLogo, SoftwareName } from "@/components/business/software-logo";
 import { BilledAs, Card, EmptyState, IconTile, Kpi, LinkButton, Meter, Money, Pill, StatusPill, TableWrap, type KpiTone } from "@/components/business/ui";
 import { Icon, type IconProps } from "@/components/ui/icon";
@@ -116,9 +116,8 @@ export default async function DashboardPage() {
   if (model.subs.length === 0 && model.software.length === 0) {
     return (
       <>
-        <section className="biz-card biz-hero so-grain theme-dark mb-5 px-5 py-6 text-fg sm:px-7">
-          <Aurora />
-          <div className="relative z-10">
+        <section className="biz-card mb-5 px-5 py-6 sm:px-7">
+          <div>
             <p className="text-[12.5px] font-medium text-faint">{ctx.workspace.name}</p>
             <h1 className="mt-1 text-[26px] font-semibold leading-tight tracking-tight text-heading">Overview</h1>
             <p className="mt-2 max-w-xl text-[14px] text-muted">Welcome, {firstName}. Add the tools your team pays for and this page fills in with spending, renewals, seats and savings.</p>
@@ -236,13 +235,12 @@ export default async function DashboardPage() {
     <>
       {/* ── Hero: the monthly figure, the year and the 12-month run-rate. What's active and what renews
            soon are the tiles just below, so the hero doesn't repeat them. ── */}
-      <section className="biz-card biz-hero so-grain theme-dark so-rise px-5 py-5 text-fg sm:px-6" data-dashboard-hero>
-        <Aurora />
-        <span aria-hidden="true" className="so-shine pointer-events-none absolute inset-0 rounded-[inherit]" />
+      {/* A light card, like a macOS widget: the figures in ink, the trend in the accent colour. */}
+      <section className="biz-card so-rise px-5 py-5 sm:px-6" data-dashboard-hero>
         <h1 className="sr-only" data-hero-title>
           Overview
         </h1>
-        <div className="relative z-10">
+        <div>
           <div className="flex items-center justify-between gap-3">
             <p className="flex items-center gap-1 whitespace-nowrap text-[12.5px] font-medium text-muted">
               Monthly software spend
@@ -252,18 +250,18 @@ export default async function DashboardPage() {
               </InfoTip>
             </p>
             <span className="max-sm:hidden">
-              <PageActions title="Overview" workspace={ctx.workspace.name} tone="dark" />
+              <PageActions title="Overview" workspace={ctx.workspace.name} />
             </span>
           </div>
 
           <div className="mt-2 grid gap-x-8 gap-y-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:items-end">
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
-                <p className="so-ink tabular w-fit text-[2.25rem] font-semibold leading-[1.1] tracking-tight sm:text-[2.5rem]" data-hero-monthly>
+                <p className="tabular w-fit text-[2.25rem] font-semibold leading-[1.1] tracking-tight text-heading sm:text-[2.5rem]" data-hero-monthly>
                   {heroMain ? formatMoney(heroMain.amount, heroMain.currency) : "—"}
                 </p>
                 {change !== null && (
-                  <span className="pill bg-white/10 text-muted shadow-[inset_0_0_0_1px_rgb(255_255_255/0.14)]" title={`Monthly run-rate now against ${trend[0]?.label ?? "12 months ago"}`} data-hero-change>
+                  <span className="pill pill-neutral" title={`Monthly run-rate now against ${trend[0]?.label ?? "12 months ago"}`} data-hero-change>
                     {change > 0 ? "↑" : "↓"} {Math.abs(change) < 10 ? Math.abs(change).toFixed(1) : Math.round(Math.abs(change))}% in 12 months
                   </span>
                 )}
@@ -276,7 +274,7 @@ export default async function DashboardPage() {
                   a year
                 </span>
                 {s.missingPrice > 0 && (
-                  <Link href="/business/subscriptions?status=active" className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5 text-[12px] text-muted hover:text-fg">
+                  <Link href="/business/subscriptions?status=active" className="pill pill-warn hover:brightness-95">
                     <Icon name="info" size={12} /> {s.missingPrice} without a price not included
                   </Link>
                 )}
@@ -308,13 +306,13 @@ export default async function DashboardPage() {
                   </span>
                 )}
               </div>
-              <Sparkline values={model.runRate.map((p) => p.totals[chartCurrency] ?? 0)} label={`Monthly run-rate over the last 12 months, ${chartCurrency}`} tone="light" height={56} />
+              <Sparkline values={model.runRate.map((p) => p.totals[chartCurrency] ?? 0)} label={`Monthly run-rate over the last 12 months, ${chartCurrency}`} height={56} />
               {!model.historyReliable && <p className="mt-1 text-[11.5px] text-faint">The trend fills in as the months go by and prices change.</p>}
             </div>
           </div>
           {/* On phones the buttons sit under the figures, so the label keeps its line. */}
           <div className="mt-4 sm:hidden">
-            <PageActions title="Overview" workspace={ctx.workspace.name} tone="dark" />
+            <PageActions title="Overview" workspace={ctx.workspace.name} />
           </div>
         </div>
       </section>

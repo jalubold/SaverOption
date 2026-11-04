@@ -105,6 +105,51 @@
   color: var(--fg);
 }
 
+/* ── The business app looks like a Mac app ─────────────────────────────────
+ * The system font (San Francisco on Apple devices, Segoe UI on Windows), Apple's cool greys,
+ * hairline borders and a light source-list sidebar. Set on the whole document while the app is
+ * open (menus and dialogs are portalled to <body>), and on .mac-ui for the app picture on the
+ * landing and download pages.
+ */
+:root:has(.biz-shell),
+.mac-ui {
+  color-scheme: light;
+  --bg: #f5f5f7;
+  --surface: #ffffff;
+  --subtle: #f1f1f4;
+  --fg: #1d1d1f;
+  --heading: #1d1d1f;
+  --muted: #6e6e73;
+  --faint: #86868b;
+  --line: #e3e3e8;
+  --line-strong: #d2d2d7;
+  --accent-soft: color-mix(in oklab, var(--accent) 10%, white);
+  --accent-ink: color-mix(in oklab, var(--accent) 82%, black);
+  --warn: #9a5b00;
+  --warn-soft: #fdf5e4;
+  --danger: #b42318;
+  --success: #16a34a;
+  --btn2-from: #ffffff;
+  --btn2-to: #ffffff;
+  --btn2-border: rgb(0 0 0 / 0.14);
+  --btn2-fg: #1d1d1f;
+  --card-shadow: 0 0.5px 1.5px rgb(0 0 0 / 0.07);
+  --card-shadow-hover: 0 4px 14px -6px rgb(0 0 0 / 0.14);
+  /* The sidebar's source-list grey. */
+  --mac-sidebar: #ececf0;
+}
+:root:has(.biz-shell) body,
+.mac-ui {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI Variable Text", "Segoe UI", var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: -0.003em;
+}
+@layer base {
+  .mac-ui {
+    background-color: var(--bg);
+    color: var(--fg);
+  }
+}
+
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
@@ -226,6 +271,31 @@
     background: var(--subtle);
   }
 
+  /* Mac push buttons in the app: a flat accent fill with a faint top light, and white secondary
+     buttons with a hairline edge. Utilities still win (later layer), as before. */
+  :root:has(.biz-shell) .btn,
+  .mac-ui .btn {
+    font-weight: 500;
+  }
+  :root:has(.biz-shell) .btn-primary,
+  .mac-ui .btn-primary {
+    background-image: linear-gradient(180deg, color-mix(in oklab, var(--accent) 86%, white) 0%, var(--accent) 100%);
+    border: 1px solid color-mix(in oklab, var(--accent) 78%, black);
+    box-shadow:
+      0 0.5px 1px rgb(0 0 0 / 0.14),
+      inset 0 1px 0 rgb(255 255 255 / 0.22);
+  }
+  :root:has(.biz-shell) .btn-secondary,
+  .mac-ui .btn-secondary {
+    box-shadow: 0 0.5px 1px rgb(0 0 0 / 0.08);
+  }
+  :root:has(.biz-shell) .btn-secondary:hover,
+  .mac-ui .btn-secondary:hover {
+    filter: none;
+    background-image: none;
+    background-color: #f7f7f9;
+  }
+
   /* Pill segmented control with an accent ring (tabs, price filter). */
   .seg {
     display: inline-flex;
@@ -295,7 +365,8 @@
 
 /* Label (Pill) colours per theme: a soft tint, its ink and a hairline ring. */
 :root,
-.theme-light {
+.theme-light,
+.mac-ui {
   --pill-neutral-bg: #f2f2f5; --pill-neutral-fg: #51525c; --pill-neutral-ring: #e2e2e8;
   --pill-accent-bg: color-mix(in oklab, var(--accent) 8%, white); --pill-accent-fg: var(--accent-ink); --pill-accent-ring: color-mix(in oklab, var(--accent) 22%, white);
   --pill-info-bg: #eff5ff; --pill-info-fg: #1d4fd8; --pill-info-ring: #cfdffd;
@@ -355,10 +426,10 @@
   .biz-card {
     /* Grid and flex children: let wide tables scroll inside the card instead of widening the page. */
     min-width: 0;
-    border-radius: 14px;
+    border-radius: 12px;
     border: 1px solid var(--line);
     background: var(--surface);
-    box-shadow: 0 1px 2px rgb(20 20 40 / 0.04);
+    box-shadow: 0 0.5px 1.5px rgb(0 0 0 / 0.06);
   }
   .biz-card-lift {
     transition:
