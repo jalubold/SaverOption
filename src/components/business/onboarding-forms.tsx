@@ -10,7 +10,7 @@ import { ActionForm, SelectField, Submit, TextField } from "@/components/busines
  * from where the visitor is (their IP's country and time zone, worked out by the server), and
  * otherwise from the browser; both can be changed before saving.
  */
-export function CreateWorkspaceForm({ suggested = {} }: { suggested?: { currency?: string; timeZone?: string; countryName?: string } }) {
+export function CreateWorkspaceForm({ suggested = {}, next }: { suggested?: { currency?: string; timeZone?: string; countryName?: string }; next?: string }) {
   const [timeZone, setTimeZone] = useState(suggested.timeZone ?? "UTC");
   const [currency, setCurrency] = useState(suggested.currency ?? "USD");
   useEffect(() => {
@@ -35,6 +35,7 @@ export function CreateWorkspaceForm({ suggested = {} }: { suggested?: { currency
   return (
     // The workspace id isn't known yet; the server action checks the session instead.
     <ActionForm action={createWorkspaceAction} workspaceId="" className="grid gap-4 sm:grid-cols-2">
+      {next && <input type="hidden" name="next" value={next} />}
       <TextField label="Company name" name="name" required maxLength={80} placeholder="e.g. Acme Inc." className="sm:col-span-2" autoFocus />
       <TextField label="Industry" name="industry" optional maxLength={80} placeholder="e.g. Software, Agency, Retail" />
       <SelectField label="Company size" name="companySize" optional placeholder="Choose…" options={COMPANY_SIZES.map((s) => ({ value: s, label: `${s} people` }))} />

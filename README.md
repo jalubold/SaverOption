@@ -139,6 +139,10 @@ The form posts to `/api/newsletter`. With no provider configured, development lo
 
 Software-spend management for companies: Google sign-in, workspaces with roles, subscriptions, software inventory, licenses and seats, renewals with in-app reminders, savings opportunities, reports with CSV export, and an audit log. It runs on the same Supabase Auth and Postgres as the advertiser features (tables are created on build), with all access checked on the server. Calculations live in `src/lib/business/calc.ts` and are unit-tested (`npm test`). Setup, security model and calculation rules: [`docs/BUSINESS_SETUP.md`](docs/BUSINESS_SETUP.md).
 
+### AppSumo lifetime codes
+
+Buyers redeem an AppSumo code on `/business/redeem` (Google sign-in, then the code and the workspace it goes to; owners and admins only). One active code gives a workspace Pro for life, a second code on the same workspace gives Business; lifetime access outranks the trial and needs no Creem subscription (rules in `src/lib/business/billing.ts`, tested). Admins import the codes CSV and deactivate refunded codes on `/admin/codes`. Only SHA-256 hashes of codes are stored (`biz_lifetime_codes`), so never commit a codes file to this repository: import it on `/admin/codes` before uploading the same file to AppSumo.
+
 ## Next step: admin for deals and persistent storage (proposed, not built)
 
 The admin interface needs a database and authentication, so it was left out of this iteration on purpose. Recommended lightweight path:

@@ -9,6 +9,7 @@ import {
   canStartCheckout,
   formatInstant,
   intervalLabels,
+  LIFETIME_MAX_CODES,
   planLabels,
   PLANS,
   remainingText,
@@ -23,6 +24,7 @@ import { can } from "@/lib/business/permissions";
 import { assistantConfigured } from "@/lib/server/business/assistant";
 import { checkoutConfigured, confirmCheckoutReturn, getBillingRecord, memberCapacity, offerViews, pricingInfo, type OfferView } from "@/lib/server/business/billing";
 import { requireBizContext } from "@/lib/server/business/context";
+import { workspaceLifetimeCodes } from "@/lib/server/business/lifetime";
 import { businessContactEmail, planFeatures } from "@/lib/server/business/plans";
 
 export const metadata = { title: "Plan & billing" };
@@ -40,6 +42,8 @@ function statusOf(a: Access, b: BillingRecord | null, tz: string, now: Date): { 
       if (a.state === "trialing") return { pill: <Pill tone="accent">Trial (Creem)</Pill>, detail: a.until ? `First payment ${formatInstant(a.until, tz)}` : "Trial at Creem" };
       if (a.state === "ending") return { pill: <Pill tone="warn">Cancelled</Pill>, detail: a.until ? `Access until ${formatInstant(a.until, tz)}; it won't renew` : "Ends at the close of the paid period" };
       return { pill: <Pill tone="danger">Payment failed</Pill>, detail: a.until ? `Update the payment method — access until ${formatInstant(a.until, tz)}` : "Update the payment method" };
+    case "lifetime":
+      return { pill: <Pill tone="success">Lifetime</Pill>, detail: `${a.codes} lifetime code${a.codes === 1 ? "" : "s"} redeemed · never renews` };
     case "locked": {
       const label = { trial_ended: "Trial ended", no_trial: "No plan", subscription_ended: "Ended", payment_failed: "Payment failed", paused: "Paused" }[a.reason];
       const detail =
@@ -77,6 +81,7 @@ export default async function BillingPage({ searchParams }: { searchParams: Prom
   const now = new Date();
   const record = ws.isDemo ? null : await getBillingRecord(ws.id);
   const access = resolveAccess(record, { isDemo: ws.isDemo, now });
+  const lifetimeCodes = record && record.lifetimeCodes > 0 ? await workspaceLifetimeCodes(ws.id) : [];
   const canManage = can(ctx.role, "billing.manage");
   const [offers, capacity] = await Promise.all([offerViews(), memberCapacity(ctx)]);
   const configured = offers.some((o) => o.available) || (await checkoutConfigured());
@@ -99,6 +104,11 @@ export default async function BillingPage({ searchParams }: { searchParams: Prom
       />
 
       <div className="grid gap-5">
+        {sp.redeemed === "1" && access.kind === "lifetime" && (
+          <InlineNote title={`Code redeemed — ${planLabels[access.plan]} for life`}>
+            {access.plan === "pro" ? "Your lifetime plan is active. A second code on this workspace upgrades it to Business." : "Your lifetime plan is active, with unlimited members."}
+          </InlineNote>
+        )}
         {sp.return === "active" && subscribed && (
           <InlineNote title={`Payment confirmed — ${planLabels[access.plan]} is active`}>Creem confirmed the subscription. Thank you!</InlineNote>
         )}
@@ -123,9 +133,20 @@ export default async function BillingPage({ searchParams }: { searchParams: Prom
         <Card title="Current plan">
           <DefinitionList
             items={[
-              { label: "Plan", value: subscribed ? planLabels[access.plan] : access.kind === "trial" ? "Free trial (everything in Business)" : access.kind === "demo" ? "Demo" : "None" },
+              {
+                label: "Plan",
+                value: subscribed
+                  ? planLabels[access.plan]
+                  : access.kind === "lifetime"
+                    ? `${planLabels[access.plan]} (lifetime)`
+                    : access.kind === "trial"
+                      ? "Free trial (everything in Business)"
+                      : access.kind === "demo"
+                        ? "Demo"
+                        : "None",
+              },
               { label: "Status", value: <span className="inline-flex flex-wrap items-center gap-2">{status.pill}<span className="text-[13px] text-muted">{status.detail}</span></span> },
-              ...(record?.trialStartedAt && record.trialEndsAt && (access.kind !== "subscription" || access.state === "past_due" || record.trialEndsAt > now)
+              ...(record?.trialStartedAt && record.trialEndsAt && access.kind !== "lifetime" && (access.kind !== "subscription" || access.state === "past_due" || record.trialEndsAt > now)
                 ? [{ label: "Free trial", value: `${formatInstant(record.trialStartedAt, ws.timeZone)} – ${formatInstant(record.trialEndsAt, ws.timeZone, { time: true })}`, hint: `${TRIAL_DAYS} days, no card needed.` }]
                 : []),
               ...(record?.creemSubscriptionId
@@ -171,6 +192,27 @@ export default async function BillingPage({ searchParams }: { searchParams: Prom
           )}
           {!canManage && !ws.isDemo && <p className="mt-4 text-[12.5px] text-faint">Only owners and admins can change the plan or billing.</p>}
         </Card>
+
+        {!ws.isDemo && lifetimeCodes.length > 0 && (
+          <Card title="Lifetime deal" description="Codes redeemed from AppSumo. Each one stays on this workspace for good.">
+            <DefinitionList items={lifetimeCodes.map((c) => ({ label: `Code …${c.hint}`, value: `Redeemed ${formatInstant(c.redeemedAt, ws.timeZone)}` }))} />
+            {canManage && lifetimeCodes.length < LIFETIME_MAX_CODES && (
+              <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-line pt-4">
+                <LinkButton href="/business/redeem" icon="sparkles">
+                  Redeem a second code
+                </LinkButton>
+                <p className="max-w-md text-[12.5px] text-faint">A second code upgrades this workspace to Business for life, with unlimited members.</p>
+              </div>
+            )}
+          </Card>
+        )}
+        {!ws.isDemo && lifetimeCodes.length === 0 && canManage && (
+          <Card title="Have an AppSumo code?" description="Redeem it for a lifetime plan: one code gives Pro, two give Business. No subscription or card needed.">
+            <LinkButton href="/business/redeem" icon="sparkles">
+              Redeem a code
+            </LinkButton>
+          </Card>
+        )}
 
         {ws.isDemo && (
           <InlineNote title="This is the demo workspace">
@@ -296,6 +338,7 @@ export default async function BillingPage({ searchParams }: { searchParams: Prom
             <li>After the trial, a paid plan is needed to keep using software records, reports and the AI tools. Your data is kept either way.</li>
             <li>Payments, invoices and payment methods are handled by Creem. Saver Option stores only Creem&apos;s customer and subscription references — never card details.</li>
             <li>Cancelling takes effect at the end of the paid period; you keep access until then.</li>
+            <li>Lifetime codes from AppSumo give Pro (one code) or Business (two codes on the same workspace) for good, with no renewal.</li>
           </ul>
           <div className="mt-4">
             <LinkButton href="/business/docs" icon="info">

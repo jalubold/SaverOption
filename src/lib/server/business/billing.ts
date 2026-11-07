@@ -75,11 +75,17 @@ function mapBilling(r: any): BillingRecord {
     canceledAt: r.canceled_at,
     endedAt: r.ended_at,
     lastRefundAt: r.last_refund_at,
+    // Only getBillingRecord reads the count; rows read for Creem updates leave it at 0, which they never write.
+    lifetimeCodes: Number(r.lifetime_codes ?? 0) || 0,
   };
 }
 
 export async function getBillingRecord(workspaceId: string, sql: Db = db()): Promise<BillingRecord | null> {
-  const [row] = await sql`select * from biz_billing where workspace_id = ${workspaceId}`;
+  const [row] = await sql`
+    select b.*,
+      (select count(*)::int from biz_lifetime_codes c
+        where c.workspace_id = b.workspace_id and c.redeemed_at is not null and c.revoked_at is null) as lifetime_codes
+    from biz_billing b where b.workspace_id = ${workspaceId}`;
   return row ? mapBilling(row) : null;
 }
 
@@ -140,6 +146,8 @@ export async function trialUsed(user: SessionUser): Promise<boolean> {
 
 export interface MemberCapacity {
   plan: PlanId | null;
+  /** The plan comes from lifetime codes (its upgrade is another code, not a checkout). */
+  lifetime: boolean;
   limit: number | null;
   members: number;
   openInvites: number;
@@ -147,12 +155,13 @@ export interface MemberCapacity {
 }
 
 export async function memberCapacity(ctx: BizContext, sql: Db = db()): Promise<MemberCapacity> {
-  const plan = effectivePlan(await accessFor(ctx.workspace));
+  const access = await accessFor(ctx.workspace);
+  const plan = effectivePlan(access);
   const limit = plan ? memberLimit(plan) : 0;
   const [{ members, invites }] = await sql`
     select (select count(*)::int from biz_memberships where workspace_id = ${ctx.workspace.id}) as members,
       (select count(*)::int from biz_invitations where workspace_id = ${ctx.workspace.id} and accepted_at is null and revoked_at is null) as invites`;
-  return { plan, limit, members, openInvites: invites, reached: plan === null || memberLimitReached(limit, members, invites) };
+  return { plan, lifetime: access.kind === "lifetime", limit, members, openInvites: invites, reached: plan === null || memberLimitReached(limit, members, invites) };
 }
 
 /** Before an invitation: the plan must be active and have room. */
@@ -160,7 +169,8 @@ export async function assertMemberCapacity(ctx: BizContext, sql: Db): Promise<vo
   await assertPremium(ctx);
   const c = await memberCapacity(ctx, sql);
   if (c.reached && c.plan) {
-    const hint = c.plan === "pro" ? " Upgrade to Business or remove a member or open invitation first." : " Remove a member or open invitation first.";
+    const upgrade = c.lifetime ? "Redeem a second lifetime code to move to Business" : "Upgrade to Business";
+    const hint = c.plan === "pro" ? ` ${upgrade} or remove a member or open invitation first.` : " Remove a member or open invitation first.";
     throw new BizError("invalid", `The ${planLabels[c.plan]} plan includes up to ${c.limit} members (including open invitations).${hint}`);
   }
 }

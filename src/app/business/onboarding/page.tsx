@@ -103,7 +103,7 @@ export default async function OnboardingPage(props: PageProps<"/business/onboard
                   : `It starts with a ${TRIAL_DAYS}-day free trial with everything included — no card needed. After that, choose a paid plan to keep going.`}
               </p>
               <div className="mt-6">
-                <CreateWorkspaceForm suggested={await regionDefaults()} />
+                <CreateWorkspaceForm suggested={await regionDefaults()} next={q.next === "/business/redeem" ? "/business/redeem" : undefined} />
               </div>
             </section>
             <section className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-dashed border-line-strong px-5 py-4" data-demo-offer>
