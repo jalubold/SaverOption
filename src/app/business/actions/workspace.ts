@@ -50,6 +50,8 @@ export async function createWorkspaceAction(_prev: FormState, form: FormData): P
     const id = await createWorkspace(user, { name, industry, companySize, website, defaultCurrency, timeZone });
     await selectWorkspace(id);
     revalidatePath("/business", "layout");
+    // Created to take a lifetime code: straight back to redeeming it.
+    if (form.get("next") === "/business/redeem") redirect("/business/redeem");
     // Without a trial (already used on this account) the next step is choosing a plan.
     const access = resolveAccess(await getBillingRecord(id), { isDemo: false, now: new Date() });
     redirect(hasPremium(access) ? "/business/onboarding?step=subscription" : "/business/settings/billing?locked=1");

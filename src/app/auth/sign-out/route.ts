@@ -8,8 +8,9 @@ export async function POST(request: NextRequest) {
   const scope = form?.get("scope") === "global" ? "global" : "local";
   if (authConfigured()) await (await supabaseServer()).auth.signOut({ scope });
   const next = form?.get("next");
-  // An invite link's page offers "Sign out and switch account", so it comes back to the invite.
+  // An invite link's page and the code redemption page offer "Sign out" to switch account, so they come back.
   const invite = typeof next === "string" && /^\/business\/invite\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(next);
-  const to = next === "/business" ? "/business?signed_out=1" : invite ? (next as string) : "/";
+  const back = invite || next === "/business/redeem";
+  const to = next === "/business" ? "/business?signed_out=1" : back ? (next as string) : "/";
   return NextResponse.redirect(new URL(to, request.nextUrl.origin), 303);
 }

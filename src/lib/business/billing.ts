@@ -10,6 +10,9 @@
  *   Creem-side trial), and until the end of the paid period once it's set to
  *   cancel, cancelled or behind on payment. Paused, unpaid, expired or unknown
  *   states give none.
+ * - Lifetime codes (sold on AppSumo, redeemed on /business/redeem): one active
+ *   code gives Pro for life, two give Business. They never expire, outrank the
+ *   trial, and give way only to a running subscription on a higher plan.
  * - The demo workspace (fictional sample data for trying the product) isn't billed.
  */
 
@@ -49,7 +52,20 @@ export interface BillingRecord {
   canceledAt: Date | null;
   endedAt: Date | null;
   lastRefundAt: Date | null;
+  /** Lifetime codes redeemed on this workspace and not deactivated. */
+  lifetimeCodes: number;
 }
+
+/** Codes one workspace can stack: the first gives Pro, the second Business. */
+export const LIFETIME_MAX_CODES = 2;
+
+/** The plan a number of active lifetime codes gives, or null for none. */
+export function lifetimePlan(codes: number): PlanId | null {
+  if (!Number.isFinite(codes) || codes < 1) return null;
+  return codes >= 2 ? "business" : "pro";
+}
+
+const planRank: Record<PlanId, number> = { pro: 1, business: 2 };
 
 export type LockReason = "trial_ended" | "no_trial" | "subscription_ended" | "payment_failed" | "paused";
 
@@ -63,6 +79,8 @@ export type Access =
       state: "active" | "trialing" | "ending" | "past_due";
       until: Date | null;
     }
+  /** Redeemed lifetime codes: `codes` active codes giving `plan`, with no renewal. */
+  | { kind: "lifetime"; plan: PlanId; codes: number }
   | { kind: "locked"; reason: LockReason };
 
 /** What a subscription in this state gives right now, or null when it gives nothing. */
@@ -95,6 +113,12 @@ export function resolveAccess(b: BillingRecord | null, opts: { isDemo: boolean; 
   if (opts.isDemo) return { kind: "demo" };
   if (!b) return { kind: "locked", reason: "no_trial" };
   const sub = subscriptionAccess(b, opts.now);
+  const lifetime = lifetimePlan(b.lifetimeCodes);
+  if (lifetime) {
+    // A running subscription on a higher plan wins while it lasts; then the lifetime plan applies again.
+    if (sub && planRank[sub.plan] > planRank[lifetime]) return sub;
+    return { kind: "lifetime", plan: lifetime, codes: b.lifetimeCodes };
+  }
   // A failed or cancelled subscription doesn't cut a trial that is still running.
   if (sub && !(sub.state === "past_due" && trialActive(b, opts.now))) return sub;
   if (trialActive(b, opts.now)) return { kind: "trial", endsAt: b.trialEndsAt! };
@@ -113,13 +137,17 @@ export function hasPremium(a: Access): boolean {
 
 /** The plan whose limits apply: the trial (and the demo) get everything Business has. */
 export function effectivePlan(a: Access): PlanId | null {
-  if (a.kind === "subscription") return a.plan;
+  if (a.kind === "subscription" || a.kind === "lifetime") return a.plan;
   if (a.kind === "trial" || a.kind === "demo") return "business";
   return null;
 }
 
-/** Whether starting a new checkout makes sense (not while a subscription is running and renewing). */
+/**
+ * Whether starting a new checkout makes sense: not while a subscription is
+ * running and renewing, and not on a lifetime plan (its upgrade is a second code).
+ */
 export function canStartCheckout(a: Access): boolean {
+  if (a.kind === "lifetime") return false;
   return !(a.kind === "subscription" && (a.state === "active" || a.state === "trialing"));
 }
 
@@ -188,6 +216,7 @@ export function billingNotice(a: Access, opts: { timeZone: string; canManage: bo
   const askOwner = opts.canManage ? "" : " An owner or admin can choose a plan.";
   switch (a.kind) {
     case "demo":
+    case "lifetime":
       return null;
     case "trial": {
       const left = remainingText(a.endsAt, opts.now);

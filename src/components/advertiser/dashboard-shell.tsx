@@ -11,7 +11,7 @@ export function DashboardShell({
 }: {
   email: string;
   admin: boolean;
-  section: "dashboard" | "admin" | "metrics" | "setup";
+  section: "dashboard" | "admin" | "metrics" | "setup" | "codes";
   children: React.ReactNode;
 }) {
   const tabs = [
@@ -21,6 +21,7 @@ export function DashboardShell({
           { href: "/admin", label: "Review", key: "admin" },
           { href: "/admin/metrics", label: "Metrics", key: "metrics" },
           { href: "/admin/setup", label: "Setup", key: "setup" },
+          { href: "/admin/codes", label: "Lifetime codes", key: "codes" },
         ]
       : []),
   ];

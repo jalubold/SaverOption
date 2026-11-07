@@ -2,7 +2,7 @@
 import assert from "node:assert/strict";
 import { createHmac } from "node:crypto";
 import { test } from "node:test";
-import { billingNotice, classifyProduct, yearlySavings, trialBadge, canStartCheckout, daysLeft, effectivePlan, hasPremium, memberLimitReached, remainingText, resolveAccess, TRIAL_DAYS, type BillingRecord } from "./billing.ts";
+import { billingNotice, classifyProduct, yearlySavings, trialBadge, canStartCheckout, daysLeft, effectivePlan, hasPremium, lifetimePlan, memberLimitReached, remainingText, resolveAccess, TRIAL_DAYS, type BillingRecord } from "./billing.ts";
 import { parseCheckout, parseCreemEvent, parseProduct, parseSubscription, verifyCreemSignature } from "../server/business/creem.ts";
 
 const now = new Date("2026-10-24T12:00:00Z");
@@ -25,6 +25,7 @@ function record(p: Partial<BillingRecord> = {}): BillingRecord {
     canceledAt: null,
     endedAt: null,
     lastRefundAt: null,
+    lifetimeCodes: 0,
     ...p,
   };
 }
@@ -226,4 +227,34 @@ test("event envelope and objects are parsed defensively", () => {
   assert.equal(p.billingPeriod, "every-month");
   assert.equal(p.taxMode, "exclusive");
   assert.equal(parseProduct({ id: "prod_2", price: "29" }), null);
+});
+
+test("lifetime codes: one gives Pro, two give Business, for good", () => {
+  const r = (p: Partial<BillingRecord>) => resolveAccess(record(p), { isDemo: false, now });
+  assert.equal(lifetimePlan(0), null);
+  assert.equal(lifetimePlan(1), "pro");
+  assert.equal(lifetimePlan(2), "business");
+  assert.equal(lifetimePlan(3), "business");
+
+  assert.deepEqual(r({ lifetimeCodes: 1 }), { kind: "lifetime", plan: "pro", codes: 1 });
+  assert.deepEqual(r({ lifetimeCodes: 2 }), { kind: "lifetime", plan: "business", codes: 2 });
+  // Outranks a running trial and an ended trial alike.
+  assert.equal(r({ ...trial(3), lifetimeCodes: 1 }).kind, "lifetime");
+  assert.equal(r({ ...trial(-30), lifetimeCodes: 1 }).kind, "lifetime");
+  // An ended or failed subscription doesn't take lifetime access away.
+  assert.equal(r({ ...sub("canceled", -5), lifetimeCodes: 1 }).kind, "lifetime");
+  assert.equal(r({ ...sub("unpaid", 5), lifetimeCodes: 2 }).kind, "lifetime");
+  // A running Business subscription wins over a Pro code while it lasts…
+  assert.deepEqual(r({ ...sub("active", 10, "business"), lifetimeCodes: 1 }), { kind: "subscription", plan: "business", state: "active", until: at(10) });
+  // …but a Pro subscription doesn't push a Business code down to Pro.
+  assert.equal(r({ ...sub("active", 10, "pro"), lifetimeCodes: 2 }).kind, "lifetime");
+
+  const a = r({ lifetimeCodes: 1 });
+  assert.equal(hasPremium(a), true);
+  assert.equal(effectivePlan(a), "pro");
+  assert.equal(canStartCheckout(a), false);
+  assert.equal(billingNotice(a, { timeZone: "UTC", canManage: true, now }), null);
+  assert.equal(trialBadge(a, now), null);
+  // The demo workspace stays the demo.
+  assert.deepEqual(resolveAccess(record({ lifetimeCodes: 2 }), { isDemo: true, now }), { kind: "demo" });
 });
