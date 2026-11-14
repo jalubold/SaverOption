@@ -184,6 +184,28 @@ export async function getSponsoredOffers(category?: CategorySlug, limit = 1): Pr
     .slice(0, limit);
 }
 
+/**
+ * How many cards a category or collection page renders itself. The rest load on "Show all"
+ * (from /api/offers), so the cached page stays small: every card is stored three times in each
+ * ISR write (HTML, RSC payload and segments). 24 fills whole rows of two and three columns.
+ */
+export const FIRST_CARDS = 24;
+
+/**
+ * Every card of a category page, in the order shown: its sponsored card (labelled) first, then
+ * the rest of the category. The page and /api/offers both use this, so "Show all" continues
+ * exactly where the page stops.
+ */
+export async function getCategoryGrid(category: CategorySlug): Promise<OfferView[]> {
+  const [{ offers }, sponsored] = await Promise.all([queryOffers({ category }), getSponsoredOffers(category, 1)]);
+  return [...sponsored, ...offers.filter((o) => !sponsored.some((s) => s.id === o.id))];
+}
+
+/** Every card of a collection page (/for/…), in the order shown. Shared with /api/offers like getCategoryGrid. */
+export async function getAudienceGrid(audience: AudienceSlug): Promise<OfferView[]> {
+  return (await queryOffers({ audience })).offers;
+}
+
 export async function getOfferBySlug(slug: string): Promise<OfferView | null> {
   return publishedViews().find((o) => o.slug === slug) ?? null;
 }

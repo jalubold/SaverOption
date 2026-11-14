@@ -3,11 +3,12 @@ import type { CSSProperties } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { siteConfig } from "@/config/site";
+import { MoreOffers } from "@/components/offers/more-offers";
 import { OfferGrid } from "@/components/offers/offer-card";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Icon } from "@/components/ui/icon";
 import { Container } from "@/components/ui/primitives";
-import { getAudience, getAudiences, queryOffers } from "@/lib/catalog";
+import { FIRST_CARDS, getAudience, getAudienceGrid, getAudiences, queryOffers } from "@/lib/catalog";
 import { breadcrumbJsonLd, clampDescription, collectionJsonLd, freshnessLabel, pageMetadata } from "@/lib/seo";
 
 export const revalidate = 43200;
@@ -34,7 +35,9 @@ export default async function AudiencePage(props: PageProps<"/for/[slug]">) {
   const audience = await getAudience((await props.params).slug);
   if (!audience) notFound();
 
-  const [{ offers, total }, all] = await Promise.all([queryOffers({ audience: audience.slug }), getAudiences()]);
+  // The same list /api/offers continues from for "Show all".
+  const [offers, all] = await Promise.all([getAudienceGrid(audience.slug), getAudiences()]);
+  const total = offers.length;
   const title = `${siteConfig.name} for ${audience.name}`;
   const others = all.filter((a) => a.slug !== audience.slug && a.count > 0);
 
@@ -78,7 +81,10 @@ export default async function AudiencePage(props: PageProps<"/for/[slug]">) {
         </p>
 
         {total > 0 ? (
-          <OfferGrid offers={offers} headingLevel="h2" />
+          <>
+            <OfferGrid offers={offers.slice(0, FIRST_CARDS)} headingLevel="h2" />
+            {total > FIRST_CARDS && <MoreOffers source={{ audience: audience.slug }} total={total} headingLevel="h2" />}
+          </>
         ) : (
           <div className="rounded-[var(--radius-card)] border border-dashed border-line-strong bg-surface px-6 py-14 text-center">
             <h2 className="text-lg font-semibold">No active offers here yet</h2>

@@ -3,12 +3,13 @@ import type { CSSProperties } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CategoryChips } from "@/components/categories/category-links";
+import { MoreOffers } from "@/components/offers/more-offers";
 import { OfferGrid } from "@/components/offers/offer-card";
 import { FaqSection } from "@/components/seo/faq-section";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Icon } from "@/components/ui/icon";
 import { buttonClass, Container } from "@/components/ui/primitives";
-import { getCategories, getCategory, getSponsoredOffers, queryOffers } from "@/lib/catalog";
+import { FIRST_CARDS, getCategories, getCategory, getCategoryGrid, queryOffers } from "@/lib/catalog";
 import { categoryFaq } from "@/lib/faq";
 import { breadcrumbJsonLd, clampDescription, collectionJsonLd, faqJsonLd, freshnessLabel, pageMetadata } from "@/lib/seo";
 
@@ -37,13 +38,12 @@ export default async function CategoryPage(props: PageProps<"/categories/[slug]"
   const category = await getCategory((await props.params).slug);
   if (!category) notFound();
 
-  const [{ offers: allOffers }, sponsoredSlot, all] = await Promise.all([
+  const [{ offers: allOffers }, grid, all] = await Promise.all([
     queryOffers({ category: category.slug }),
-    getSponsoredOffers(category.slug, 1),
+    // The sponsored card leads the grid once, labelled, and is removed from the organic list.
+    getCategoryGrid(category.slug),
     getCategories(),
   ]);
-  // The sponsored card leads the grid once, labelled, and is removed from the organic list.
-  const offers = allOffers.filter((o) => !sponsoredSlot.some((s) => s.id === o.id));
   const total = allOffers.length;
   const others = all.filter((c) => c.slug !== category.slug && c.count > 0);
   const faq = categoryFaq(category, allOffers);
@@ -100,7 +100,10 @@ export default async function CategoryPage(props: PageProps<"/categories/[slug]"
         </p>
 
         {total > 0 ? (
-          <OfferGrid offers={[...sponsoredSlot, ...offers]} headingLevel="h2" />
+          <>
+            <OfferGrid offers={grid.slice(0, FIRST_CARDS)} headingLevel="h2" />
+            {grid.length > FIRST_CARDS && <MoreOffers source={{ category: category.slug }} total={grid.length} headingLevel="h2" />}
+          </>
         ) : (
           <div className="rounded-[var(--radius-card)] border border-dashed border-line-strong bg-surface px-6 py-14 text-center">
             <h2 className="text-lg font-semibold">No active offers in this category yet</h2>
