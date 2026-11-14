@@ -49,8 +49,23 @@ export async function proxy(request: NextRequest) {
 }
 
 const STATS_PARAMS = ["range", ...Object.values(DIMENSIONS).map((d) => d.param)];
+// Kept as a second check: the matcher below already leaves these paths out.
 const PUBLIC_BUSINESS = /^\/business(?:\/mcp|\/download(?:\/mac)?|\/docs(?:\/[^/]+)*|\/software-deals(?:\/[^/]+)?)?\/?$/;
 
 export const config = {
-  matcher: ["/stats", "/dashboard/:path*", "/admin/:path*", "/claim", "/login", "/signup", "/promote/:path*", "/business/:path*"],
+  matcher: [
+    "/stats",
+    "/dashboard/:path*",
+    "/admin/:path*",
+    "/claim",
+    "/login",
+    "/signup",
+    "/promote/:path*",
+    // Every Business page except the public ones (the landing page /business itself, AI & MCP,
+    // download, docs and the software deals with their share images). Those are cached pages that
+    // need no session, and leaving them out of the matcher means the proxy function doesn't run
+    // before each of them at all. The lookahead stops at a segment boundary ("/", the ".rsc" of a
+    // client navigation, or the end), so the signed-in /business/software pages still go through it.
+    "/business/((?!mcp(?:/|\\.|$)|download(?:/|\\.|$)|docs(?:/|\\.|$)|software-deals(?:/|\\.|$)).*)",
+  ],
 };
