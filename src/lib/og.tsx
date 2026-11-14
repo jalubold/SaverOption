@@ -9,6 +9,27 @@ import { siteConfig } from "@/config/site";
 export const ogSize = { width: 1200, height: 630 };
 export const ogContentType = "image/png";
 
+/**
+ * Share images for deals, products, categories and collections are drawn on request (not at build,
+ * which would make each deployment much larger), and drawing one costs far more CPU than serving a
+ * page. Next.js sends them with max-age=0, so every crawler and link preview drew the image again.
+ * s-maxage lets Vercel's CDN keep each one for the same 12 hours the pages keep (a deal's image only
+ * changes when it ends), and serve the old one while it draws the next in the background.
+ * Browsers still revalidate (max-age=0). This is CDN caching, not ISR, so it adds no ISR writes.
+ */
+export const OG_CACHE_CONTROL = "public, max-age=0, s-maxage=43200, stale-while-revalidate=86400";
+
+/**
+ * For a slug that isn't in the catalog: a plain 404 (drawing nothing) instead of a generic image,
+ * like the page itself. The CDN keeps it for an hour so the same bad URL doesn't run the function again.
+ */
+export function ogNotFound(): Response {
+  return new Response("Not Found", {
+    status: 404,
+    headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "public, max-age=0, s-maxage=3600" },
+  });
+}
+
 function clip(text: string, max: number): string {
   return text.length > max ? `${text.slice(0, max - 1).trimEnd()}…` : text;
 }
@@ -76,6 +97,6 @@ export function ogImage({
         <div style={{ height: 8, width: 160, backgroundImage: `linear-gradient(90deg, ${from}, ${to})`, borderRadius: 4 }} />
       </div>
     ),
-    ogSize,
+    { ...ogSize, headers: { "cache-control": OG_CACHE_CONTROL } },
   );
 }
