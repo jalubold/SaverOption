@@ -1,6 +1,7 @@
 import { siteConfig } from "@/config/site";
+import { parseSent, pickIndexNowUrls, serializeSent } from "@/lib/indexnow-pick";
 import { db, dbConfigured } from "@/lib/server/db";
-import { getSettings, saveSettings } from "@/lib/server/settings";
+import { INDEXNOW_SENT_KEY, getSettings, saveSettings } from "@/lib/server/settings";
 import { siteUrls } from "@/lib/site-urls";
 
 /**
@@ -12,9 +13,12 @@ import { siteUrls } from "@/lib/site-urls";
 export const INDEXNOW_KEY = "55c265383b56b634821a100e6503a700";
 
 /**
- * Once per production deployment (whichever server starts first): submits the
- * pages that changed since the last submission — everything the first time —
- * plus the list pages, which change whenever a deal does.
+ * Once per production deployment (whichever server starts first): submits only
+ * the pages that are new or changed since the last submission (see
+ * pickIndexNowUrls) — everything the first time. List pages go out when a deal
+ * in them changed, and a deployment that changed no content submits nothing,
+ * so search engines aren't asked to recrawl (and re-render) unchanged pages
+ * after every deployment.
  */
 export async function submitIndexNow(): Promise<void> {
   const deployment = process.env.VERCEL_DEPLOYMENT_ID || process.env.VERCEL_GIT_COMMIT_SHA;
@@ -28,16 +32,18 @@ export async function submitIndexNow(): Promise<void> {
     returning key`;
   if (!claimed.length) return;
 
-  const last = (await getSettings()).get("indexnow_at")?.slice(0, 10);
-  const isList = (url: string) => {
-    const path = new URL(url).pathname;
-    return path === "/" || path === "/deals" || path === "/categories" || path.startsWith("/categories/") || path.startsWith("/for/");
-  };
-  const urls = (await siteUrls())
-    .filter((u) => !last || isList(u.url) || (u.lastModified !== undefined && u.lastModified >= last))
-    .map((u) => u.url)
-    .slice(0, 10_000);
-  if (!urls.length) return;
+  const lastDate = (await getSettings()).get("indexnow_at")?.slice(0, 10);
+  // What was submitted last time, per URL (read on its own: getSettings leaves this value out).
+  const [stored] = await db()<{ value: string }[]>`select value from app_settings where key = ${INDEXNOW_SENT_KEY}`;
+  const sent = parseSent(stored?.value);
+  const all = await siteUrls();
+  const urls = pickIndexNowUrls(all, { sent, lastDate }).slice(0, 10_000);
+  if (!urls.length) {
+    // Nothing new: remember the current URLs so the next deployment compares against them.
+    if (!sent) await saveSettings({ [INDEXNOW_SENT_KEY]: serializeSent(all) });
+    console.log("[indexnow] no new or changed pages to submit");
+    return;
+  }
 
   const res = await fetch("https://api.indexnow.org/indexnow", {
     method: "POST",
@@ -46,7 +52,7 @@ export async function submitIndexNow(): Promise<void> {
     signal: AbortSignal.timeout(10_000),
   });
   if (res.ok) {
-    await saveSettings({ indexnow_at: new Date().toISOString() });
+    await saveSettings({ indexnow_at: new Date().toISOString(), [INDEXNOW_SENT_KEY]: serializeSent(all) });
     console.log(`[indexnow] submitted ${urls.length} URLs (${res.status})`);
   } else {
     console.error(`[indexnow] submission refused (${res.status})`);

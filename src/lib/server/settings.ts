@@ -9,12 +9,18 @@ import { db, dbConfigured } from "@/lib/server/db";
 const TTL_MS = 30_000;
 let cache: { at: number; values: Map<string, string> } | null = null;
 
+/**
+ * Fingerprints of the URLs last submitted to IndexNow (a few KB, see src/lib/indexnow-pick.ts).
+ * Only the IndexNow submission reads it, so getSettings, which pages call, leaves it out.
+ */
+export const INDEXNOW_SENT_KEY = "indexnow_sent";
+
 export async function getSettings(): Promise<Map<string, string>> {
   if (!dbConfigured()) return new Map();
   if (cache && Date.now() - cache.at < TTL_MS) return cache.values;
   let values = new Map<string, string>();
   try {
-    const rows = await db()<{ key: string; value: string }[]>`select key, value from app_settings`;
+    const rows = await db()<{ key: string; value: string }[]>`select key, value from app_settings where key <> ${INDEXNOW_SENT_KEY}`;
     values = new Map(rows.map((r) => [r.key, r.value]));
   } catch {
     // Table not there yet (migrations pending): behave as if nothing is configured.
