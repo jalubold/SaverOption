@@ -1,5 +1,5 @@
 import { withPrices, type ListingPlan } from "@/config/listing-plans";
-import { dodoApiKey, dodoCheckoutMode, dodoPrices } from "@/lib/server/dodo";
+import { PAGE_PRICES_REVALIDATE, dodoApiKey, dodoCheckoutMode, dodoPrices } from "@/lib/server/dodo";
 import { checkoutMode, getListingPlans, type CheckoutMode } from "@/lib/server/lemonsqueezy";
 
 /**
@@ -29,11 +29,16 @@ export async function checkoutChoice({ admin = false }: { admin?: boolean } = {}
 }
 
 /** The plans with the prices set at a provider (defaults where it has none). */
-export async function plansFor(provider: ListingProvider): Promise<ListingPlan[]> {
-  return provider === "dodo" ? withPrices(await dodoPrices()) : getListingPlans();
+export async function plansFor(provider: ListingProvider, { revalidate }: { revalidate?: number } = {}): Promise<ListingPlan[]> {
+  return provider === "dodo" ? withPrices(await dodoPrices({ revalidate })) : getListingPlans();
 }
 
-/** The plans as ordinary visitors buy them right now (what cached pages show). */
+/**
+ * The plans as ordinary visitors buy them right now (what cached pages show, rendered by the root
+ * layout). It picks the provider the way checkoutChoice does, without checkoutChoice's mode check:
+ * that check reads Dodo every 15 minutes, which would make every cached page refresh that often.
+ * The promote form replaces these prices with the server's current ones as soon as it opens.
+ */
 export async function listingPlansForSale(): Promise<ListingPlan[]> {
-  return plansFor((await checkoutChoice()).provider);
+  return plansFor(dodoApiKey() ? "dodo" : "lemonsqueezy", { revalidate: PAGE_PRICES_REVALIDATE });
 }

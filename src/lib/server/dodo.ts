@@ -41,6 +41,17 @@ export class DodoError extends Error {}
 /** Cache tag of the product details (price and billing period), read again every 15 minutes or on "Re-check". */
 export const DODO_PRODUCTS_TAG = "dodo-products";
 
+/** How often checkout, the promote form and /admin/setup read the products again (seconds). */
+const PRODUCTS_REVALIDATE = 900;
+
+/**
+ * How often prices shown on cached pages are read again: the 12 hours the deal pages keep anyway.
+ * A page refreshes as often as the shortest-lived data it reads, so reading prices every 15 minutes
+ * there made every cached page (and its ISR write) refresh every 15 minutes. The promote form gets
+ * fresh prices from the server when it opens, and "Re-check" (DODO_PRODUCTS_TAG) still updates at once.
+ */
+export const PAGE_PRICES_REVALIDATE = 43_200;
+
 export function dodoApiKey(): string | null {
   return process.env.DODO_PAYMENTS_API_KEY?.trim() || null;
 }
@@ -177,12 +188,12 @@ export interface DodoProductInfo {
   every: { count: number; interval: string } | null;
 }
 
-/** A product's price and billing period (cached for 15 minutes), or an error message. */
-export async function dodoProduct(cfg: DodoConfig, productId: string): Promise<DodoProductInfo | { error: string }> {
+/** A product's price and billing period (cached for 15 minutes unless `revalidate` says otherwise), or an error message. */
+export async function dodoProduct(cfg: DodoConfig, productId: string, revalidate = PRODUCTS_REVALIDATE): Promise<DodoProductInfo | { error: string }> {
   try {
     const res = await fetch(`${cfg.baseUrl}/products/${encodeURIComponent(productId)}`, {
       headers: { Authorization: `Bearer ${cfg.apiKey}`, Accept: "application/json" },
-      next: { revalidate: 900, tags: [DODO_PRODUCTS_TAG] },
+      next: { revalidate, tags: [DODO_PRODUCTS_TAG] },
       signal: AbortSignal.timeout(8_000),
     });
     if (!res.ok) return { error: res.status === 404 ? "not found in this mode" : `couldn't be read (${res.status})` };
@@ -215,17 +226,20 @@ export function matchesPlan(info: DodoProductInfo, plan: ListingPlan): boolean {
   return info.recurring && info.every?.count === want.count && info.every.interval === want.interval && (info.currency ?? "USD") === plan.currency;
 }
 
-/** Prices (cents) of the configured products that bill the way their plan says. */
-export async function dodoPrices(): Promise<Partial<Record<ListingPlanId, number>>> {
+/**
+ * Prices (cents) of the configured products that bill the way their plan says. Cached pages pass
+ * PAGE_PRICES_REVALIDATE; everything else reads them every 15 minutes.
+ */
+export async function dodoPrices({ revalidate = PRODUCTS_REVALIDATE }: { revalidate?: number } = {}): Promise<Partial<Record<ListingPlanId, number>>> {
   const cfg = await dodoConfig();
-  return cfg ? pricesFor(cfg) : {};
+  return cfg ? pricesFor(cfg, revalidate) : {};
 }
 
-async function pricesFor(cfg: DodoConfig): Promise<Partial<Record<ListingPlanId, number>>> {
+async function pricesFor(cfg: DodoConfig, revalidate = PRODUCTS_REVALIDATE): Promise<Partial<Record<ListingPlanId, number>>> {
   const prices: Partial<Record<ListingPlanId, number>> = {};
   await Promise.all(
     listingPlans.map(async (plan) => {
-      const info = await dodoProduct(cfg, cfg.products[plan.id]);
+      const info = await dodoProduct(cfg, cfg.products[plan.id], revalidate);
       if (!("error" in info) && info.priceCents && matchesPlan(info, plan)) prices[plan.id] = info.priceCents;
     }),
   );
