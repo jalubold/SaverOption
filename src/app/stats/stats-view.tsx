@@ -74,6 +74,7 @@ export async function StatsView({ q }: { q: StatsQuery }) {
                     <Link
                       href={statsHref(q, { range: key })}
                       rel="nofollow"
+                      prefetch={false}
                       scroll={false}
                       aria-current={q.range === key ? "page" : undefined}
                       className={cn(
@@ -96,6 +97,7 @@ export async function StatsView({ q }: { q: StatsQuery }) {
                     <Link
                       href={statsHref(q, { unset: dim })}
                       rel="nofollow"
+                      prefetch={false}
                       scroll={false}
                       className="inline-flex h-9 items-center gap-1.5 rounded-full border border-accent/50 bg-accent/15 pl-3 pr-2 text-[13px] text-fg transition-colors hover:border-accent"
                     >
@@ -108,7 +110,7 @@ export async function StatsView({ q }: { q: StatsQuery }) {
                 ))}
                 {activeFilters.length > 1 && (
                   <li>
-                    <Link href={statsHref(q, { unset: "all" })} rel="nofollow" scroll={false} className="inline-flex h-9 items-center px-2 text-[13px] font-medium text-accent-ink hover:underline">
+                    <Link href={statsHref(q, { unset: "all" })} rel="nofollow" prefetch={false} scroll={false} className="inline-flex h-9 items-center px-2 text-[13px] font-medium text-accent-ink hover:underline">
                       Clear all
                     </Link>
                   </li>

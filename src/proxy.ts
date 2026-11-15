@@ -59,13 +59,14 @@ export async function proxy(request: NextRequest) {
  * (they're nofollow and disallowed in robots.txt, which bad bots ignore) costs real CPU. Here:
  *  - automation (crawlers, headless browsers, scraping libraries) goes to the prerendered /stats
  *    (the API answers 403), without rendering anything;
- *  - each visitor (a hash of the IP, never the IP) gets a generous allowance per 10 minutes;
+ *  - each visitor (a hash of the IP, never the IP) gets a generous allowance per 10 minutes (the
+ *    stats filter links don't prefetch, so only real clicks and loads count);
  *  - and the whole site's filtered views are capped per hour, so even a crawler spread over many
  *    IPs can't run up the bill. People rarely come near either limit.
  * Limits fail open when Redis isn't reachable. Nothing here is cached (no-store).
  */
 const STATS_LIMITS = {
-  page: { perVisitor: 30, total: 300 },
+  page: { perVisitor: 60, total: 300 },
   api: { perVisitor: 120, total: 1500 },
 };
 
@@ -78,9 +79,6 @@ async function guardStats(request: NextRequest, api: boolean): Promise<NextRespo
     to.search = "";
     return NextResponse.redirect(to, { status: 307, headers: noStore });
   }
-  // A link prefetch (filter links in view) isn't a visit and doesn't render the page; don't count it,
-  // or someone merely looking at the stats could run out.
-  if (request.headers.has("next-router-prefetch")) return NextResponse.next();
   const limits = api ? STATS_LIMITS.api : STATS_LIMITS.page;
   const kind = api ? "stats-api" : "stats-view";
   const visitor = clientKey(request.headers.get("x-forwarded-for"), request.headers.get("x-real-ip"));
