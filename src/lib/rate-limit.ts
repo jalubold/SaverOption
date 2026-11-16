@@ -2,11 +2,12 @@ import { createHash } from "node:crypto";
 import { redisPipeline } from "./redis.ts";
 
 /**
- * Fixed-window request limits kept in Upstash Redis (the same store as the visitor and click
- * counts). One INCR per request; the counter expires with its window.
+ * Fixed-window request limits, counted in Upstash Redis (the same store as the visitor and click
+ * counts) so every server instance shares them. One INCR per request; the counter expires with its
+ * window.
  *
- * Fails open: without Redis, or when Redis can't be reached, nothing is limited, so an outage
- * never locks people out.
+ * Without Redis, or when Redis can't be reached, each server instance counts in memory instead, so
+ * the limits still hold (per instance) rather than switching off.
  */
 export async function overLimit(key: string, limit: number, windowSeconds: number, now = Date.now()): Promise<boolean> {
   const window = Math.floor(now / 1000 / windowSeconds);
@@ -16,7 +17,18 @@ export async function overLimit(key: string, limit: number, windowSeconds: numbe
     ["EXPIRE", counter, windowSeconds * 2],
   ]);
   const count = Number(result?.[0]);
-  return Number.isFinite(count) && count > limit;
+  return (Number.isFinite(count) ? count : countInMemory(counter, window)) > limit;
+}
+
+const memory = new Map<string, { window: number; count: number }>();
+
+function countInMemory(counter: string, window: number): number {
+  // Forget finished windows now and then, so the map stays small.
+  if (memory.size > 5_000) for (const [k, v] of memory) if (v.window < window) memory.delete(k);
+  const entry = memory.get(counter) ?? { window, count: 0 };
+  entry.count += 1;
+  memory.set(counter, entry);
+  return entry.count;
 }
 
 /**

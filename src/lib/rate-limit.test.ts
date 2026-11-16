@@ -46,14 +46,18 @@ test("separate keys have separate counters", async () => {
   assert.ok(seen.every((k) => k.startsWith("rl:stats:view:")));
 });
 
-test("fails open: no Redis configured, or Redis unreachable", async () => {
-  assert.equal(await overLimit("k", 0, 600), false);
+test("without Redis, or with Redis unreachable, the limits still hold (counted in memory)", async () => {
+  const t = Date.UTC(2026, 10, 16, 6, 0, 0);
+  for (let i = 0; i < 2; i++) assert.equal(await overLimit("mem-a", 2, 600, t), false);
+  assert.equal(await overLimit("mem-a", 2, 600, t), true);
+  assert.equal(await overLimit("mem-a", 2, 600, t + 600_000), false, "a new window starts over");
   process.env.UPSTASH_REDIS_REST_URL = "https://redis.test";
   process.env.UPSTASH_REDIS_REST_TOKEN = "t";
   globalThis.fetch = (async () => {
     throw new Error("down");
   }) as typeof fetch;
-  assert.equal(await overLimit("k", 0, 600), false);
+  assert.equal(await overLimit("mem-b", 1, 600, t), false);
+  assert.equal(await overLimit("mem-b", 1, 600, t), true);
 });
 
 test("the client key is a short hash, never the IP itself", () => {

@@ -60,19 +60,23 @@ export async function proxy(request: NextRequest) {
  *  - automation that says so (crawlers, headless browsers, scraping libraries) goes to the
  *    prerendered /stats (the API answers 403), without rendering anything;
  *  - browsers also say where a request comes from (Sec-Fetch-Site, which page scripts can't
- *    change). A filter clicked on the site is "same-origin". A crawler opening URLs one by one, the
- *    pattern that got through looking like ordinary browsers with one view per IP, arrives as
- *    "none" (opened directly) or without the header. Direct opens share a small hourly budget; once
- *    it's spent they go to the prerendered /stats (a shared link then shows the overview);
- *  - clicks on the site: each visitor (a hash of the IP, never the IP) gets 60 per 10 minutes and
- *    the whole site 150 per hour (the filter links don't prefetch, so only real clicks count);
+ *    change). A filter clicked on the site, a client-side navigation and a reload are
+ *    "same-origin". A crawler opening URLs one by one, the pattern that got through looking like
+ *    ordinary browsers with one view per IP, arrives as "none" (opened directly) or "cross-site".
+ *    Those get a small page with a "Show these stats" link instead of the render: one click for a
+ *    person with a shared link (the click is same-origin), nothing rendered and nothing counted in
+ *    the traffic figures for a crawler (the small page loads no analytics);
+ *  - requests without the header (very old browsers, HTTP libraries posing as a browser) share a
+ *    tiny hourly budget, then get the same small page;
+ *  - same-origin: each visitor (a hash of the IP, never the IP) gets 60 per 10 minutes and the
+ *    whole site 100 per hour (the filter links don't prefetch, so only real clicks count);
  *  - the breakdown API is only fetched by the stats page itself, so a request that says it comes
  *    from elsewhere gets 403.
- * Limits fail open when Redis isn't reachable. Nothing here is cached (no-store).
+ * Counts live in Redis, or in each instance's memory without it. Nothing here is cached (no-store).
  */
 const STATS_LIMITS = {
-  page: { perVisitor: 60, total: 150 },
-  direct: { perVisitor: 10, total: 30 },
+  page: { perVisitor: 60, total: 100 },
+  noHeader: { perVisitor: 5, total: 10 },
   api: { perVisitor: 120, total: 600 },
 };
 const NO_STORE = { "Cache-Control": "no-store" };
@@ -92,12 +96,13 @@ async function guardStats(request: NextRequest, api: boolean): Promise<NextRespo
   if (api && site && site !== "same-origin") return forbidden();
   const visitor = clientKey(request.headers.get("x-forwarded-for"), request.headers.get("x-real-ip"));
 
-  if (!api && site !== "same-origin") {
+  if (!api && site && site !== "same-origin") return openStatsPage(request);
+  if (!api && !site) {
     const [visitorOver, totalOver] = await Promise.all([
-      overLimit(`stats-direct:${visitor}`, STATS_LIMITS.direct.perVisitor, 600),
-      overLimit("stats-direct:all", STATS_LIMITS.direct.total, 3600),
+      overLimit(`stats-noheader:${visitor}`, STATS_LIMITS.noHeader.perVisitor, 600),
+      overLimit("stats-noheader:all", STATS_LIMITS.noHeader.total, 3600),
     ]);
-    return visitorOver || totalOver ? toStatsOverview(request) : NextResponse.next();
+    return visitorOver || totalOver ? openStatsPage(request) : NextResponse.next();
   }
 
   const limits = api ? STATS_LIMITS.api : STATS_LIMITS.page;
@@ -107,6 +112,19 @@ async function guardStats(request: NextRequest, api: boolean): Promise<NextRespo
   const headers = { ...NO_STORE, "Retry-After": totalOver ? "1800" : "300" };
   if (api) return NextResponse.json({ ok: false, reason: "Too many requests" }, { status: 429, headers });
   return new NextResponse(TOO_MANY_STATS, { status: 429, headers: { ...headers, "Content-Type": "text/html; charset=utf-8" } });
+}
+
+/** HTML-escapes text for an attribute or element (the URL below comes from the request). */
+const escapeHtml = (s: string) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+/**
+ * What a direct open of a filtered stats URL gets: a small page (no rendering, no analytics) whose
+ * link opens the same view. Clicking it is a same-origin navigation, so a person gets the stats.
+ */
+function openStatsPage(request: NextRequest): NextResponse {
+  const href = escapeHtml(request.nextUrl.pathname + request.nextUrl.search);
+  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex, nofollow"><title>Traffic stats · Saver Option</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0c0e12;color:#f7f7f7;font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}main{max-width:28rem;padding:2rem;text-align:center}p{color:#a1a1aa}.btn{display:inline-block;margin-top:.5rem;padding:.7rem 1.4rem;border-radius:999px;background:#7c3aec;color:#fff;text-decoration:none;font-weight:600}a{color:#b99cff}</style></head><body><main><h1>Traffic stats</h1><p>This link opens a filtered view of Saver Option&apos;s live traffic.</p><p><a class="btn" href="${href}" rel="nofollow">Show these stats</a></p><p><a href="/stats">Or see the overview</a></p></main></body></html>`;
+  return new NextResponse(html, { status: 200, headers: { ...NO_STORE, "Content-Type": "text/html; charset=utf-8", "X-Robots-Tag": "noindex, nofollow" } });
 }
 
 const TOO_MANY_STATS = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Too many requests · Saver Option</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0c0e12;color:#f7f7f7;font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}main{max-width:28rem;padding:2rem;text-align:center}p{color:#a1a1aa}a{color:#b99cff}</style></head><body><main><h1>Too many requests</h1><p>The filtered traffic stats are busy right now. Please try again in a few minutes.</p><p><a href="/stats">See the traffic stats overview</a></p></main></body></html>`;
