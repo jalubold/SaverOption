@@ -15,3 +15,12 @@ const AUTOMATED_AGENT =
 export function isAutomatedAgent(userAgent: string | null | undefined): boolean {
   return !userAgent || userAgent.length < 10 || AUTOMATED_AGENT.test(userAgent);
 }
+
+/**
+ * In the browser: whether automation drives it (Playwright, Puppeteer, Selenium and headless
+ * Chrome set navigator.webdriver, whatever User-Agent they claim). Used to keep those visits out of
+ * the traffic counts. Always false on the server.
+ */
+export function isAutomatedBrowser(): boolean {
+  return typeof navigator !== "undefined" && navigator.webdriver === true;
+}

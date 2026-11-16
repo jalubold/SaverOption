@@ -1,10 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Analytics } from "@vercel/analytics/next";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import { Instrument_Serif } from "next/font/google";
 import type { CSSProperties } from "react";
 import { siteConfig } from "@/config/site";
+import { SiteAnalytics } from "@/components/analytics/site-analytics";
 import { VisitBeacon } from "@/components/analytics/visit-beacon";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { PromoteProvider } from "@/components/promote/promote-modal";
@@ -85,7 +85,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <JsonLd data={websiteJsonLd()} />
         <JsonLd data={organizationJsonLd()} />
         <VisitBeacon />
-        <Analytics />
+        <SiteAnalytics />
       </body>
     </html>
   );

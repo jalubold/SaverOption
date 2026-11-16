@@ -57,34 +57,54 @@ export async function proxy(request: NextRequest) {
  * The filtered stats (/stats/view) and their breakdown API are rendered on every request and each
  * new filter combination calls the Vercel Analytics API, so a crawler walking the filter links
  * (they're nofollow and disallowed in robots.txt, which bad bots ignore) costs real CPU. Here:
- *  - automation (crawlers, headless browsers, scraping libraries) goes to the prerendered /stats
- *    (the API answers 403), without rendering anything;
- *  - each visitor (a hash of the IP, never the IP) gets a generous allowance per 10 minutes (the
- *    stats filter links don't prefetch, so only real clicks and loads count);
- *  - and the whole site's filtered views are capped per hour, so even a crawler spread over many
- *    IPs can't run up the bill. People rarely come near either limit.
+ *  - automation that says so (crawlers, headless browsers, scraping libraries) goes to the
+ *    prerendered /stats (the API answers 403), without rendering anything;
+ *  - browsers also say where a request comes from (Sec-Fetch-Site, which page scripts can't
+ *    change). A filter clicked on the site is "same-origin". A crawler opening URLs one by one, the
+ *    pattern that got through looking like ordinary browsers with one view per IP, arrives as
+ *    "none" (opened directly) or without the header. Direct opens share a small hourly budget; once
+ *    it's spent they go to the prerendered /stats (a shared link then shows the overview);
+ *  - clicks on the site: each visitor (a hash of the IP, never the IP) gets 60 per 10 minutes and
+ *    the whole site 150 per hour (the filter links don't prefetch, so only real clicks count);
+ *  - the breakdown API is only fetched by the stats page itself, so a request that says it comes
+ *    from elsewhere gets 403.
  * Limits fail open when Redis isn't reachable. Nothing here is cached (no-store).
  */
 const STATS_LIMITS = {
-  page: { perVisitor: 60, total: 300 },
-  api: { perVisitor: 120, total: 1500 },
+  page: { perVisitor: 60, total: 150 },
+  direct: { perVisitor: 10, total: 30 },
+  api: { perVisitor: 120, total: 600 },
 };
+const NO_STORE = { "Cache-Control": "no-store" };
+
+function toStatsOverview(request: NextRequest): NextResponse {
+  const to = request.nextUrl.clone();
+  to.pathname = "/stats";
+  to.search = "";
+  return NextResponse.redirect(to, { status: 307, headers: NO_STORE });
+}
 
 async function guardStats(request: NextRequest, api: boolean): Promise<NextResponse> {
-  const noStore = { "Cache-Control": "no-store" };
-  if (isAutomatedAgent(request.headers.get("user-agent"))) {
-    if (api) return NextResponse.json({ ok: false, reason: "Not available to automated clients" }, { status: 403, headers: noStore });
-    const to = request.nextUrl.clone();
-    to.pathname = "/stats";
-    to.search = "";
-    return NextResponse.redirect(to, { status: 307, headers: noStore });
+  const forbidden = () => NextResponse.json({ ok: false, reason: "Not available to automated clients" }, { status: 403, headers: NO_STORE });
+  if (isAutomatedAgent(request.headers.get("user-agent"))) return api ? forbidden() : toStatsOverview(request);
+
+  const site = request.headers.get("sec-fetch-site");
+  if (api && site && site !== "same-origin") return forbidden();
+  const visitor = clientKey(request.headers.get("x-forwarded-for"), request.headers.get("x-real-ip"));
+
+  if (!api && site !== "same-origin") {
+    const [visitorOver, totalOver] = await Promise.all([
+      overLimit(`stats-direct:${visitor}`, STATS_LIMITS.direct.perVisitor, 600),
+      overLimit("stats-direct:all", STATS_LIMITS.direct.total, 3600),
+    ]);
+    return visitorOver || totalOver ? toStatsOverview(request) : NextResponse.next();
   }
+
   const limits = api ? STATS_LIMITS.api : STATS_LIMITS.page;
   const kind = api ? "stats-api" : "stats-view";
-  const visitor = clientKey(request.headers.get("x-forwarded-for"), request.headers.get("x-real-ip"));
   const [visitorOver, totalOver] = await Promise.all([overLimit(`${kind}:${visitor}`, limits.perVisitor, 600), overLimit(`${kind}:all`, limits.total, 3600)]);
   if (!visitorOver && !totalOver) return NextResponse.next();
-  const headers = { ...noStore, "Retry-After": totalOver ? "1800" : "300" };
+  const headers = { ...NO_STORE, "Retry-After": totalOver ? "1800" : "300" };
   if (api) return NextResponse.json({ ok: false, reason: "Too many requests" }, { status: 429, headers });
   return new NextResponse(TOO_MANY_STATS, { status: 429, headers: { ...headers, "Content-Type": "text/html; charset=utf-8" } });
 }
