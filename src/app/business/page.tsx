@@ -35,8 +35,9 @@ import { faqJsonLd, pageMetadata } from "@/lib/seo";
 const description =
   "Saver Option Business tracks your company's software subscriptions, renewals and licenses in one workspace, and shows where you could spend less. Sign in with Google.";
 
+// Also the site's home page (/ is rewritten here), which is its canonical address.
 export const metadata: Metadata = {
-  ...pageMetadata({ title: "Saver Option Business: software spend management", description, path: "/business" }),
+  ...pageMetadata({ title: "Saver Option Business: software spend management", description, path: "/" }),
   title: { absolute: "Saver Option Business: software spend management" },
 };
 

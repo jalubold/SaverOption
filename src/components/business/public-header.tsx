@@ -7,12 +7,13 @@ import { buttonClass, Container } from "@/components/ui/primitives";
 
 // `wide`: shown in the inline nav only from that breakpoint (landing-page sections, so the
 // header fits next to the full name); the menu button lists every link on narrower screens.
+// The landing page is the site's home page (/), so its sections are linked there.
 const links: { href: string; label: string; wide?: string }[] = [
-  { href: "/business#features", label: "Features" },
+  { href: "/#features", label: "Features" },
   { href: "/business/mcp", label: "AI & MCP" },
-  { href: "/business#how-it-works", label: "How it works", wide: "hidden 2xl:block" },
-  { href: "/business#pricing", label: "Pricing" },
-  { href: "/business#faq", label: "FAQ", wide: "hidden xl:block" },
+  { href: "/#how-it-works", label: "How it works", wide: "hidden 2xl:block" },
+  { href: "/#pricing", label: "Pricing" },
+  { href: "/#faq", label: "FAQ", wide: "hidden xl:block" },
   { href: "/business/docs", label: "Docs" },
   { href: "/business/download", label: "Download" },
   { href: "/business/software-deals", label: "Software deals" },
@@ -45,7 +46,7 @@ export function BusinessPublicHeader({ signedIn }: { signedIn?: boolean }) {
     // the docs included) and whatever scrolls underneath.
     <header data-tauri-drag-region className="theme-dark sticky top-0 z-40 border-b border-line" style={{ backgroundColor: "color-mix(in oklab, var(--bg) 82%, #08070c)" }}>
       <Container data-tauri-drag-region className="flex h-16 items-center gap-6 desktop-app:max-xl:pl-[84px]">
-        <Link href="/business" className="flex min-w-0 shrink items-center gap-2.5" aria-label="Saver Option Business home">
+        <Link href="/" className="flex min-w-0 shrink items-center gap-2.5" aria-label="Saver Option Business home">
           <BrandMark className="shrink-0 drop-shadow-[0_4px_14px_color-mix(in_oklab,var(--accent)_55%,transparent)]" />
           {/* Stacked on phones so the name never has to be cut off. */}
           <span className="flex min-w-0 flex-col whitespace-nowrap font-semibold leading-tight tracking-tight text-fg sm:flex-row sm:items-baseline sm:gap-1.5">

@@ -54,7 +54,7 @@ export async function siteUrls(): Promise<SiteUrl[]> {
       priority: o.isExpired ? 0.3 : 0.7,
     })),
     ...products.map((p) => ({ url: absoluteUrl(`/products/${p.slug}`), lastModified: p.lastModified, changeFrequency: "weekly" as const, priority: 0.5 })),
-    { url: absoluteUrl("/business"), changeFrequency: "monthly", priority: 0.6 },
+    // /business is the same page as / (the home page), whose address is the canonical one.
     { url: absoluteUrl("/business/mcp"), changeFrequency: "monthly", priority: 0.5 },
     { url: absoluteUrl("/business/download"), changeFrequency: "monthly", priority: 0.4 },
     ...docNav.map((d) => ({ url: absoluteUrl(d.href), changeFrequency: "monthly" as const, priority: d.href === "/business/docs" ? 0.5 : 0.4 })),
