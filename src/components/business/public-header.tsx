@@ -24,11 +24,13 @@ const links: { href: string; label: string; wide?: string }[] = [
  * Without `signedIn` (prerendered pages), the browser's sign-in hint picks the buttons.
  */
 export function BusinessPublicHeader({ signedIn }: { signedIn?: boolean }) {
+  // A full page load into the app (a plain link): the app has its own shell and loads much more code,
+  // and a client-side switch from a public page could fail halfway on a patchy mobile connection.
   const dashboard = (
-    <Link href="/business/dashboard" className={buttonClass("primary", "sm")}>
+    <a href="/business/dashboard" className={buttonClass("primary", "sm")}>
       <span className="hidden min-[380px]:inline">Open dashboard</span>
       <span className="min-[380px]:hidden">Dashboard</span> <Icon name="arrow-right" size={13} />
-    </Link>
+    </a>
   );
   const signIn = (
     <>

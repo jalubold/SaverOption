@@ -7,6 +7,7 @@ import { siteConfig } from "@/config/site";
 import { SiteAnalytics } from "@/components/analytics/site-analytics";
 import { VisitBeacon } from "@/components/analytics/visit-beacon";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { NavTracker } from "@/components/navigation/nav-tracker";
 import { PromoteProvider } from "@/components/promote/promote-modal";
 import { SiteChrome } from "@/components/layout/site-chrome";
 import { SiteHeader } from "@/components/layout/site-header";
@@ -86,6 +87,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <JsonLd data={organizationJsonLd()} />
         <VisitBeacon />
         <SiteAnalytics />
+        <NavTracker />
       </body>
     </html>
   );

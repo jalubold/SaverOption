@@ -114,9 +114,10 @@ export default async function BusinessLandingPage() {
   const cta = (
     <SignedInSwitch
       signedIn={
-        <Link href="/business/dashboard" className={buttonClass("primary", "lg", "w-full")}>
+        // A full page load into the app (see BusinessPublicHeader).
+        <a href="/business/dashboard" className={buttonClass("primary", "lg", "w-full")}>
           Open your dashboard <Icon name="arrow-right" size={15} />
-        </Link>
+        </a>
       }
       signedOut={
         <div className="w-full max-w-xs rounded-[14px] shadow-[0_10px_30px_-12px_rgb(124_58_236/0.55)]">
